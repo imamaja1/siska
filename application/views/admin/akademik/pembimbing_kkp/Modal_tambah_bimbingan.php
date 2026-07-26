@@ -1,0 +1,90 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span></button>
+    <h4 class="modal-title"><i class="fa fa-pencil"></i> Bagi bimbingan</h4>
+</div>
+<form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/pembimbing_kkp/add') ?>">
+    <div class="modal-body">
+        <div class="box-body">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-3 control-label">Mahasiswa<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <select name="nim" required class="form-control select2" style="width: 100%">
+                        <option value=""></option>
+                        <?php foreach ($data as $row) : ?>
+                            <option value="<?= $row->nim ?>"><?= $row->nim ?> - <?= $row->nama_mahasiswa ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label">Pembimbing<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <select name="kode_dosen" required class="form-control select2" style="width: 100%">
+                        <option value=""></option>
+                        <?php foreach ($dosen as $row) : ?>
+                            <option value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label">Lokasi KKP<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <textarea name="lokasi_kkp" required class="form-control" cols="30" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label">Bidang/Topik KKP<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <textarea name="bidang_kkp" required class="form-control" cols="30" rows="3"></textarea>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label">Tgl. Pelaksanaan<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="text" required name="tgl_pelaksanaan" class="form-control datepicker">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label">Batas. Pelaksanaan<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="text" required name="batas_pelaksanaan" class="form-control datepicker">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label">Batas Laporan<span class="text-danger">*</span></label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="text" required name="batas_laporan" class="form-control datepicker">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Batal</button>
+        <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-check-square-o"></i> Simpan</button>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $(".select2").select2({
+            placeholder: "Silahkan Pilih",
+            allowClear: true
+        });
+
+        $(".datepicker").datepicker({
+            'format' : 'yyyy-mm-dd'
+        });
+    })
+</script>

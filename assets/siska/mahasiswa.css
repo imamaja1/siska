@@ -1,0 +1,23 @@
+#kotak-pesan {
+    position:fixed !important;
+    /* position:absolute;right:10px; */
+    right:-2%;bottom:10%;margin:0 auto;width:300px;
+    background:#fff;padding:16px; padding-right: 50px;
+    border:2px solid #3c8dbc;color:#3c8dbc;
+    border-radius: 10px;
+    font:normal 1em Cambria,Georgia,Serif;
+    box-shadow:0px 1px 3px rgba(0,0,0,0.4);}
+
+#kotak-pesan a.close:hover {background:red;color:#fff;}
+#kotak-pesan a.close {
+    position:absolute;
+    top:5px;right:10px;background:#fff;
+    font:bold 13px Arial,Sans-Serif;
+    line-height:15px;width:15px;text-align:center;
+    color:red;border:2px solid #fff;
+    box-shadow:0px 1px 2px rgba(0,0,0,0.4);
+    border-radius:15px;cursor:pointer;
+}
+#th{
+    text-align: center;
+}

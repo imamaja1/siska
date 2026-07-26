@@ -1,0 +1,1121 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class nilai extends CI_Controller {
+
+    var $limit = 50;
+    var $limit_10 = 10;
+    var $limit_500 = 5000;
+
+    function __construct() {
+        parent::__construct();
+        $this->load->model(array(
+            'jurusan/m_tahun_akademik',
+            'jurusan/program_studi/nama_jurusan_model',
+            'akademik/nilai_model',
+            'jurusan/kurikulum/m_matakuliah',
+            'kuisioner/kuisioner_model',
+        ));
+        $this->load->library(array('form_validation', 'pagination'));
+
+        $class = $this->router->fetch_class();
+        if (!$this->session->userdata('nama_login')) {
+            redirect('login/admin');
+        } else {
+            $id_user = $this->session->userdata('id');
+            $cek = rbac_cek($class, $id_user);
+//            $tes = array('02-50-41-00-00-01');
+//            $ce = in_array(get_mac_addres(), $tes);
+            if (!$cek) {
+                redirect(site_url('denied'));
+            }
+//            elseif(!$ce){
+//                redirect(site_url('denied'));
+//            }
+        }
+    }
+
+    function index() {
+        $data = array(
+            'content' => 'admin/akademik/nilai/View_nilai',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Nilai',
+//            'tahun_akademik' => $this->m_tahun_akademik->get_tahun_ganjil_genap(),
+            'tahun_akademik' => $this->db->select('*')->from('tahun_akademik')->order_by('kode_tahun_akademik', 'DESC')->get()->result(),
+        );
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function validasi_nilai($kelas_id) {
+        $nilai = $this->db->select('dn.*')
+                        ->from('kelas_mahasiswa as km')
+                        ->join('dummy_nilai as dn', 'dn.kode_krs_detail=km.kode_krs_detail')
+                        ->where('kelas_id', $kelas_id)
+                        ->get()->result();
+        foreach ($nilai as $row) {
+            $data_nilai = array(
+                'nilai_harian' => $row->dummy_harian,
+                'nilai_uts' => $row->dummy_uts,
+                'nilai_uas' => $row->dummy_uas,
+                'nilai_akhir' => $row->dummy_na,
+            );
+            $ubah = $this->nilai_model->validasi_dekan($row->dummy_id, $data_nilai);
+            if ($ubah) {
+                $res['st'][] = true;
+            } else {
+                $res['st'][] = false;
+            }
+        }
+        $this->db->where('kelas_id', $kelas_id)->update('kelas', array('status_nilai_uts' => 'T', 'validasi_nilai_uts' => 'T', 'validasi_dekan_uts' => 'T', 'valid_uts' => '2'));
+        $this->db->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian_uts' => 'T', 'validasi_prodi_uts' => 'T', 'validasi_dekan_uts' => 'T']);
+
+        echo $resss;
+//        $this->load->view('admin/akademik/validasi_khusus_uts');
+        redirect('admin/akademik/validasikhusus_uts');
+    }
+    public function validasi_nilai_uas($kelas_id) {
+        $nilai = $this->db->select('dn.*')
+                        ->from('kelas_mahasiswa as km')
+                        ->join('dummy_nilai as dn', 'dn.kode_krs_detail=km.kode_krs_detail')
+                        ->where('kelas_id', $kelas_id)
+                        ->get()->result();
+        foreach ($nilai as $row) {
+            $data_nilai = array(
+                'nilai_harian' => $row->dummy_harian,
+                'nilai_uts' => $row->dummy_uts,
+                'nilai_uas' => $row->dummy_uas,
+                'nilai_akhir' => $row->dummy_na,
+            );
+            $ubah = $this->nilai_model->validasi_dekan($row->dummy_id, $data_nilai);
+            if ($ubah) {
+                $res['st'][] = true;
+            } else {
+                $res['st'][] = false;
+            }
+        }
+        $this->db->where('kelas_id', $kelas_id)->update('kelas', array('status_nilai' => 'T', 'validasi_nilai' => 'T', 'validasi_dekan' => 'T', 'param_uas' => '', 'status_revisi_uas' => ''));
+        $this->db->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian' => 'T', 'validasi_prodi' => 'T', 'validasi_dekan' => 'T']);
+
+        echo $resss;
+//        $this->load->view('admin/akademik/validasi_khusus_uts');
+        redirect('admin/akademik/validasikhusus_uas');
+    }
+
+    function get_nilai_process() {
+        $data = array(
+            'content' => 'admin/akademik/nilai/View_nilai',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Nilai',
+            'tahun_akademik' => $this->m_tahun_akademik->get_tahun_ganjil_genap(),
+        );
+        $this->load->view('admin/template/V_main', $data);
+
+        $tahun_akademik = $this->m_tahun_akademik->get_all_tahun_akademik()->result();
+        $options_tahun_akademik = array();
+        foreach ($tahun_akademik as $row) {
+            if ($row->semester % 2 == 1) {
+                $semester = 'Ganjil';
+            } else {
+                $semester = 'Genap';
+            }
+            $options_tahun_akademik[$row->kode_tahun_akademik] = $row->tahun_akademik . ' - ' . $semester;
+        }
+
+        $data['options_tahun_akademik'] = $options_tahun_akademik;
+
+        $this->form_validation->set_rules('tahun_akademik', 'Tahun Akademik', 'required');
+        $this->form_validation->set_rules('jurusan', 'Jurusan', 'required');
+        $this->form_validation->set_rules('matakuliah', 'Matakuliah', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+
+            $kode_tahun_akademik = $this->input->post('tahun_akademik');
+            $id_matakuliah = $this->input->post('matakuliah');
+
+            $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_by_kode($kode_tahun_akademik);
+            if ($tahun_akademik->semester % 2 == 1) {
+                $nama_semester = 'Ganjil';
+            } else {
+                $nama_semester = 'Genap';
+            }
+
+            $nama_tahun_akademik = $tahun_akademik->tahun_akademik;
+            $nama_jurusan = $this->nama_jurusan_model->get_kode_by_program_studi($this->input->post('jurusan'));
+            $kode_jurusan_jenjang = $nama_jurusan->kode_jurusan . '' . $nama_jurusan->kode_jenjang;
+            $matakuliah = $this->m_matakuliah->get_matakuliah_by_kode($id_matakuliah);
+            $nama_matakuliah = $matakuliah->nama_matakuliah;
+
+            $this->session->set_userdata('kode_tahun_akademik', $kode_tahun_akademik);
+            $this->session->set_userdata('nama_semester', $nama_semester);
+            $this->session->set_userdata('singkatan_jurusan', $nama_jurusan->singkatan_program_studi);
+            $this->session->set_userdata('kode_jurusan_jenjang', $kode_jurusan_jenjang);
+            $this->session->set_userdata('id_matakuliah', $id_matakuliah);
+            $this->session->set_userdata('nama_matakuliah', $nama_matakuliah);
+            $this->session->set_userdata('nama_tahun_akademik', $nama_tahun_akademik);
+            $this->session->set_userdata('kode_program_studi', $this->input->post('jurusan'));
+
+            redirect('admin/akademik/nilai/get_all_nilai_matakuliah');
+        } else {
+            $data['default']['tahun_akademik'] = $this->input->post('tahun_akademik');
+            $data['default']['jurusan'] = $this->input->post('jurusan');
+            $data['default']['matakuliah'] = $this->input->post('matakuliah');
+            $this->load->view('admin/template/V_main', $data);
+        }
+    }
+
+    function get_all_nilai_matakuliah($offset = 0) {
+
+        $uri_segment = 5;
+        if ($this->uri->segment($uri_segment) == FALSE) {
+            $offset = 0;
+        } else {
+            $offset = $this->uri->segment($uri_segment);
+        }
+
+        $kode_program_studi = $this->session->userdata('kode_program_studi');
+        $id_matakuliah = $this->session->userdata('id_matakuliah');
+        $kode_tahun_akademik = $this->session->userdata('kode_tahun_akademik');
+        $data_count = count($this->nilai_model->count_all_results_nilai_matakuliah($kode_tahun_akademik, $kode_program_studi, $id_matakuliah));
+
+        if ($data_count > 0) {
+            // Generate pagination			
+            $config = array(
+                'base_url' => site_url('admin/akademik/nilai/get_all_nilai_matakuliah'),
+                'total_rows' => $data_count,
+                'per_page' => $this->limit,
+                'uri_segment' => $uri_segment,
+                'full_tag_open' => '<div class="btn-group">',
+                'full_tag_close' => '</div>',
+                'cur_tag_open' => '<a href="#!" class="btn btn-xs btn-flat btn-default disabled">',
+                'cur_tag_close' => '</a>',
+                'attributes' => array('class' => 'btn btn-flat btn-xs btn-default'),
+            );
+
+            $this->pagination->initialize($config);
+
+            $data = array(
+                'content' => 'admin/akademik/nilai/View_nilai_proses',
+                'judul' => 'Akademik',
+                'sub_judul' => 'Nilai',
+                'title_h1' => '<li> Tahun Akademik ' . $this->session->userdata('nama_tahun_akademik') . ' </li> <li>Semester ' . $this->session->userdata('nama_semester') . '</li> <li>Jurusan ' . $this->session->userdata('singkatan_jurusan') . '</li> <li>Matakuliah ' . $this->session->userdata('nama_matakuliah') . '</li>',
+                'halaman' => $this->pagination->create_links(),
+                'jumlah_data' => $data_count,
+            );
+
+//            $nilai = $this->nilai_model->get_all_nilai_matakuliah($this->session->userdata('kode_tahun_akademik'), $this->session->userdata('kode_jurusan_jenjang'), $this->session->userdata('id_matakuliah'), $this->limit, $offset);
+            $nilai = $this->nilai_model->get_all_nilai_matakuliah($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $this->limit, $offset);
+//            echo "<pre>";
+//            print_r($nilai);
+//            die();
+            $i = 0 + $offset;
+
+            $table = '<div class="box box-primary flat"><div class="box-body"><table class="table demo-table">';
+            $table .= '<thead><tr>';
+            $table .= '<th>NO.</th>';
+            $table .= '<th id="th">NIM</th>';
+            $table .= '<th id="th">NAMA MAHASISWA</th>';
+            $table .= '<th id="th">NILAI HARIAN</th>';
+            $table .= '<th id="th">NILAI UTS</th>';
+            $table .= '<th id="th">NILAI UAS</th>';
+            $table .= '<th id="th">NILAI AKHIR</th>';
+            $table .= '<th id="th">GRADE</th>';
+            $table .= '<th id="th">KETERANGAN</th>';
+            $table .= '<th id="th">STATUS TB</th>';
+            $table .= '</tr></thead>';
+            foreach ($nilai as $row) {
+                $table .= '<tr>';
+                $table .= '<td align="center">' . ++$i . '</td>';
+                $table .= '<td align="center">' . $row->nim . '</td>';
+                $table .= '<td>' . $row->nama_mahasiswa . '</td>';
+                $table .= '<td align="center">' . $row->nilai_harian . '</div></td>';
+                $table .= '<td align="center">' . $row->nilai_uts . '</td>';
+                $table .= '<td align="center">' . $row->nilai_uas . '</td>';
+                $table .= '<td align="center">' . $nilai_akhir = $row->nilai_akhir . '</td>';
+
+//                $kode_jurusan = substr($row->nim, 2, 2);
+//                $kode_jenjang = substr($row->nim, 4, 1);
+//
+//                $jurusan = $this->db->query("select id_jurusan from jurusan where kode_jurusan='$kode_jurusan'")->row();
+//                $jenjang = $this->db->query("select id_jenjang from jenjang where kode_jenjang='$kode_jenjang'")->row();
+//
+//                # mencari id jurusan dan id jenjang
+//                $id_jurusan = $jurusan->id_jurusan;
+//                $id_jenjang = $jenjang->id_jenjang;
+//
+//                $program_studi = $this->db->query("select kode_program_studi from program_studi where id_jenjang='$id_jenjang' and id_jurusan='$id_jurusan'")->row();
+                #mencari kode program studi dan angkatan 
+//                $kode_program_studi = $program_studi->kode_program_studi;
+                $angkatan = "20" . substr($row->nim, 0, 2);
+
+                #mencari kode kurikulum 
+//                $kode_kurikulum = $this->db->query("select kode_nama_kurikulum from nama_kurikulum where angkatan='$angkatan' and kode_program_studi='$kode_program_studi'")->row();
+//                $kode_nama_kurikulum = $kode_kurikulum->kode_nama_kurikulum;
+                $kode_nama_kurikulum = kode_nama_kurikulum($row->nim);
+//                echo $kode_nama_kurikulum;
+//                die();
+                $data_penilaian = data_penilaian($row->nim, $row->semester);
+//                echo "<pre>";
+//                print_r($data_penilaian);
+//                die();
+                $grade = "";
+                $keterangan = "";
+                $na = $row->nilai_akhir * 1;
+                foreach ($data_penilaian as $key) {
+                    if (($key['nilai_minimum'] <= $na) && ($na <= $key['nilai_maksimum'])) {
+                        $grade = $key['grade'];
+                        $keterangan = $key['keterangan'];
+                    }
+                }
+
+                #mencari kode sistem penilaian
+//                $kode_penilaian = $this->db->query("select kode_sistem_penilaian from sistem_penilaian where kode_nama_kurikulum='$kode_nama_kurikulum'")->row_object();
+//                $kode_sistem_penilaian = $kode_penilaian->kode_sistem_penilaian;
+//
+//
+//                $sistem_penilaian = $this->db->query("select * from sistem_penilaian_detail where '$nilai_akhir' >= nilai_minimum  and '$nilai_akhir' <= nilai_maksimum and kode_sistem_penilaian='$kode_sistem_penilaian'")->row();
+//                $table .= '<td align="center">' . $sistem_penilaian->grade . '</td>';
+//                $table .= '<td align="center">' . $sistem_penilaian->keterangan . '</td>';
+                $table .= '<td align="center">' . $grade . '</td>';
+                $table .= '<td align="center">' . $keterangan . '</td>';
+                $table .= '<td align="center">' . $row->tidak_berhak . '</td>';
+                $table .= '</tr>';
+            }
+            $table .= '</table></div></div>';
+            $data['table'] = $table;
+        } else {
+            $data['message'] = "Tidak ditemukan satupun data nilai untuk Tahun Akademik " . $this->session->userdata('nama_tahun_akademik') . " dan Jurusan " . $this->session->userdata('nama_jurusan') . " serta Matakuliah " . $this->session->userdata('kode_matakuliah') . "-" . $this->session->userdata('nama_matakuliah') . "!";
+        }
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    function get_jurusan($id) {
+        $this->session->set_userdata('kode_tahun_akademik', $id);
+
+        $tmp = '';
+        $data = $this->nama_jurusan_model->get();
+        if (!empty($data)) {
+            $tmp .= "<option value='' disabled selected>Pilih Jurusan</option>";
+            foreach ($data as $row) {
+                $tmp .= "<option value='" . $row->kode_program_studi . "'>" . $row->nama_program_studi . "</option>";
+            }
+        } else {
+            $tmp .= "<option value='' disabled selected>Pilih Jurusan</option>";
+        }
+        die($tmp);
+    }
+
+    function get_matakuliah($id, $kode_tahun_akademik = null) {
+        $tmp = '';
+        if ($kode_tahun_akademik == null) {
+//            $tahun = tahun_akademik();
+            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        }
+        $kode_program_studi = $id;
+        $nama_jurusan = $this->nama_jurusan_model->get_kode_by_program_studi($kode_program_studi);
+
+        $this->session->set_userdata('singkatan_program_studi', $nama_jurusan->singkatan_program_studi);
+
+//        $kode_jurusan_jenjang = $nama_jurusan->kode_jurusan . '' . $nama_jurusan->kode_jenjang;
+//        $data = $this->nilai_model->get_all_matakuliah_by_tahun_akademik_and_jurusan($tahun->kode_tahun_akademik, $kode_jurusan_jenjang);
+//        $data = $this->nilai_model->get_all_matakuliah_by_tahun_akademik_and_jurusan($tahun->kode_tahun_akademik, $kode_program_studi);
+        $data = $this->nilai_model->get_all_matakuliah_by_tahun_akademik_and_jurusan($kode_tahun_akademik, $kode_program_studi);
+
+        if (!empty($data)) {
+            $tmp .= "<option value='' disabled selected>Pilih Matakuliah</option>";
+            foreach ($data as $row) {
+                $tmp .= "<option value='" . $row->id_matakuliah . "'>" . $row->kode_matakuliah . ' - ' . $row->nama_matakuliah . "</option>";
+            }
+        } else {
+            $tmp .= "<option value='' disabled selected>Pilih Matakuliah</option>";
+        }
+        die($tmp);
+    }
+
+    function download() {
+
+        $id_matakuliah = $this->session->userdata('id_matakuliah');
+        $kode_program_studi = $this->session->userdata('kode_program_studi');
+        $kode_tahun_akademik = $this->session->userdata('kode_tahun_akademik');
+
+        $matakuliah = $this->m_matakuliah->get_matakuliah_by_kode($id_matakuliah);
+        $nama_matakuliah = $matakuliah->nama_matakuliah;
+        $file_name = $matakuliah->kode_matakuliah . "-" . $nama_matakuliah . " (" . $this->session->userdata('singkatan_jurusan') . ")";
+
+        // Load data
+        $nilai = $this->nilai_model->count_all_results_nilai_matakuliah($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
+
+        $table = '<table border="1">';
+        $table .= '<tr>';
+        $table .= '<th>NO.</th>';
+        $table .= '<th>NIM</th>';
+        $table .= '<th>NAMA MAHASISWA</th>';
+        $table .= '<th>NILAI HARIAN</th>';
+        $table .= '<th>NILAI UTS</th>';
+        $table .= '<th>NILAI UAS</th>';
+        $table .= '<th>NILAI AKHIR</th>';
+        $table .= '<th id="th">GRADE</th>';
+        $table .= '<th id="th">KETERANGAN</th>';
+        $table .= '<th>STATUS TB</th>';
+        $table .= '</tr>';
+        $no = 0;
+        foreach ($nilai as $row) {
+            $table .= '<tr>';
+            $table .= '<td>' . ++$no . '.</td>';
+            $table .= '<td>' . $row->nim . '</td>';
+            $table .= '<td>' . $row->nama_mahasiswa . '</td>';
+            $table .= '<td>' . $nilai_harian = $row->nilai_harian . '</td>';
+            $table .= '<td>' . $nilai_uts = $row->nilai_uts . '</td>';
+            $table .= '<td>' . $nilai_uas = $row->nilai_uas . '</td>';
+            $table .= '<td align="center">' . $nilai_akhir = $row->nilai_akhir . '</td>';
+
+//            $kode_jurusan = substr($row->nim, 2, 2);
+//            $kode_jenjang = substr($row->nim, 4, 1);
+//
+//            $jurusan = $this->db->query("select id_jurusan from jurusan where kode_jurusan='$kode_jurusan'")->row();
+//            $jenjang = $this->db->query("select id_jenjang from jenjang where kode_jenjang='$kode_jenjang'")->row();
+//
+//            # mencari id jurusan dan id jenjang
+//            $id_jurusan = $jurusan->id_jurusan;
+//            $id_jenjang = $jenjang->id_jenjang;
+//
+//            $program_studi = $this->db->query("select kode_program_studi from program_studi where id_jenjang='$id_jenjang' and id_jurusan='$id_jurusan'")->row();
+//
+//            #mencari kode program studi dan angkatan
+//            $kode_program_studi = $program_studi->kode_program_studi;
+            $angkatan = "20" . substr($row->nim, 0, 2);
+
+            #mencari kode kurikulum 
+//            $kode_kurikulum = $this->db->query("select kode_nama_kurikulum from nama_kurikulum where angkatan='$angkatan' and kode_program_studi='$kode_program_studi'")->row();
+//            $kode_nama_kurikulum = $kode_kurikulum->kode_nama_kurikulum;
+            $data_penilaian = data_penilaian($row->nim, $row->semester);
+//                echo "<pre>";
+//                print_r($data_penilaian);
+//                die();
+            $grade = "";
+            $keterangan = "";
+            $na = $row->nilai_akhir * 1;
+            foreach ($data_penilaian as $key) {
+                if (($key['nilai_minimum'] <= $na) && ($na <= $key['nilai_maksimum'])) {
+                    $grade = $key['grade'];
+                    $keterangan = $key['keterangan'];
+                }
+            }
+
+            #mencari kode sistem penilaian
+//                $kode_penilaian = $this->db->query("select kode_sistem_penilaian from sistem_penilaian where kode_nama_kurikulum='$kode_nama_kurikulum'")->row_object();
+//                $kode_sistem_penilaian = $kode_penilaian->kode_sistem_penilaian;
+//
+//
+//                $sistem_penilaian = $this->db->query("select * from sistem_penilaian_detail where '$nilai_akhir' >= nilai_minimum  and '$nilai_akhir' <= nilai_maksimum and kode_sistem_penilaian='$kode_sistem_penilaian'")->row();
+//                $table .= '<td align="center">' . $sistem_penilaian->grade . '</td>';
+//                $table .= '<td align="center">' . $sistem_penilaian->keterangan . '</td>';
+            $table .= '<td align="center">' . $grade . '</td>';
+            $table .= '<td align="center">' . $keterangan . '</td>';
+            $table .= '<td align="center">' . $row->tidak_berhak . '</td>';
+            $table .= '</tr>';
+        }
+        $table .= '</table>';
+        $data['table'] = $table;
+        $data['file_name'] = $file_name;
+        $this->load->view('admin/akademik/nilai/spreadsheet_view', $data);
+    }
+
+    function get_update_nilai() {
+        $data = array(
+            'content' => 'admin/akademik/nilai/View_update_nilai',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Update Nilai Per Matakuliah',
+            'program_studi' => $this->nama_jurusan_model->get(),
+        );
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    function get_update_nilai_process() {
+
+        $data = array(
+            'content' => 'admin/akademik/nilai/View_update_nilai',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Update Nilai',
+            'program_studi' => $this->nama_jurusan_model->get(),
+        );
+
+        $this->form_validation->set_rules('jurusan', 'Jurusan', 'required');
+        $this->form_validation->set_rules('matakuliah', 'Matakuliah', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+
+            $nama_jurusan = $this->nama_jurusan_model->get_kode_by_program_studi($this->input->post('jurusan'));
+
+            $kode_jurusan_jenjang = $nama_jurusan->kode_jurusan . '' . $nama_jurusan->kode_jenjang;
+
+            $id_matakuliah = $this->input->post('matakuliah');
+
+            $matakuliah = $this->m_matakuliah->get_matakuliah_by_kode($id_matakuliah);
+            $nama_matakuliah = $matakuliah->nama_matakuliah;
+
+            $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
+            $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+            $nama_tahun_akademik = $tahun_akademik->tahun_akademik;
+
+            $this->session->set_userdata('singkatan_jurusan', $nama_jurusan->singkatan_program_studi);
+            $this->session->set_userdata('kode_jurusan_jenjang', $kode_jurusan_jenjang);
+            $this->session->set_userdata('nama_matakuliah', $nama_matakuliah);
+            $this->session->set_userdata('kode_tahun_akademik', $kode_tahun_akademik);
+            $this->session->set_userdata('nama_tahun_akademik', $nama_tahun_akademik);
+            $this->session->set_userdata('id_matakuliah', $id_matakuliah);
+            $this->session->set_userdata('kode_program_studi', $this->input->post('jurusan'));
+
+            // tambahan input filter menggunakan kelas
+            $this->session->set_userdata('kelas_id', $this->input->post('kelas_id'));
+
+            redirect('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah');
+        } else {
+            $data['default']['jurusan'] = $this->input->post('jurusan');
+            $data['default']['matakuliah'] = $this->input->post('matakuliah');
+            $this->load->view('admin/template/V_main', $data);
+        }
+    }
+
+    function get_update_nilai_per_mahasiswa() {
+        $data = array(
+            'content' => 'admin/akademik/nilai/View_update_nilai_per_mahasiswa',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Update Nilai Per Mahasiswa',
+            'program_studi' => $this->nama_jurusan_model->get(),
+        );
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    function get_update_nilai_per_mahasiswa_process() {
+
+        $data = array(
+            'content' => 'admin/akademik/nilai/View_update_nilai',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Update Nilai',
+            'program_studi' => $this->nama_jurusan_model->get(),
+        );
+
+        $this->form_validation->set_rules('jurusan', 'Jurusan', 'required');
+        $this->form_validation->set_rules('matakuliah', 'Matakuliah', 'required');
+//        $this->form_validation->set_rules('nim', 'nim', 'required');
+
+        $this->form_validation->set_rules('nim', 'nim', 'required|numeric|exact_length[10]', array('required' => 'Field NIM harus diisi', 'numeric' => 'Field NIM harus mengandung angka', 'exact_length' => 'Field NIM harus 10 karakter'));
+
+        if ($this->form_validation->run() == TRUE) {
+
+            $nama_jurusan = $this->nama_jurusan_model->get_kode_by_program_studi($this->input->post('jurusan'));
+
+            $kode_jurusan_jenjang = $nama_jurusan->kode_jurusan . '' . $nama_jurusan->kode_jenjang;
+
+            $id_matakuliah = $this->input->post('matakuliah');
+
+            $matakuliah = $this->m_matakuliah->get_matakuliah_by_kode($id_matakuliah);
+            $nama_matakuliah = $matakuliah->nama_matakuliah;
+
+            $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
+            $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+            $nama_tahun_akademik = $tahun_akademik->tahun_akademik;
+
+            $this->session->set_userdata('singkatan_jurusan', $nama_jurusan->singkatan_program_studi);
+            $this->session->set_userdata('kode_jurusan_jenjang', $kode_jurusan_jenjang);
+            $this->session->set_userdata('nama_matakuliah', $nama_matakuliah);
+            $this->session->set_userdata('kode_tahun_akademik', $kode_tahun_akademik);
+            $this->session->set_userdata('nama_tahun_akademik', $nama_tahun_akademik);
+            $this->session->set_userdata('id_matakuliah', $id_matakuliah);
+            $this->session->set_userdata('nim', $this->input->post('nim'));
+            $this->session->set_userdata('kode_program_studi', $this->input->post('jurusan'));
+
+            redirect('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah_per_mahasiswa');
+        } else {
+//            dfdfdfdf
+            $data = array(
+                'content' => 'admin/akademik/nilai/View_update_nilai_per_mahasiswa',
+                'judul' => 'Akademik',
+                'sub_judul' => 'Update Nilai Per Mahasiswa',
+                'program_studi' => $this->nama_jurusan_model->get(),
+            );
+            $this->load->view('admin/template/V_main', $data);
+        }
+    }
+
+    function get_all_mahasiswa_for_update_nilai_matakuliah_per_mahasiswa() {
+        $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
+        $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+        $kode_program_studi = $this->session->userdata('kode_program_studi');
+        $id_matakuliah = $this->session->userdata('id_matakuliah');
+        $nim = $this->session->userdata('nim');
+        $data_count = count($this->nilai_model->get_nilai_per_mahasiswa_for_update($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $nim));
+
+        if ($data_count > 0) {
+
+            $data = array(
+                'content' => 'admin/akademik/nilai/View_proses_update_per_mahasiswa',
+                'judul' => 'Akademik',
+                'sub_judul' => 'Update Nilai',
+                'title_h1' => '<li> Tahun Akademik ' . $this->session->userdata('nama_tahun_akademik') . ' </li> <li>Semester ' . $this->session->userdata('nama_semester') . '</li> <li>Jurusan ' . $this->session->userdata('singkatan_jurusan') . '</li> <li>Matakuliah ' . $this->session->userdata('kode_matakuliah') . ' - ' . $this->session->userdata('nama_matakuliah') . '</li>',
+                'halaman' => '',
+                'jumlah_data' => $data_count,
+                'nilai_matakuliah' => $this->nilai_model->get_nilai_per_mahasiswa_for_update($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $nim),
+            );
+            $this->load->view('admin/template/V_main', $data);
+        } else {
+            $this->session->set_flashdata('info',
+                    '<script>swal("","Data tidak ditemukan!","error")</script>');
+            redirect('admin/akademik/nilai/get_update_nilai_per_mahasiswa');
+        }
+    }
+
+    function get_all_mahasiswa_for_update_nilai_matakuliah($offset = 0, $id_kelas = 0) {
+        $matakuliah = $this->m_matakuliah->get_matakuliah_by_kode($this->session->userdata('id_matakuliah'));
+        $nama_matakuliah = $matakuliah->nama_matakuliah;
+        $kode_tahun_akademik = $this->session->userdata('kode_tahun_akademik');
+        $kode_program_studi = $this->session->userdata('kode_program_studi');
+        $id_matakuliah = $this->session->userdata('id_matakuliah');
+
+        if ($id_kelas == 0) {
+            // mengambil data filter kelas diawal pemilihan matakuliah dan kelas
+            $kelas_id = $this->session->userdata('kelas_id');
+        } elseif ($id_kelas == 01) {
+            // untuk menampilkan semua data mahasiswa tanpa melihat kelas
+            $this->session->set_userdata('kelas_id', 0);
+            $kelas_id = 0;
+        } else {
+            // menampilkan filter spesifik perkelas
+            $this->session->set_userdata('kelas_id', $id_kelas);
+            $kelas_id = $id_kelas;
+        }
+
+
+        $uri_segment = 5;
+        if ($this->uri->segment($uri_segment) == FALSE) {
+            $offset = 0;
+        } else {
+            $offset = $this->uri->segment($uri_segment);
+        }
+
+//        $data_count = count($this->nilai_model->count_nilai_per_matakuliah_for_update($this->session->userdata('kode_tahun_akademik'), $this->session->userdata('kode_jurusan_jenjang'), $this->session->userdata('id_matakuliah')));
+        $data_count = count($this->nilai_model->count_nilai_per_matakuliah_for_update($kode_tahun_akademik, $kode_program_studi, $id_matakuliah));
+
+        if ($data_count > 0) {
+            $config = array(
+                'base_url' => site_url('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah'),
+                'total_rows' => $data_count,
+                'per_page' => $this->limit_500,
+                'uri_segment' => $uri_segment,
+                'full_tag_open' => '<div class="btn-group">',
+                'full_tag_close' => '</div>',
+                'cur_tag_open' => '<a href="#!" class="btn btn-xs btn-flat btn-default disabled">',
+                'cur_tag_close' => '</a>',
+                'attributes' => array('class' => 'btn btn-flat btn-xs btn-default'),
+            );
+
+            $this->pagination->initialize($config);
+
+            $data = array(
+                'content' => 'admin/akademik/nilai/View_proses_update',
+                'judul' => 'Akademik',
+                'sub_judul' => 'Update Nilai',
+                'title_h1' => '<li> Tahun Akademik ' . $this->session->userdata('nama_tahun_akademik') . ' </li> <li>Semester ' . $this->session->userdata('nama_semester') . '</li> <li>Jurusan ' . $this->session->userdata('singkatan_jurusan') . '</li> <li>Matakuliah ' . $matakuliah->kode_matakuliah . ' - ' . $this->session->userdata('nama_matakuliah') . '</li>',
+                'halaman' => $this->pagination->create_links(),
+                'jumlah_data' => $data_count,
+                'nilai_matakuliah' => $this->nilai_model->get_nilai_per_matakuliah_for_update($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $kelas_id, $this->limit_500, $offset),
+                'data_kelas' => $this->nilai_model->get_kelas_matakuliah($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $kelas_id),
+                'dosen' => $this->kuisioner_model->get_kelas_dosen($kelas_id)
+            );
+            $this->load->view('admin/template/V_main', $data);
+        } else {
+            $this->session->set_flashdata('message', "Data nilai untuk matakuliah tersebut tidak ditemukan!");
+            redirect('admin/nilai/get_update_nilai');
+        }
+    }
+
+    function get_all_mahasiswa_for_update_nilai_matakuliah_process() {
+        $input = filter_input_array(INPUT_POST);
+        if ($input['action'] === 'edit') {
+            if (isset($input['nilai_harian'])) {
+                $this->db->query("UPDATE khs_detail SET nilai_harian='" . $input['nilai_harian'] . "' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            }
+            if (isset($input['nilai_uts'])) {
+                $this->db->query("UPDATE khs_detail SET nilai_uts='" . $input['nilai_uts'] . "' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            }
+            if (isset($input['nilai_uas'])) {
+                $this->db->query("UPDATE khs_detail SET nilai_uas='" . $input['nilai_uas'] . "' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            }
+
+            if (isset($input['nilai_akhir'])) {
+                $this->db->query("UPDATE khs_detail SET nilai_akhir='" . $input['nilai_akhir'] . "' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            }
+
+            if ($input['tidak_berhak'] == 1) {
+                $this->db->query("UPDATE khs_detail SET tidak_berhak='N' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            } else if ($input['tidak_berhak'] == 2) {
+                $this->db->query("UPDATE khs_detail SET tidak_berhak='A', nilai_uas='0' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            } else {
+                $this->db->query("UPDATE khs_detail SET tidak_berhak='N' WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+            }
+        } else if ($input['action'] === 'delete') {
+            $this->db->query("UPDATE khs_detail SET deleted=1 WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+        } else if ($input['action'] === 'restore') {
+            $this->db->query("UPDATE khs_detail SET deleted=0 WHERE kode_khs_detail='" . $input['kode_khs_detail'] . "'");
+        }
+
+        echo json_encode($input);
+    }
+
+    function update_nilai($kode_khs_detail) {
+        $input_name = $this->input->post('input_name');
+        $nilai = $this->input->post('nilai');
+        if ($input_name == 'nilai_harian') {
+            if (empty($nilai)) {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_harian' => null));
+            } else {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_harian' => $nilai));
+            }
+        } elseif ($input_name == 'nilai_uts') {
+            if (empty($nilai)) {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_uts' => null));
+            } else {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_uts' => $nilai));
+            }
+        } elseif ($input_name == 'nilai_uas') {
+            if (empty($nilai)) {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_uas' => null));
+            } else {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_uas' => $nilai));
+            }
+        } else {
+            if (empty($nilai)) {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_akhir' => null));
+            } else {
+                $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('nilai_akhir' => $nilai));
+            }
+        }
+
+        if ($ubah) {
+            echo 'true';
+        } else {
+            echo 'false';
+        }
+    }
+
+    function update_tidak_berhak($kode_khs_detail) {
+        $tidak_berhak = $this->input->post('tidak_berhak');
+        if (empty($tidak_berhak)) {
+            $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('tidak_berhak' => null));
+        } else {
+            $ubah = $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('tidak_berhak' => $tidak_berhak));
+        }
+
+        if ($ubah) {
+            echo 'true';
+        } else {
+            echo 'false';
+        }
+    }
+
+    public function upload() {
+        if ($this->session->userdata('file_name')) {
+            $path = "./assets/excel/" . $this->session->userdata('file_name');
+            if (unlink($path)) {
+                $this->session->unset_userdata('file_name');
+            }
+        }
+        $this->load->library('upload'); // Load librari upload
+
+        $config['upload_path'] = './assets/excel/';
+        $config['allowed_types'] = 'xlsx';
+        $config['max_size'] = '2048';
+        $config['overwrite'] = true;
+//        $config['file_name'] = "tes";
+
+        $this->upload->initialize($config); // Load konfigurasi uploadnya
+        if ($this->upload->do_upload('file')) { // Lakukan upload dan Cek jika proses upload berhasil
+            // Jika berhasil :
+            $file_name = $this->upload->data('file_name');
+            $this->session->set_userdata(array('file_name' => $file_name));
+            $page = $this->load->view('admin/akademik/nilai/View_preview_nilai', $this->data_upload(), TRUE);
+            $return = array('status' => true, 'file_name' => $file_name, 'data', 'page' => $page);
+//            return $return;
+            echo json_encode($return);
+        } else {
+            // Jika gagal :
+            $return = array('status' => false, 'file' => '', 'error' => $this->upload->display_errors());
+            echo json_encode($return);
+        }
+    }
+
+    public function import() {
+        // Load plugin PHPExcel nya
+        $file_name = $this->session->userdata('file_name');
+        include APPPATH . 'third_party/PHPExcel.php';
+
+        $excelreader = new PHPExcel_Reader_Excel2007();
+        $loadexcel = $excelreader->load('assets/excel/' . $file_name); // Load file yang telah diupload ke folder excel
+        $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
+        $kode_matakuliah = $loadexcel->getActiveSheet()->getCell('C1')->getValue();
+
+        // Buat sebuah variabel array untuk menampung array data yg akan kita insert ke database
+//        $data = array();
+        $error = array();
+
+        $numrow = 1;
+        $i = 0;
+        foreach ($sheet as $row) {
+            // Cek $numrow apakah lebih dari 1
+            // Artinya karena baris pertama adalah nama-nama kolom
+            // Jadi dilewat saja, tidak usah diimport
+            if ($numrow > 3) {
+                // Kita push (add) array data ke variabel data
+                $nim = $row['B'];
+                $kode_nama_kurikulum = kode_nama_kurikulum($nim);
+                $id_matakuliah = $this->db->select('mak.id_matakuliah')
+                                ->from('kurikulum as kur')
+                                ->join('matakuliah as mak', 'mak.id_matakuliah=kur.id_matakuliah')
+                                ->where('kur.kode_nama_kurikulum', $kode_nama_kurikulum)
+                                ->where('mak.kode_matakuliah', $kode_matakuliah)
+                                ->get()->row_object()->id_matakuliah;
+                $khs_detail = $this->db->select("kode_khs_detail")
+                                ->from("krs")
+                                ->join('krs_detail as krd', 'krs.kode_krs=krd.kode_krs')
+                                ->join('khs_detail as khd', 'khd.kode_krs_detail=krd.kode_krs_detail')
+                                ->where("krs.nim", $nim)
+                                ->where("krd.id_matakuliah", $id_matakuliah)
+                                ->get()->row();
+                if (count($khs_detail) > 0) {
+                    $data = array(
+                        'nilai_harian' => $row['D'], // Insert data alamat dari kolom D di excel
+                        'nilai_uts' => $row['E'], // Insert data alamat dari kolom D di excel
+                        'nilai_uas' => $row['F'], // Insert data alamat dari kolom D di excel
+                        'nilai_akhir' => $row['G'], // Insert data alamat dari kolom D di excel
+                        'tidak_berhak' => $row['I'], // Insert data alamat dari kolom D di excel
+                    );
+                    $ubah = $this->db->where('kode_khs_detail', $khs_detail->kode_khs_detail)->update('khs_detail', $data);
+//                    array_push($data, array(
+//                        'nim'=>$nim, // Insert data nama dari kolom B di excel
+//                        'id_matakuliah'=>$id_matakuliah, // Insert data nama dari kolom B di excel
+//                        'nama'=>$row['C'], // Insert data jenis kelamin dari kolom C di excel
+//                        'nilai_harian'=>$row['D'], // Insert data alamat dari kolom D di excel
+//                        'nilai_uts'=>$row['E'], // Insert data alamat dari kolom D di excel
+//                        'nilai_uas'=>$row['F'], // Insert data alamat dari kolom D di excel
+//                        'nilai_akhir'=>$row['G'], // Insert data alamat dari kolom D di excel
+//                        'tidak_berhak'=>$row['I'], // Insert data alamat dari kolom D di excel
+//                        'kode_nama_kurikulum'=>$kode_nama_kurikulum, // Insert data alamat dari kolom D di excel
+//                        'kode_khs_detail'=>$khs_detail->kode_khs_detail, // Insert data alamat dari kolom D di excel
+//                    ));
+                } else {
+                    $error['error'][$i]['msg'] = "Gagal ubah numrow excel <b>" . $numrow . "</b>, data tidak ditemukan";
+                    $i++;
+                }
+            }
+
+            $numrow++; // Tambah 1 setiap kali looping
+        }
+//        return redirect(site_url('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah'));
+        return $this->load->view("admin/akademik/nilai/Error_report", $error);
+
+//        echo "<pre>";
+//        print_r($kode_matakuliah);
+//        print_r($data);
+    }
+
+    public function data_upload() {
+        $file_name = $this->session->userdata('file_name');
+        // Load plugin PHPExcel nya
+        include APPPATH . 'third_party/PHPExcel.php';
+
+        $excelreader = new PHPExcel_Reader_Excel2007();
+        $loadexcel = $excelreader->load('assets/excel/' . $file_name); // Load file yang telah diupload ke folder excel
+        $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
+        $kode_matakuliah = $loadexcel->getActiveSheet()->getCell('C1')->getValue();
+        $nama_matakuliah = $loadexcel->getActiveSheet()->getCell('C2')->getValue();
+
+        // Buat sebuah variabel array untuk menampung array data yg akan kita insert ke database
+        $res['kode_matakuliah'] = $kode_matakuliah;
+        $res['nama_matakuliah'] = $nama_matakuliah;
+        $data = array();
+
+        $numrow = 1;
+        foreach ($sheet as $row) {
+            // Cek $numrow apakah lebih dari 1
+            // Artinya karena baris pertama adalah nama-nama kolom
+            // Jadi dilewat saja, tidak usah diimport
+            if ($numrow > 3) {
+                // Kita push (add) array data ke variabel data
+                array_push($data, array(
+                    'nim' => $row['B'], // Insert data nama dari kolom B di excel
+                    'nama' => $row['C'], // Insert data jenis kelamin dari kolom C di excel
+                    'nilai_harian' => $row['D'], // Insert data alamat dari kolom D di excel
+                    'nilai_uts' => $row['E'], // Insert data alamat dari kolom D di excel
+                    'nilai_uas' => $row['F'], // Insert data alamat dari kolom D di excel
+                    'nilai_akhir' => $row['G'], // Insert data alamat dari kolom D di excel
+                    'grade' => $row['H'], // Insert data alamat dari kolom D di excel
+                    'tidak_berhak' => $row['I'], // Insert data alamat dari kolom D di excel
+                ));
+            }
+            $numrow++; // Tambah 1 setiap kali looping
+        }
+        $res['data'] = $data;
+        return $res;
+    }
+
+    public function delete_file() {
+        $this->load->helper("file");
+        if ($this->session->userdata('file_name')) {
+            $path = "./assets/excel/" . $this->session->userdata('file_name');
+            if (unlink($path)) {
+                echo "berhasil hapus";
+                $this->session->unset_userdata('file_name');
+            } else {
+                echo "gagal hapus";
+            }
+        }
+    }
+
+    public function persentase_penginputan() {
+        $tahun_akademik = tahun_akademik();
+        $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+        $prodi = $this->nama_jurusan_model->get();
+        $persen = [];
+        $j = 0;
+        foreach ($prodi as $item) {
+            $persen[$j]['kode_program_studi'] = $item->kode_program_studi;
+            $persen[$j]['nama_program_studi'] = $item->nama_program_studi;
+            $matakuliah = $this->nilai_model->get_all_matakuliah_by_tahun_akademik_and_jurusan($kode_tahun_akademik, $item->kode_program_studi);
+            $hasil = [];
+            $i = 0;
+            $persen_semua = 0;
+            $persen_terisi = 0;
+            $persen_makul = 0;
+            foreach ($matakuliah as $row) {
+                $total = $this->db->select('kd.kode_krs_detail,mak.kode_matakuliah, nama_matakuliah,nilai_akhir')
+                                ->from('krs_detail as kd')
+                                ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                                ->join('matakuliah as mak', 'mak.id_matakuliah=kd.id_matakuliah')
+                                ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                                ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+                                ->where_not_in('status', ['K'])
+                                ->where('kd.id_matakuliah', $row->id_matakuliah)
+                                ->get()->num_rows();
+                $terisi = $this->db->select('kd.kode_krs_detail,mak.kode_matakuliah, nama_matakuliah,nilai_akhir')
+                                ->from('krs_detail as kd')
+                                ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                                ->join('matakuliah as mak', 'mak.id_matakuliah=kd.id_matakuliah')
+                                ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                                ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+                                ->where_not_in('status', ['K'])
+                                ->where('nilai_akhir IS NOT NULL')
+                                ->where('kd.id_matakuliah', $row->id_matakuliah)
+                                ->get()->num_rows();
+                $hasil[$i]['semua'] = $total;
+                $hasil[$i]['terisi'] = $terisi;
+                $hasil[$i]['nama_matakuliah'] = $row->nama_matakuliah;
+                $hasil[$i]['kode_matakuliah'] = $row->kode_matakuliah;
+                $hasil[$i]['id_matakuliah'] = $row->id_matakuliah;
+                $hasil[$i]['persen'] = number_format($terisi / $total * 100, 2);
+                $hasil[$i]['status'] = $total == $terisi ? true : false;
+                if ($total == $terisi) {
+                    $persen_terisi = $persen_terisi + 1;
+                }
+                $persen_makul = $persen_makul + ($terisi / $total * 100);
+                $i++;
+            }
+
+            $persen_semua = count($hasil);
+            $persen[$j]['semua'] = $persen_semua;
+            $persen[$j]['terisi'] = $persen_terisi;
+            $persen[$j]['persen'] = $persen_makul / $persen_semua;
+            $persen[$j]['status'] = $persen_semua == $persen_terisi && $persen_semua != 0 ? true : false;
+            $j++;
+        }
+
+//        echo "<pre>";
+//        print_r($persen);
+//        die();
+        $data = array(
+            'content' => 'admin/akademik/nilai/persentase_penginputan/V_index',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Persentase Penginputan',
+            'prodi' => $persen,
+        );
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function persentase_penginputan_prodi($kode_program_studi) {
+        $tahun_akademik = tahun_akademik();
+        $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+        $matakuliah = $this->nilai_model->get_all_matakuliah_by_tahun_akademik_and_jurusan($kode_tahun_akademik, $kode_program_studi);
+        $hasil = [];
+        $i = 0;
+        foreach ($matakuliah as $row) {
+            $total = $this->db->select('kd.kode_krs_detail,mak.kode_matakuliah, nama_matakuliah,nilai_akhir')
+                            ->from('krs_detail as kd')
+                            ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                            ->join('matakuliah as mak', 'mak.id_matakuliah=kd.id_matakuliah')
+                            ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                            ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+                            ->where_not_in('status', ['K'])
+                            ->where('kd.id_matakuliah', $row->id_matakuliah)
+                            ->get()->num_rows();
+            $terisi = $this->db->select('kd.kode_krs_detail,mak.kode_matakuliah, nama_matakuliah,nilai_akhir')
+                            ->from('krs_detail as kd')
+                            ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                            ->join('matakuliah as mak', 'mak.id_matakuliah=kd.id_matakuliah')
+                            ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                            ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+                            ->where_not_in('status', ['K'])
+                            ->where('nilai_akhir IS NOT NULL')
+                            ->where('kd.id_matakuliah', $row->id_matakuliah)
+                            ->get()->num_rows();
+            $hasil[$i]['semua'] = $total;
+            $hasil[$i]['terisi'] = $terisi;
+            $hasil[$i]['nama_matakuliah'] = $row->nama_matakuliah;
+            $hasil[$i]['kode_matakuliah'] = $row->kode_matakuliah;
+            $hasil[$i]['id_matakuliah'] = $row->id_matakuliah;
+            $hasil[$i]['status'] = $total == $terisi ? true : false;
+            $i++;
+        }
+//        echo "<pre>";
+//        print_r($hasil);
+//        die();
+        $data = array(
+            'matakuliah' => $hasil,
+        );
+        $this->load->view('admin/akademik/nilai/persentase_penginputan/V_matakuliah', $data);
+    }
+
+    public function distribusi_nilai() {
+        $data = array(
+            'content' => 'admin/akademik/nilai/distribusi_nilai/V_index',
+            'judul' => 'Akademik',
+            'sub_judul' => 'Pendistribusian Nilai',
+            'tahun_akademik' => $this->db->order_by('kode_tahun_akademik', 'DESC')->get('tahun_akademik')->result_object(),
+            'program_studi' => $this->nama_jurusan_model->get(),
+        );
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function filter_distribusi() {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_program_studi = $this->input->post('kode_program_studi');
+        $res['kode_tahun_akademik'] = $kode_tahun_akademik;
+        $res['kode_program_studi'] = $kode_program_studi;
+
+        $data_kelas = $this->db->select('kelas.kelas_id, nama_matakuliah, nama_kelas, semester, group_concat(nama_dosen) as nama_dosen')
+                        ->from('kelas')
+                        ->join('matakuliah as mak', 'mak.id_matakuliah=kelas.id_matakuliah')
+                        ->join('nama_kelas', 'nama_kelas.nama_kelas_id=kelas.nama_kelas_id')
+                        ->join('mengajar', 'mengajar.kelas_id=kelas.kelas_id', 'left')
+                        ->join('dosen', 'mengajar.kode_dosen=dosen.kode_dosen', 'left')
+                        ->where('kelas.kode_tahun_akademik', $kode_tahun_akademik)
+                        ->where('kelas.kode_program_studi', $kode_program_studi)
+                        ->order_by('mak.nama_matakuliah')
+                        ->group_by('kelas.kelas_id')
+                        ->get()->result_object();
+//        echo "<pre>";
+//        print_r($data_kelas);
+//        die();
+        $i = 0;
+        $data = array();
+        foreach ($data_kelas as $row) {
+            if(!$row->nama_dosen){
+                continue;
+            }
+            $data[$i]['nama_kelas'] = $row->nama_kelas;
+            $data[$i]['nama_matakuliah'] = $row->nama_matakuliah;
+            $data[$i]['semester'] = $row->semester;
+            $data[$i]['nama_dosen'] = $row->nama_dosen;
+//            $total = $this->db->select('grade, nilai_akhir')
+            $total = $this->db->select('*')
+//                    ->from('kelas_mahasiswa as km, sistem_penilaian_detail as spd')
+                            ->from('kelas_mahasiswa as km')
+                            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
+                            ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
+                            ->where('kelas_id', $row->kelas_id)
+//                    ->where('spd.kode_sistem_penilaian','1')
+//                    ->where('spd.nilai_minimum <= khd.nilai_akhir')
+//                    ->where('spd.nilai_maksimum >= khd.nilai_akhir')
+              				
+                            ->get()->num_rows();
+            $data[$i]['total'] = $total;
+            $sub_query = $this->db->select('grade, nilai_akhir, count(kd.kode_krs_detail) as jumlah')
+                            ->from('kelas_mahasiswa as km, sistem_penilaian_detail as spd')
+                            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
+                            ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
+                            ->where('kelas_id', $row->kelas_id)
+                            ->where('spd.kode_sistem_penilaian', '1')
+                            ->where('spd.nilai_minimum <= khd.nilai_akhir')
+                            ->where('spd.nilai_maksimum >= khd.nilai_akhir')
+              				//->group_by('khd.kode_krs_detail')->get_compiled_select();
+                            ->group_by('grade')->get_compiled_select();
+
+            $data[$i]['data'] = $this->db->select("jumlah, (jumlah/$total)*100 as persen")
+                            ->from("($sub_query) as m")
+                            ->join('sistem_penilaian_detail as spd', 'spd.grade=m.grade', 'right')
+                            ->where('spd.kode_sistem_penilaian', '1')
+                            ->get()->result_object();
+            $i++;
+        }
+        $res['data'] = $data;
+        $this->load->view('admin/akademik/nilai/distribusi_nilai/V_lists', $res);
+    }
+
+    public function distribusi_excel($kode_tahun_akademik, $kode_program_studi) {
+        $res['tahun_akademik'] = $this->db->where('kode_tahun_akademik', $kode_tahun_akademik)->get('tahun_akademik')->row_object();
+        $res['program_studi'] = $this->db->where('kode_program_studi', $kode_program_studi)->get('program_studi')->row_object();
+        $data_kelas = $this->db->select('kelas.kelas_id, nama_matakuliah, nama_kelas, semester, group_concat(nama_dosen) as nama_dosen')
+                        ->from('kelas')
+                        ->join('matakuliah as mak', 'mak.id_matakuliah=kelas.id_matakuliah')
+                        ->join('nama_kelas', 'nama_kelas.nama_kelas_id=kelas.nama_kelas_id')
+                        ->join('mengajar', 'mengajar.kelas_id=kelas.kelas_id', 'left')
+                        ->join('dosen', 'mengajar.kode_dosen=dosen.kode_dosen', 'left')
+                        ->where('kelas.kode_tahun_akademik', $kode_tahun_akademik)
+                        ->where('kelas.kode_program_studi', $kode_program_studi)
+                        ->order_by('mak.nama_matakuliah')
+                        ->group_by('kelas.kelas_id')
+                        ->get()->result_object();
+        ;
+        $i = 0;
+        $data = array();
+        foreach ($data_kelas as $row) {
+            if(!$row->nama_dosen){
+                continue;
+            }
+            $data[$i]['nama_kelas'] = $row->nama_kelas;
+            $data[$i]['nama_matakuliah'] = $row->nama_matakuliah;
+            $data[$i]['semester'] = $row->semester;
+            $data[$i]['nama_dosen'] = $row->nama_dosen;
+            $total = $this->db->select('grade, nilai_akhir')
+                            ->from('kelas_mahasiswa as km, sistem_penilaian_detail as spd')
+                            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
+                            ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
+                            ->where('kelas_id', $row->kelas_id)
+                            ->where('spd.kode_sistem_penilaian', '1')
+                            ->where('spd.nilai_minimum <= khd.nilai_akhir')
+                            ->where('spd.nilai_maksimum >= khd.nilai_akhir')
+                            ->get()->num_rows();
+            $data[$i]['total'] = $total;
+            $sub_query = $this->db->select('grade, nilai_akhir, count(kd.kode_krs_detail) as jumlah')
+                            ->from('kelas_mahasiswa as km, sistem_penilaian_detail as spd')
+                            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
+                            ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
+                            ->where('kelas_id', $row->kelas_id)
+                            ->where('spd.kode_sistem_penilaian', '1')
+                            ->where('spd.nilai_minimum <= khd.nilai_akhir')
+                            ->where('spd.nilai_maksimum >= khd.nilai_akhir')
+                            ->group_by('grade')->get_compiled_select();
+
+            $data[$i]['data'] = $this->db->select("jumlah, (jumlah/$total)*100 as persen")
+                            ->from("($sub_query) as m")
+                            ->join('sistem_penilaian_detail as spd', 'spd.grade=m.grade', 'right')
+                            ->where('spd.kode_sistem_penilaian', '1')
+                            ->get()->result_object();
+            $i++;
+        }
+        $semester = $res['tahun_akademik']->semester == '1' ? "GANJIL" : 'GENAP';
+        $res['data'] = $data;
+        $res['filename'] = "REKAPITULASI PENDISTRIBUSIAN NILAI PROGRAM STUDI " . strtoupper($res['program_studi']->nama_program_studi) . " SEMESTER " . $semester . " " . $res['tahun_akademik']->tahun_akademik;
+        $this->load->view('admin/akademik/nilai/distribusi_nilai/Excel', $res);
+    }
+
+}

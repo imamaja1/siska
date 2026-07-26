@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "codeigniter": {
+      "source": "yasserstudio/codeigniter-skills",
+      "sourceType": "github",
+      "skillPath": "skills/codeigniter/SKILL.md",
+      "computedHash": "c60b113b458b55a1e36f6173cc4855c882028e9d2f2ba36f4802c13fa92701a5"
+    },
+    "php-codeigniter-audit": {
+      "source": "0xshe/php-code-audit-skill",
+      "sourceType": "github",
+      "skillPath": "php-codeigniter-audit/SKILL.md",
+      "computedHash": "39b81dc5306f4a351622ec4a9c58f10e48f9bb0b349aabe3f871424c6290fb77"
+    }
+  }
+}

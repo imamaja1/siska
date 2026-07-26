@@ -1,0 +1,125 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class KPATService extends MY_Service {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    // --- Kelas ---
+
+    public function getKelasMahasiswaDetail($matakuliah_id, $kode_tahun_akademik) {
+        return $this->db->select('km.kode_krs_detail')->from('kelas_kpat')
+            ->join('kelas_mahasiswa_kpat as km', 'kelas_kpat.kelas_id=km.kelas_id')
+            ->where('kelas_kpat.kode_tahun_akademik', $kode_tahun_akademik)
+            ->where('kelas_kpat.id_matakuliah', $matakuliah_id)
+            ->get()->result();
+    }
+
+    public function getSemuaMahasiswaKpat($kode_tahun_akademik, $matakuliah_id) {
+        $this->db->select('*')->from('krs')
+            ->join('krs_detail as kd', 'krs.kode_krs=kd.kode_krs')
+            ->join('mahasiswa as mah', 'krs.nim=mah.nim')
+            ->join('status_perkuliahan as sp', "sp.nim=krs.nim and sp.kode_tahun_akademik=".$this->db->escape($kode_tahun_akademik))
+            ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+            ->where('kd.id_matakuliah', $matakuliah_id);
+        return $this->db;
+    }
+
+    public function getNamaKelas() {
+        return $this->db->get('nama_kelas')->result_object();
+    }
+
+    public function hapusKelasKpat($kelas_id) {
+        return $this->db->where('kelas_id', $kelas_id)->delete('kelas_kpat');
+    }
+
+    public function getAllDosen() {
+        return $this->db->get('dosen')->result_object();
+    }
+
+    public function getMatakuliahKpat($ta, $prodi) {
+        return $this->db->select('mak.id_matakuliah, mak.kode_matakuliah, mak.id_matakuliah, nama_matakuliah, kelas_kpat.kelas_id')
+            ->from('nama_kurikulum as nk')
+            ->join('kurikulum as kur', 'nk.kode_nama_kurikulum=kur.kode_nama_kurikulum')
+            ->join('krs_detail as kd', 'kd.id_matakuliah=kur.id_matakuliah')
+            ->join('matakuliah as mak', 'mak.id_matakuliah=kd.id_matakuliah')
+            ->join('krs', 'krs.kode_krs=kd.kode_krs')
+            ->join('kelas_kpat', 'kelas_kpat.id_matakuliah=mak.id_matakuliah AND kelas_kpat.kode_tahun_akademik=krs.kode_tahun_akademik', 'left')
+            ->where('nk.kode_program_studi', $prodi)
+            ->where('krs.kode_tahun_akademik', $ta)
+            ->where_in('kd.status', ['K'])
+            ->group_by('mak.id_matakuliah')
+            ->order_by('substr(mak.kode_matakuliah,-4,4) ASC')
+            ->get()->result();
+    }
+
+    public function tambahMahasiswaKpat($data) {
+        return $this->db->insert('kelas_mahasiswa_kpat', $data);
+    }
+
+    // --- Khs ---
+
+    public function getKrsByKode($kode_krs) {
+        return $this->db->where('kode_krs', $kode_krs)->get('krs')->row_object();
+    }
+
+    // --- Krs ---
+
+    public function getKrsByKodeKrs($kode_krs) {
+        return $this->db->where(array('kode_krs' => $kode_krs))->get('krs')->row_object();
+    }
+
+    public function updateKhsDetailRaw($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak) {
+        $this->db->set('nilai_harian', $nilai_harian)
+            ->set('nilai_uts', $nilai_uts)
+            ->set('nilai_uas', $nilai_uas)
+            ->set('nilai_akhir', $nilai_akhir)
+            ->set('tidak_berhak', $tidak_berhak)
+            ->where('kode_krs_detail', $kode_krs_detail)
+            ->update('khs_detail');
+    }
+
+    public function deleteKrsDetail($kode_krs_detail) {
+        $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('krs_detail');
+    }
+
+    public function deleteKhsDetail($kode_krs_detail) {
+        $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('khs_detail');
+    }
+
+    public function restoreKhsDetail($kode_khs_detail) {
+        $this->db->set('deleted', 0)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+    }
+
+    // --- Nilai ---
+
+    public function getMatakuliahByProdiTa($kode_program_studi, $kode_tahun_akademik) {
+        return $this->db->select('mak.id_matakuliah, nama_matakuliah, mak.kode_matakuliah')
+            ->from('krs')
+            ->join('krs_detail as kd','krs.kode_krs=kd.kode_krs')
+            ->join('matakuliah as mak','kd.id_matakuliah=mak.id_matakuliah')
+            ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+            ->where('mak.kode_program_studi', $kode_program_studi)
+            ->where('kd.status','K')
+            ->group_by('kd.id_matakuliah')
+            ->get()->result_object();
+    }
+
+    public function updateNilaiKhsDetail($kode_khs_detail, $field, $value) {
+        $allowed = ['nilai_harian', 'nilai_uts', 'nilai_uas', 'nilai_akhir', 'tidak_berhak', 'grade', 'deleted'];
+        if (!in_array($field, $allowed)) {
+            return;
+        }
+        $this->db->set($field, $value)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+    }
+
+    public function softDeleteKhsDetail($kode_khs_detail) {
+        $this->db->set('deleted', 1)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+    }
+
+    public function restoreKhsDetailNilai($kode_khs_detail) {
+        $this->db->set('deleted', 0)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+    }
+}

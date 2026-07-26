@@ -1,0 +1,20 @@
+{
+  "name": "epoknak",
+  "authors": [
+    "Ardianta Pargo <ardianta_pargo@yahoo.co.id>"
+  ],
+  "description": "Epoknak",
+  "main": "index.php",
+  "keywords": [
+    "epoknak"
+  ],
+  "license": "MIT",
+  "homepage": "http://petanikode.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

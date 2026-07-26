@@ -6,7 +6,6 @@
 </div>
 
 <div class="box box-primary flat">
-
     <div class="box-body">
         <table class="table demo-table">
             <thead>
@@ -25,23 +24,22 @@
                 ?>
                 <tr>
                     <td align="center"><?= $i++ ?></td>
-                    <td align="center" id="kode-jurusan-<?= $row->id_jurusan ?>"><?= $row->kode_jurusan ?></td>
-                    <td id="nama-jurusan-<?= $row->id_jurusan ?>"><?= $row->nama_jurusan ?></td>
+                    <td align="center" id="kode-jurusan-<?= e($row->id_jurusan) ?>"><?= e($row->kode_jurusan) ?></td>
+                    <td id="nama-jurusan-<?= e($row->id_jurusan) ?>"><?= e($row->nama_jurusan) ?></td>
                     <td align="center"><?= date('d F Y , H:i:s A', strtotime($row->tanggal_terbuat)); ?></td>
-                    <td><?php $is = []; foreach($institusi as $ins) $is[$ins->kode_institusi] = $ins->singkatan; echo $is[$row->kode_institusi] ?? '-'; ?></td>
+                    <td><?php $is = []; foreach($institusi as $ins) $is[$ins->kode_institusi] = $ins->singkatan; echo isset($is[$row->kode_institusi]) ? $is[$row->kode_institusi] : '-'; ?></td>
                     <td width="150" align="center">
-                        <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editJurusan('<?= $row->id_jurusan ?>')"><i class="fa fa-edit"></i> Ubah</a>
+                        <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editJurusan('<?= e($row->id_jurusan) ?>')"><i class="fa fa-edit"></i> Ubah</a>
                         <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/program_studi/kode_jurusan/hapus/' . $row->id_jurusan) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                     </td>
-                <p id="kode-institusi-<?= $row->id_jurusan ?>" style="display: none;"><?= $row->kode_institusi ?></p>
-                <p id="kode-pengguna-<?= $row->id_jurusan ?>" style="display: none;"><?= $row->kode_pengguna ?></p>
+                <p id="kode-institusi-<?= e($row->id_jurusan) ?>" style="display: none;"><?= e($row->kode_institusi) ?></p>
+                <p id="kode-pengguna-<?= e($row->id_jurusan) ?>" style="display: none;"><?= e($row->kode_pengguna) ?></p>
                 </tr>
             <?php } ?>
         </table>
     </div>
 </div>
 
-<!-- Tambah kode jurusan -->
 <div class="modal fade" id="tambah-kode-jurusan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -50,6 +48,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Kode Jurusan</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/program_studi/kode_jurusan/simpan'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Kode Jurusan</label>
@@ -64,7 +63,7 @@
                         <select class="form-control" name="nama_institusi" id="">
                             <option value="" disabled selected>Pilih Nama Institusi</option>
                             <?php foreach ($institusi as $row) { ?>
-                                <option value="<?= $row->kode_institusi ?>"><?= $row->singkatan ?></option>
+                                <option value="<?= e($row->kode_institusi) ?>"><?= e($row->singkatan) ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -78,7 +77,6 @@
     </div>
 </div>
 
-<!-- Edit kode jurusan -->
 <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -87,6 +85,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Edit Kode Jurusan</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/program_studi/kode_jurusan/ubah'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Kode Jurusan</label>
@@ -102,7 +101,7 @@
                         <select class="form-control" name="nama_institusi" id="edit-kode-institusi">
                             <option value="" disabled selected>Pilih Nama Institusi</option>
                             <?php foreach ($institusi as $row) { ?>
-                                <option value="<?= $row->kode_institusi ?>"><?= $row->singkatan ?></option>
+                                <option value="<?= e($row->kode_institusi) ?>"><?= e($row->singkatan) ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -115,24 +114,18 @@
         </div>
     </div>
 </div>
-<!-- script -->
 <script type="text/javascript">
     function editJurusan(id) {
-        // body...
         var kode_jurusan = $('#kode-jurusan-' + id).html();
         var nama_jurusan = $('#nama-jurusan-' + id).html();
         var kode_institusi = $('#kode-institusi-' + id).html();
-
         $('#param').val(id);
         $('#edit-kode-jurusan').val(kode_jurusan);
         $('#edit-nama-jurusan').val(nama_jurusan);
         $('#edit-kode-institusi').val(kode_institusi);
-
         $('#edit-modal').modal('show');
     }
-
-    function hapus(url)
-    {
+    function hapus(url) {
         swal({
             title: '',
             text: "Anda yakin ingin menghapus data ini?",
@@ -146,5 +139,4 @@
             window.location.href = url;
         });
     }
-
 </script>

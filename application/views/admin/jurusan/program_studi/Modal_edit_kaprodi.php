@@ -3,14 +3,15 @@
     <h4 class="modal-title" id="myModalLabel"><b>Edit Ketua Jurusan</b></h4>
 </div>
 <form method="POST" action="<?= site_url('admin/jurusan/program_studi/ketua_jurusan/ubah'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="modal-body">
         <div class="form-group">
             <label>Nama Program Studi</label>
-            <input type="hidden" name="param" id="param" value="<?= $data->kode_kaprodi ?>">
+            <input type="hidden" name="param" id="param" value="<?= e($data->kode_kaprodi) ?>">
             <select class="form-control" name="kode_nama_jurusan">
                 <option value="">Pilih Program Studi</option>
                 <?php foreach ($nama_jurusan as $row) { ?>
-                    <option <?= $row->kode_program_studi == $data->kode_program_studi ? 'selected' : '' ?> value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                    <option <?= $row->kode_program_studi == $data->kode_program_studi ? 'selected' : '' ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                 <?php } ?>
             </select>
         </div>
@@ -19,7 +20,7 @@
             <select class="form-control select2" style="width: 100%;" name="kode_dosen">
                 <option value="">Pilih Nama Dosen</option>
                 <?php foreach ($dosen as $row) { ?>
-                    <option <?= $row->kode_dosen == $data->kode_dosen ? 'selected' : '' ?> value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                    <option <?= $row->kode_dosen == $data->kode_dosen ? 'selected' : '' ?> value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?></option>
                 <?php } ?>
             </select>
         </div>

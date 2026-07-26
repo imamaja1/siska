@@ -197,7 +197,7 @@
                 <tr>
                     <td align="center"><?php echo $i . '.'; ?></td>
                     <td align="center"><?php echo $row->kode_matakuliah; ?></td>
-                    <td><?= $row->nama_matakuliah ?></td>
+                    <td><?= e($row->nama_matakuliah) ?></td>
                     <td align="center"><?php
                         if ($row->sks_teori != 0) {
                             echo $row->sks_teori;

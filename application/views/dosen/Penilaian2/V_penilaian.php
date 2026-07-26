@@ -11,7 +11,7 @@
     <div class="col-md-12">
         <div class="box box-info flat">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-chain-broken"></i><b> KELAS - <?= $data_kelas->nama_kelas ?> </b> (<?= $data_kelas->kode_matakuliah ?> - <?= $data_kelas->nama_matakuliah ?>)</h3>
+                <h3 class="box-title"><i class="fa fa-chain-broken"></i><b> KELAS - <?= e($data_kelas->nama_kelas) ?> </b> (<?= e($data_kelas->kode_matakuliah) ?> - <?= e($data_kelas->nama_matakuliah) ?>)</h3>
             </div>
             <div class="box-body">
                 <?php if (count($data) > 0) : ?>
@@ -38,11 +38,11 @@
                             <?php $no=1; foreach ($data as $row) : ?>
                                 <tr>
                                     <td style="text-align: center; width: 3%"><?= $no++ ?>.</td>
-                                    <td style="text-align: center"><?= $row->nim ?></td>
-                                    <td><?= $row->nama_mahasiswa ?></td>
+                                    <td style="text-align: center"><?= e($row->nim) ?></td>
+                                    <td><?= e($row->nama_mahasiswa) ?></td>
                                     <td>
-                                        <div class="form-group nilai-<?= $row->kode_khs_detail ?> " style="margin: 0px">
-                                            <input type="text" onchange="nilai(<?= $row->kode_khs_detail ?>,this)" value="<?= $row->nilai_akhir ?>" class="form-control input-<?= $row->kode_khs_detail ?>" placeholder="Enter ...">
+                                        <div class="form-group nilai-<?= e($row->kode_khs_detail) ?> " style="margin: 0px">
+                                            <input type="text" onchange="nilai(<?= e($row->kode_khs_detail) ?>,this)" value="<?= e($row->nilai_akhir) ?>" class="form-control input-<?= e($row->kode_khs_detail) ?>" placeholder="Enter ...">
                                         </div>
                                     </td>
                                 </tr>

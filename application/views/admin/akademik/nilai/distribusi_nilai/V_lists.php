@@ -47,10 +47,10 @@
                 <?php $no=1; foreach ($data as $row) : ?>
                 <tr>
                     <td><?= $no++ ?>.</td>
-                    <td><?= $row['nama_matakuliah'] ?></td>
-                    <td style="text-align: center"><?= $row['nama_kelas'] ?> / <?= $row['semester'] ?></td>
-                    <td><?= $row['nama_dosen'] ?></td>
-                    <td style="text-align: center"><?= $row['total'] ?></td>
+                    <td><?= e($row['nama_matakuliah']) ?></td>
+                    <td style="text-align: center"><?= e($row['nama_kelas']) ?> / <?= e($row['semester']) ?></td>
+                    <td><?= e($row['nama_dosen']) ?></td>
+                    <td style="text-align: center"><?= e($row['total']) ?></td>
                     <?php $x=0; foreach ($row['data'] as $item) : ?>
                     <td style="text-align: center"><?= number_format($item->jumlah,0) ?></td>
                     <td style="text-align: center"><?= number_format($item->persen,0) ?></td>

@@ -96,7 +96,7 @@ class Nama_jurusan_model extends CI_Model
 
     function get_kode_nama_jurusan($kode_jurusan, $kode_jenjang)
     {
-        return $this->db->select('*')
+        return $this->db->select('program_studi.singkatan_program_studi, program_studi.nama_program_studi')
                 ->from('program_studi')
                 ->join('jenjang', 'program_studi.id_jenjang=jenjang.id_jenjang')
                 ->join('jurusan', 'program_studi.id_jurusan=jurusan.id_jurusan')

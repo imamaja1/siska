@@ -1,15 +1,16 @@
 <div class="box box-solid">
     <div class="box-header with-border">
         <form method="post" action="<?= site_url('admin/akademik/validasikhusus_uts/cari'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="row">
                 <div class="col-md-3">
                     <select name="kd_fk" class="form-control">
                         <option disabled>--Pilih Fakultas--</option>
                         <?php foreach ($kode_fakultas as $kd_fk): ?>
                             <?php if ($match_kode_fakultas == $kd_fk->kode_fakultas): ?>
-                                <option selected value="<?= $kd_fk->kode_fakultas ?>"><?= $kd_fk->nama_fakultas ?></option>
+                                <option selected value="<?= e($kd_fk->kode_fakultas) ?>"><?= e($kd_fk->nama_fakultas) ?></option>
                             <?php else: ?>
-                                <option value="<?= $kd_fk->kode_fakultas ?>"><?= $kd_fk->nama_fakultas ?></option>
+                                <option value="<?= e($kd_fk->kode_fakultas) ?>"><?= e($kd_fk->nama_fakultas) ?></option>
                             <?php endif; ?>
 
                         <?php endforeach; ?>
@@ -20,8 +21,8 @@
                         <select name="kode_tahun_akademik" class="form-control select2">
                             <option value="" selected disabled>Tahun Akademik</option>
                             <?php foreach ($tahun_akademik as $row) : ?>
-                                <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?>
-                                    - <?= $row->semester == 0 ? "GENAP" : "GANJIL" ?></option>
+                                <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?>
+                                    - <?= e($row->semester == 0 ? "GENAP" : "GANJIL") ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -56,11 +57,11 @@
                         ?>
                         <tr>
                             <td><?= $no++; ?></td>
-                            <td><?= $row->kelas_id; ?></td>
-                            <td><?= $row->singkatan_program_studi; ?></td>
-                            <td><?= $row->kode_matakuliah; ?> - <?= $row->nama_matakuliah; ?> - Kelas
-                                : <?= $row->nama_kelas; ?></td>
-                            <td><?= $row->nama_dosen; ?></td>
+                            <td><?= e($row->kelas_id); ?></td>
+                            <td><?= e($row->singkatan_program_studi); ?></td>
+                            <td><?= e($row->kode_matakuliah); ?> - <?= e($row->nama_matakuliah); ?> - Kelas
+                                : <?= e($row->nama_kelas); ?></td>
+                            <td><?= e($row->nama_dosen); ?></td>
                             <td>
                                 <?php if ($row->param_uts == 1):?>
                                     <?= nilai_validasi_telat($row->status_nilai_uts) ?>
@@ -83,10 +84,10 @@
                             </td>
                           	<td> 
                                <button class="btn btn-primary btn-xs btn-flat" disabled>
-                                  <?= $row->jum_mhs; ?>
+                                  <?= e($row->jum_mhs); ?>
                               </button>
                                 <a class="btn btn-primary btn-xs btn-flat"
-                                   href="#" onclick='mhs("<?= $row->kelas_id ?>")' data-toggle="modal" data-target="#mhs">
+                                   href="#" onclick='mhs("<?= e($row->kelas_id) ?>")' data-toggle="modal" data-target="#mhs">
                                      View
                                 </a>
                             </td>
@@ -124,7 +125,7 @@
                                 }
                                 ?> -->
                                 <div class="custom-control custom-checkbox pull-right">
-                                    <input class="custom-control-input" type="checkbox" id="Checkbox" onchange='cek("<?= $row->kelas_id ?>")' <?php if($row->cek_uts == 2){ echo 'checked'; } ?> >				
+                                    <input class="custom-control-input" type="checkbox" id="Checkbox" onchange='cek("<?= e($row->kelas_id) ?>")' <?php if($row->cek_uts == 2){ echo 'checked'; } ?> >				
                               	</div>
                             </td>
                         </tr>

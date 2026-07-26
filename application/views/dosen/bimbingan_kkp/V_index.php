@@ -27,17 +27,17 @@
                             <?php $no=1; foreach ($data as $row) : ?>
                                 <tr>
                                     <td><?= $no++ ?>.</td>
-                                    <td align="center"><?= $row->nim ?></td>
-                                    <td><?= $row->nama_mahasiswa ?></td>
+                                    <td align="center"><?= e($row->nim) ?></td>
+                                    <td><?= e($row->nama_mahasiswa) ?></td>
                                     <td><?= date('d M Y', strtotime($row->tgl_pelaksanaan)) ?></td>
                                     <td><?= date('d M Y', strtotime($row->batas_laporan)) ?></td>
                                     <td><?= day_left($row->batas_laporan) ?></td>
                                     <td align="center">
                                         <div class="btn-group btn-group-xs">
                                             <?php if ($row->id_nilai == null) : ?>
-                                                <a href="#" id="<?= $row->id_pembimbing_kkp ?>" class="btn btn-success pindah"><i class="fa fa-pencil"></i> Beri Nilai</a>
+                                                <a href="#" id="<?= e($row->id_pembimbing_kkp) ?>" class="btn btn-success pindah"><i class="fa fa-pencil"></i> Beri Nilai</a>
                                             <?php else: ?>
-                                                <a href="#" id="<?= $row->id_pembimbing_kkp ?>" class="btn btn-warning pindah"><i class="fa fa-pencil-square-o"></i> Update Nilai</a>
+                                                <a href="#" id="<?= e($row->id_pembimbing_kkp) ?>" class="btn btn-warning pindah"><i class="fa fa-pencil-square-o"></i> Update Nilai</a>
                                             <?php endif;?>
                                         </div>
                                     </td>

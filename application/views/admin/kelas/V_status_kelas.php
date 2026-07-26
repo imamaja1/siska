@@ -11,7 +11,7 @@
                             class="fa fa-arrow-left"></i> Kembali</a>
             </div>
         <?php else: ?>
-            <div class="badge bg-aqua"><?= $kode_matakuliah . ' - ' . $nama_matakuliah ?></div>
+            <div class="badge bg-aqua"><?= e($kode_matakuliah) . ' - ' . e($nama_matakuliah) ?></div>
             <a href="<?= site_url('admin/kuisioner/kelas') ?>" class="btn btn-success btn-sm flat pull-right"><i
                         class="fa fa-arrow-left"></i> Kembali</a>
         <?php endif; ?>
@@ -23,15 +23,15 @@
             <?php foreach ($nama_kelas as $row) : ?>
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="info-box bg-aqua">
-                        <span class="info-box-icon"><?= $row->nama_kelas ?></i></span>
+                        <span class="info-box-icon"><?= e($row->nama_kelas) ?></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Mahasiswa</span><a href="#" onclick="hapus_kelas('<?= $row->kelas_id ?>')" class="pull-right" style="color: white" title="Hapus"><i class="fa fa-times"></i></a>
+                            <span class="info-box-text">Mahasiswa</span><a href="#" onclick="hapus_kelas('<?= e($row->kelas_id) ?>')" class="pull-right" style="color: white" title="Hapus"><i class="fa fa-times"></i></a>
                             <span class="info-box-number"><?= $row->jml ?></span>
                             <div class="progress">
                                 <div class="progress-bar" style="width:<?= $row->jml * (100 / 50) ?>%"></div>
                             </div>
                             <span class="progress-description">
-                    <a href="#" onclick="lihat('<?= $row->kelas_id ?>')" style="color: #ffffff">Lihat Data <i
+                    <a href="#" onclick="lihat('<?= e($row->kelas_id) ?>')" style="color: #ffffff">Lihat Data <i
                                 class="fa fa-arrow-circle-right"></i></a>
                   </span>
                         </div>

@@ -17,9 +17,9 @@
                 <?php $i=1; foreach ($data as $row) : ?>
                     <tr>
                         <td align="center" width="3%"><?= $i++ ?>.</td>
-                        <td align="center"><?= $row->nim ?></td>
-                        <td ><?= $row->nama_mahasiswa ?> <?= $row->kode_krs !== null ? '<span class="badge bg-aqua">Konverted</span>' : ''?> </td>
-                      	<td align="center"><?= $row->nama_program_studi ?></td>
+                        <td align="center"><?= e($row->nim) ?></td>
+                        <td ><?= e($row->nama_mahasiswa) ?> <?= $row->kode_krs !== null ? '<span class="badge bg-aqua">Konverted</span>' : ''?> </td>
+                      	<td align="center"><?= e($row->nama_program_studi) ?></td>
                         <td align="center">
                             <?php if ($row->kode_krs==null) : ?>
                             <a href="<?= site_url('admin/akademik/konversi/konversi/'.$row->nim) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-gear"></i> Konversi</a>

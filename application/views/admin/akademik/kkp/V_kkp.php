@@ -10,6 +10,7 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" action="<?= site_url('admin/akademik/kkp/get_mahasiswa_process'); ?>" method="POST">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Angkatan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-3">
@@ -29,7 +30,7 @@
                     <select class="form-control" name="kode_program_studi" id="kode_program_studi">
                         <option value="" disabled selected>Pilih Program Studi</option>
                         <?php foreach ($program_studi as $row) { ?>
-                            <option <?= set_select('kode_program_studi', $row->kode_program_studi) ?> value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi?></option>
+                            <option <?= set_select('kode_program_studi', $row->kode_program_studi) ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi)?></option>
                         <?php } ?>
                     </select>
                     <small class="text-danger"><?= form_error('kode_program_studi'); ?></small>

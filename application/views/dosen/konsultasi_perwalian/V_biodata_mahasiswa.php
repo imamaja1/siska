@@ -8,7 +8,7 @@
                 <tr style="height: 30px;">
                     <td width="20%"><strong>NIM</strong></td>
                     <td width="1%"><strong>:</strong></td>
-                    <td><?= $data->nim ?></td>
+                    <td><?= e($data->nim) ?></td>
                     <td rowspan="8">
                         <div style="width: 170px; height: 220px; margin: auto;">
                             <?php
@@ -31,28 +31,28 @@
                 <tr style="height: 30px;">
                     <td><strong>NPM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->npm ?></td>
+                    <td><?= e($data->npm) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Nama Mahasiswa</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->nama_mahasiswa ?></td>
+                    <td><?= e($data->nama_mahasiswa) ?></td>
                 </tr>
 
                 <tr style="height: 30px;">
                     <td><strong>Tempat/Tgl. lahir</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->tempat_lahir ?>, <?= date('d-m-Y', strtotime($data->tanggal_lahir)) ?></td>
+                    <td><?= e($data->tempat_lahir) ?>, <?= date('d-m-Y', strtotime($data->tanggal_lahir)) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Alamat</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->alamat ?>, <?= $data->kota ?></td>
+                    <td><?= e($data->alamat) ?>, <?= e($data->kota) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Propinsi</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->propinsi ?></td>
+                    <td><?= e($data->propinsi) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Jenis Kelamin</strong></td>
@@ -73,12 +73,12 @@
                 <tr style="height: 30px;">
                     <td><strong>Agama</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->agama ?></td>
+                    <td><?= e($data->agama) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Kewarganegaraan</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->kewarganegaraan ?></td>
+                    <td><?= e($data->kewarganegaraan) ?></td>
                     <td align="center">
                         <?php
                         if (empty($foto) or ( $foto == "P.png") or ( $foto == "L.png")) {
@@ -93,17 +93,17 @@
                 <tr style="height: 30px;">
                     <td><strong>No. Telepon</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->telepon ?></td>
+                    <td><?= e($data->telepon) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Nama Instansi/Tempat Kerja</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->nama_instansi ?></td>
+                    <td><?= e($data->nama_instansi) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Email Kampus</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->email ?></td>
+                    <td><?= e($data->email) ?></td>
                 </tr>
 
             </table>
@@ -125,12 +125,12 @@
                 <tr style="height: 30px;">
                     <td><strong>Agama Ayah</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->agama_ayah ?></td>
+                    <td><?= e($data->agama_ayah) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Pekerjaan Ayah</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->pekerjaan_ayah ?></td>
+                    <td><?= e($data->pekerjaan_ayah) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Nama Ibu</strong></td>
@@ -140,27 +140,27 @@
                 <tr style="height: 30px;">
                     <td><strong>Agama Ibu</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->agama_ibu ?></td>
+                    <td><?= e($data->agama_ibu) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Pekerjaan Ibu</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->pekerjaan_ibu ?></td>
+                    <td><?= e($data->pekerjaan_ibu) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Alamat Orang Tua</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->alamat_orangtua ?>, <?= $data->kota_orangtua ?> </td>
+                    <td><?= e($data->alamat_orangtua) ?>, <?= e($data->kota_orangtua) ?> </td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Propinsi Orang Tua</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->propinsi_orangtua ?> </td>
+                    <td><?= e($data->propinsi_orangtua) ?> </td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>No. Telepon Orang Tua</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data->telepon_orangtua ?></td>
+                    <td><?= e($data->telepon_orangtua) ?></td>
                 </tr>
             </table>
         </div>

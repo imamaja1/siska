@@ -6,7 +6,7 @@
                    <select class="form-control" name="kode_prodi" id="kode-prodi">
                        <option value="" selected disabled>Program Studi</option>
                        <?php foreach ($prodi as $row): ?>
-                           <option value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                           <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                        <?php endforeach; ?>
                    </select>
                </div>

@@ -21,8 +21,8 @@
 			<?php $i=1 + $this->uri->segment(5); foreach ($data as $row) : ?>
 				<tr>
 					<td><center><?= $i++ ?>.</center></td>
-					<td><center><?= $row->nim ?></center></td>
-					<td><?= $row->nama_mahasiswa ?></td>
+					<td><center><?= e($row->nim) ?></center></td>
+					<td><?= e($row->nama_mahasiswa) ?></td>
                   	<td style="text-align: center;">
                       <a href="<?= site_url('admin/mbkm/daftar/print_nilai_non_mbkm/'.$row->nim) ?>" target="_blank" class="btn btn-danger btn-xs flat" id="coba"><i class="fa fa-print"></i> Non MBKM</a>
                         <a href="<?= site_url('admin/mbkm/daftar/print_nilai/'.$row->nim) ?>" target="_blank" class="btn btn-danger btn-xs flat" id="coba"><i class="fa fa-print"></i> MBKM </a>

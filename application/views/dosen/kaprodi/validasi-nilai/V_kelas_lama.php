@@ -12,20 +12,20 @@
             $icon = 'fa-times';
         }
     ?>
-    <a href="#" onclick="lihat('<?= $row->kelas_id ?>')" style="color: white">
+    <a href="#" onclick="lihat('<?= e($row->kelas_id) ?>')" style="color: white">
         <div class="row">
-            <div class="info-box <?= $bg ?> ">
-                <span class="info-box-icon"><i class="fa <?= $icon ?>"></i></span>
+            <div class="info-box <?= e($bg) ?> ">
+                <span class="info-box-icon"><i class="fa <?= e($icon) ?>"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text"><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?></span>
-                    <span class="info-box-number">KELAS - <?= $row->nama_kelas ?></span>
+                    <span class="info-box-text"><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></span>
+                    <span class="info-box-number">KELAS - <?= e($row->nama_kelas) ?></span>
 
                     <div class="progress">
                         <div class="progress-bar" style="width: 100%"></div>
                     </div>
                     <span class="progress-description">
                             </span>
-                    <span class="info-box-text"><?= $row->nama_dosen ?></span>
+                    <span class="info-box-text"><?= e($row->nama_dosen) ?></span>
                 </div>
             </div>
         </div>

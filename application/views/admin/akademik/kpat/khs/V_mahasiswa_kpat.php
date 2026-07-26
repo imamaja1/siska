@@ -21,8 +21,8 @@
 					foreach ($data as $row) { ?>
 					<tr>
 						<td style="text-align: center;"><?= $i++."."  ?></td>
-						<td style="text-align: center;"><?= $row->nim  ?></td>
-						<td><?= $row->nama_mahasiswa  ?></td>
+<td style="text-align: center;"><?= e($row->nim)  ?></td>
+                        <td><?= e($row->nama_mahasiswa)  ?></td>
 						<td style="text-align: center;">
 							<!--<a href="<?= site_url('admin/akademik/kpat/khs/lihat_khs/'.$row->kode_krs.'/'.substr($row->nim,0,2).'/'.substr($row->nim,2,2).'/'.substr($row->nim,4,1)) ?>" class="btn btn-info btn-xs flat"><i class="fa fa-eye"></i> Lihat</a>&nbsp;-->
 							<a href="<?= site_url('admin/akademik/kpat/khs/lihat_khs/'.$row->kode_krs.'/'.$row->nim) ?>" class="btn btn-info btn-xs flat"><i class="fa fa-eye"></i> Lihat</a>&nbsp;

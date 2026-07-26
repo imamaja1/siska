@@ -28,9 +28,9 @@
                 foreach ($data_dosen as $d) {
                     ?>
                     <tr>
-                        <td align="center"><?= $i++; ?>.</td>
-                        <td align="center" id="nik-<?= $d->kode_dosen ?>"><?= $d->nik ?></td>
-                        <td id="nama-dosen-<?= $d->kode_dosen ?>"><?= $d->nama_dosen ?></td>
+                        <td align="center"><?= $i++ ?>.</td>
+                        <td align="center" id="nik-<?= e($d->kode_dosen) ?>"><?= e($d->nik) ?></td>
+                        <td id="nama-dosen-<?= e($d->kode_dosen) ?>"><?= e($d->nama_dosen) ?></td>
                         <td style="text-align: center;"><?php
                             $status_dosen = $d->status_dosen;
                             if ($status_dosen == "T") {
@@ -47,8 +47,8 @@
                                 echo "Tidak Aktif";
                             }
                             ?></td>
-                        <td><?= $d->alamat_email ?></td>
-                        <td align="center" style='font-size: 17px;'><b><?= $kirim_string; ?></b></td>
+                        <td><?= e($d->alamat_email) ?></td>
+                        <td align="center" style='font-size: 17px;'><b><?= e($kirim_string) ?></b></td>
                     </tr>
                 <?php } ?>
 

@@ -30,9 +30,9 @@
                     ?>
                     <tr>
                         <td align="center"><?= $no++ ?>.</td>
-                        <td align="center"><?= $data->nama_pengguna ?></td>
-                        <td align="center"><?= $data->nama_login ?></td>
-                        <td align="center"><?= $data->nama_role ?></td>
+                        <td align="center"><?= e($data->nama_pengguna) ?></td>
+                        <td align="center"><?= e($data->nama_login) ?></td>
+                        <td align="center"><?= e($data->nama_role) ?></td>
                         <td align="center" width="130">
                             <a href="<?= site_url('admin/pengguna/pengguna/edit/'. $data->kode_pengguna); ?>" class="btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
                             <a href="#" onclick="hapus('<?= site_url('admin/pengguna/pengguna/hapus/' . $data->kode_pengguna) ?>')" class="btn-xs btn-danger flat"><i class="fa fa-remove"></i> Hapus</a>

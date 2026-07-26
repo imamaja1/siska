@@ -18,9 +18,9 @@
                     <?php  foreach ($data as $key => $value) { ?> 
                         <tr>
                             <td><?= $key+1 ?></td>
-                            <td><?= $value->nim ?></td>
-                            <td><?= $value->nama_mahasiswa ?></td>
-                            <td><?= $value->nama_dosen ?></td>
+                            <td><?= e($value->nim) ?></td>
+                            <td><?= e($value->nama_mahasiswa) ?></td>
+                            <td><?= e($value->nama_dosen) ?></td>
                             <td>
                                 <?php
                                     if ($value->kode_krs == null) {

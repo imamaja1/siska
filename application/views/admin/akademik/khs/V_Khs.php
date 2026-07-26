@@ -15,13 +15,14 @@
             </div>
             <div class="box-body">
                 <form class="form-horizontal" method="POST" action="Khs/filter">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label class="control-label col-sm-2">Angkatan <span class="text-danger">*</span> : </label>
                         <div class="col-sm-4">
                             <select required name="angkatan" class="form-control">
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($tahun_angkatan as $row) { ?>
-                                    <option value="<?= substr($row->tahun_akademik, 2, 2) ?>"><?= substr($row->tahun_akademik, 0, 4) ?></option>
+                                    <option value="<?= e(substr($row->tahun_akademik, 2, 2)) ?>"><?= e(substr($row->tahun_akademik, 0, 4)) ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -32,7 +33,7 @@
                             <select required class="form-control" name="prodi">
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($nama_jurusan as $row) { ?>
-                                    <option value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                                    <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                                 <?php } ?>
                             </select>
                         </div>

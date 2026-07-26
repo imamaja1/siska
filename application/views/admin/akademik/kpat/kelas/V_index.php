@@ -7,8 +7,8 @@
                 <?php foreach ($tahun_akademik as $value) { 
                     if ($value->semester == 0) {
                     ?>
-                    <option value="<?= $value->kode_tahun_akademik ?>">
-                        <?= $value->tahun_akademik ?> - GENAP
+                    <option value="<?= e($value->kode_tahun_akademik) ?>">
+                        <?= e($value->tahun_akademik) ?> - GENAP
                     </option>
                 <?php }} ?>
             </select>
@@ -20,8 +20,8 @@
                 </option>
                 <?php foreach ($jurusan as $value) { 
                     ?>
-                    <option value="<?= $value->kode_program_studi ?>">
-                        <?= $value->nama_program_studi ?>
+                    <option value="<?= e($value->kode_program_studi) ?>">
+                        <?= e($value->nama_program_studi) ?>
                     </option>
                 <?php } ?>
             </select>

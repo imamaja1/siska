@@ -6,8 +6,8 @@ foreach (scanDirectories('./application/controllers') as $row => $value) :
     <div class="form-group">
         <label for="<?= str_replace('.php','',$end) ?>">
             <input type="checkbox" <?= (in_array(str_replace('.php','',$end), $controller)) ? 'checked' : '' ?>
-                   id="<?= str_replace('.php','',$end) ?>" name="controller[]"
-                   value="<?= str_replace('.php','',$end) ?>"> <?= $value ?>
+                   id="<?= e(str_replace('.php','',$end)) ?>" name="controller[]"
+                   value="<?= e(str_replace('.php','',$end)) ?>"> <?= e($value) ?>
         </label>
     </div>
 <?php endforeach; ?>

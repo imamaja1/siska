@@ -29,7 +29,7 @@ header("Expires: 0");
     foreach ($data as $row) : ?>
         <tr>
             <td style="text-align: center"><?= $no++ ?>.</td>
-            <td style="text-align: center"><?= $row['angkatan'] ?></td>
+            <td style="text-align: center"><?= e($row['angkatan']) ?></td>
             <td style="text-align: center"><?= $row['laki']  ?></td>
             <td style="text-align: center"><?= $row['perempuan'] ?></td>
             <td style="text-align: center"><?= $row['total'] ?></td>

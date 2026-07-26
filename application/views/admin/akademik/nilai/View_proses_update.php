@@ -11,13 +11,13 @@
             Filter Berdasarkan Kelas :
             <?php foreach ($data_kelas as $row) : ?>
                 <a href="<?= site_url('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah/0/' . $row->kelas_id) ?>"
-                   class="btn btn-flat btn-<?= ($this->session->userdata('kelas_id') == $row->kelas_id) ? 'success' : 'warning' ?> "><b><?= $row->nama_kelas; ?></b></a>
+                   class="btn btn-flat btn-<?= ($this->session->userdata('kelas_id') == $row->kelas_id) ? 'success' : 'warning' ?> "><b><?= e($row->nama_kelas) ?></b></a>
             <?php endforeach; ?>
             <a href="<?= site_url('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah/0/01') ?>"
                class="btn btn-flat btn-<?= ($this->session->userdata('kelas_id') == 0) ? 'success' : 'warning' ?> "><b>Semua
-                    Data (<?= $jumlah_data; ?>)</b></a>
+                    Data (<?= e($jumlah_data) ?>)</b></a>
         <?php else : ?>
-            Kelas pada Matakuliah belum dibagi (Jumlah Mahasiswa : <?= $jumlah_data; ?>)
+            Kelas pada Matakuliah belum dibagi (Jumlah Mahasiswa : <?= e($jumlah_data) ?>)
         <?php endif; ?>
     </div>
 </div>
@@ -26,7 +26,7 @@
         <div class="box-body">
             Dosen Pengajar :
             <?php foreach ($dosen as $row) :
-                echo '<b>' . $row->nama_dosen . '</b> - ';
+                echo '<b>' . e($row->nama_dosen) . '</b> - ';
             endforeach; ?>
         </div>
     </div>
@@ -57,21 +57,21 @@
                     ?>
                     <tr class="dark">
                         <td><?php echo ++$i . '.'; ?></td>
-                        <td style="display:none;"><?= $row->kode_khs_detail ?></td>
-                        <td><?php echo $row->nim; ?></td>
-                        <td><?php echo $row->nama_mahasiswa; ?></td>	
-                        <td align="center"><?= $row->status; ?></td>	
+                        <td style="display:none;"><?= e($row->kode_khs_detail) ?></td>
+                        <td><?php echo e($row->nim); ?></td>
+                        <td><?php echo e($row->nama_mahasiswa); ?></td>	
+                        <td align="center"><?= e($row->status) ?></td>	
                         <td style="text-align:center;">
-                            <?= $row->nilai_harian ?>
+                            <?= e($row->nilai_harian) ?>
                         </td>
                         <td style="text-align:center;">
-                            <?= $row->nilai_uts ?>
+                            <?= e($row->nilai_uts) ?>
                         </td>
                         <td style="text-align:center;">
-                           <?= $row->nilai_uas ?>
+                           <?= e($row->nilai_uas) ?>
                         </td>
                         <td style="text-align:center;">
-                            <?= $row->nilai_akhir ?>
+                            <?= e($row->nilai_akhir) ?>
                         </td>
                         <!-- 
 						<td align="center">
@@ -114,6 +114,7 @@ if (!empty($link)) {
             </div>
             <div class="modal-body">
                 <form id="form-upload" action="<?= site_url('admin/akademik/nilai/upload'); ?>" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label for="">File Excel</label>
                         <input type="file" name="file">

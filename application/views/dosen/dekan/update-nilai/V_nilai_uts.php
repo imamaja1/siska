@@ -1,7 +1,7 @@
 <div class="box box-warning">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-list"></i> KELAS - <?= $data_kelas->nama_kelas ?>
-            / <?= $data_kelas->kode_matakuliah . " - " . $data_kelas->nama_matakuliah ?></h3>
+        <h3 class="box-title"><i class="fa fa-list"></i> KELAS - <?= e($data_kelas->nama_kelas) ?>
+            / <?= e($data_kelas->kode_matakuliah . " - " . $data_kelas->nama_matakuliah) ?></h3>
     </div>
     <div class="box-body">
         <?php if (count($data) > 0) : ?>
@@ -22,9 +22,9 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?>.</td>
-                                <td><?= $row->nim ?></td>
-                                <td><?= $row->nama_mahasiswa ?></td>
-                                <td><?= $row->uts ? $row->uts : "-" ?></td>
+                                <td><?= e($row->nim) ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?></td>
+                                <td><?= e($row->uts ? $row->uts : "-") ?></td>
 
                             </tr>
                         <?php endforeach; ?>
@@ -43,7 +43,7 @@
             <?php if ($data_kelas->status_uts_dekan != 'T') : ?>
                 <form action="<?= site_url('dosen/dekan/update_penilaian/revisi_uts') ?>" method="post">
                     <div class="form-group">
-                        <input type="hidden" value="<?= $data_kelas->kelas_id ?>" name="kelas_id" required readonly>
+                        <input type="hidden" value="<?= e($data_kelas->kelas_id) ?>" name="kelas_id" required readonly>
                         <textarea class="form-control" name="catatan_prodi" id="catatan_prodi" required
                                   placeholder="Catatan untuk dosen wajib diisi jika nilai di revisi"></textarea>
 

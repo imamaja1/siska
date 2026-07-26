@@ -1376,81 +1376,16 @@ class Krs extends CI_Controller
     {
         $nim = $this->session->userdata('nim');
         $tahun_akademik = $this->m_tahun_akademik->get_aktif();
-        $cek = $this->mahasiswaservice->getKonsultasiPerwalianAktif($nim, $tahun_akademik);
-        $cek_pembayaran = $this->mahasiswaservice->getBayarSks($nim, $tahun_akademik);
-        //        print_r($cek);
-//        die();
-//        print_r($cek_pembayaran);
-//        die();
         $kode_jurusan = substr($nim, 2, 2);
         $kode_jenjang = substr($nim, 4, 1);
         $data['kode_jenjang'] = $kode_jenjang;
         $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
 
-        if (empty($mahasiswa->foto) || $mahasiswa->foto == 'P.png' || $mahasiswa->foto == 'L.png') {
-            $foto = false;
-        } else {
-            $foto = true;
-        }
-
-        if (!empty($cek) && !empty($cek_pembayaran) && $foto) {
             $data['beban_sks'] = $this->maksimum_sks();
-            //        $data['krs_matakuliah'] = $this->Krs_detail_model->get_data_krs($kode_krs);
             $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi(get_kode_prodi($nim)->kode_program_studi);
             $data['jurusan'] = get_kode_prodi($nim);
-            //        $data['krs_mahasiswa'] = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);;
-            $data['krs_mahasiswa'] = $this->Krs_model->get_krs_mahasiswa_by_nim($nim, $this->semester);
-            $data['krs_matakuliah'] = $this->Krs_model->get_krs_matakuliah_by_nim_semester($nim, $this->semester);
-
-            $header = $this->load->view('admin/akademik/krs/V_header_krs', $data, TRUE);
-            $content = $this->load->view('admin/akademik/krs/V_cetak_krs', $data, true);
-
-            $nama_mahasiswa = $mahasiswa->nama_mahasiswa;
-
-            $this->load->library('m_pdf');
-            $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 42, 'margin_bottom' => 20, 'margin_header' => 3, 'margin_footer' => 3]);
-            $mpdf = $this->m_pdf;
-            $mpdf->SetHeader($header);
-            $mpdf->WriteHTML($content);
-            $mpdf->defaultheaderline = true;
             $semester = $this->semester;
-            $mpdf->Output("KRS - $nim - $nama_mahasiswa - Semester $semester.pdf", 'D');
-        } else {
-            $this->session->set_flashdata('pesan', 'Maaf anda tidak bisa melakukan download KRS, Silahkan melakukan pengaktifan KRS ke dosen wali dan validasi pembayaran KRS pada bagian keuangan. ');
-            redirect(site_url('mahasiswa/krs'));
-        }
-
-    }
-
-    public function cetak_lalu($tahun_akademik, $semester)
-    {
-        // echo json_encode($tahun_akademik);break;
-        $nim = $this->session->userdata('nim');
-        // $tahun_akademik = $this->m_tahun_akademik->get_aktif();
-        $cek = $this->mahasiswaservice->getKonsultasiPerwalianAktif($nim, $tahun_akademik);
-        $cek_pembayaran = $this->mahasiswaservice->getBayarSks($nim, $tahun_akademik);
-        //        print_r($cek);
-//        die();
-//        print_r($cek_pembayaran);
-//        die();
-        $kode_jurusan = substr($nim, 2, 2);
-        $kode_jenjang = substr($nim, 4, 1);
-        $data['kode_jenjang'] = $kode_jenjang;
-        $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
-
-        if (empty($mahasiswa->foto) || $mahasiswa->foto == 'P.png' || $mahasiswa->foto == 'L.png') {
-            $foto = false;
-        } else {
-            $foto = true;
-        }
-
-        // if (count($cek) > 0 && count($cek_pembayaran) > 0 && $foto) {
-         if (!empty($cek) && !empty($cek_pembayaran)) {
-            $data['beban_sks'] = $this->maksimum_sks_lalu($tahun_akademik, $semester);
-            //        $data['krs_matakuliah'] = $this->Krs_detail_model->get_data_krs($kode_krs);
-            $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi(get_kode_prodi($nim)->kode_program_studi);
-            $data['jurusan'] = get_kode_prodi($nim);
-            //        $data['krs_mahasiswa'] = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);;
+            $data['semester'] = $semester;
             $data['krs_mahasiswa'] = $this->Krs_model->get_krs_mahasiswa_by_nim($nim, $semester);
             $data['krs_matakuliah'] = $this->Krs_model->get_krs_matakuliah_by_nim_semester($nim, $semester);
 
@@ -1466,10 +1401,36 @@ class Krs extends CI_Controller
             $mpdf->WriteHTML($content);
             $mpdf->defaultheaderline = true;
             $mpdf->Output("KRS - $nim - $nama_mahasiswa - Semester $semester.pdf", 'D');
-        } else {
-            $this->session->set_flashdata('pesan', 'Maaf anda tidak bisa melakukan download KRS, Silahkan melakukan pengaktifan KRS ke dosen wali dan validasi pembayaran KRS pada bagian keuangan. ');
-            redirect(site_url('mahasiswa/krs'));
-        }
+
+    }
+
+    public function cetak_lalu($tahun_akademik, $semester)
+    {
+        $nim = $this->session->userdata('nim');
+        $kode_jurusan = substr($nim, 2, 2);
+        $kode_jenjang = substr($nim, 4, 1);
+        $data['kode_jenjang'] = $kode_jenjang;
+        $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
+
+            $data['beban_sks'] = $this->maksimum_sks_lalu($tahun_akademik, $semester);
+            $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi(get_kode_prodi($nim)->kode_program_studi);
+            $data['jurusan'] = get_kode_prodi($nim);
+            $data['semester'] = $semester;
+            $data['krs_mahasiswa'] = $this->Krs_model->get_krs_mahasiswa_by_nim($nim, $semester);
+            $data['krs_matakuliah'] = $this->Krs_model->get_krs_matakuliah_by_nim_semester($nim, $semester);
+
+            $header = $this->load->view('admin/akademik/krs/V_header_krs', $data, TRUE);
+            $content = $this->load->view('admin/akademik/krs/V_cetak_krs', $data, true);
+
+            $nama_mahasiswa = $mahasiswa->nama_mahasiswa;
+
+            $this->load->library('m_pdf');
+            $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 42, 'margin_bottom' => 20, 'margin_header' => 3, 'margin_footer' => 3]);
+            $mpdf = $this->m_pdf;
+            $mpdf->SetHeader($header);
+            $mpdf->WriteHTML($content);
+            $mpdf->defaultheaderline = true;
+            $mpdf->Output("KRS - $nim - $nama_mahasiswa - Semester $semester.pdf", 'D');
 
         }
 

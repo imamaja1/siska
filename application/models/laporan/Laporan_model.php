@@ -224,7 +224,7 @@ class Laporan_model extends CI_Model
                 ->group_by('mah.nim')
                 ->get_compiled_select();
 
-        $sql = $this->db->query("SELECT *, sum(skripsi) as skripsi, sum(kkp) as kkp  FROM ($normal UNION $skripsi UNION $kkp) as m  GROUP BY nim")->result();
+        $sql = $this->db->query("SELECT nim, ANY_VALUE(status_pendaftaran) as status_pendaftaran, ANY_VALUE(nama_mahasiswa) as nama_mahasiswa, ANY_VALUE(jenis_kelamin) as jenis_kelamin, SUM(total_sks) as total_sks, SUM(praktikum) as praktikum, SUM(skripsi) as skripsi, SUM(kkp) as kkp FROM ($normal UNION $skripsi UNION $kkp) as m GROUP BY nim")->result();
 
         return count($sql);
     }
@@ -276,7 +276,7 @@ class Laporan_model extends CI_Model
                 ->group_by('mah.nim')
                 ->get_compiled_select();
 
-        $sql = $this->db->query("SELECT *, sum(skripsi) as skripsi, sum(kkp) as kkp  FROM ($normal UNION $skripsi UNION $kkp) as m  GROUP BY nim limit ".(int)$limit." offset ".(int)$offset)->result();
+        $sql = $this->db->query("SELECT nim, ANY_VALUE(status_pendaftaran) as status_pendaftaran, ANY_VALUE(nama_mahasiswa) as nama_mahasiswa, ANY_VALUE(jenis_kelamin) as jenis_kelamin, SUM(praktikum) as praktikum, SUM(skripsi) as skripsi, SUM(kkp) as kkp FROM ($normal UNION $skripsi UNION $kkp) as m GROUP BY nim limit ".(int)$limit." offset ".(int)$offset)->result();
         $i = 0;
         foreach ($sql as $mah) {
             $kode_nama_kurikulum = kode_nama_kurikulum($mah->nim);
@@ -346,7 +346,7 @@ class Laporan_model extends CI_Model
                 ->group_by('mah.nim')
                 ->get_compiled_select();
 
-        $sql = $this->db->query("SELECT *, sum(skripsi) as skripsi, sum(kkp) as kkp  FROM ($normal UNION $skripsi UNION $kkp) as m  GROUP BY nim")->result();
+        $sql = $this->db->query("SELECT nim, ANY_VALUE(status_pendaftaran) as status_pendaftaran, ANY_VALUE(nama_mahasiswa) as nama_mahasiswa, ANY_VALUE(jenis_kelamin) as jenis_kelamin, SUM(praktikum) as praktikum, SUM(skripsi) as skripsi, SUM(kkp) as kkp FROM ($normal UNION $skripsi UNION $kkp) as m GROUP BY nim")->result();
         $i = 0;
         foreach ($sql as $mah) {
             $kode_nama_kurikulum = kode_nama_kurikulum($mah->nim);
@@ -381,7 +381,7 @@ class Laporan_model extends CI_Model
             ->where('krs.kode_tahun_akademik <=', $kode_tahun_akademik)
             ->where('nilai_akhir IS NOT NULL')
             ->order_by('nilai_akhir', 'DESC')->get_compiled_select();
-        $data = $this->db->select("*")
+        $data = $this->db->select('id_matakuliah, ANY_VALUE(semester) as semester, ANY_VALUE(nilai_akhir) as nilai_akhir, ANY_VALUE(sks) as sks')
             ->from("($sub) as sub", false)
             ->group_by('id_matakuliah')
             ->get()->result();

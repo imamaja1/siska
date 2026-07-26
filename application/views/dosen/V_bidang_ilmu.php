@@ -1,4 +1,4 @@
-<?= $this->session->flashdata('info') ?>
+<?= e($this->session->flashdata('info')) ?>
 <!--<div class="box box-solid flat">-->
 <!--<div class="box-body">-->
 <div class="alert alert-info alert-dismissible">
@@ -28,10 +28,10 @@
                                 ?>
                                 <tr>
                                     <td align="center"><?= $i++ ?></td>
-                                    <td><?= $dbi->nama_bidang ?></td>
+                                    <td><?= e($dbi->nama_bidang) ?></td>
                                     <td>
                                         <!--<input type="hidden" id="id_bidang_ilmu" name="id_bidang_ilmu" value="">-->
-                                        <button type="button" class="btn btn-info btn-flat" onclick="add_bidang_ilmu('<?= $dbi->id_bidang_ilmu ?>')">Pilih</button>
+                                        <button type="button" class="btn btn-info btn-flat" onclick="add_bidang_ilmu('<?= e($dbi->id_bidang_ilmu) ?>')">Pilih</button>
                                     </td>
 
                                 </tr>

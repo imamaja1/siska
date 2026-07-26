@@ -11,17 +11,17 @@
             <tr>
                 <td width="300">a. Nomor Induk Mahasiswa</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nim; ?></td>
+                <td><?= e($mahasiswa->nim) ?></td>
             </tr>
             <tr>
                 <td>b. Nomor Pokok Mahasiswa</td>
                 <td>:</td>
-                <td><?= $mahasiswa->npm; ?></td>
+                <td><?= e($mahasiswa->npm) ?></td>
             </tr>
             <tr>
                 <td>c. Nama Mahasiswa</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nama_mahasiswa; ?></td>
+                <td><?= e($mahasiswa->nama_mahasiswa) ?></td>
             </tr>
             <tr>
                 <td>d. Jurusan</td>
@@ -43,27 +43,27 @@
             <tr>
                 <td>e. Nomor Pendaftaran</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nomor_pendaftaran; ?></td>
+                <td><?= e($mahasiswa->nomor_pendaftaran) ?></td>
             </tr>
             <tr>
                 <td>f. Nomor Pendaftaran Ulang</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nomor_pendaftaran_ulang; ?></td>
+                <td><?= e($mahasiswa->nomor_pendaftaran_ulang) ?></td>
             </tr>
             <tr>
                 <td>g. Tempat/Tgl Lahir</td>
                 <td>:</td>
-                <td><?= $mahasiswa->tempat_lahir; ?>, <?= date('d-m-Y', strtotime($mahasiswa->tanggal_lahir)); ?></td>
+                <td><?= e($mahasiswa->tempat_lahir) ?>, <?= date('d-m-Y', strtotime($mahasiswa->tanggal_lahir)) ?></td>
             </tr>
             <tr>
                 <td>h. Alamat Lengkap</td>
                 <td>:</td>
-                <td><?= $mahasiswa->alamat; ?>, <?= $mahasiswa->kota; ?> - <?= $mahasiswa->propinsi; ?>.</td>
+                <td><?= e($mahasiswa->alamat) ?>, <?= e($mahasiswa->kota) ?> - <?= e($mahasiswa->propinsi) ?>.</td>
             </tr>
             <tr>
                 <td>i. Telepon</td>
                 <td>:</td>
-                <td><?= $mahasiswa->telepon; ?></td>
+                <td><?= e($mahasiswa->telepon) ?></td>
             </tr>
             <tr>
                 <td>j. Jenis Kelamin</td>
@@ -80,17 +80,17 @@
             <tr>
                 <td>k. Agama</td>
                 <td>:</td>
-                <td><?= $mahasiswa->agama; ?></td>
+                <td><?= e($mahasiswa->agama) ?></td>
             </tr>
             <tr>
                 <td>l. Golongan Darah</td>
                 <td>:</td>
-                <td><?= $mahasiswa->golongan_darah; ?></td>
+                <td><?= e($mahasiswa->golongan_darah) ?></td>
             </tr>
             <tr>
                 <td>m. Kewarganegaraan</td>
                 <td>:</td>
-                <?=
+                <?php
                 $warga_negara = $mahasiswa->kewarganegaraan;
                 if ($warga_negara == "WNI") {
                     $negara = "WNI (Warga Negara Indonesia)";
@@ -103,12 +103,12 @@
             <tr>
                 <td>n. Nama Instansi (Bagi yang bekerja)</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nama_instansi; ?></td>
+                <td><?= e($mahasiswa->nama_instansi) ?></td>
             </tr>
             <tr>
                 <td>o. Email</td>
                 <td>:</td>
-                <td><?= $mahasiswa->email; ?></td>
+                <td><?= e($mahasiswa->email) ?></td>
             </tr>
 
         </table>
@@ -117,40 +117,39 @@
             <tr>
                 <td width="300">a. Nama Ayah</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nama_ayah; ?></td>
+                <td><?= e($mahasiswa->nama_ayah) ?></td>
             </tr>
             <tr>
                 <td>b. Agama Ayah</td>
                 <td>:</td>
-                <td><?= $mahasiswa->agama_ayah; ?></td>
+                <td><?= e($mahasiswa->agama_ayah) ?></td>
             </tr>
             <tr>
                 <td>c. Pekerjaan Ayah</td>
                 <td>:</td>
-                <td><?= $mahasiswa->pekerjaan_ayah; ?></td>
+                <td><?= e($mahasiswa->pekerjaan_ayah) ?></td>
             </tr>
             <tr>
                 <td>d. Nama Ibu</td>
                 <td>:</td>
-                <td><?= $mahasiswa->nama_ibu; ?></td>
+                <td><?= e($mahasiswa->nama_ibu) ?></td>
             </tr>
             <tr>
                 <td>e. Agama Ibu</td>
                 <td>:</td>
-                <td><?= $mahasiswa->agama_ibu; ?></td>
+                <td><?= e($mahasiswa->agama_ibu) ?></td>
             </tr>
             <tr>
                 <td>f. Pekerjaan Ibu</td>
                 <td>:</td>
-                <td><?= $mahasiswa->pekerjaan_ibu; ?></td>
+                <td><?= e($mahasiswa->pekerjaan_ibu) ?></td>
             </tr>
             <tr>
                 <td>g. Alamat Lengkap Orang Tua</td>
                 <td>:</td>
-                <td><?= $mahasiswa->alamat_orangtua; ?>, <?= $mahasiswa->kota_orangtua; ?> - <?= $mahasiswa->propinsi_orangtua; ?>.</td>
+                <td><?= e($mahasiswa->alamat_orangtua) ?>, <?= e($mahasiswa->kota_orangtua) ?> - <?= e($mahasiswa->propinsi_orangtua) ?>.</td>
             </tr>
         </table>
 
     </body>
 </html>
-

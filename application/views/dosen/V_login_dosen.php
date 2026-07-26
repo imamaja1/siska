@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -47,7 +47,7 @@
                 ?>
                 <div class="alert alert-dismissible flat animated fadeInDown" style="background-color: #3c8dbc; color: #fff;">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <p><?= $pesan; ?></p>
+                    <p><?= e($pesan) ?></p>
                 </div>
             <?php else:endif; ?>
         </div>

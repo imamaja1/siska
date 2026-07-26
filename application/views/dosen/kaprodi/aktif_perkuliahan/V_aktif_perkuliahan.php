@@ -5,9 +5,9 @@
         <a href="<?= site_url('dosen/kaprodi/aktif_perkuliahan/cetak_aktif_perkuliahan') ?>"
            class="btn btn-warning btn-sm flat"><i class="fa fa-file-excel-o"></i> Cetak Excel</a>
 
-        <span class="badge bg-aqua pull-right">Angkatan : 20<?= $angkatan ?></span>
-        <span class="badge bg-blue-active pull-right">Tahun Akademik : <?= $ta->tahun_akademik ?> - <?= $ta->semester == 1 ? 'Ganjil' : 'Genap' ?></span>
-        <span class="badge bg-aqua pull-right"><?= $prodi->singkatan_program_studi ?> - <?= $prodi->nama_program_studi ?></span>
+        <span class="badge bg-aqua pull-right">Angkatan : 20<?= e($angkatan) ?></span>
+        <span class="badge bg-blue-active pull-right">Tahun Akademik : <?= e($ta->tahun_akademik) ?> - <?= e($ta->semester == 1 ? 'Ganjil' : 'Genap') ?></span>
+        <span class="badge bg-aqua pull-right"><?= e($prodi->singkatan_program_studi) ?> - <?= e($prodi->nama_program_studi) ?></span>
     </div>
 </div>
 <div class="box box-solid flat">
@@ -32,10 +32,10 @@
                 foreach ($data as $row) : ?>
                     <tr>
                         <td width="3%" align="center"><?= $i++ ?>.</td>
-                        <td align="center"><?= $row->nim ?></td>
-                        <td><?= $row->nama_mahasiswa ?></td>
-                        <td><?= $row->telepon ?></td>
-                      	<td><?= $row->nama_dosen ?></td>
+                        <td align="center"><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
+                        <td><?= e($row->telepon) ?></td>
+                      	<td><?= e($row->nama_dosen) ?></td>
                         <td>
                             <?php if ($row->status_cetak == 'A') : ?>
                                 <span class="badge bg-green"><i class="fa fa-check"></i> Sudah</span>
@@ -76,10 +76,10 @@
                 foreach ($tidak_aktif as $row) : ?>
                     <tr>
                         <td width="3%" align="center"><?= $i++ ?>.</td>
-                        <td align="center"><?= $row->nim ?></td>
-                        <td><?= $row->nama_mahasiswa ?></td>
-                        <td><?= $row->telepon ?></td>
-                      	<td><?= $row->nama_dosen ?></td>
+                        <td align="center"><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
+                        <td><?= e($row->telepon) ?></td>
+                      	<td><?= e($row->nama_dosen) ?></td>
                         <td>
                             <a class="btn btn-info btn-xs" href="#"
                                onclick="halaman('<?= site_url('dosen/Konsultasi_perwalian/biodata_mahasiswa/' . $row->nim) ?>');">

@@ -46,6 +46,7 @@
 <div class="box box-primary flat">
     <div class="box-body"><br>
         <form class="form-horizontal" method="POST" action="<?= site_url('admin/akademik/nilai/get_nilai_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
             <div class="form-group">
                 <label class="control-label col-sm-3"> Tahun Akademik <label style="color: red;">*</label> :</label>
@@ -61,7 +62,7 @@
                             }
                             ?>
                             <option <?= set_select('tahun_akademik', $data->kode_tahun_akademik) ?>
-                                value="<?= $data->kode_tahun_akademik ?>"><?= $data->tahun_akademik ?>
+                                value="<?= e($data->kode_tahun_akademik) ?>"><?= e($data->tahun_akademik) ?>
                                 - <?= $periode; ?></option>
                         <?php } ?>
                     </select>

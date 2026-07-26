@@ -56,7 +56,7 @@
 </div>
 	<div class="header">
 		<p style="text-align: center;"><strong>Kartu Hasil Studi (KHS)</strong></p>
-		<p style="text-align: center;"><strong>Semester <?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil" ; ?> TA. <?= $data['tahun_akademik'] ?></strong></p>
+		<p style="text-align: center;"><strong>Semester <?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil" ; ?> TA. <?= e($data['tahun_akademik']) ?></strong></p>
 	</div>
 
 	<div class="row">
@@ -65,12 +65,12 @@
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>Nama Mahasiswa</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $data['nama_mahasiswa']  ?></td>
+				<td style="border: 0px;"><?= e($data['nama_mahasiswa'])  ?></td>
 			</tr>
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>NIM</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $data['nim']  ?></td>
+				<td style="border: 0px;"><?= e($data['nim'])  ?></td>
 			</tr>
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>Semester</strong></td>
@@ -84,17 +84,17 @@
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>Program Studi</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $data['nama_jurusan']  ?></td>
+				<td style="border: 0px;"><?= e($data['nama_jurusan'])  ?></td>
 			</tr>
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>Jenjang</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $data['nama_jenjang']  ?></td>
+				<td style="border: 0px;"><?= e($data['nama_jenjang'])  ?></td>
 			</tr>
 			<tr>
 				<td style="border: 0px;"><strong>Kurikulum</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $data['kurikulum']?></td>
+				<td style="border: 0px;"><?= e($data['kurikulum']) ?></td>
 			</tr>
 		</table>
 	</div>
@@ -116,12 +116,12 @@
 			<?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
 			<tr>
 				<td><center><?= $i++ ?></center></td>
-				<td><center><?= $row['kode_matakuliah'] ?></center></td>
-				<td><?= $row['nama_matakuliah'] ?></td>
-				<td><center><?= $row['sks'] ?></center></td>
-				<td><center><?= $row['grade'] ?></center></td>
-				<td><center><?= $row['sksn'] ?></center></td>
-				<td><center><?= $row['tb'] == 'A' ? 'TB' : '' ?></center></td>
+				<td><center><?= e($row['kode_matakuliah']) ?></center></td>
+				<td><?= e($row['nama_matakuliah']) ?></td>
+				<td><center><?= e($row['sks']) ?></center></td>
+				<td><center><?= e($row['grade']) ?></center></td>
+				<td><center><?= e($row['sksn']) ?></center></td>
+				<td><center><?= e($row['tb'] == 'A' ? 'TB' : '') ?></center></td>
 			</tr>
 			<?php 
 			$sksn = $sksn + $row['sksn']; 
@@ -131,7 +131,7 @@
 		<?php endforeach; ?>
 		<tr>
 			<td colspan="5"></td>
-			<td id="color"><center><strong><?= $sksn ?></strong></center></td>
+			<td id="color"><center><strong><?= e($sksn) ?></strong></center></td>
 		</tr>
 	</tbody>
 	</table>
@@ -143,18 +143,18 @@
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>Jumlah SKS yang ditempuh</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $sks  ?></td>
+				<td style="border: 0px;"><?= e($sks)  ?></td>
 			</tr>
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>IP Semester ini</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= number_format($sksn/$sks,2)  ?></td>
+				<td style="border: 0px;"><?= e(number_format($sksn/$sks,2))  ?></td>
 			</tr>
             <?php if (substr($data['nim'],4,1) !=3) : ?>
 			<tr style="border: 0px;">
 				<td style="border: 0px;"><strong>Maksismum SKS Semester Depan</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
-				<td style="border: 0px;"><?= $data['maksimum_sks'] ?></td>
+				<td style="border: 0px;"><?= e($data['maksimum_sks']) ?></td>
 			</tr>
             <?php endif; ?>
 		</table>

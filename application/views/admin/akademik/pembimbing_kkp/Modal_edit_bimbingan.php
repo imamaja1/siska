@@ -4,18 +4,19 @@
     <h4 class="modal-title"><i class="fa fa-pencil"></i> Bagi bimbingan</h4>
 </div>
 <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/pembimbing_kkp/update/'.$id.'/'.$kode_dosen) ?>">
+    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="modal-body">
         <div class="box-body">
             <div class="form-group">
                 <label for="inputPassword3" class="col-sm-3 control-label">Lokasi KKP<span class="text-danger">*</span></label>
                 <div class="col-sm-9">
-                    <textarea name="lokasi_kkp" required class="form-control" cols="30" rows="3"><?= $data->lokasi_kkp ?></textarea>
+                    <textarea name="lokasi_kkp" required class="form-control" cols="30" rows="3"><?= e($data->lokasi_kkp) ?></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputPassword3" class="col-sm-3 control-label">Bidang/Topik KKP<span class="text-danger">*</span></label>
                 <div class="col-sm-9">
-                    <textarea name="bidang_kkp" required class="form-control" cols="30" rows="3"><?= $data->bidang_kkp ?></textarea>
+                    <textarea name="bidang_kkp" required class="form-control" cols="30" rows="3"><?= e($data->bidang_kkp) ?></textarea>
                 </div>
             </div>
             <hr>
@@ -23,7 +24,7 @@
                 <label for="inputPassword3" class="col-sm-3 control-label">Tgl. Pelaksanaan<span class="text-danger">*</span></label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" required name="tgl_pelaksanaan" value="<?= $data->tgl_pelaksanaan ?>" class="form-control datepicker">
+                        <input type="text" required name="tgl_pelaksanaan" value="<?= e($data->tgl_pelaksanaan) ?>" class="form-control datepicker">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
@@ -32,7 +33,7 @@
                 <label for="inputPassword3" class="col-sm-3 control-label">Batas Pelaksanaan<span class="text-danger">*</span></label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" required name="batas_pelaksanaan" value="<?= $data->batas_pelaksanaan ?>" class="form-control datepicker">
+                        <input type="text" required name="batas_pelaksanaan" value="<?= e($data->batas_pelaksanaan) ?>" class="form-control datepicker">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
                 <label for="inputPassword3" class="col-sm-3 control-label">Batas Laporan<span class="text-danger">*</span></label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" required name="batas_laporan" value="<?= $data->batas_laporan ?>" class="form-control datepicker">
+                        <input type="text" required name="batas_laporan" value="<?= e($data->batas_laporan) ?>" class="form-control datepicker">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>

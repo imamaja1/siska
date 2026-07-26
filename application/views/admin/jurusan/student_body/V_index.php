@@ -1,5 +1,6 @@
 <div class="box box-solid flat">
     <form class="form-horizontal" method="post" action="<?= site_url('admin/jurusan/student_body/filter') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
         <div class="box-body">
             <div class="form-group">
                 <label for="jurusan" class="col-sm-2 control-label text-right">Jurusan<span class="text-danger">*</span></label>
@@ -7,7 +8,7 @@
                     <select name="kode_program_studi" required class="form-control" id="jurusan">
                         <option value="">Pilih</option>
                         <?php foreach ($prodi as $row) : ?>
-                            <option value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?> (<?= $row->singkatan_program_studi ?>)</option>
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?> (<?= e($row->singkatan_program_studi) ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>

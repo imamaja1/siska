@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -72,7 +72,7 @@
                                 <br>
                                 <table>
                                     <tr>
-                                        <td><b>Info Matakuliah</b> <br><?= $query1->mtkm; ?> - <?= $query1->nama_matakuliah; ?></td>
+                                        <td><b>Info Matakuliah</b> <br><?= e($query1->mtkm) ?> - <?= e($query1->nama_matakuliah) ?></td>
                                     </tr>
 
                                 </table>
@@ -81,9 +81,9 @@
                                     <tr>
                                         <td><b>Info Pendantangan</b> <br>
                                             <ol>
-                                                <li>Dekan <?= $query1->nama_fakultas; ?> : <?= $query3->dosen_fakultas; ?></li>
-                                                <li>Ketua Program Studi <?= $query1->nama_program_studi; ?> : <?= $query4->dosen_program_studi; ?></li>
-                                               <li>Dosen Pengampu : <?= $nama_dosen->nama_dosen; ?> </li>
+                                                <li>Dekan <?= e($query1->nama_fakultas) ?> : <?= e($query3->dosen_fakultas) ?></li>
+                                                <li>Ketua Program Studi <?= e($query1->nama_program_studi) ?> : <?= e($query4->dosen_program_studi) ?></li>
+                                               <li>Dosen Pengampu : <?= e($nama_dosen->nama_dosen) ?> </li>
                                             </ol>
                                         </td>
                                     </tr>

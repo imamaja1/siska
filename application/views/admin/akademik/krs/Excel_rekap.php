@@ -33,7 +33,7 @@ header("Expires: 0");
     </style>
 </head>
 <body>
-<p style="text-align: center"><?= $file_name ?><br>Aktif pembayaran SKS</p>
+<p style="text-align: center"><?= e($file_name) ?><br>Aktif pembayaran SKS</p>
 <hr>
 <table id="customers">
     <thead>
@@ -49,8 +49,8 @@ header("Expires: 0");
         ?>
         <tr>
             <td align="center"><?= $no++ ?>.</td>
-            <td align="center"><?= $row->nim; ?></td>
-            <td <?= $row->kode_status_perkuliahan == '' ? "style=\"background-color: #00b3ee\"" : "" ?>><?= $row->nama_mahasiswa; ?></td>
+            <td align="center"><?= e($row->nim) ?></td>
+            <td <?= $row->kode_status_perkuliahan == '' ? "style=\"background-color: #00b3ee\"" : "" ?>><?= e($row->nama_mahasiswa) ?></td>
         </tr>
     <?php } ?>
 </table>

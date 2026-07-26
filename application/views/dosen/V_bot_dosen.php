@@ -104,7 +104,7 @@
 
                         <div class="row">
                             <div class="col-md-10">
-                                Tulis dan Kirim pesan yang isinya hanya alamat email ini: <b><?= $this->session->userdata('alamat_email'); ?></b> ke <b>universitasbumigorabot</b>
+                                Tulis dan Kirim pesan yang isinya hanya alamat email ini: <b><?= e($this->session->userdata('alamat_email')) ?></b> ke <b>universitasbumigorabot</b>
                             </div> 
                             <div class="col-md-2">
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#gambar3"><i class="fa fa-eye"></i> Lihat Gambar</button>

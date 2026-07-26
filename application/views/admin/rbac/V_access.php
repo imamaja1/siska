@@ -1,6 +1,7 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <form action="<?= site_url('admin/rbac/simpan_access') ?>" method="post">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="row">
                 <div class="col-xs-4">
                     <div class="form-group">
@@ -8,7 +9,7 @@
                         <select name="id_role" onchange="ambil_role(this.value)" class="form-control ">
                             <?php foreach ($role as $row) : ?>
                                 <option <?= ($this->session->userdata('id_role') == $row->id_role) ? 'selected' : '' ?>
-                                        value="<?= $row->id_role ?>"> <?= $row->nama_role ?> </option>
+                                        value="<?= e($row->id_role) ?>"> <?= e($row->nama_role) ?> </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -23,8 +24,8 @@
                             <div class="form-group">
                                 <label for="<?= str_replace('.php','',$end) ?>">
                                     <input type="checkbox" <?= (in_array(str_replace('.php','',$end), $controller)) ? 'checked' : '' ?>
-                                           id="<?= str_replace('.php','',$end) ?>" name="controller[]"
-                                           value="<?= str_replace('.php','',$end) ?>"> <?= $value ?>
+                                           id="<?= e(str_replace('.php','',$end)) ?>" name="controller[]"
+                                           value="<?= e(str_replace('.php','',$end)) ?>"> <?= e($value) ?>
                                 </label>
                             </div>
                         <?php endforeach; ?>

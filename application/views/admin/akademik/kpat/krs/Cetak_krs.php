@@ -45,8 +45,8 @@
     </style>
 </head>
 <body>
-<h4>KARTU RENCANA STUDI KULIAH PROGRAM ALIH TAHUN (KPAT) <br />PROGRAM STUDI <?= strtoupper($prodi->nama_program_studi) ?><br />
-    SEMESTER <?= $tahun_akademik->semester % 2 == 0 ? "GENAP" : "GANJIL"?> TAHUN AKADEMIK <?= $tahun_akademik->tahun_akademik ?></h4>
+<h4>KARTU RENCANA STUDI KULIAH PROGRAM ALIH TAHUN (KPAT) <br />PROGRAM STUDI <?= e(strtoupper($prodi->nama_program_studi)) ?><br />
+    SEMESTER <?= $tahun_akademik->semester % 2 == 0 ? "GENAP" : "GANJIL"?> TAHUN AKADEMIK <?= e($tahun_akademik->tahun_akademik) ?></h4>
 <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
     <tr>
         <td>
@@ -54,22 +54,22 @@
                 <tr>
                     <td><b>Nama Mahasiswa</b></td>
                     <td><b>:</b></td>
-                    <td><?= $mahasiswa->nama_mahasiswa  ?></td>
+                    <td><?= e($mahasiswa->nama_mahasiswa)  ?></td>
                 </tr>
                 <tr>
                     <td><b>NIM</b></td>
                     <td><b>:</b></td>
-                    <td><?= $mahasiswa->nim  ?></td>
+                    <td><?= e($mahasiswa->nim)  ?></td>
                 </tr>
                 <tr>
                     <td><b>Semester</b></td>
                     <td><b>:</b></td>
-                    <td><?= $semester ?></td>
+                    <td><?= e($semester) ?></td>
                 </tr>
                 <tr>
                     <td><b>Dosen Wali</b></td>
                     <td><b>:</b></td>
-                    <td><?= $dosen_wali->nama_dosen  ?></td>
+                    <td><?= e($dosen_wali->nama_dosen)  ?></td>
                 </tr>
             </table>
         </td>
@@ -79,22 +79,22 @@
                 <tr>
                     <td><b>Alamat Sekarang</b></td>
                     <td><b>:</b></td>
-                    <td><?= $mahasiswa->alamat.", ".$mahasiswa->kota."<br>".$mahasiswa->propinsi  ?> </td>
+                    <td><?= e($mahasiswa->alamat.", ".$mahasiswa->kota."<br>".$mahasiswa->propinsi)  ?> </td>
                 </tr>
                 <tr>
                     <td><b>Telp/HP</b></td>
                     <td><b>:</b></td>
-                    <td><?= $mahasiswa->telepon  ?></td>
+                    <td><?= e($mahasiswa->telepon)  ?></td>
                 </tr>
                 <tr>
                     <td><b>Alamat Ortu/Wali/Libur</b></td>
                     <td><b>:</b></td>
-                    <td><?= $mahasiswa->alamat_orangtua.", ".$mahasiswa->kota_orangtua."<br>".$mahasiswa->propinsi_orangtua  ?></td>
+                    <td><?= e($mahasiswa->alamat_orangtua.", ".$mahasiswa->kota_orangtua."<br>".$mahasiswa->propinsi_orangtua)  ?></td>
                 </tr>
                 <tr>
                     <td><b>Telp</b></td>
                     <td><b>:</b></td>
-                    <td><?= $mahasiswa->telepon_orangtua  ?></td>
+                    <td><?= e($mahasiswa->telepon_orangtua)  ?></td>
                 </tr>
             </table>
         </td>
@@ -105,7 +105,7 @@
 <!-- Start Content KRS -->
 <table border="1" class="items" width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
     <tr>
-        <th colspan="9" align="center">SEMESTER <?= $semester ?> </th>
+        <th colspan="9" align="center">SEMESTER <?= e($semester) ?> </th>
     </tr>
     <tr>
         <th rowspan="2" width="5%">NO</th>
@@ -128,11 +128,11 @@
     $i=1; foreach ($data_matakuliah as $row) : ?>
         <tr>
             <td style="text-align: center;"><?= $i++."." ?></td>
-            <td style="text-align: center;"><?= $row->kode_matakuliah ?></td>
-            <td><?= $row->nama_matakuliah ?></td>
-            <td style="text-align: center;"><?= $row->sks_teori == (0) ? "" : $row->sks_teori ?></td>
-            <td style="text-align: center;"><?= $row->sks_praktek == (0) ? "" : $row->sks_praktek ?></td>
-            <td style="text-align: center;"><?= $row->sks_praktikum == (0) ? "" : $row->sks_praktikum?></td>
+            <td style="text-align: center;"><?= e($row->kode_matakuliah) ?></td>
+            <td><?= e($row->nama_matakuliah) ?></td>
+            <td style="text-align: center;"><?= e($row->sks_teori == (0) ? "" : $row->sks_teori) ?></td>
+            <td style="text-align: center;"><?= e($row->sks_praktek == (0) ? "" : $row->sks_praktek) ?></td>
+            <td style="text-align: center;"><?= e($row->sks_praktikum == (0) ? "" : $row->sks_praktikum) ?></td>
             <td style="text-align: center;"></td>
             <td style="text-align: center;"></td>
             <td style="text-align: center;"></td>
@@ -146,9 +146,9 @@
     <?php endforeach; ?>
     <tr class="dark">
         <td colspan="3" align="center">JUMLAH</td>
-        <td align="center"><?= $teori; ?></td>
-        <td align="center"><?= $praktek; ?></td>
-        <td align="center"><?= $praktikum; ?></td>
+        <td align="center"><?= e($teori) ?></td>
+        <td align="center"><?= e($praktek) ?></td>
+        <td align="center"><?= e($praktikum) ?></td>
         <td colspan="3">&nbsp;</td>
     </tr>
 </table>
@@ -162,7 +162,7 @@
                     <td>Beban SKS KPAT maksimum</td>
                     <td>:</td>
                     <td>
-                        <?= $maksimum_sks ?>
+                        <?= e($maksimum_sks) ?>
                     </td>
                 </tr>
             </table>
@@ -238,9 +238,9 @@
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><div class="garis_bawah"><?= $kaprodi->nama_dosen ?></div>NIP/NIK: NIP/NIK: <?= $kaprodi->nik ?></td>
+        <td><div class="garis_bawah"><?= e($kaprodi->nama_dosen) ?></div>NIP/NIK: NIP/NIK: <?= e($kaprodi->nik) ?></td>
         <td>&nbsp;</td>
-        <td><div class="garis_bawah"><?= $data_mahasiswa->nama_mahasiswa ?></div>NIM: <?= $data_mahasiswa->nim ?></td>
+        <td><div class="garis_bawah"><?= e($data_mahasiswa->nama_mahasiswa) ?></div>NIM: <?= e($data_mahasiswa->nim) ?></td>
     </tr>
 </table>
 <p class="keterangan"><br />Keterangan:</p>

@@ -15,7 +15,8 @@
                 <h4>Cari Pembayaran</h4>
             </div>
             <div class="box-body">
-                <form id="form-nim-pembayaran" action="<?= site_url('admin/keuangan/pembayaran/history_pembayaran') ?>">
+                <form id="form-nim-pembayaran" action="<?= site_url('admin/keuangan/pembayaran/history_pembayaran') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <input type="hidden" name="nim" id="nim" value="">
                         <input type="text" autocomplete="off" required placeholder="Masukan NIM atau Nama" id="search-box" class="form-control">

@@ -1,4 +1,4 @@
-<div class="box box-solid flat">
+﻿<div class="box box-solid flat">
     <div class="box-body">
         <a class="btn-sm btn-success flat" href="<?= site_url('dosen/perwalian'); ?>"><i class="fa fa-arrow-left"></i> Kembali</a>
     </div>
@@ -22,9 +22,9 @@
                     foreach ($perwalian as $row) {
                         ?>
                         <tr>
-                            <td align="center"><?= $no++; ?></td>
-                            <td align="center"><?= $row->nim ?></td>
-                            <td><?= $row->nama_mahasiswa ?></td>
+                            <td align="center"><?= e($no++) ?></td>
+                            <td align="center"><?= e($row->nim) ?></td>
+                            <td><?= e($row->nama_mahasiswa) ?></td>
                             <?php
                             switch ($row->status_perkuliahan) {
                                 case 'A':
@@ -51,7 +51,7 @@
                                 echo anchor_popup('dosen/Konsultasi_perwalian/biodata_mahasiswa/' . $row->nim, '<i class="fa fa-user"></i> Biodata', array('class' => 'btn-xs btn btn-default')) . ' ' . anchor_popup('dosen/konsultasi_perwalian/krs_mahasiswa/' . $row->nim, '<i class="fa fa-file"></i> KRS', array('class' => 'btn-xs btn btn-default')) . ' ' . anchor_popup('dosen/konsultasi_perwalian/khs_mahasiswa/' . $row->nim, '<i class="fa fa-file"></i> KHS Semester Lalu', array('class' => 'btn-xs btn btn-default')) . ' ' . anchor_popup('dosen/konsultasi_perwalian/petikan_nilai_mahasiswa/' . $row->nim, '<i class="fa fa-clipboard"></i> Petikan Nilai', array('class' => 'btn-xs btn btn-default'));
                                 ?>
 
-                            <td align="center"><?= $status_perkuliahan ?></td>
+                            <td align="center"><?= e($status_perkuliahan) ?></td>
                         </tr>
                     <?php } ?>
                 </table>

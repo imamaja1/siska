@@ -18,10 +18,10 @@
 				foreach ($data_prasyarat as $data) {?>
 				<tr>
 					<td><center><?= $i++."."  ?></center></td>
-					<td><center><?= $data['matakuliah_yg_diambil']  ?></center></td>
-					<td><?= $data['nama_matakuliah_yg_diambil']  ?></td>
-					<td><center><?= $data['matakuliah_prasyarat']  ?></center></td>
-					<td><?= $data['nama_matakuliah_prasyarat']  ?></td
+					<td><center><?= e($data['matakuliah_yg_diambil'])  ?></center></td>
+					<td><?= e($data['nama_matakuliah_yg_diambil'])  ?></td>
+					<td><center><?= e($data['matakuliah_prasyarat'])  ?></center></td>
+					<td><?= e($data['nama_matakuliah_prasyarat'])  ?></td>
 
 				</tr>
 				<?php } ?>

@@ -93,7 +93,7 @@
         <!-- Start Header Petikan Nilai -->
         <hr style="border: 2px solid black;">
         <h4 class="header-text" style="text-align: center; font-size: 8pt">PETIKAN NILAI MAHASISWA SEMESTER <?= $tahun_akademik->semester != 1  ? "GENAP" : "GANJIL"; ?>
-            TA. <?= $tahun_akademik->ta ?> ANGKATAN 20<?= substr($mahasiswa->nim, 0, 2) ?></h4>
+            TA. <?= e($tahun_akademik->ta) ?> ANGKATAN 20<?= e(substr($mahasiswa->nim, 0, 2)) ?></h4>
         <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
             <tr>
                 <td>
@@ -101,17 +101,17 @@
                         <tr>
                             <td style="font-size: 8pt;"><b>Nama Mahasiswa</b></td>
                             <td style="font-size: 8pt;"><b>:</b></td>
-                            <td style="font-size: 8pt;"><?php echo $mahasiswa->nama_mahasiswa; ?></td>
+                            <td style="font-size: 8pt;"><?php echo e($mahasiswa->nama_mahasiswa); ?></td>
                         </tr>
                         <tr>
                             <td style="font-size: 8pt;"><b>NIM</b></td>
                             <td style="font-size: 8pt;"><b>:</b></td>
-                            <td style="font-size: 8pt;"><?php echo $mahasiswa->nim; ?></td>
+                            <td style="font-size: 8pt;"><?php echo e($mahasiswa->nim); ?></td>
                         </tr>
                         <tr>
                             <td style="font-size: 8pt;"><b>NPM</b></td>
                             <td style="font-size: 8pt;"><b>:</b></td>
-                            <td style="font-size: 8pt;"><?php echo $mahasiswa->npm; ?></td>
+                            <td style="font-size: 8pt;"><?php echo e($mahasiswa->npm); ?></td>
                         </tr>
                     </table>
                 </td>
@@ -121,12 +121,12 @@
                         <tr>
                             <td style="font-size: 8pt;"><b>Jurusan</b></td>
                             <td style="font-size: 8pt;"><b>:</b></td>
-                            <td style="font-size: 8pt;"><?php echo strtoupper($prodi->nama_program_studi); ?></td>
+                            <td style="font-size: 8pt;"><?php echo strtoupper(e($prodi->nama_program_studi)); ?></td>
                         </tr>
                         <tr>
                             <td style="font-size: 8pt;"><b>Fakultas</b></td>
                             <td style="font-size: 8pt;"><b>:</b></td>
-                            <td style="font-size: 8pt;"><?php echo bodo_kop($mahasiswa->nim)['nama_fakultas']; ?></td>
+                            <td style="font-size: 8pt;"><?php echo e(bodo_kop($mahasiswa->nim)['nama_fakultas']); ?></td>
                         </tr>
                     </table>
                 </td>
@@ -171,8 +171,8 @@
                                     <td align="center"  >
                                         <?= $j++ ?>.
                                     </td>
-                                    <td align="center"><?= $row['kode_matakuliah'] ?></td>
-                                    <td><?= $row['nama_matakuliah'] ?></td>
+                                    <td align="center"><?= e($row['kode_matakuliah']) ?></td>
+                                    <td><?= e($row['nama_matakuliah']) ?></td>
                                     <td align="center">
                                         <?php
                                   if ($row['semester'] <= $semester || $row['semester'] =='K') {
@@ -253,8 +253,8 @@
                                     } 
                                     ?> ">
                                         <td align="center"><?= $j++ ?>.</td>
-                                        <td align="center"><?= $row['kode_matakuliah'] ?></td>
-                                        <td><?= $row['nama_matakuliah'] ?></td>
+                                        <td align="center"><?= e($row['kode_matakuliah']) ?></td>
+                                        <td><?= e($row['nama_matakuliah']) ?></td>
                                         <!--<td align="center"><?= substr($row['kode_matakuliah'], 4, 1) ?></td>-->
                                         <td align="center">
                                             <?php
@@ -338,8 +338,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <div class="garis_bawah"><?php echo bodo_kop($mahasiswa->nim)['dekan']; ?></div>
-                            NIK: <?php echo bodo_kop($mahasiswa->nim)['nik']; ?></td>
+                            <div class="garis_bawah"><?php echo e(bodo_kop($mahasiswa->nim)['dekan']); ?></div>
+                            NIK: <?php echo e(bodo_kop($mahasiswa->nim)['nik']); ?></td>
                     </tr>
                 </table>
             </div>

@@ -22,7 +22,7 @@
                     <?php $no=1; foreach ($data as $row) : ?>
                         <tr>
                             <td style="text-align: center;"><?= $no++ ?>.</td>
-                            <td style="text-align: left;"><?= $row->nama_dosen ?>&nbsp;<span class="badge bg-success"><?= $row->jml ?></span>(<?= $row->singkatan_program_studi ?>)</td>
+                            <td style="text-align: left;"><?= e($row->nama_dosen) ?>&nbsp;<span class="badge bg-success"><?= e($row->jml) ?></span>(<?= e($row->singkatan_program_studi) ?>)</td>
                         </tr>
                     <?php endforeach;?>
                     </tbody>

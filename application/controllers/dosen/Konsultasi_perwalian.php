@@ -166,16 +166,18 @@ class Konsultasi_perwalian extends CI_Controller {
                 $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                 $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                 $khs['semester'] = $row->semester;
-                $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+                $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'] ?? '';
                 $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                 $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                 $khs['data_nilai'][$i]['sks'] = $row->sks;
 //                $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
                 $nilai_akhir = ($row->nilai_akhir * 1);
-                foreach ($data_penilaian as $key) {
-                    if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                        $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                        $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * ($row->sks);
+                if (!empty($data_penilaian)) {
+                    foreach ($data_penilaian as $key) {
+                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * ($row->sks);
+                        }
                     }
                 }
                 $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
@@ -812,10 +814,7 @@ class Konsultasi_perwalian extends CI_Controller {
     }
 
     public function maksimum_sks($nim, $semester, $kode_program_studi, $status_pendaftaran) {
-//        $kode_jenjang = substr($nim, 4, 1);
-//        $kode_jurusan = substr($nim, 2, 2);
-//        $angkatan = substr($nim, 0, 2);
-//        $kode_nama_kurikulum = kode_nama_kurikulum($nim);
+        $angkatan = substr($nim, 0, 2);
        	$krs_sebelumnya = $this->dosenservice->getKrsSebelumnya($nim, $semester);
         $data_penilaian = data_penilaian($nim, $krs_sebelumnya->semester);
 //        if (stup_grade($kode_nama_kurikulum, $semester-1))
@@ -830,7 +829,7 @@ class Konsultasi_perwalian extends CI_Controller {
 //                $kode_krs = $this->Krs_model->get_kode_krs_konversi($nim, $tahun_akademik);
                 $kode_kr = $this->Krs_model->get_kode_krs($nim, $tahun_akademik);
                 //Generate
-//                $data_penilaian = $this->Khs_model->kurikulum_penilaian($angkatan, $kode_program_studi);
+                $data_penilaian = $this->Khs_model->kurikulum_penilaian($angkatan, $kode_program_studi);
                 if ($kode_kr == 0) {
                     $kode_krs = $this->Krs_model->get_krs_konversi($nim);
                 } else {
@@ -849,24 +848,26 @@ class Konsultasi_perwalian extends CI_Controller {
                     $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                     $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                     $khs['semester'] = $row->semester;
-                    $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+                    $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'] ?? '';
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
 //                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
                     $nilai_akhir = $row->nilai_akhir * 1;
-                    foreach ($data_penilaian as $key) {
-                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    if (!empty($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                            }
                         }
                     }
-                    $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
                     $sks = $sks + $khs['data_nilai'][$i]['sks'];
                     $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
                     $i++;
                 }
-                $ipk_semester_lalu = $sksn / $sks;
+                $ipk_semester_lalu = $sks != 0 ? $sksn / $sks : 0;
                 if ($ipk_semester_lalu >= 3.5) {
                     $jumlah_maksimum_sks = 24;
                 } elseif ($ipk_semester_lalu >= 3.25) {
@@ -896,10 +897,10 @@ class Konsultasi_perwalian extends CI_Controller {
                 $kode_krs = $this->Krs_model->get_kode_krs($nim, $krs_sebelumnya->tahun_akademik);
 
                 //Generate
-//                $data_penilaian = $this->Khs_model->kurikulum_penilaian($angkatan, $kode_program_studi);
+                $data_penilaian = $this->Khs_model->kurikulum_penilaian($angkatan, $kode_program_studi);
                 $data_krs = $this->Khs_model->khs($kode_krs);
-
-                $khs['sksn'] = 0;
+ 
+                 $khs['sksn'] = 0;
                 $khs['total_sks'] = 0;
                 $khs['total_bobot'] = 0;
                 $sksn = 0;
@@ -910,25 +911,27 @@ class Konsultasi_perwalian extends CI_Controller {
                     $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                     $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                     $khs['semester'] = $row->semester;
-                    $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+                    $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'] ?? '';
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
-//                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+//                $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
                     $nilai_akhir = $row->nilai_akhir * 1;
-                    foreach ($data_penilaian as $key) {
-                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    if (!empty($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                            }
                         }
                     }
-                    $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
                     $sks = $sks + $khs['data_nilai'][$i]['sks'];
                     $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
 
                     $i++;
                 }
-                $ipk_semester_lalu = $sksn / $sks;
+                $ipk_semester_lalu = $sks != 0 ? $sksn / $sks : 0;
                 if ($ipk_semester_lalu >= 3.5) {
                     $jumlah_maksimum_sks = 24;
                 } elseif ($ipk_semester_lalu >= 3.25) {
@@ -974,25 +977,27 @@ class Konsultasi_perwalian extends CI_Controller {
                 $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                 $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                 $khs['semester'] = $row->semester;
-                $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
-                $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
-                $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
-                $khs['data_nilai'][$i]['sks'] = $row->sks;
-//                $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
-                $nilai_akhir = $row->nilai_akhir * 1;
-                foreach ($data_penilaian as $key) {
-                    if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                        $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                        $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'] ?? '';
+                    $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
+                    $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
+                    $khs['data_nilai'][$i]['sks'] = $row->sks;
+//                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                    $nilai_akhir = $row->nilai_akhir * 1;
+                    if (!empty($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                            }
+                        }
                     }
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                    $sks = $sks + $khs['data_nilai'][$i]['sks'];
+                    $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                    $i++;
                 }
-                $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
-                $i++;
-            }
-            $ipk_semester_lalu = $sksn / $sks;
-            if ($ipk_semester_lalu >= 3.5) {
+                $ipk_semester_lalu = $sks != 0 ? $sksn / $sks : 0;
+                if ($ipk_semester_lalu >= 3.5) {
                 $jumlah_maksimum_sks = 24;
             } elseif ($ipk_semester_lalu >= 3.25) {
                 $jumlah_maksimum_sks = 23;
@@ -1034,10 +1039,14 @@ class Konsultasi_perwalian extends CI_Controller {
         $mpdf->WriteHTML($html);
         $mpdf->Output($namafile, "D");
     }
-  	public function detail($nim){
+   	public function detail($nim){
         $data['perwalian'] = $this->dosenservice->getDetailPerwalian($nim);
         $data['data'] = $this->konsultasi_perwalian_model->detail_manipulasi($nim);
         $data['dosen'] = true;
+        if (!$data['perwalian']) {
+            echo '<p>Data perwalian tidak ditemukan untuk NIM ini.</p>';
+            return;
+        }
         $this->load->view('admin/jurusan/konsultasi_perwalian/V_Detail', $data);
     }
     function tambah_konsultasi_krs_new($nim) {

@@ -11,16 +11,16 @@
             <dl class="dl-horizontal">
                 <dt>Nama Dosen : </dt>
                 <?php $no=1; foreach ($top['dosen'] as $row) :?>
-                    <dd><?= $no++; ?>. <?= $row->nama_dosen ?></dd>
+                    <dd><?= $no++; ?>. <?= e($row->nama_dosen) ?></dd>
                 <?php endforeach;?>
             </dl>
         </div>
         <div class="col-sm-6">
             <dl class="dl-horizontal">
                 <dt>Kelas : </dt>
-                <dd><?= $nama_kelas ?></dd>
+                <dd><?= e($nama_kelas) ?></dd>
                 <dt>Matakuliah : </dt>
-                <dd><?= $top['nama_matakuliah']->nama_matakuliah ?></dd>
+                <dd><?= e($top['nama_matakuliah']->nama_matakuliah) ?></dd>
             </dl>
 
         </div>
@@ -35,7 +35,7 @@
                     <tr>
                         <th id="th" rowspan="2">NO.</th>
                         <?php $batas=0; foreach ($data['soal_kuisioner']['T'] as $key) : ?>
-                            <th id="th" colspan="<?= $key->colspan ?>"><?= $key->kategori ?></th>
+                            <th id="th" colspan="<?= e($key->colspan) ?>"><?= e($key->kategori) ?></th>
                             <?php $batas = $batas + $key->colspan; ?>
                         <?php endforeach;?>
                     </tr>
@@ -93,7 +93,7 @@
                 <tr>
                     <th id="th" rowspan="2">NO.</th>
                     <?php $batas2=0; foreach ($data['soal_kuisioner']['P'] as $key) : ?>
-                            <th id="th" colspan="<?= $key->colspan ?>"><?= $key->kategori ?></th>
+                            <th id="th" colspan="<?= e($key->colspan) ?>"><?= e($key->kategori) ?></th>
                         <?php $batas2 = $batas2 + $key->colspan; ?>
                     <?php endforeach;?>
                 </tr>
@@ -150,7 +150,7 @@
                     <tr>
                         <th id="th" rowspan="2">NO.</th>
                         <?php $batas3 = 0; foreach ($data['soal_kuisioner'] as $key) : ?>
-                            <th id="th" colspan="<?= $key->colspan ?>"><?= $key->kategori ?></th>
+                            <th id="th" colspan="<?= e($key->colspan) ?>"><?= e($key->kategori) ?></th>
                             <?php $batas3 = $batas3 + $key->colspan; ?>
                         <?php endforeach;?>
                     </tr>

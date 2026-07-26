@@ -78,7 +78,7 @@
                     <select class="form-control"name="propinsi">
                         <option value="" disabled selected>Pilih Propinsi</option>
                         <?php foreach ($provinsi as $row) { ?>
-                            <option <?= set_select('propinsi', $row->nama) ?> <?= $data_mahasiswa->propinsi == $row->nama ? "selected" : "" ?> value="<?= $row->nama ?>"><?= $row->nama; ?></option>
+                            <option <?= set_select('propinsi', $row->nama) ?> <?= $data_mahasiswa->propinsi == $row->nama ? "selected" : "" ?> value="<?= e($row->nama) ?>"><?= e($row->nama) ?></option>
                         <?php } ?>
                     </select>
                     <small style="color: red"><?= form_error('propinsi'); ?></small>
@@ -421,7 +421,7 @@
                     <select class="form-control " name="propinsi_orangtua">
                         <option value="" disabled selected>Pilih Propinsi</option>
                         <?php foreach ($provinsi as $row) { ?>
-                            <option <?= set_select('propinsi_orangtua', $row->nama) ?> <?= $data_mahasiswa->propinsi_orangtua == $row->nama ? "selected" : "" ?> value="<?= $row->nama ?>"><?= $row->nama; ?></option>
+                            <option <?= set_select('propinsi_orangtua', $row->nama) ?> <?= $data_mahasiswa->propinsi_orangtua == $row->nama ? "selected" : "" ?> value="<?= e($row->nama) ?>"><?= e($row->nama) ?></option>
                         <?php } ?>
                     </select>
                     <small style="color: red"><?= form_error('propinsi_orangtua'); ?></small>

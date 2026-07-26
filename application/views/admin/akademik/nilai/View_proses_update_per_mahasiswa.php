@@ -3,9 +3,9 @@
         <a href="<?= site_url('admin/akademik/nilai/get_update_nilai_per_mahasiswa'); ?>" class="btn btn btn-xs btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>
         <?php if (!empty($jumlah_data) > 0): ?>
 
-            <button class="btn btn-flat btn-default btn-xs ">Terdapat <b><?= $jumlah_data; ?> Record</b></button>
+            <button class="btn btn-flat btn-default btn-xs ">Terdapat <b><?= e($jumlah_data) ?> Record</b></button>
             <div class="pull-right">
-                <?= $halaman; ?>
+                <?= e($halaman) ?>
             </div>
 
         <?php else: ?>
@@ -38,14 +38,14 @@
                     ?>
                     <tr class="dark">
                         <td><div align="center"><?php echo ++$i . '.'; ?></div></td>
-                        <td style="display:none;"><?= $row->kode_khs_detail ?></td>
-                        <td><div align="center"><?php echo $row->nim; ?></div></td>
-                        <td><?php echo $row->nama_mahasiswa; ?></td>	
-                        <td align="center"><?= $row->status; ?></td>	
-                        <td style="text-align:center;"><?= $row->nilai_harian ?></td>
-                        <td style="text-align:center;"><?= $row->nilai_uts ?></td>
-                        <td style="text-align:center;"><?= $row->nilai_uas ?></td>
-                        <td style="text-align:center;"><?= $row->nilai_akhir ?></td>
+                        <td style="display:none;"><?= e($row->kode_khs_detail) ?></td>
+                        <td><div align="center"><?php echo e($row->nim); ?></div></td>
+                        <td><?php echo e($row->nama_mahasiswa); ?></td>	
+                        <td align="center"><?= e($row->status) ?></td>	
+                        <td style="text-align:center;"><?= e($row->nilai_harian) ?></td>
+                        <td style="text-align:center;"><?= e($row->nilai_uts) ?></td>
+                        <td style="text-align:center;"><?= e($row->nilai_uas) ?></td>
+                        <td style="text-align:center;"><?= e($row->nilai_akhir) ?></td>
                         <td align="center">
                             <?php
                             $status = $row->tidak_berhak;

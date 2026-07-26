@@ -1,4 +1,4 @@
-<?php if ($jenis == 'kuisioner') : ?>
+﻿<?php if ($jenis == 'kuisioner') : ?>
     <?php if (count($komentar) > 0) : ?>
         <div class="table-responsive">
             <table class="table demo-table">
@@ -11,8 +11,8 @@
                 <tbody>
                 <?php foreach ($komentar as $row) : ?>
                     <tr>
-                        <td><?= $row->kritik ?></td>
-                        <td><?= $row->saran ?></td>
+                        <td><?= e($row->kritik) ?></td>
+                        <td><?= e($row->saran) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -32,8 +32,8 @@
             </thead>
             <tbody>
             <tr>
-                <td><?= $komentar->catatan_prodi ?></td>
-                <td><?= $komentar->catatan_dekan; ?></td>
+                <td><?= e($komentar->catatan_prodi) ?></td>
+                <td><?= e($komentar->catatan_dekan) ?></td>
             </tr>
             </tbody>
         </table>

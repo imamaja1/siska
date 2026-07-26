@@ -19,8 +19,8 @@
                     foreach ($data as $row): ?>
                         <tr>
                             <td align="center"><?= $i++ ?>.</td>
-                            <td align="center"><?= $row->nim ?></td>
-                            <td align="center"><?= $row->nama_mahasiswa ?></td>
+                            <td align="center"><?= e($row->nim) ?></td>
+                            <td align="center"><?= e($row->nama_mahasiswa) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

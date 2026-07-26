@@ -1,4 +1,4 @@
-<div class="box box-solid flat">
+﻿<div class="box box-solid flat">
     <div class="box-body">
         <h5>&nbsp;DATA KONSULTASI PENGAKTIFAN KRS, <b><?php
                 foreach ($data as $row_title) {
@@ -25,9 +25,9 @@
                     ?>
                     <form method="POST" action="<?= site_url('dosen/konsultasi_perwalian/tambah_konsultasi_krs'); ?>">
                         <div class="modal-body">
-                            <input type="hidden" name="kode_konsultasi_perwalian" value="<?= $row->kode_konsultasi_perwalian ?>">
-                            <input  type="hidden" required name="nim" value="<?= $row->nim ?>" class="form-control">
-                            <input  type="hidden" required name="nama_mahasiswa" value="<?= $row->nama_mahasiswa ?>" class="form-control">
+                            <input type="hidden" name="kode_konsultasi_perwalian" value="<?= e($row->kode_konsultasi_perwalian) ?>">
+                            <input  type="hidden" required name="nim" value="<?= e($row->nim) ?>" class="form-control">
+                            <input  type="hidden" required name="nama_mahasiswa" value="<?= e($row->nama_mahasiswa) ?>" class="form-control">
 
                             <div class="form-group">
                                 <label>Isi Konsultasi :</label>
@@ -77,26 +77,26 @@
                     foreach ($data as $krs_konsul) {
                         ?>
                         <tr>
-                            <td align="center"><?= $no++; ?>.</td>
-                            <td id="isi_konsultasi_krs-<?= $krs_konsul->kode_konsultasi_perwalian ?>"><?= $krs_konsul->isi_konsultasi; ?></td>
-                            <td id="tanggapan_krs-<?= $krs_konsul->kode_konsultasi_perwalian ?>"><?= $krs_konsul->tanggapan; ?></td>
-                            <td align="center"><?= $krs_konsul->date_created ?></td>
-                        <p hidden id="jenis_konsultasi_krs-<?= $krs_konsul->kode_konsultasi_perwalian ?>"><?= $krs_konsul->jenis_konsultasi ?></p>
-                        <p hidden id="nim-<?= $krs_konsul->kode_konsultasi_perwalian ?>"><?= $krs_konsul->nim ?></p>
+                            <td align="center"><?= e($no++) ?>.</td>
+                            <td id="isi_konsultasi_krs-<?= e($krs_konsul->kode_konsultasi_perwalian) ?>"><?= e($krs_konsul->isi_konsultasi) ?></td>
+                            <td id="tanggapan_krs-<?= e($krs_konsul->kode_konsultasi_perwalian) ?>"><?= e($krs_konsul->tanggapan) ?></td>
+                            <td align="center"><?= e($krs_konsul->date_created) ?></td>
+                        <p hidden id="jenis_konsultasi_krs-<?= e($krs_konsul->kode_konsultasi_perwalian) ?>"><?= e($krs_konsul->jenis_konsultasi) ?></p>
+                        <p hidden id="nim-<?= e($krs_konsul->kode_konsultasi_perwalian) ?>"><?= e($krs_konsul->nim) ?></p>
 
                         </tr>   
                     <?php } ?>
                 </table>
             <?php else: ?>
                 <div style="padding: 20px;">
-                    Tidak ada data/isi Konsultasi Pengaktifan KRS, silahkan tambah data/isi konsultasi untuk mengaktifkan pencetakan KRS dari mahasiswa <b><?= $nama ?>.</b>
+                    Tidak ada data/isi Konsultasi Pengaktifan KRS, silahkan tambah data/isi konsultasi untuk mengaktifkan pencetakan KRS dari mahasiswa <b><?= e($nama) ?>.</b>
                 </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
-<?= $this->session->flashdata('message'); ?>
+<?= $this->session->flashdata('message') ?>
 
 <script>
     function editkonsultasikrs(id) {

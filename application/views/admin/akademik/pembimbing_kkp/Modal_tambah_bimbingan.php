@@ -4,6 +4,7 @@
     <h4 class="modal-title"><i class="fa fa-pencil"></i> Bagi bimbingan</h4>
 </div>
 <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/pembimbing_kkp/add') ?>">
+    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="modal-body">
         <div class="box-body">
             <div class="form-group">
@@ -12,7 +13,7 @@
                     <select name="nim" required class="form-control select2" style="width: 100%">
                         <option value=""></option>
                         <?php foreach ($data as $row) : ?>
-                            <option value="<?= $row->nim ?>"><?= $row->nim ?> - <?= $row->nama_mahasiswa ?></option>
+                            <option value="<?= e($row->nim) ?>"><?= e($row->nim) ?> - <?= e($row->nama_mahasiswa) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -23,7 +24,7 @@
                     <select name="kode_dosen" required class="form-control select2" style="width: 100%">
                         <option value=""></option>
                         <?php foreach ($dosen as $row) : ?>
-                            <option value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                            <option value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

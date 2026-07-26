@@ -57,7 +57,7 @@ class Krs_kpat_model extends CI_Model {
 
 	public function autocomplate($keyword)
 	{
-		return $this->db->query("SELECT * FROM krs WHERE nim like ? group by nim ORDER BY nim LIMIT 6", array($keyword . '%'))->result();
+		return $this->db->query("SELECT nim FROM krs WHERE nim like ? group by nim ORDER BY nim LIMIT 6", array($keyword . '%'))->result();
 	}
 
 	public function get_krs_sebelumnya($nim, $kode_tahun_akademik)
@@ -187,7 +187,7 @@ class Krs_kpat_model extends CI_Model {
 	{
 //		$query = $this->db->query("SELECT *, krs.semester FROM krs, krs_detail, khs_detail, matakuliah WHERE krs_detail.kode_krs=krs.kode_krs and krs_detail.kode_krs_detail=khs_detail.kode_krs_detail and krs_detail.kode_matakuliah=matakuliah.kode_matakuliah and krs_detail.kode_krs=".$kode_krs."")->result();
 		$skripsi_kkp = get_kode_matakuliah_kkp_skripsi();
-        $query = $this->db->select('*, krs.semester, khd.kode_krs_detail')
+        $query = $this->db->select('krs.nim, krs.semester, krd.id_matakuliah, makul.kode_matakuliah, makul.nama_matakuliah, makul.sks_teori, makul.sks_praktek, makul.sks_praktikum, khd.kode_krs_detail, khd.nilai_harian, khd.nilai_uts, khd.nilai_uas, khd.nilai_akhir')
             ->from('krs')
             ->join('krs_detail as krd', 'krd.kode_krs=krs.kode_krs')
             ->join('matakuliah as makul', 'makul.id_matakuliah=krd.id_matakuliah')

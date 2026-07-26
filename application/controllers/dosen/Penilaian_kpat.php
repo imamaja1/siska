@@ -112,6 +112,10 @@ class Penilaian_kpat extends CI_Controller {
                 $data_kelas_valid = $this->dosenakademikservice->getDummyUpdateKelasKpatLast($value->kelas_id);
             }
             $data_kelas[$key]->validasi = $data_kelas_valid;
+            $row_status = !empty($data_kelas_valid) ? $data_kelas_valid[0] : null;
+            $data_kelas[$key]->status_dosen = $row_status->status_dosen ?? null;
+            $data_kelas[$key]->status_prodi = $row_status->status_prodi ?? null;
+            $data_kelas[$key]->status_dekan = $row_status->status_dekan ?? null;
         }
 
         $pesan_prodi = array();
@@ -239,7 +243,7 @@ class Penilaian_kpat extends CI_Controller {
         $level = $this->input->POST('level');
         $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
         $ta = ($ta) ? $ta : $tahun_akademik; 
-        $data['data'] = $this->dosenakademikservice->getRevisiNilaiMahasiswa($kelas, $level, $ta);
+        $data['data'] = $this->dosenakademikservice->getRevisiNilaiMahasiswaKpat($kelas, $level, $ta);
         $this->load->view('dosen/penilaian/V_revisi_nilai_mahasiswa', $data);
     }
     public function revisi_dosen_selesai(){

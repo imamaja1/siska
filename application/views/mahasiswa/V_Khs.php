@@ -12,19 +12,19 @@
         <p align="right"><a href="<?= site_url('mahasiswa/khs/cetak/'.$data['krs'].'/'.$data['nim']) ?>" class="btn btn-danger btn-xs" ><i class="fa fa-download"></i> Download</a></p>    
         
         <p align="center"><strong>KARTU HASIL STUDI (KHS)</strong></p>
-        <p align="center"><strong>SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= $data['tahun_akademik'] ?></strong></p>
+        <p align="center"><strong>SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= e($data['tahun_akademik']) ?></strong></p>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <table class="table">
                 <tr>
                     <td><strong>Nama Mahasiswa</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['nama_mahasiswa']  ?></td>
+                    <td><?= e($data['nama_mahasiswa'])  ?></td>
                 </tr>
                 <tr>
                     <td><strong>NIM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['nim']  ?></td>
+                    <td><?= e($data['nim'])  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Semester</strong></td>
@@ -38,17 +38,17 @@
                 <tr>
                     <td><strong>Program Studi</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $prodi->nama_program_studi  ?></td>
+                    <td><?= e($prodi->nama_program_studi)  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Fakultas</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $prodi->nama_fakultas  ?></td>
+                    <td><?= e($prodi->nama_fakultas)  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Kurikulum</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['kurikulum']?></td>
+                    <td><?= e($data['kurikulum']) ?></td>
                 </tr>
             </table>
         </div>
@@ -68,10 +68,10 @@
             <?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
                 <tr>
                     <td align="center"><?= $i++ ?>.</td>
-                    <td align="center"><?= $row['kode_matakuliah'] ?></td>
-                    <td><?= $row['nama_matakuliah'] ?></td>
+                    <td align="center"><?= e($row['kode_matakuliah']) ?></td>
+                    <td><?= e($row['nama_matakuliah']) ?></td>
                     <td align="center"><?= $row['sks'] ?></td>
-                    <td align="center"><?= $row['grade'] ?></td>
+                    <td align="center"><?= e($row['grade']) ?></td>
                     <td align="center"><?= $row['sksn'] ?></td>
                     <td align="center">-</td>
                 </tr>

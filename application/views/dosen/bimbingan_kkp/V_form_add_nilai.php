@@ -2,7 +2,7 @@
     <div class="box-body">
         <div class="form-group">
             <label for=""><span class="small text-blue">BAB I (15%)</span></label>
-            <input type="hidden" name="id_pembimbing_kkp" value="<?= $id ?>">
+            <input type="hidden" name="id_pembimbing_kkp" value="<?= e($id) ?>">
             <input type="number" name="bab_1" step="any" min="0" max="100" required class="form-control input-sm" placeholder="Nilai">
         </div>
         <div class="form-group">

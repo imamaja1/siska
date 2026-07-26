@@ -7,13 +7,14 @@
 <div class="box box-primary flat">
     <div class="box-body"><br>
         <form class="form-horizontal" method="POST" action="<?= site_url('admin/akademik/krs/get_rekapitulasi_mahasiswa_per_matakuliah'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2">Jurusan <lable class="text-danger">*</lable> :</label>
                 <div class="col-sm-3">
                     <select class="form-control" name="kode_program_studi" id="kode_jurusan_jenjang">
                         <option value="" disabled selected>Pilih Jurusan</option>
                         <?php foreach ($program_studi as $row) { ?>
-                            <option <?= set_select('kode_program_studi', $row->kode_program_studi) ?> value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi?></option>
+                            <option <?= set_select('kode_program_studi', $row->kode_program_studi) ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                         <?php } ?>
                     </select>
                     <small class="text-danger"><?= form_error('kode_program_studi'); ?></small>
@@ -43,10 +44,10 @@
                     ?>
                     <tr>
                         <td align="center"><?= $no++ ?>.</td>
-                        <td align="center"><?= $row->kode_matakuliah; ?></td>
-                        <td><?= $row->nama_matakuliah; ?></td>
-                        <td align="center"><?= $row->sks_praktikum != '0' ? "<span class='badge bg-green'>Avaible - ".$row->sks_praktikum." SKS</span>" : "" ?></td>
-                        <td style="text-align: center"><?= $row->jml; ?></td>
+                        <td align="center"><?= e($row->kode_matakuliah) ?></td>
+                        <td><?= e($row->nama_matakuliah) ?></td>
+                        <td align="center"><?= e($row->sks_praktikum != '0' ? "<span class='badge bg-green'>Avaible - ".$row->sks_praktikum." SKS</span>" : "") ?></td>
+                        <td style="text-align: center"><?= e($row->jml) ?></td>
                         <td align="center">
                             <a class="btn btn-xs btn-info" href="<?= site_url('admin/akademik/krs/download/' . $row->id_matakuliah); ?>"><i class="fa fa-download"></i> Download</a>
                             <a class="btn btn-xs btn-warning" target="_blank" href="<?= site_url('admin/akademik/krs/lihat_rekap/' . $row->id_matakuliah); ?>"><i class="fa fa-eye"></i> Lihat</a>

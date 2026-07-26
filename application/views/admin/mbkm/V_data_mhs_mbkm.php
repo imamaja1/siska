@@ -16,12 +16,12 @@
                     <?php  foreach ($mahasiswa as $key => $value) { ?> 
                         <tr>
                             <td><?= $key+1 ?></td>
-                            <td><?= $value->nim ?></td>
-                            <td><?= $value->nama_mahasiswa ?></td>
-                            <td><?= $value->nama_program_studi ?></td>
+                            <td><?= e($value->nim) ?></td>
+                            <td><?= e($value->nama_mahasiswa) ?></td>
+                            <td><?= e($value->nama_program_studi) ?></td>
                             <td> 
-                                <a href="<?= base_url() ?>admin/mbkm/daftar/nilai/<?= $value->id_fix ?>/<?= $ta ?>" class="btn btn-success btn-sm">Penilaian</a>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="hapus(<?= $value->id_fix ?>)">Hapus</button>
+                                <a href="<?= base_url() ?>admin/mbkm/daftar/nilai/<?= e($value->id_fix) ?>/<?= e($ta) ?>" class="btn btn-success btn-sm">Penilaian</a>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="hapus(<?= e($value->id_fix) ?>)">Hapus</button>
                             </td>
                         </tr>
                     <?php } ?>

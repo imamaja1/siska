@@ -1,6 +1,6 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == 0 ? 'GENAP' : 'GANJIL'?> / Podi <?= $prodi->nama_program_studi ?></h3>
+        <h3 class="box-title">TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == 0 ? 'GENAP' : 'GANJIL'?> / Podi <?= e($prodi->nama_program_studi) ?></h3>
         <div class="box-tools">
             <a href="<?= site_url('admin/akademik/status_perkuliahan/excel_rekap/'.$kode_program_studi) ?>" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
         </div>
@@ -22,7 +22,7 @@
                 foreach ($data as $row) : ?>
                 <tr>
                     <td style="text-align: center"><?= $no++ ?>.</td>
-                    <td style="text-align: center"><a href="#" onclick="detail('<?= $row['angkatan'] ?>')"><?= $row['angkatan'] ?></a></td>
+                    <td style="text-align: center"><a href="#" onclick="detail('<?= e($row['angkatan']) ?>')"><?= e($row['angkatan']) ?></a></td>
                     <td style="text-align: center"><?= $row['laki']  ?></td>
                     <td style="text-align: center"><?= $row['perempuan'] ?></td>
                     <td style="text-align: center"><?= $row['total'] ?></td>

@@ -29,8 +29,8 @@
             ?>
             <tr>
                 <td><?= $no++ ?></td>
-                <td><?= $d->kode_krs; ?></td>
-                <td><?= $d->nim; ?></td>
+                <td><?= e($d->kode_krs) ?></td>
+                <td><?= e($d->nim) ?></td>
                 <td><?= $d->semester; ?></td>
                 <td><?= $d->cnim; ?></td>
                 <td>

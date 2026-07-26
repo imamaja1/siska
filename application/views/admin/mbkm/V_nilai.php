@@ -9,7 +9,7 @@
                         </p>
                         <p>
                             <center><strong>SEMESTER <?= $semester->semester ? "GENAP" : "GANJIL" ?> TA.
-                                    <?= $semester->tahun_akademik; ?></strong></center>
+                                    <?= e($semester->tahun_akademik) ?></strong></center>
                         </p>
                         <br>
                         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -17,17 +17,17 @@
                                 <tr>
                                     <td><strong>Nama Mahasiswa</strong></td>
                                     <td><strong>:</strong></td>
-                                    <td><?= $data_mhs->nama_mahasiswa ? $data_mhs->nama_mahasiswa : '-' ?></td>
+                                    <td><?= $data_mhs->nama_mahasiswa ? e($data_mhs->nama_mahasiswa) : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>NIM</strong></td>
                                     <td><strong>:</strong></td>
-                                    <td><?= $data_mhs->nim ? $data_mhs->nim : '-' ?></td>
+                                    <td><?= $data_mhs->nim ? e($data_mhs->nim) : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Semester</strong></td>
                                     <td><strong>:</strong></td>
-                                    <td><?= $data_mhs->semester ? $data_mhs->semester : '-' ?></td>
+                                    <td><?= $data_mhs->semester ? e($data_mhs->semester) : '-' ?></td>
                                 </tr>
                             </table>
                         </div>
@@ -36,17 +36,17 @@
                                 <tr>
                                     <td><strong>Program Studi</strong></td>
                                     <td><strong>:</strong></td>
-                                    <td><?= $data_mhs->nama_program_studi ? $data_mhs->nama_program_studi : '-' ?></td>
+                                    <td><?= $data_mhs->nama_program_studi ? e($data_mhs->nama_program_studi) : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Fakultas</strong></td>
                                     <td><strong>:</strong></td>
-                                    <td><?= $data_mhs->nama_fakultas ? $data_mhs->nama_fakultas : '-' ?></td>
+                                    <td><?= $data_mhs->nama_fakultas ? e($data_mhs->nama_fakultas) : '-' ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Kurikulum</strong></td>
                                     <td><strong>:</strong></td>
-                                    <td><?= $kurikulum->nama_kurikulum ? $kurikulum->nama_kurikulum : '-'; ?></td>
+                                    <td><?= $kurikulum->nama_kurikulum ? e($kurikulum->nama_kurikulum) : '-'; ?></td>
                                 </tr>
                             </table>
                         </div>
@@ -98,17 +98,17 @@
                             <?php foreach ($data_nilai as $keys => $value): ?>
                                 <tr>
                                     <td style="padding-top:15px"><?= $keys + 1 ?>.</td>
-                                    <td style="padding-top:15px"><?= $value->kode_matakuliah ?></td>
-                                    <td style="padding-top:15px"><?= $value->nama_matakuliah ?></td>
+                                    <td style="padding-top:15px"><?= e($value->kode_matakuliah) ?></td>
+                                    <td style="padding-top:15px"><?= e($value->nama_matakuliah) ?></td>
                                     <td><input type="" class="form-control" id="<?= $keys ?>"
-                                            value="<?= $value->nilai_akhir ?>"></td>
+                                            value="<?= e($value->nilai_akhir) ?>"></td>
                                     <td style="padding-top:15px">
                                         <div id='grade<?= $keys ?>'>
                                             <?php
                                             $data_penilaian = sistem_penilaian($value->nim);
                                             foreach ($data_penilaian as $key) {
                                                 if (($key['nilai_minimum'] <= $value->nilai_akhir) && ($value->nilai_akhir <= $key['nilai_maksimum'])) {
-                                                    echo $key['grade'];
+                                                    echo e($key['grade']);
                                                 }
                                             }
                                             ?>
@@ -116,15 +116,15 @@
                                     </td>
                                     <td style="padding-top:15px"><button type="button" id="button<?= $keys ?>"
                                             class="btn btn-primary"
-                                            onclick="nilai(<?= $value->kode_khs_detail ?>,<?= $keys ?>)"
-                                            value='<?= $value->nilai_akhir ?>'>
+                                            onclick="nilai(<?= e($value->kode_khs_detail) ?>,<?= $keys ?>)"
+                                            value='<?= e($value->nilai_akhir) ?>'>
                                             Update
                                         </button>
                                     <td style="padding-top:15px" class="text-center">
                                         <button type="button" id="status<?= $keys ?>"
                                             class="btn btn-sm <?= $value->status_mbkm == 1 ? "btn-success" : "btn-danger" ?>"
                                             data-toggle="modal"
-                                            onclick="status(<?= $value->kode_krs_detail ?>,<?= $keys ?>)">
+                                            onclick="status(<?= e($value->kode_krs_detail) ?>,<?= $keys ?>)">
                                             <?= $value->status_mbkm == 1 ? "Aktif" : "Non Aktif" ?>
                                         </button>
                                     </td>

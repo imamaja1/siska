@@ -29,8 +29,8 @@
                                 ?>
                                 <tr>
                                     <td align="center"><?= $i++ ?>.</td>
-                                    <td align="center" id="nim-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nim ?></td>
-                                    <td><?= $row->nama_mahasiswa ?></td>
+                                    <td align="center" id="nim-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nim) ?></td>
+                                    <td><?= e($row->nama_mahasiswa) ?></td>
                                     <td align="center"><?php
                                         $dosen_perwakilan = $row->kode_dosen_perwakilan;
                                         if (empty($dosen_perwakilan)) {
@@ -59,14 +59,14 @@
                                     </td>   
                                 </tr>
                             <div hidden
-                                 id="nama_mahasiswa-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nama_mahasiswa ?></div>
-                            <div hidden id="nama_dosen-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nama_dosen ?></div>
-                            <div hidden id="kode_dosen-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->kode_dosen ?></div>
+                                 id="nama_mahasiswa-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nama_mahasiswa) ?></div>
+                            <div hidden id="nama_dosen-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nama_dosen) ?></div>
+                            <div hidden id="kode_dosen-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->kode_dosen) ?></div>
                             <div hidden
-                                 id="isi_konsultasi-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->isi_konsultasi ?></div>
-                            <div hidden id="tanggapan-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->tanggapan ?></div>
+                                 id="isi_konsultasi-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->isi_konsultasi) ?></div>
+                            <div hidden id="tanggapan-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->tanggapan) ?></div>
                             <div hidden
-                                 id="jenis_konsultasi-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->jenis_konsultasi ?></div>
+                                 id="jenis_konsultasi-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->jenis_konsultasi) ?></div>
                              <?php endforeach; ?>
                         </tbody>
                     </table>

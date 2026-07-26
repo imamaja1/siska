@@ -208,7 +208,7 @@
 
                                         <p style="color: white;">
                                             Login Sebagai:<br>
-                                            <?= $this->session->userdata('nama_dosen') ?>
+                                            <?= e($this->session->userdata('nama_dosen')) ?>
                                         </p>
                                     </li>
 
@@ -234,11 +234,11 @@
 
                 <section class="content-header">
                     <h1>
-                        <?= $judul ?>
+                        <?= e($judul) ?>
                         <!--<small>Control panel</small>-->
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-dashboard"></i> <?= $judul ?></a></li>
+                        <li><a href="#"><i class="fa fa-dashboard"></i> <?= e($judul) ?></a></li>
                         <li class="active"><?= isset($sub_judul) ? $sub_judul : '' ?></li>
                     </ol>
                 </section>

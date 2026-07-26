@@ -1,4 +1,5 @@
 <form action="<?= site_url('admin/keuangan/status_perkuliahan/update/'.$id) ?>" method="post">
+    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="form-group">
         <div class="input-group">
             <select name="status_perkuliahan" style="width:200px;" class="form-control">

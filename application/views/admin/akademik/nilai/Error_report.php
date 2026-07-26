@@ -8,7 +8,7 @@
                 <?php if (count($error) > 0) : ?>
                     <ul>
                         <?php foreach ($error as $row) : ?>
-                            <li><span class="text-danger"><?= $row['msg'] ?></span></li>
+                            <li><span class="text-danger"><?= e($row['msg']) ?></span></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php else : ?>

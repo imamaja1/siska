@@ -1,16 +1,17 @@
 <div class="box box-solid flat">
     <div class="box-body">
-        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= $dosen_wali ?></span>&nbsp;
+        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= e($dosen_wali) ?></span>&nbsp;
         <?php if (isset($dosen_perwakilan)) : ?>
-            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= $dosen_perwakilan ?></span>
+            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= e($dosen_perwakilan) ?></span>
         <?php endif; ?>
     </div>
 </div>
 <div class="box box-primary flat">
     <div class="box-body">
-        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) JENJANG <?= strtoupper($prodi->nama_program_studi) ?> (<?= strtoupper($prodi->singkatan_program_studi) ?>)</strong></p>
+        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?> (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
         <p style="text-align: center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL" ?></strong></p>
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/add_one') ?>" method="POST">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <?php if (count($matakuliah_awal) > 0) : ?>
                     <div class="table-responsive">
                     <table class="table demo-table">
@@ -34,8 +35,8 @@
                         foreach ($matakuliah_awal as $row) : ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td style="text-align: center;"><?= $row->kode_matakuliah ?></td>
-                                <td ><?= $row->nama_matakuliah ?></td>
+                                <td style="text-align: center;"><?= e($row->kode_matakuliah) ?></td>
+                                <td ><?= e($row->nama_matakuliah) ?></td>
                                 <td style="text-align: center;" width="100"><?= $row->sks_teori ?></td>
                                 <td style="text-align: center;" width="100"><?= $row->sks_praktek ?></td>
                                 <td style="text-align: center;" width="100"><?= $row->sks_praktikum ?></td>
@@ -87,4 +88,3 @@
         }
     });
 </script>
-

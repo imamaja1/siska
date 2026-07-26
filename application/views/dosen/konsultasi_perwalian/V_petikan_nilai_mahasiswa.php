@@ -1,7 +1,7 @@
 <div class="box box-primary flat">
     <div class="box-body table-responsive">
         <p><center><strong>PETIKAN NILAI MAHASISWA</strong></center></p>
-        <P><center><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL" ;  ?> TA. <?= $tahun_akademik->ta  ?></strong></center></P>
+        <P><center><strong>SEMESTER <?= e($tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL")  ?> TA. <?= e($tahun_akademik->ta)  ?></strong></center></P>
         <P><center><strong>ANGKATAN  20<?= substr($mahasiswa->nim, 0,2) ?> </strong></center></P>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -9,17 +9,17 @@
                 <tr>
                     <td><strong>NAMA</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $mahasiswa->nama_mahasiswa ?></td>
+                    <td><?= e($mahasiswa->nama_mahasiswa) ?></td>
                 </tr>
                 <tr>
                     <td><strong>NIM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $mahasiswa->nim ?></td>
+                    <td><?= e($mahasiswa->nim) ?></td>
                 </tr>
                 <tr>
                     <td><strong>NPM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $mahasiswa->npm ?></td>
+                    <td><?= e($mahasiswa->npm) ?></td>
                 </tr>
             </table>
         </div>
@@ -28,19 +28,19 @@
                 <tr>
                     <td><strong>PROGRAM STUDI</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $prodi->nama_program_studi ?></td>
+                    <td><?= e($prodi->nama_program_studi) ?></td>
                 </tr>
                 <tr>
                     <td><strong>FAKULTAS</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $prodi->nama_fakultas ?></td>
+                    <td><?= e($prodi->nama_fakultas) ?></td>
                 </tr>
             </table>
         </div>
         <br>
         <div class="col-sm-12 col-md-12 col-lg-12">
             <?php $total_sks = 0; $total_sksn = 0; foreach ($data as $key) : ?>
-                <p><strong>SEMESTER  <?= $key['semester'] ?></strong></p>
+                <p><strong>SEMESTER  <?= e($key['semester']) ?></strong></p>
                 <table class="table demo-table">
                     <thead>
                     <tr>
@@ -58,11 +58,11 @@
                         $sks=0; $sksn=0; $j=1; foreach ($key['data_nilai'] as $row) : ?>
                         <tr>
                             <td><center><?= $j++ ?></center></td>
-                            <td><center><?= $row['kode_matakuliah'] ?></center></td>
-                            <td><?= $row['nama_matakuliah'] ?></td>
+                            <td><center><?= e($row['kode_matakuliah']) ?></center></td>
+                            <td><?= e($row['nama_matakuliah']) ?></td>
                             <td><center><?= substr($row['kode_matakuliah'], 4,1) ?></center></td>
-                            <td><center><?= $row['grade'] ?></center></td>
-                            <td><center><?= $row['sksn'] ?></center></td>
+                            <td><center><?= e($row['grade']) ?></center></td>
+                            <td><center><?= e($row['sksn']) ?></center></td>
                         </tr>
 
                     <?php endforeach;
@@ -80,9 +80,9 @@
             <table class="table table-bordered" >
                 <tr>
                     <td class="th-color" ><center><strong>JUMLAH</strong></center></td>
-                    <td class="th-color" width="100"><center><strong><?= $total_sks ?></strong></center></td>
+                    <td class="th-color" width="100"><center><strong><?= e($total_sks) ?></strong></center></td>
                     <td class="th-color" width="100"><center></center></td>
-                    <td class="th-color" width="100"><center><strong><?= $total_sksn ?></strong></center></td>
+                    <td class="th-color" width="100"><center><strong><?= e($total_sksn) ?></strong></center></td>
                 </tr>
             </table>
             <br>
@@ -92,12 +92,12 @@
                         <td rowspan="2"><center><strong>IPK = </strong></center></td>
                         <td style="border-bottom:1px solid black;"><strong>SKSN</strong></td>
                         <td rowspan="2">=</td>
-                        <td style="border-bottom:1px solid black;"><strong><?= $total_sksn ?></strong></td>
-                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($total_sksn/$total_sks, 2) ?></strong></td>
+                        <td style="border-bottom:1px solid black;"><strong><?= e($total_sksn) ?></strong></td>
+                        <td rowspan="2"><strong>= <?= e($total_sks == 0 ? '0' : number_format($total_sksn/$total_sks, 2)) ?></strong></td>
                     </tr>
                     <tr>
                         <td ><strong>SKS</strong></td>
-                        <td ><strong><?= $total_sks ?></strong></td>
+                        <td ><strong><?= e($total_sks) ?></strong></td>
                     </tr>
                 </table>
             </center>

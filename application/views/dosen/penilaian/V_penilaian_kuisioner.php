@@ -10,10 +10,10 @@ $v = $warna[$k];
             <label for="inputEmail3" class="col-sm-2 control-label">Pilih Tahun Akademik:</label>
             <div class="col-sm-4">
                 <form action="">
-                    <select id="nilai-akademik" name="kode_nilai_akademik" class="form-control select2">
+                    <select id="nilai-akademik" name="kode_tahun_akademik" class="form-control select2">
                         <option value="" selected disabled>Tahun Akademik</option>
                         <?php foreach ($tahun_akademik as $row) : ?>
-                            <option <?= ($get_kode_ta == $row->kode_tahun_akademik ? "selected" : "") ?> value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?> - <?= $row->semester == 0 ? "GENAP" : "GANJIL" ?></option>
+                            <option <?= ($get_kode_ta == $row->kode_tahun_akademik ? "selected" : "") ?> value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> - <?= e($row->semester == 0 ? "GENAP" : "GANJIL") ?></option>
                         <?php endforeach; ?>
                     </select>
                 </form>
@@ -45,7 +45,7 @@ $v = $warna[$k];
     <script>
         $(document).ready(function () {
             autoload1();
-            $("#tahun-akademik").change(function (e) {
+            $("#nilai-akademik").change(function (e) {
                 var url = "<?= site_url('dosen/penilaian/kuisioner') ?>";
                 var data = $(this).serialize();
                 $.ajax({
@@ -65,48 +65,17 @@ $v = $warna[$k];
 
         function autoload1() {
             var url = "<?= site_url('dosen/penilaian/kuisioner') ?>";
+            var data = $("#nilai-akademik").serialize();
             $.ajax({
                 url: url,
+                data: data,
+                type: "post",
                 beforeSend: function () {
                     var html = "<p style='text-align: center'><img src='<?= base_url("assets/siska/img/logo-ubg.gif") ?>' alt=''></p>";
                     $("#landing-kuisioner").html(html);
                 },
                 success: function (res) {
                     $("#landing-kuisioner").html(res);
-                }
-            })
-        }
-
-        $(document).ready(function () {
-            autoload2();
-            $("#nilai-akademik").change(function (e) {
-                var url = "<?= site_url('dosen/penilaian/choose_nilai') ?>";
-                var data = $(this).serialize();
-                $.ajax({
-                    url: url,
-                    data: data,
-                    type: "post",
-                    beforeSend: function () {
-                        var html = "<p style='text-align: center'><img src='<?= base_url("assets/siska/img/logo-ubg.gif") ?>' alt=''></p>";
-                        $("#landing-nilai").html(html);
-                    },
-                    success: function (res) {
-                        $("#landing-nilai").html(res);
-                    }
-                })
-            })
-        })
-
-        function autoload2() {
-            var url = "<?= site_url('dosen/penilaian/choose_nilai') ?>";
-            $.ajax({
-                url: url,
-                beforeSend: function () {
-                    var html = "<p style='text-align: center'><img src='<?= base_url("assets/siska/img/logo-ubg.gif") ?>' alt=''></p>";
-                    $("#landing-nilai").html(html);
-                },
-                success: function (res) {
-                    $("#landing-nilai").html(res);
                 }
             })
         }

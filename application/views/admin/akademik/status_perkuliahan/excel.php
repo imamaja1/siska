@@ -31,9 +31,9 @@ header("Expires: 0");
     <?php $no = 1; foreach ($data as $row) : ?>
         <tr>
             <td><?= $no++ ?></td>
-            <td><?= $row->nim ?></td>
-            <td><?= $row->nama_mahasiswa ?></td>
-            <td style="text-align: center"><?= $row->jenis_kelamin ?></td>
+            <td><?= e($row->nim) ?></td>
+            <td><?= e($row->nama_mahasiswa) ?></td>
+            <td style="text-align: center"><?= e($row->jenis_kelamin) ?></td>
             <td style="text-align: center;"><?= $row->total_sks?></td>
             <td style="text-align: center;"><?= $row->skripsi == 0 ? "" : "SKRIPSI" ?></td>
             <td style="text-align: center;"><?= $row->kkp == 0 ? "" : "KKP" ?></td>

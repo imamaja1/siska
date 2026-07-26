@@ -12,7 +12,7 @@ header("Content-Disposition: attachment; filename=".$file_name.".xls");
 <table style="font-family: 'Arial Narrow','Arial';">
     <tr>
         <td colspan="2">Program Studi</td>
-        <td colspan="7"> : <?= $prodi->nama_program_studi ?></td>
+        <td colspan="7"> : <?= e($prodi->nama_program_studi) ?></td>
     </tr>
 
     <tr><td></td></tr>
@@ -22,7 +22,7 @@ header("Content-Disposition: attachment; filename=".$file_name.".xls");
         <tr>
             <th id="th" rowspan="2" style="border: 0.1pt solid black;">NO.</th>
             <?php $batas=0; foreach ($header as $key) : ?>
-                <th id="th" colspan="<?= $key->colspan ?>" style="border: 0.1pt solid black;"><?= $key->nama_bagian ?></th>
+                <th id="th" colspan="<?= e($key->colspan) ?>" style="border: 0.1pt solid black;"><?= e($key->nama_bagian) ?></th>
                 <?php $batas = $batas + $key->colspan; ?>
             <?php endforeach;?>
             <th id="th" rowspan="2" style="border: 0.1pt solid black;">Masukan</th>
@@ -58,7 +58,7 @@ header("Content-Disposition: attachment; filename=".$file_name.".xls");
                     $index++;
                 endforeach;
                 $total = $jml;?>
-                <td style="border: 0.1pt solid black;"> <?= $masukan ?> </td>
+                <td style="border: 0.1pt solid black;"> <?= e($masukan) ?> </td>
             </tr>
         <?php endforeach;?>
         </tbody>

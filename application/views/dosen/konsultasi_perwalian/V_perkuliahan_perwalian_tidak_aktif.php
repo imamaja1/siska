@@ -22,10 +22,10 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center"><?= $row->nim ?></td>
-                                <td><?= $row->nama_mahasiswa ?> </td>
-                                <td align="center"><?= $row->semester ?> </td>
-                                <td><?= $row->telepon ?> </td>
+                                <td align="center"><?= e($row->nim) ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?> </td>
+                                <td align="center"><?= e($row->semester) ?> </td>
+                                <td><?= e($row->telepon) ?> </td>
                                 <td align="center">
 
                                     <?php if (($row->pembayaran_spp == "0") || empty($row->pembayaran_spp) || is_null($row->pembayaran_spp)): ?>

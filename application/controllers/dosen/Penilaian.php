@@ -375,6 +375,17 @@ class Penilaian extends CI_Controller {
         $this->load->view('dosen/penilaian/V_choose_presentasi_nilai', $data);
     }
 
+    public function choose_nilai() {
+        if ($this->input->post('kode_nilai_akademik')) {
+            $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
+        } else {
+            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        }
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        $data['data'] = $this->dosenakademikservice->getChooseNilaiUts($kode_dosen, $kode_tahun_akademik);
+        $this->load->view('dosen/penilaian/V_choose_nilai', $data);
+    }
+
     public function choose_nilai_uts() {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
@@ -941,6 +952,10 @@ class Penilaian extends CI_Controller {
                 $data_kelas_valid = $this->dosenakademikservice->getDummyUpdateKelasLast($value->kelas_id);
             }
             $data_kelas[$key]->validasi = $data_kelas_valid;
+            $row_status = !empty($data_kelas_valid) ? $data_kelas_valid[0] : null;
+            $data_kelas[$key]->status_dosen = $row_status->status_dosen ?? null;
+            $data_kelas[$key]->status_prodi = $row_status->status_prodi ?? null;
+            $data_kelas[$key]->status_dekan = $row_status->status_dekan ?? null;
         }
 
         $pesan_prodi = array();
@@ -994,10 +1009,10 @@ class Penilaian extends CI_Controller {
         
         foreach ($kelas_mahasiswa2 as $key => $val) {
             if ($kelas_mahasiswa2[$key]->na == null) {
-                $kelas_mahasiswa2[$key]->na = $kelas_mahasiswa1[$key]->na;
-                $kelas_mahasiswa2[$key]->uas = $kelas_mahasiswa1[$key]->uas;
-                $kelas_mahasiswa2[$key]->uts = $kelas_mahasiswa1[$key]->uts;
-                $kelas_mahasiswa2[$key]->harian = $kelas_mahasiswa1[$key]->harian;
+                $kelas_mahasiswa2[$key]->na = $kelas_mahasiswa1[$key]->na ?? $kelas_mahasiswa1[$key]->khs_na;
+                $kelas_mahasiswa2[$key]->uas = $kelas_mahasiswa1[$key]->uas ?? $kelas_mahasiswa1[$key]->khs_uas;
+                $kelas_mahasiswa2[$key]->uts = $kelas_mahasiswa1[$key]->uts ?? $kelas_mahasiswa1[$key]->khs_uts;
+                $kelas_mahasiswa2[$key]->harian = $kelas_mahasiswa1[$key]->harian ?? $kelas_mahasiswa1[$key]->khs_harian;
             }
             if ($kelas_mahasiswa2[$key]->na) {
                 $tmp = $kelas_mahasiswa2[$key]->na;
@@ -1130,10 +1145,26 @@ class Penilaian extends CI_Controller {
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
         $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
-        $ta = ($ta) ? $ta : $tahun_akademik; 
-        $data['data'] = $this->dosenakademikservice->getRevisiNilaiMahasiswa($kelas, $level, $ta);
+        $ta = ($ta) ? $ta : $tahun_akademik;
+        $kelas_mahasiswa = $this->dosenakademikservice->getRevisiNilaiMahasiswa($kelas, $level, $ta);
+        $sistem_nilai = $this->dosenakademikservice->getSistemPenilaian();
+        foreach ($kelas_mahasiswa as $key => $val) {
+            if ($val->na == null) {
+                $kelas_mahasiswa[$key]->harian = $val->khs_harian;
+                $kelas_mahasiswa[$key]->uts = $val->khs_uts;
+                $kelas_mahasiswa[$key]->uas = $val->khs_uas;
+                $kelas_mahasiswa[$key]->na = $val->khs_na;
+            }
+            $tmp = $kelas_mahasiswa[$key]->na;
+            if ($tmp) {
+                $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
+                    return $obj->nilai_minimum <= ($tmp) && $obj->nilai_maksimum >= ($tmp);
+                });
+                $kelas_mahasiswa[$key]->grade = !empty($result) ? reset($result)->grade : '';
+            }
+        }
+        $data['data'] = $kelas_mahasiswa;
         $this->load->view('dosen/penilaian/V_revisi_nilai_mahasiswa', $data);
-        // echo json_encode($level);
     }
     public function cetak_nilai_revisi_kelas($id,$level,$ta) {
         $data['query1'] = $this->dosenakademikservice->getCetakQuery1($id);

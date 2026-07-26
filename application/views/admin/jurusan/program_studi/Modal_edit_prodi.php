@@ -3,14 +3,15 @@
     <h4 class="modal-title" id="myModalLabel"><b>Edit Jurusan</b></h4>
 </div>
 <form method="POST" action="<?= site_url('admin/jurusan/program_studi/nama_jurusan/ubah'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="modal-body">
         <div class="form-group">
             <label>Nama Fakultas</label>
-            <input type="hidden" name="param" value="<?= $data->kode_program_studi ?>">
+            <input type="hidden" name="param" value="<?= e($data->kode_program_studi) ?>">
             <select class="form-control" name="kode_fakultas">
                 <option value="" disabled selected>Pilih Fakultas</option>
                 <?php foreach ($fakultas as $row) { ?>
-                    <option <?= $row->kode_fakultas == $data->kode_fakultas ? "selected" : ""?> value="<?= $row->kode_fakultas?>"><?= $row->nama_fakultas?></option>
+                    <option <?= $row->kode_fakultas == $data->kode_fakultas ? "selected" : ""?> value="<?= e($row->kode_fakultas)?>"><?= e($row->nama_fakultas)?></option>
                 <?php } ?>
             </select>
         </div>
@@ -25,15 +26,15 @@
         </div>
         <div class="form-group">
             <label>Kode Program Studi</label>
-            <input  class="form-control" type="number" value="<?= $data->kode_prodi_univ ?>" name="kode_prodi_univ" maxlength="2" placeholder="Kode Program Studi">
+            <input  class="form-control" type="number" value="<?= e($data->kode_prodi_univ) ?>" name="kode_prodi_univ" maxlength="2" placeholder="Kode Program Studi">
         </div>
         <div class="form-group">
             <label>Nama Program Studi</label>
-            <input required  class="form-control" type="text"  name="nama_jurusan" value="<?= $data->nama_program_studi ?>" placeholder="Nama Jurusan">
+            <input required  class="form-control" type="text"  name="nama_jurusan" value="<?= e($data->nama_program_studi) ?>" placeholder="Nama Jurusan">
         </div>
         <div class="form-group">
             <label>Singkatan</label>
-            <input required class="form-control" type="text" name="singkatan" value="<?= $data->singkatan_program_studi ?>" placeholder="Singkatan">
+            <input required class="form-control" type="text" name="singkatan" value="<?= e($data->singkatan_program_studi) ?>" placeholder="Singkatan">
         </div>
         <div class="form-group">
             <label>Sistem Kompetensi</label>

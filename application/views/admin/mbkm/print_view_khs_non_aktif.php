@@ -61,7 +61,7 @@
 </table>
 <!-- Start Header KHS -->
 <hr style="border :1px solid black">
-<h4 style="font-size: 8pt; text-align: center">KARTU HASIL STUDI (KHS)<br />SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= $data['tahun_akademik'] ?></h4>
+<h4 style="font-size: 8pt; text-align: center">KARTU HASIL STUDI (KHS)<br />SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= e($data['tahun_akademik']) ?></h4>
 <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
     <tr>
         <td>
@@ -69,12 +69,12 @@
                 <tr>
                     <td><b>Nama Mahasiswa</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['nama_mahasiswa'] ?></td>
+                    <td><?= e($data['nama_mahasiswa']) ?></td>
                 </tr>
                 <tr>
                     <td><b>NIM</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['nim'] ?></td>
+                    <td><?= e($data['nim']) ?></td>
                 </tr>
             </table>
         </td>
@@ -84,7 +84,7 @@
                 <tr>
                     <td><b>Program Studi</b></td>
                     <td><b>:</b></td>
-                    <td><?= $prodi->nama_program_studi ?></td>
+                    <td><?= e($prodi->nama_program_studi) ?></td>
                 </tr>
                 <tr>
                     <td><b>Fakultas</b></td>
@@ -124,11 +124,11 @@
         ?>
         <tr>
             <td align="center"><?php echo $i++ .'.'; ?></td>
-            <td align="center"><?= $row['kode_matakuliah'] ?></td>
-            <td><?= $row['nama_matakuliah'] ?></td>
-            <td align="center"><?= $row['sks'] ?></center></td>
-            <td align="center"><?= $row['grade'] ?></td>
-            <td align="center"><?= $row['sksn'] ?></td>
+            <td align="center"><?= e($row['kode_matakuliah']) ?></td>
+            <td><?= e($row['nama_matakuliah']) ?></td>
+            <td align="center"><?= e($row['sks']) ?></center></td>
+            <td align="center"><?= e($row['grade']) ?></td>
+            <td align="center"><?= e($row['sksn']) ?></td>
             <td align="center"><?= $row['tb'] == 'A' ? 'TB' : '' ?></td>
         </tr>
         <?php
@@ -191,7 +191,7 @@
     <tr>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td><div class="garis_bawah"><?php echo bodo_kop($data['nim'])['dekan']; ?></div>NIK: <?php echo bodo_kop($data['nim'])['nik']; ?></td>
+                        <td><div class="garis_bawah"><?= e(bodo_kop($data['nim'])['dekan']) ?></div>NIK: <?= e(bodo_kop($data['nim'])['nik']) ?></td>
     </tr>
 </table>
 <!-- End Footer KHS -->

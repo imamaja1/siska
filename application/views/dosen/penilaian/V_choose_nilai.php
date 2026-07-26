@@ -1,4 +1,4 @@
-<?php if (count($data) > 0) : ?>
+﻿<?php if (count($data) > 0) : ?>
     <table class="table table-bordered demo-table">
         <thead>
             <tr>
@@ -20,20 +20,20 @@
                 ?>
                 <tr>
 
-                    <td align="center"><?= $row->kelas_id; ?></td>
-                    <td><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?> Kelas
-                        - <?= $row->nama_kelas ?></td>
+                    <td align="center"><?= e($row->kelas_id) ?></td>
+                    <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?> Kelas
+                        - <?= e($row->nama_kelas) ?></td>
                     <td><?= nilai_validasi($row->status_nilai) ?></td>
                     <td><?= nilai_validasi($row->validasi_nilai) ?></td>
                     <td><?= nilai_validasi($row->validasi_dekan) ?></td>
                     <td>
-                        <a class="btn btn-<?= $row->status_nilai != 'T' ? 'warning' : 'info'; ?> btn-xs btn-flat"
+                        <a class="btn btn-<?= e($row->status_nilai != 'T' ? 'warning' : 'info') ?> btn-xs btn-flat"
                            href="<?= site_url('dosen/penilaian/nilai_mahasiswa/' . $row->kelas_id) ?>">
                             <i class="fa fa-arrow-circle-right"></i>
-                            <?= $row->status_nilai == 'R' ? 'Update Nilai' : ($row->status_nilai == 'T' ? 'Lihat Nilai' : 'Isi Nilai'); ?>
+                            <?= e($row->status_nilai == 'R' ? 'Update Nilai' : ($row->status_nilai == 'T' ? 'Lihat Nilai' : 'Isi Nilai')) ?>
                         </a>
                         <?php if (cek_komentar_revisi($row->kelas_id)) : ?>
-                            <a href="#" onclick="show_history_comment('<?= $row->kelas_id ?>')"
+                            <a href="#" onclick="show_history_comment('<?= e($row->kelas_id) ?>')"
                                title="Lihat Catatan Prodi / Dekan" class="btn pull-right bg-purple btn-xs btn-flat"><i
                                     class="fa fa-comment-o"></i> Komentar</a>
                             <?php endif; ?>

@@ -8,12 +8,13 @@
             </div>
             <div class="modal-body">
                 <form action="<?= site_url('mahasiswa/kompetensi/simpan') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label for=""> Kompetensi</label>
                         <select name="kode_kompetensi" id="" class="form-control">
                             <option selected disabled>Pilih</option>
                             <?php foreach ($data_kompetensi as $row) : ?>
-                                <option value="<?= $row->kode_kompetensi ?>"><?= $row->singkatan_kompetensi ?> - <?= $row->nama_kompetensi ?></option>
+                                <option value="<?= e($row->kode_kompetensi) ?>"><?= e($row->singkatan_kompetensi) ?> - <?= e($row->nama_kompetensi) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

@@ -30,11 +30,11 @@ header("Expires: 0");
 <table style="font-size: 12px;">
     <tr>
         <td colspan="2">KODE MATAKULIAH</td>
-        <td colspan="16">: <?= $kode_matakuliah ?></td>
+        <td colspan="16">: <?= e($kode_matakuliah) ?></td>
     </tr>
     <tr>
         <td colspan="2">MATAKULIAH</td>
-        <td colspan="16">: <?= $nama_matakuliah ?> / <?= $nama_kelas->nama_kelas ?></td>
+        <td colspan="16">: <?= e($nama_matakuliah) ?> / <?= e($nama_kelas->nama_kelas) ?></td>
     </tr>
     <tr>
         <td colspan="2">JUMLAH SKS </td>
@@ -46,7 +46,7 @@ header("Expires: 0");
     </tr>
     <tr>
         <td colspan="2">PROGRAM STUDI </td>
-        <td colspan="16">: <?= $prodi->nama_program_studi ?></td>
+        <td colspan="16">: <?= e($prodi->nama_program_studi) ?></td>
     </tr>
     <tr>
         <td colspan="2">DOSEN </td>
@@ -55,11 +55,11 @@ header("Expires: 0");
                 echo '-';
             }elseif(count($pengajar) == 1){
                 foreach ($pengajar as $row) {
-                    echo $row->nama_dosen;
+                    echo e($row->nama_dosen);
                 }
             }else{
                 foreach ($pengajar as $row) {
-                    echo $row->nama_dosen.' /';
+                    echo e($row->nama_dosen).' /';
                 }
             }
             ?></td>
@@ -116,8 +116,8 @@ header("Expires: 0");
     <?php $no=1; foreach ($data as $row) : ?>
         <tr>
             <td align="center" style="border: 0.1pt solid black;"><?= $no++ ?>.</td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $row->nim ?></td>
-            <td align="left" style="border: 0.1pt solid black;"><?= $row->nama_mahasiswa ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= e($row->nim) ?></td>
+            <td align="left" style="border: 0.1pt solid black;"><?= e($row->nama_mahasiswa) ?></td>
             <td style="border: 0.1pt solid black;"></td>
             <td style="border: 0.1pt solid black;"></td>
             <td style="border: 0.1pt solid black;"></td>
@@ -167,11 +167,11 @@ header("Expires: 0");
         echo '-';
     }elseif(count($pengajar) == 1){
         foreach ($pengajar as $row) {
-            echo $row->nama_dosen;
+            echo e($row->nama_dosen);
         }
     }else{
         foreach ($pengajar as $row) {
-            echo $row->nama_dosen.' /';
+            echo e($row->nama_dosen).' /';
         }
     }
     ?></p>

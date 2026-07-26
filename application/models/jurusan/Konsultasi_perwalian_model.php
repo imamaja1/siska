@@ -91,7 +91,7 @@ class Konsultasi_perwalian_model extends CI_Model
         return $this->db->select('*')
             ->from('konsultasi_perwalian as kp')
             ->join('status_perkuliahan as sp','kp.kode_tahun_akademik=sp.kode_tahun_akademik')
-            ->where_not_in('semester','K')
+            ->where_not_in('sp.semester','K')
             ->where('kp.nim', $nim)
             ->where('sp.nim', $nim)
             ->get()->result();
@@ -100,29 +100,34 @@ class Konsultasi_perwalian_model extends CI_Model
         $data = $this->db->select('*')
             ->from('konsultasi_perwalian as kp')
             ->join('status_perkuliahan as sp','kp.kode_tahun_akademik=sp.kode_tahun_akademik')
-            ->where_not_in('semester','K')
+            ->where_not_in('sp.semester','K')
             ->where('kp.nim', $nim)
             ->where('sp.nim', $nim)
             ->get()->result();
+        $datafix = [];
         $nomor = 0;
         foreach ($data as $value) {
             if ($value->date_created) {
+                $datafix[$nomor] = new stdClass();
                 $datafix[$nomor]->isi_konsultasi = $this->konsul($value->nim* 3+$nomor)['isi_konsultasi'];
                 $datafix[$nomor]->tanggapan =  $this->konsul($value->nim* 3+$nomor)['tanggapan'];
                 $datafix[$nomor]->date_created = $value->date_created;
                 $datafix[$nomor]->semester = $value->semester;
                 $nomor++;
+                $datafix[$nomor] = new stdClass();
                 $datafix[$nomor]->isi_konsultasi = $this->konsul($value->nim* 3 + 4+$nomor)['isi_konsultasi'] ;
                 $datafix[$nomor]->tanggapan = $this->konsul($value->nim* 3 + 4+$nomor)['tanggapan'];
                 $datafix[$nomor]->date_created = date('Y-m-d', strtotime($value->date_created . ' +7 days'));
                 $datafix[$nomor]->semester = $value->semester;
                 $nomor++;
+                $datafix[$nomor] = new stdClass();
                 $datafix[$nomor]->isi_konsultasi = $this->konsul($value->nim + 20 + $nomor)['isi_konsultasi'];
                 $datafix[$nomor]->tanggapan = $this->konsul($value->nim + 20 + $nomor)['tanggapan'];
                 $datafix[$nomor]->date_created = date('Y-m-d', strtotime($value->date_created . ' +37 days'));
                 $datafix[$nomor]->semester = $value->semester;
                 $nomor++;
                 if (($value->nim + $value->semester) % 5 == 3) {
+                    $datafix[$nomor] = new stdClass();
                     $datafix[$nomor]->isi_konsultasi = $this->konsul($value->nim + 20 + $nomor)['isi_konsultasi'];
                     $datafix[$nomor]->tanggapan = $this->konsul($value->nim + 20 + $nomor)['tanggapan'];
                     $datafix[$nomor]->date_created = date('Y-m-d', strtotime($value->date_created . ' +37 days'));
@@ -132,13 +137,19 @@ class Konsultasi_perwalian_model extends CI_Model
                 $tmp = $this->db->select('kpd.*,sp.semester')
                         ->from('konsultasi_perwalian as kp')
                         ->join('konsultasi_perwalian_detail as kpd', 'kp.kode_konsultasi_perwalian = kpd.kode_konsultasi_perwalian')
-                        ->join('status_perkuliahan as sp','kp.kode_tahun_akademik=sp.kode_tahun_akademik')
+                        ->join('status_perkuliahan as sp','kp.kode_tahun_akademik=sp.kode_tahun_akademik and sp.nim='.$this->db->escape($nim))
                         ->where('kp.nim', $nim)
                         ->where('kp.kode_tahun_akademik', $value->kode_tahun_akademik)
                         ->get()->result();
                 if (count($tmp) > 0) {
-                    $datafix[$nomor] = $tmp;
-                    $nomor++;
+                    foreach ($tmp as $val) {
+                        $datafix[$nomor] = new stdClass();
+                        $datafix[$nomor]->isi_konsultasi = $val->isi_konsultasi;
+                        $datafix[$nomor]->tanggapan = $val->tanggapan;
+                        $datafix[$nomor]->date_created = $val->date_created;
+                        $datafix[$nomor]->semester = $val->semester;
+                        $nomor++;
+                    }
                 }
             }else{
                 $tmp = $this->db->select('kpd.*,sp.semester')
@@ -150,6 +161,7 @@ class Konsultasi_perwalian_model extends CI_Model
                         ->get()->result_object();
                 if (count($tmp) > 0) {
                     foreach ($tmp as $val) {
+                        $datafix[$nomor] = new stdClass();
                         $datafix[$nomor]->isi_konsultasi = $val->isi_konsultasi;
                         $datafix[$nomor]->tanggapan = $val->tanggapan;
                         $datafix[$nomor]->date_created = date('Y-m-d', strtotime($val->date_created));

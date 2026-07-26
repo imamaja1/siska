@@ -50,11 +50,11 @@ header("Cache-Control: private", false);
     <?php $no=1; foreach ($data as $row) : ?>
         <tr>
             <td><?= $no++ ?>.</td>
-            <td><?= $row->nama_dosen ?></td>
-          	<td><?= $row->homebase ?></td>
-            <td style="text-align: center"><?= $row->nim ?></td>
-            <td><?= $row->nama_mahasiswa ?></td>
-          	<td><?= $row->jurusan ?></td>
+            <td><?= e($row->nama_dosen) ?></td>
+          	<td><?= e($row->homebase) ?></td>
+            <td style="text-align: center"><?= e($row->nim) ?></td>
+            <td><?= e($row->nama_mahasiswa) ?></td>
+          	<td><?= e($row->jurusan) ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

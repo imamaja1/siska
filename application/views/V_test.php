@@ -13,9 +13,9 @@
             <tr>
                 <td><?= $no++ ?>.</td>
                 <td>
-                    <?= $row->kode_matakuliah ?>
+                    <?= e($row->kode_matakuliah) ?>
                 </td>
-                <td><?= $row->nama_matakuliah ?></td>
+                <td><?= e($row->nama_matakuliah) ?></td>
                 <td>
                     <?php if ($row->kelas_id): ?>
                         <button onclick="kelas('<?= $row->id_matakuliah ?>')" class="btn btn-xs btn-default"

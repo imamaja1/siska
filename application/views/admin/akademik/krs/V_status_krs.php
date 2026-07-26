@@ -14,12 +14,13 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/krs/status_krs'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Tahun Akademik :</label>
                 <div class="col-sm-4">
                     <select name="ta" id="" class="form-control">
                         <?php foreach ($data_ta as $key => $value) : ?>
-                            <option value="<?= $value->kode_tahun_akademik ?>" <?= ($value->kode_tahun_akademik == $ta ? 'selected' :'')  ?>><?= $value->tahun_akademik.' Semester '.($value->semester == 0 ? 'Genap' : 'Ganjil') ?></option>
+                            <option value="<?= e($value->kode_tahun_akademik) ?>" <?= ($value->kode_tahun_akademik == $ta ? 'selected' :'')  ?>><?= e($value->tahun_akademik.' Semester '.($value->semester == 0 ? 'Genap' : 'Ganjil')) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -29,7 +30,7 @@
                 <div class="col-sm-4">
                      <select name="prodi" id="" class="form-control">
                         <?php foreach ($data_prodi as $key => $value) : ?>
-                            <option value="<?= $value->kode_program_studi ?>" <?= ($value->kode_program_studi == $prodi) ? 'selected' :''  ?>><?= $value->nama_program_studi ?></option>
+                            <option value="<?= e($value->kode_program_studi) ?>" <?= ($value->kode_program_studi == $prodi) ? 'selected' :''  ?>><?= e($value->nama_program_studi) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -41,7 +42,7 @@
                             <option value="semua">Semua Angkatan</option>
                         <?php $tmp = 0; foreach ($data_ta as $key => $value) : ?>
                             <?php if($tmp == substr($value->tahun_akademik,0,4)) continue; ?>
-                            <option value="<?= substr($value->tahun_akademik,0,4) ?>" <?= $angaktan == substr($value->tahun_akademik,0,4) ? 'selected' : '' ?>><?= substr($value->tahun_akademik,0,4) ?></option>
+                            <option value="<?= e(substr($value->tahun_akademik,0,4)) ?>" <?= $angaktan == substr($value->tahun_akademik,0,4) ? 'selected' : '' ?>><?= e(substr($value->tahun_akademik,0,4)) ?></option>
                         <?php $tmp = substr($value->tahun_akademik,0,4); endforeach; ?>
                     </select>
                 </div>
@@ -87,8 +88,8 @@
                     <?php foreach ($data_mhs as $key => $value) : ?>
                     <tr>
                         <th scope="row"><?= $key+1 ?></th>
-                        <td><?= $value->nim ?></td>
-                        <td><?= $value->nama_mahasiswa ?></td>
+                        <td><?= e($value->nim) ?></td>
+                        <td><?= e($value->nama_mahasiswa) ?></td>
                         <td><?= $value->kode_krs ? '<span class="badge btn-success"> Sudah Diisi</span>':'<span class="badge btn-danger">Belum Diisi</span>' ?></td>
                     </tr>
                     <?php endforeach; ?>

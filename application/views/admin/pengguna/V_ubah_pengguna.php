@@ -14,6 +14,7 @@
             <div class="box box-solid flat">
                 <div class="box-body"><br>
                     <form action="<?= site_url('admin/pengguna/pengguna/ubah_data'); ?>" method="POST" class="form-horizontal">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <input type="hidden" name="kode_pengguna" value="<?= set_value('kode_pengguna', $data_pengguna->kode_pengguna) ?>">
                         <div class="form-group">
                             <label class="control-label col-sm-3">Nama Pengguna :</label>
@@ -34,7 +35,7 @@
                             <div class="col-sm-4">
                                 <select class="form-control" name="id_role">
                                     <?php foreach ($roles as $role) : ?>
-                                    <option <?= $role->id_role == $data_pengguna->id_role ? "selected" : "" ?> value="<?= $role->id_role ?>"><?= $role->nama_role ?></option>
+                                    <option <?= $role->id_role == $data_pengguna->id_role ? "selected" : "" ?> value="<?= e($role->id_role) ?>"><?= e($role->nama_role) ?></option>
                                     <?php endforeach;?>
                                 </select>
                                 <small style="color: red"><?= form_error('id_role') ?></small>
@@ -54,10 +55,11 @@
         <div class="tab-pane <?= isset($active_2_2) ? $active_2_2 : "" ?>" id="tab_2">
             <div class="box box-solid flat">
                 <div class="box-header">
-                    <h5>Ubah Password Bapak/Ibu <b><?= $data_pengguna->nama_pengguna; ?></b></h5><hr>
+                    <h5>Ubah Password Bapak/Ibu <b><?= e($data_pengguna->nama_pengguna) ?></b></h5><hr>
                 </div>
                 <div class="box-body">
                     <form action="<?= site_url('admin/pengguna/pengguna/ubah_password'); ?>" method="POST" class="form-horizontal">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <input type="hidden" name="kode_pengguna" value="<?= set_value('kode_pengguna', $data_pengguna->kode_pengguna) ?>">
                         <div class="form-group">
                             <label class="control-label col-sm-3">Sandi Pengguna :</label>

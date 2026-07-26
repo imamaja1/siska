@@ -37,28 +37,28 @@
                     ?>
                     <tr <?= ($d->jenis == '1') ? 'style="font-style:italic;"' : '' ?>>
                         <td align="center"><?= $i++ ?></td>
-                        <td align="center" id="kode-matakuliah-<?= $d->id_matakuliah ?>"><?= $d->kode_matakuliah ?></td>
-                        <td id="nama-matakuliah-<?= $d->id_matakuliah ?>"><?= $d->nama_matakuliah ?></td>
-                        <td align="center" id="sks-teori-<?= $d->id_matakuliah ?>"><?= $d->sks_teori ?></td>
-                        <td align="center" id="sks-praktek-<?= $d->id_matakuliah ?>"><?= $d->sks_praktek ?></td>
-                        <td align="center" id="sks-praktikum-<?= $d->id_matakuliah ?>"><?= $d->sks_praktikum ?></td>
-                        <td align="center" style="display: none" id="jenis-<?= $d->id_matakuliah ?>"><?= $d->jenis ?></td>
-                        <td align="center" style="display: none" id="kode-nama-jurusan-<?= $d->id_matakuliah ?>">
-                            <?= $d->kode_program_studi ?>
+                        <td align="center" id="kode-matakuliah-<?= e($d->id_matakuliah) ?>"><?= e($d->kode_matakuliah) ?></td>
+                        <td id="nama-matakuliah-<?= e($d->id_matakuliah) ?>"><?= e($d->nama_matakuliah) ?></td>
+                        <td align="center" id="sks-teori-<?= e($d->id_matakuliah) ?>"><?= e($d->sks_teori) ?></td>
+                        <td align="center" id="sks-praktek-<?= e($d->id_matakuliah) ?>"><?= e($d->sks_praktek) ?></td>
+                        <td align="center" id="sks-praktikum-<?= e($d->id_matakuliah) ?>"><?= e($d->sks_praktikum) ?></td>
+                        <td align="center" style="display: none" id="jenis-<?= e($d->id_matakuliah) ?>"><?= e($d->jenis) ?></td>
+                        <td align="center" style="display: none" id="kode-nama-jurusan-<?= e($d->id_matakuliah) ?>">
+                            <?= e($d->kode_program_studi) ?>
                         </td>
-                        <td align="center" style="display: none" id="block-<?= $d->id_matakuliah ?>">
-                            <?= $d->block ?>
+                        <td align="center" style="display: none" id="block-<?= e($d->id_matakuliah) ?>">
+                            <?= e($d->block) ?>
                         </td>
                         <td align="center">
                             <a href="#" class="btn btn-xs btn-info flat"
-                                onclick="javascript:editMatakuliah('<?= $d->id_matakuliah ?>')"><i
+                                onclick="javascript:editMatakuliah('<?= e($d->id_matakuliah) ?>')"><i
                                     class="fa fa-edit"></i></a>&nbsp;
                             <a href="#" class="btn btn-xs btn-danger flat"
                                 onclick="hapus('<?= site_url('admin/jurusan/kurikulum/matakuliah/hapus/' . $d->id_matakuliah) ?>')"><i
                                     class="fa fa-trash"></i></a>
                         </td>
                     </tr>
-                    <div style="display: none;" id="kode-kompetensi-<?= $d->id_matakuliah ?>"><?= $d->kode_kompetensi ?>
+                    <div style="display: none;" id="kode-kompetensi-<?= e($d->id_matakuliah) ?>"><?= e($d->kode_kompetensi) ?>
                     </div>
                 <?php } ?>
 
@@ -67,9 +67,9 @@
     </div>
     <div class="box-footer">
         <?php if (count($data) > 0): ?>
-            <span class="btn flat btn-default btn-sm " style="cursor: default">Terdapat <b><?= $jumlah_data; ?> Record</b></span>
+            <span class="btn flat btn-default btn-sm " style="cursor: default">Terdapat <b><?= e($jumlah_data) ?> Record</b></span>
             <div class="pull-right" id="halaman">
-                <?= $halaman; ?>
+                <?= $halaman ?>
             </div>
         <?php endif; ?>
     </div>

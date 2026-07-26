@@ -3,8 +3,8 @@
         <div class="box box-solid flat">
             <div class="box-body">
                 <div class="box-header with-border">
-                    <div style="size : 20px;" ><b> KELAS - <?= $data_kelas->nama_kelas ?> </b>
-                        (<?= $data_kelas->kode_matakuliah ?> - <?= $data_kelas->nama_matakuliah ?>)
+                    <div style="size : 20px;" ><b> KELAS - <?= e($data_kelas->nama_kelas) ?> </b>
+                        (<?= e($data_kelas->kode_matakuliah) ?> - <?= e($data_kelas->nama_matakuliah) ?>)
                         <div class="pull-right">
                             <a href="<?= site_url('dosen/penilaian_kpat/penilaian_revisi') ?>" class="btn btn-success btn-xs flat"><i
                                     class="fa fa-arrow-circle-left"></i> Kembali</a>
@@ -37,14 +37,14 @@
                         foreach ($semua_kelas as $key => $row) :
                             ?>
                             <tr>
-                            <td>Pengajuan Nilai Ke - <?= $row->level ?></td>
+                            <td>Pengajuan Nilai Ke - <?= e($row->level) ?></td>
                             <td><?= nilai_validasi($row->status_dosen ? $row->status_dosen:"F") ?></td>
                             <td><?= nilai_validasi($row->status_prodi ? $row->status_prodi:"F") ?></td>
                             <td><?= nilai_validasi($row->status_dekan ? $row->status_dekan:"F") ?></td>
                             <td style="white-space: nowrap;width: 1px;">
-                                <button class="btn btn-success btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_nilai(<?= $kelas_id ?>,<?= $row->level ?>)"></i>Lihat Nilai</button>
+                                <button class="btn btn-success btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_nilai(<?= e($kelas_id) ?>,<?= e($row->level) ?>)"></i>Lihat Nilai</button>
                                 <?php if ($row->status_prodi == 'F' ) :?>
-                                    <button class="btn btn-danger btn-xs btn-flat" onclick="pembatalan(<?= $kelas_id ?>,<?= $row->level ?>)"></i>Delete</button>
+                                    <button class="btn btn-danger btn-xs btn-flat" onclick="pembatalan(<?= e($kelas_id) ?>,<?= e($row->level) ?>)"></i>Delete</button>
                                 <?php endif; ?>
                                 <?php 
                                 if ($row->status_dekan == 'T') {
@@ -65,10 +65,10 @@
         <div class="box box-info flat">
             <?php if ($data_kelas->status_dosen != 'T'): ?>
             <div class="box-header with-border">
-                <h3 class="box-title"><b> KELAS - <?= $data_kelas->nama_kelas ?> </b>
-                    (<?= $data_kelas->kode_matakuliah ?> - <?= $data_kelas->nama_matakuliah ?>)</h3>
+                <h3 class="box-title"><b> KELAS - <?= e($data_kelas->nama_kelas) ?> </b>
+                    (<?= e($data_kelas->kode_matakuliah) ?> - <?= e($data_kelas->nama_matakuliah) ?>)</h3>
                     <br>
-                <b> PENGISIAN NILAI KE - <?= $data_kelas->level ?> </b>
+                <b> PENGISIAN NILAI KE - <?= e($data_kelas->level) ?> </b>
             </div>
             <div class="box-body">
                 <?php if (count($data) > 0 ) : ?>
@@ -96,44 +96,44 @@
                                 ?>
                                 <tr>
                                     <td style="text-align: center; width: 3%"><?= $no++ ?>.</td>
-                                    <td style="text-align: center"><?= $row->nim ?></td>
-                                    <td><?= $row->nama_mahasiswa ?></td>
+                                    <td style="text-align: center"><?= e($row->nim) ?></td>
+                                    <td><?= e($row->nama_mahasiswa) ?></td>
                                     <td >
-                                        <input name="id<?= $key ?>" value = "<?= $row->kode_khs_detail ?>" hidden>
+                                        <input name="id<?= e($key) ?>" value = "<?= e($row->kode_khs_detail) ?>" hidden>
                                         <div class="form-group"
                                             style="margin: 0px">
-                                            <input style="text-align: center" name="harian<?= $key ?>" type="text" id="<?= $key ?>"
-                                                value="<?= $row->mbkm_id ? '0' : ($row->harian ? $row->harian:$row->nilai_harian) ?>"
-                                                class="form-control harian-<?= $row->kode_khs_detail?>"
-                                                <?= $data_kelas->status_dosen == 'T' ? 'disabled':'' ?><?= $row->mbkm_id ? 'disabled':'' ?>>
+                                            <input style="text-align: center" name="harian<?= e($key) ?>" type="text" id="<?= e($key) ?>"
+                                                value="<?= e($row->mbkm_id ? '0' : ($row->harian ? $row->harian:$row->nilai_harian)) ?>"
+                                                class="form-control harian-<?= e($row->kode_khs_detail)?>"
+                                                <?= e($data_kelas->status_dosen == 'T' ? 'disabled':'') ?><?= e($row->mbkm_id ? 'disabled':'') ?>>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="form-group "
                                             style="margin: 0px">
-                                            <input style="text-align: center" name="uts<?= $key ?>" type="text" id="<?= $key ?>"
-                                                value="<?=  $row->mbkm_id ? '0' : ($row->uts ? $row->uts:$row->nilai_uts)?>"
-                                                class="form-control uts-<?= $row->kode_khs_detail?> "
-                                                <?= $data_kelas->status_dosen == 'T' ? 'disabled':'' ?><?= $row->mbkm_id ? 'disabled':'' ?>>
+                                            <input style="text-align: center" name="uts<?= e($key) ?>" type="text" id="<?= e($key) ?>"
+                                                value="<?=  e($row->mbkm_id ? '0' : ($row->uts ? $row->uts:$row->nilai_uts))?>"
+                                                class="form-control uts-<?= e($row->kode_khs_detail)?> "
+                                                <?= e($data_kelas->status_dosen == 'T' ? 'disabled':'') ?><?= e($row->mbkm_id ? 'disabled':'') ?>>
                                         </div>    
                                     </td>
                                     <td>
                                         <div class="form-group"
                                             style="margin: 0px">
-                                            <input style="text-align: center" name="uas<?= $key ?>" type="text" id="<?= $key ?>"
-                                                value="<?=  $row->mbkm_id ? '0' : ($row->uas ? $row->uas:$row->nilai_uas)?>"
-                                                class="form-control uas-<?= $row->kode_khs_detail?>"
-                                                <?= $data_kelas->status_dosen == 'T' ? 'disabled':'' ?>
-                                                <?= $row->mbkm_id ? 'disabled':'' ?>>
+                                            <input style="text-align: center" name="uas<?= e($key) ?>" type="text" id="<?= e($key) ?>"
+                                                value="<?=  e($row->mbkm_id ? '0' : ($row->uas ? $row->uas:$row->nilai_uas))?>"
+                                                class="form-control uas-<?= e($row->kode_khs_detail)?>"
+                                                <?= e($data_kelas->status_dosen == 'T' ? 'disabled':'') ?>
+                                                <?= e($row->mbkm_id ? 'disabled':'') ?>>
                                         </div>
                                     </td>
-                                    <td style="text-align:center"><p id="na<?= $key ?>"><?= ceil($row->na ? $row->na:$row->nilai_akhir) ?> </p></td>
-                                    <td style="text-align:center"><p id="grade<?= $key ?>"><?= $row->grade ? $row->grade: '-' ?></p></td>
+                                    <td style="text-align:center"><p id="na<?= e($key) ?>"><?= ceil($row->na ? $row->na:$row->nilai_akhir) ?> </p></td>
+                                    <td style="text-align:center"><p id="grade<?= e($key) ?>"><?= e($row->grade ? $row->grade: '-') ?></p></td>
                                     <td style="text-align: center">
-                                        <button class="btn <?= $row->ket ? "btn-success":"btn-primary" ?> btn-xs btn-flat" id="ket<?= $key ?>" data-toggle="modal" data-target="#ModalKet" onclick="show_ket(<?= $row->kode_khs_detail ?>,<?= $kelas_id ?>,<?= $data_kelas->level ?>,<?= $key ?>)"></i><?= $row->ket ? "Ubah":"Tambah" ?></button>
+                                        <button class="btn <?= e($row->ket ? "btn-success":"btn-primary") ?> btn-xs btn-flat" id="ket<?= e($key) ?>" data-toggle="modal" data-target="#ModalKet" onclick="show_ket(<?= e($row->kode_khs_detail) ?>,<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>,<?= e($key) ?>)"></i><?= e($row->ket ? "Ubah":"Tambah") ?></button>
                                     </td>
-                                    <td style="text-align: center"><button type="submit" id="button<?= $key ?>" class="btn btn-success btn-xs flat"  onclick="nilai(<?= $row->kode_khs_detail?>,<?= $kelas_id ?>,<?= $key ?>,<?= $data_kelas->level ?>)" <?= $data_kelas->status_dosen == 'T' ? 'disabled':'' ?>> Simpan </button></td>
-                                    <td style="text-align:center"><?= $row->block_id ? "Block": ($row->mbkm_id ? 'MBKM': '') ?></td>
+                                    <td style="text-align: center"><button type="submit" id="button<?= e($key) ?>" class="btn btn-success btn-xs flat"  onclick="nilai(<?= e($row->kode_khs_detail)?>,<?= e($kelas_id) ?>,<?= e($key) ?>,<?= e($data_kelas->level) ?>)" <?= e($data_kelas->status_dosen == 'T' ? 'disabled':'') ?>> Simpan </button></td>
+                                    <td style="text-align:center"><?= e($row->block_id ? "Block": ($row->mbkm_id ? 'MBKM': '')) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -141,8 +141,8 @@
                 </div>
                 <div class="row" style="margin-top: 15px;margin-buttom: 15px">
                     <div class="col-md-12 col-xs-12" style="padding: 15px">
-                        <button class="btn btn-success pull-right" onclick="selesai(<?= $kelas_id ?>,<?= $key ?>,<?= $data_kelas->level ?>)" ><i class="fa fa-check-square-o"></i>Kirim Nilai</button>
-                        <button class="btn btn-danger pull-right" style="margin : 0 15px 0 0"  onclick="pembatalan(<?= $kelas_id ?>,<?= $data_kelas->level ?>)" ><i class="fa fa-check-square-o"></i>Batal</button>
+                        <button class="btn btn-success pull-right" onclick="selesai(<?= e($kelas_id) ?>,<?= e($key) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Kirim Nilai</button>
+                        <button class="btn btn-danger pull-right" style="margin : 0 15px 0 0"  onclick="pembatalan(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Batal</button>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -151,7 +151,7 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-3 col-xs-12">
-                            <button class="btn btn-success" onclick="new_penilaian(<?= $kelas_id ?>,<?= $data_kelas->level ?>)" ><i class="fa fa-check-square-o"></i>Pengajuan Baru</button>
+                            <button class="btn btn-success" onclick="new_penilaian(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Pengajuan Baru</button>
                         </div>
                     </div>
                 </div>

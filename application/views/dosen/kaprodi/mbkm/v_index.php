@@ -13,7 +13,7 @@
                             <div class="form-group">
                                 <select class="form-control" id="ta" onchange="mhs_ta();">
                                     <?php foreach ($tahun_akademik as $key => $value) { ?>
-                                        <option value='<?= $value->kode_tahun_akademik ?>' <?php if($value->kode_tahun_akademik == $semester->kode_tahun_akademik){ echo 'selected';}  ?>>Semester <?= $value->semester == '1' ? 'Ganjil Tahun '.$value->tahun_akademik:'Genap Tahun '.$value->tahun_akademik?></option>
+                                        <option value='<?= e($value->kode_tahun_akademik) ?>' <?php if($value->kode_tahun_akademik == $semester->kode_tahun_akademik){ echo 'selected';}  ?>>Semester <?= e($value->semester == '1' ? 'Ganjil Tahun '.$value->tahun_akademik:'Genap Tahun '.$value->tahun_akademik)?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -65,7 +65,7 @@
 
 <script>
     var kode_program_studi = '1';
-    var kode_tahun_akademik_mega = '<?= $kode_tahun_akademik ?>'
+    var kode_tahun_akademik_mega = '<?= e($kode_tahun_akademik) ?>'
     var matakuliah_id = '';
     var super_kelas_id = '';
     var default_landing = '<div style="height: 200px; border-radius: 20px; background-color: #00a7d0; padding: 20px">\n' +

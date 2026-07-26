@@ -327,7 +327,7 @@ class KaprodiService extends MY_Service {
     // ===================== KELAS =====================
 
     public function get_kelas_by_prodi_ta($prodi, $tahun_now) {
-        return $this->db->select('*')
+        return $this->db->select('mak.id_matakuliah, mak.kode_matakuliah, mak.nama_matakuliah, mak.sks_teori, mak.sks_praktek, mak.sks_praktikum, nk.nama_kurikulum')
             ->from('nama_kurikulum as nk')
             ->join('kurikulum as kur', 'nk.kode_nama_kurikulum=kur.kode_nama_kurikulum')
             ->join('krs_detail as kd', 'kd.id_matakuliah=kur.id_matakuliah')
@@ -373,7 +373,7 @@ class KaprodiService extends MY_Service {
     }
 
     public function get_krs_by_nim($nim) {
-        return $this->db->select('*')
+        return $this->db->select('kode_tahun_akademik, semester')
             ->from('krs')
             ->where('nim', $nim)
             ->where_not_in('semester','K')

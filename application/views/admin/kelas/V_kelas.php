@@ -4,6 +4,7 @@
             <div class="box-body">
                 <div class="row">
                     <form action="<?= site_url('admin/kuisioner/kelas/filter') ?>" method="post">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <div class="col-xs-4">
                             <div class="form-group" style="margin: 0px">
                                 <select name="kode_tahun_akademik" onchange="change_tahun_akademik(this.value)"
@@ -11,8 +12,8 @@
                                     <option value="" selected disabled>Tahun Akademik</option>
                                     <?php foreach ($tahun_akademik as $row): ?>
                                         <option <?= $row->kode_tahun_akademik == $kode_tahun_akademik ? 'selected' : '' ?>
-                                            value="<?= $row->kode_tahun_akademik ?>">
-                                                <?= $row->tahun_akademik ?>
+                                            value="<?= e($row->kode_tahun_akademik) ?>">
+                                                <?= e($row->tahun_akademik) ?>
                                             - <?= $row->semester == 0 ? 'GENAP' : 'GANJIL' ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -24,9 +25,9 @@
                                 <select name="kode_program_studi" onchange="makul(this.value)" class="form-control">
                                     <option value="" selected disabled>Pilih Program Studi</option>
                                     <?php foreach ($nama_jurusan as $row): ?>
-                                        <option value="<?= $row->kode_program_studi ?>">
-                                            <?= $row->singkatan_program_studi ?>
-                                            - <?= $row->nama_program_studi ?>
+                                        <option value="<?= e($row->kode_program_studi) ?>">
+                                            <?= e($row->singkatan_program_studi) ?>
+                                            - <?= e($row->nama_program_studi) ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -65,7 +66,7 @@
 
 <script>
     var kode_program_studi = '1';
-    var kode_tahun_akademik_mega = '<?= $kode_tahun_akademik ?>'
+    var kode_tahun_akademik_mega = '<?= e($kode_tahun_akademik) ?>'
     var matakuliah_id = '';
     var super_kelas_id = '';
     var default_landing = '<div style="height: 200px; border-radius: 20px; background-color: #00a7d0; padding: 20px">\n' +

@@ -23,19 +23,19 @@
                 if (count($kelas) > 0) :
                     foreach ($kelas as $row) : ?>
                         <tr>
-                            <td><?= $row->kelas_id; ?></td>
-                            <td><?= $row->singkatan_program_studi; ?></td>
-                            <td><b><?= $row->kode_matakuliah; ?> - <?= $row->nama_matakuliah; ?></b> - Kelas
-                                : <?= $row->nama_kelas; ?></td>
-                            <td align="center"><?= $row->semester ?></td>
+                            <td><?= e($row->kelas_id); ?></td>
+                            <td><?= e($row->singkatan_program_studi); ?></td>
+                            <td><b><?= e($row->kode_matakuliah); ?> - <?= e($row->nama_matakuliah); ?></b> - Kelas
+                                : <?= e($row->nama_kelas); ?></td>
+                            <td align="center"><?= e($row->semester) ?></td>
                             <td>
                                 <?php  foreach ($row->dosen_pengampu as $val): ?>
-                                    <b><?= $val->nama_dosen ?></b><br>
+                                    <b><?= e($val->nama_dosen) ?></b><br>
                                 <?php endforeach; ?>
                             </td>
                             <td>
                                 <?php if ($row->data_kelas) : ?>
-                                    <b>Nilai Ke-<?= $row->data_kelas->level ?></b> : 
+                                    <b>Nilai Ke-<?= e($row->data_kelas->level) ?></b> : 
                                     <?php if ($row->data_kelas->status_dosen == 'R') : ?>
                                         <span class="label label-warning">Revisi</span>
                                     <?php elseif($row->data_kelas->status_dosen == 'F') : ?>
@@ -54,11 +54,11 @@
                             <td>
                                 <div class="btn-group">
                                     <!-- <a href="<?= base_url('dosen/kaprodi/validasinilai/revisi_nilai_all_mahasiswa/'.$row->kelas_id); ?>" title="Lihat Mahasiswa" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></a> -->
-                                    <button class="btn btn-primary btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_mhs(<?= $row->kelas_id ?>,<?= $row->data_kelas->level ?>)"><i class="fa fa-eye"></i></button>
-                                    <button class="btn btn-warning btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_nilai(<?= $row->kelas_id ?>,<?= $row->data_kelas->level ?>)"><i class="fa fa-check-circle"></i></button>
+                                    <button class="btn btn-primary btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_mhs(<?= e($row->kelas_id) ?>,<?= e($row->data_kelas->level) ?>)"><i class="fa fa-eye"></i></button>
+                                    <button class="btn btn-warning btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_nilai(<?= e($row->kelas_id) ?>,<?= e($row->data_kelas->level) ?>)"><i class="fa fa-check-circle"></i></button>
                                     <br>
-                                    <button class="btn btn-success btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilaiValidasi" onclick="show_nilai_validasi(<?= $row->kelas_id ?>)"><i class="fa fa-check-circle"></i></button>
-                                    <button id="pesan_dekan_<?= $row->kelas_id ?>" onclick="pesan_uas_dosen('<?= $row->kelas_id ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
+                                    <button class="btn btn-success btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilaiValidasi" onclick="show_nilai_validasi(<?= e($row->kelas_id) ?>)"><i class="fa fa-check-circle"></i></button>
+                                    <button id="pesan_dekan_<?= e($row->kelas_id) ?>" onclick="pesan_uas_dosen('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
                                     <?php
                                     if ($pesan_dekan[$key] != 0) {
                                         echo 'data-badge="' . $pesan_dekan[$key] . '"';

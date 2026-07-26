@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header">
-        Hasil pencarian untuk <i><b>"<?= $nim ?>"</b></i>
+        Hasil pencarian untuk <i><b>"<?= e($nim) ?>"</b></i>
     </div>
     <div class="box-body">
         <div class="table-responsive">
@@ -16,17 +16,17 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="text-align: center"><?= $nim ?></td>
-                    <td ><?= $nama_mahasiswa ?></td>
-                    <td id="dosen-wali"><?= $nama_dosen ?></td>
+                    <td style="text-align: center"><?= e($nim) ?></td>
+                    <td ><?= e($nama_mahasiswa) ?></td>
+                    <td id="dosen-wali"><?= e($nama_dosen) ?></td>
                     <td id="dosen-perwakilan">
                         <?php if ($nama_dosen_perwakilan) : ?>
-                            <?= $nama_dosen_perwakilan ?>&nbsp;
-                            <a href="#" onclick="hapus_perwakilan('<?= $kode_perwalian ?>', this)"><span class="text-danger"><i class="fa fa-times"></i></span></a>
+                            <?= e($nama_dosen_perwakilan) ?>&nbsp;
+                            <a href="#" onclick="hapus_perwakilan('<?= e($kode_perwalian) ?>', this)"><span class="text-danger"><i class="fa fa-times"></i></span></a>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="#" onclick="ubah('<?= $kode_perwalian ?>')" class="text-info" title="Edit"><i class="fa fa-edit"></i> Edit</a>
+                        <a href="#" onclick="ubah('<?= e($kode_perwalian) ?>')" class="text-info" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                     </td>
                 </tr>
                 </tbody>

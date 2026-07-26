@@ -4,6 +4,7 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/kkp/search_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Pencarian Berdasarkan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-5">
@@ -49,9 +50,9 @@
                     <?php $no=1; foreach ($data as $row) : ?>
                         <tr>
                             <td style="text-align: center"><?= $no++ ?>.</td>
-                            <td style="display: none"><?= $row->kode_krs_detail ?></td>
-                            <td style="text-align: center"><?= $row->nim ?></td>
-                            <td style="text-align: left"><?= $row->nama_mahasiswa ?></td>
+                            <td style="display: none"><?= e($row->kode_krs_detail) ?></td>
+                            <td style="text-align: center"><?= e($row->nim) ?></td>
+                            <td style="text-align: left"><?= e($row->nama_mahasiswa) ?></td>
                             <td style="text-align: center"><?= number_format($row->nilai_akhir,2)?></td>
                             <!--                            <td style="text-align: center">-->
                             <!--                                <a href="#" class="btn btn-success btn-xs"><i class="fa fa-edit"></i> Update</a>-->
@@ -62,7 +63,7 @@
                 </table>
             </div>
         <?php else: ?>
-            <p class="message"><div class = "alert alert-warning alert-dismissible flat"><?= $message ?></p>
+            <p class="message"><div class = "alert alert-warning alert-dismissible flat"><?= e($message) ?></p>
         <?php endif; ?>
     </div>
 </div>

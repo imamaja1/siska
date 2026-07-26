@@ -1,6 +1,7 @@
 <div class="box box-solid flat">
     <div class="box-body" style="padding-top:10px;">
         <form action="<?= site_url('admin/akademik/hapus_mak/cari') ?>" method="post">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
         <div class="col-sm-4">
             <div class="input-group input-group">
                 <input type="text" class="form-control" name="nim" id="search-box" placeholder="Masukan NIM">

@@ -1,4 +1,4 @@
-<div class="box box-warning direct-chat direct-chat-warning">
+﻿<div class="box box-warning direct-chat direct-chat-warning">
     <div class="box-header with-border">
         <h3 class="box-title"><i class="fa fa-envelope"></i> UBGChat V.1</h3>
 
@@ -18,11 +18,11 @@
                 ?>
                 <div class="direct-chat-msg right">
                     <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-right"><?= $dekan ?></span>
+                        <span class="direct-chat-name pull-right"><?= e($dekan) ?></span>
                        <span class="direct-chat-timestamp pull-left">Tanggal:<?= tgl_indo($row->tgl_dekan); ?>&nbsp;Jam:<?= date('h:i:s A', strtotime($row->tgl_dekan)) ?></span>
                     </div>
                     <div class="direct-chat-text">
-                        <?= $row->pesan_dekan; ?>
+                        <?= e($row->pesan_dekan) ?>
                     </div>
                 </div>
                 <?php 
@@ -112,12 +112,12 @@
         const formControl = document.querySelector('.tulis-pesan').value;
         const newMessage = document.createElement('div')
         const sendingName = `<div class="direct-chat-info clearfix">
-                    <span class="direct-chat-name pull-right"><?= $dekan ?></span>
+                    <span class="direct-chat-name pull-right"><?= e($dekan) ?></span>
                     <span class="direct-chat-timestamp pull-left">${today + ' ' + currentTime}</span>
                     </div>`
         newMessage.className = 'direct-chat-text'
         newMessage.innerText = `${formControl}`
-        var url = "<?= site_url('dosen/update_nilai/pesan_all') ?>/" + super_kelas_id + "/dekan/<?= $param ?>";
+        var url = "<?= site_url('dosen/update_nilai/pesan_all') ?>/" + super_kelas_id + "/dekan/<?= e($param) ?>";
         $.ajax({
             url: url,
             type: "POST",

@@ -1,4 +1,4 @@
-<?php if ($kode_tahun_akademik >= 26) : ?> <!-- batas untuk program penilaian -->
+﻿<?php if ($kode_tahun_akademik >= 26) : ?> <!-- batas untuk program penilaian -->
 <?php if (count($data) > 0) : ?>
     <table class="table table-bordered demo-table">
         <thead>
@@ -17,13 +17,13 @@
             foreach ($data as $key1 => $row) :
                 ?>
                 <tr>
-                <td align="center"><?= $row->kelas_id; ?></td>
-                <td><?= $row->singkatan_program_studi; ?></td>
-                <td><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?> Kelas - <?= $row->nama_kelas ?></td>
-                <td align="center"><?= $row->semester ?></td>
+                <td align="center"><?= e($row->kelas_id) ?></td>
+                <td><?= e($row->singkatan_program_studi) ?></td>
+                <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?> Kelas - <?= e($row->nama_kelas) ?></td>
+                <td align="center"><?= e($row->semester) ?></td>
                 <td>
                     <?php foreach ($row->validasi as $key2 => $val): ?>
-                        <b>Pengajuan Nilai ke-<?= $val->level ?> : </b> 
+                        <b>Pengajuan Nilai ke-<?= e($val->level) ?> : </b> 
                         <?php if ($val->status == 4):?>
                             <?php if ($val->status_dosen == 'R'):?>
                                 <span class="label label-warning">Revisi</span>
@@ -41,8 +41,8 @@
                     <?php endforeach; ?> 
                 </td>
                 <td style="white-space: nowrap;width: 1px;">
-                    <a class="btn btn-<?= $row->status_dosen != 'T' ? 'warning' : 'info'; ?> btn-xs btn-flat" href="<?= site_url('dosen/penilaian_kpat/nilai_mahasiswa_uas_revisi/' . $row->kelas_id) ?>"> <i class="fa fa-arrow-circle-right"></i>
-                        <?= $row->status_dosen == 'R' ? 'Update Nilai' : ($row->status_nilai == 'T' ? 'Lihat Nilai' : 'Isi Nilai'); ?>
+                    <a class="btn btn-<?= e($row->status_dosen != 'T' ? 'warning' : 'info') ?> btn-xs btn-flat" href="<?= site_url('dosen/penilaian_kpat/nilai_mahasiswa_uas_revisi/' . $row->kelas_id) ?>"> <i class="fa fa-arrow-circle-right"></i>
+                        <?= e($row->status_dosen == 'R' ? 'Update Nilai' : ($row->status_nilai == 'T' ? 'Lihat Nilai' : 'Isi Nilai')) ?>
                     </a>
                     <?php 
                     if ($row->status_dekan == 'T') {
@@ -53,17 +53,17 @@
                     ?>
                 </td>
                 <td style="white-space: nowrap;width: 1px;">
-                    <button id="pesan_prodi_<?= $row->kelas_id ?>" onclick="pesan_uas_prodi('<?= $row->kelas_id ?>')" class="btn btn-xs
+                    <button id="pesan_prodi_<?= e($row->kelas_id) ?>" onclick="pesan_uas_prodi('<?= e($row->kelas_id) ?>')" class="btn btn-xs
                             btn-primary btn-flat badge-notif" 
                             <?php if ($pesan_prodi[$key1] != 0) {
-                                    echo 'data-badge="' . $pesan_prodi[$key1] . '"';
+                                    echo 'data-badge="' . e($pesan_prodi[$key1]) . '"';
                                 }
                             ?> 
                             ><i class="fa fa-envelope"></i> Kaprodi</button>
-                    <button id="pesan_dekan_<?= $row->kelas_id ?>" onclick="pesan_uas_dekan('<?= $row->kelas_id ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
+                    <button id="pesan_dekan_<?= e($row->kelas_id) ?>" onclick="pesan_uas_dekan('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
                     <?php
                     if ($pesan_dekan[$key1] != 0) {
-                        echo 'data-badge="' . $pesan_dekan[$key1] . '"';
+                        echo 'data-badge="' . e($pesan_dekan[$key1]) . '"';
                     }
                     ?> 
                     ><i class="fa fa-envelope"></i> Dekan </button>

@@ -24,12 +24,12 @@
                     <tr>
                         <td><strong>Nama Mahasiswa</strong></td>
                         <td><strong>:</strong></td>
-                        <td><?= $data['nama_mahasiswa'] ?></td>
+                        <td><?= e($data['nama_mahasiswa']) ?></td>
                     </tr>
                     <tr>
                         <td><strong>NIM</strong></td>
                         <td><strong>:</strong></td>
-                        <td><?= $data['nim'] ?></td>
+                        <td><?= e($data['nim']) ?></td>
                     </tr>
                     <tr>
                         <td><strong>Semester</strong></td>
@@ -43,12 +43,12 @@
                     <tr>
                         <td><strong>Program Studi</strong></td>
                         <td><strong>:</strong></td>
-                        <td><?= $data['prodi']->nama_program_studi ?></td>
+                        <td><?= e($data['prodi']->nama_program_studi) ?></td>
                     </tr>
                     <tr>
                         <td><strong>Fakultas</strong></td>
                         <td><strong>:</strong></td>
-                        <td><?= $data['prodi']->nama_fakultas ?></td>
+                        <td><?= e($data['prodi']->nama_fakultas) ?></td>
                     </tr>
 <!--                    <tr>-->
 <!--                        <td><strong>Kurikulum</strong></td>-->
@@ -81,15 +81,15 @@
                     ?>
                     <tr>
                         <td style="text-align: center;"><?= $i++ . "." ?></td>
-                        <td style="display:none;"><?= $row['kode_krs_detail'] ?></td>
-                        <td style="text-align: center;"><?= $row['kode_matakuliah'] ?></td>
-                        <td><?= $row['nama_matakuliah'] ?></td>
-                        <td style="text-align:center;"><?= $row['nilai_harian'] ?></td>
-                        <td style="text-align:center;"><?= $row['nilai_uts'] ?></td>
-                        <td style="text-align:center;"><?= $row['nilai_uas'] ?></td>
-                        <td style="text-align: center;"><?= $row['nilai_akhir'] ?></td>
-                        <td style="text-align: center;"><?= $row['grade'] ?></td>
-                        <td style="text-align: center;"><?= $row['tb'] == 'A' ? 'TB' : "" ?></td>
+                        <td style="display:none;"><?= e($row['kode_krs_detail']) ?></td>
+                        <td style="text-align: center;"><?= e($row['kode_matakuliah']) ?></td>
+                        <td><?= e($row['nama_matakuliah']) ?></td>
+                        <td style="text-align:center;"><?= e($row['nilai_harian']) ?></td>
+                        <td style="text-align:center;"><?= e($row['nilai_uts']) ?></td>
+                        <td style="text-align:center;"><?= e($row['nilai_uas']) ?></td>
+                        <td style="text-align: center;"><?= e($row['nilai_akhir']) ?></td>
+                        <td style="text-align: center;"><?= e($row['grade']) ?></td>
+                        <td style="text-align: center;"><?= e($row['tb'] == 'A' ? 'TB' : "") ?></td>
                     </tr>
                     <?php ?>
                 <?php endforeach; ?>
@@ -114,15 +114,16 @@
                 </div>
                 <div class="modal-body">
                     <form action="<?= site_url('admin/akademik/kpat/krs/simpan') ?>" method="post">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <div class="form-group">
                             <label>Nama Matakuliah</label>
-                            <input type="hidden" name="kode_krs" value="<?= $data['kode_krs'] ?>">
-                            <input type="hidden" name="nim" value="<?= $data['nim'] ?>">
+                            <input type="hidden" name="kode_krs" value="<?= e($data['kode_krs']) ?>">
+                            <input type="hidden" name="nim" value="<?= e($data['nim']) ?>">
                             <select required style="width:100%;" name="id_matakuliah" class="form-control select2">
                                 <option selected disabled>Pilih</option>
                                 <?php foreach ($matakuliah as $row) : ?>
-                                    <option value="<?= $row->id_matakuliah ?>"><?= $row->kode_matakuliah ?>
-                                        - <?= $row->nama_matakuliah ?></option>
+                                    <option value="<?= e($row->id_matakuliah) ?>"><?= e($row->kode_matakuliah) ?>
+                                        - <?= e($row->nama_matakuliah) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

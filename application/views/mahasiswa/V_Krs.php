@@ -1,9 +1,9 @@
 <?= $this->session->flashdata('info') ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= $dosen_wali ?></span>&nbsp;
+        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= e($dosen_wali) ?></span>&nbsp;
         <?php if (isset($dosen_perwakilan)) : ?>
-            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= $dosen_perwakilan ?></span>
+            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= e($dosen_perwakilan) ?></span>
         <?php endif; ?>
     </div>
 </div>
@@ -41,7 +41,7 @@
                     <?php 
                         if ($ta == $tahun_akademik->kode_tahun_akademik) {
                         ?>
-                  			<?php if(empty($aktif_dosen) && empty($bayar_sks)):?>
+                   			<?php if(empty($aktif_dosen) && empty($bayar_sks)):?>
                                     <a href="krs/edit_krs" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Ubah</a>
                             <?php else:?>
                   				<?php if( empty($aktif_dosen) && substr($data_mahasiswa->nim, 0, 2) > 24 ):?>
@@ -49,17 +49,20 @@
                   				<?php else: ?>
                   					<a href="#" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Tidak Dapat Diubah</a>
                                 <?php endif; ?>
-                  				<?php if( !empty($aktif_dosen) && substr($data_mahasiswa->nim, 0, 2) > 24 ):?>
-                                    <a href="<?= site_url('mahasiswa/krs/print_view') ?>" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</a>
+                    				<?php if( !empty($aktif_dosen) && substr($data_mahasiswa->nim, 0, 2) > 24 ):?>
+                                        <a href="<?= site_url('mahasiswa/krs/print_view') ?>" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</a>
+                                        <a href="<?= site_url('mahasiswa/krs/cetak') ?>" class="btn btn-success btn-xs"><i class="fa fa-download"></i> Download</a>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
-                            <?php if( !empty($aktif_dosen) && !empty($bayar_sks) && substr($data_mahasiswa->nim, 0, 2) < 25 ):?>
-                                <a href="<?= site_url('mahasiswa/krs/print_view') ?>" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</a>
-                            <?php endif; ?>
+                                <?php if( !empty($aktif_dosen) && !empty($bayar_sks) && substr($data_mahasiswa->nim, 0, 2) < 25 ):?>
+                                    <a href="<?= site_url('mahasiswa/krs/print_view') ?>" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</a>
+                                    <a href="<?= site_url('mahasiswa/krs/cetak') ?>" class="btn btn-success btn-xs"><i class="fa fa-download"></i> Download</a>
+                                <?php endif; ?>
                         <?php 
                         }else{
                             ?>
                                 <a href="<?= site_url('mahasiswa/krs/print_view_lalu/'.$tahun_akademik->kode_tahun_akademik.'/'.$semester) ?>" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Print</a>
+                                <a href="<?= site_url('mahasiswa/krs/cetak_lalu/'.$tahun_akademik->kode_tahun_akademik.'/'.$semester) ?>" class="btn btn-success btn-xs"><i class="fa fa-download"></i> Download</a>
                             <?php
                         }
                     ?>
@@ -137,8 +140,8 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
             </div>
             <div class="col-md-10 col-xs-12 col-sm-12">
                 <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS)
-                        JENJANG <?= strtoupper($prodi->nama_program_studi) ?>
-                        (<?= strtoupper($prodi->singkatan_program_studi) ?>)</strong></p>
+                        JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?>
+                        (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
                 <p style="text-align: center">
                     <strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL" ?></strong></p>
             </div>
@@ -149,11 +152,11 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                     <table class="table">
                         <tr>
                             <th>Nama Mahasiswa</th>
-                            <td> : <?= $nama_mahasiswa ?></td>
+                            <td> : <?= e($nama_mahasiswa) ?></td>
                         </tr>
                         <tr>
                             <th>NIM</th>
-                            <td> : <?= $nim ?></td>
+                            <td> : <?= e($nim) ?></td>
                         </tr>
                         <tr>
                             <th>Semester</th>
@@ -161,7 +164,7 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                         </tr>
                         <tr>
                             <th>Dosen Wali</th>
-                            <td> : <?= $dosen_wali ?></td>
+                            <td> : <?= e($dosen_wali) ?></td>
                         </tr>
                     </table>
                 </td>
@@ -170,20 +173,20 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                         <tr>
                             <th>Alamat Sekarang</th>
                             <td>
-                                : <?= $data_mahasiswa->alamat . ', ' . $data_mahasiswa->kota . '<br>' . $data_mahasiswa->propinsi ?></td>
+                                : <?= e($data_mahasiswa->alamat) . ', ' . e($data_mahasiswa->kota) . '<br>' . e($data_mahasiswa->propinsi) ?></td>
                         </tr>
                         <tr>
                             <th>No. Telp/HP</th>
-                            <td> : <?= $data_mahasiswa->telepon ?></td>
+                            <td> : <?= e($data_mahasiswa->telepon) ?></td>
                         </tr>
                         <tr>
                             <th>Alamat Orang Tua</th>
                             <td>
-                                : <?= $data_mahasiswa->alamat_orangtua . ', ' . $data_mahasiswa->kota_orangtua . '<br>' . $data_mahasiswa->propinsi_orangtua ?></td>
+                                : <?= e($data_mahasiswa->alamat_orangtua) . ', ' . e($data_mahasiswa->kota_orangtua) . '<br>' . e($data_mahasiswa->propinsi_orangtua) ?></td>
                         </tr>
                         <tr>
                             <th>Telp</th>
-                            <td> : <?= $data_mahasiswa->telepon_orangtua ?></td>
+                            <td> : <?= e($data_mahasiswa->telepon_orangtua) ?></td>
                         </tr>
                     </table>
                 </td>
@@ -237,16 +240,16 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                         <center><?= $i++ ?>.</center>
                     </td>
                     <td>
-                        <center><?= $row->kode_matakuliah ?></center>
+                        <center><?= e($row->kode_matakuliah) ?></center>
                     </td>
                     <?php if (substr($this->session->userdata('nim'), 0, 2) == '16') : ?>
                         <?php if ($row->kode_matakuliah == 'TSKB351435') : ?>
                             <td>Animasi 2 Dimensi</td>
                         <?php else : ?>
-                            <td><?= $row->nama_matakuliah ?></td>
+                            <td><?= e($row->nama_matakuliah) ?></td>
                         <?php endif; ?>
                     <?php else: ?>
-                        <td><?= $row->nama_matakuliah ?></td>
+                        <td><?= e($row->nama_matakuliah) ?></td>
                     <?php endif; ?>
                     <td width="100">
                         <center><?= $row->sks_teori != 0 ? $row->sks_teori : '' ?></center>

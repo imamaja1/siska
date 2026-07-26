@@ -1,14 +1,15 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span></button>
-    <h4 class="modal-title"><i class="fa fa-pie-chart"></i> Kuisioner - <strong><?= $matakuliah->nama_matakuliah ?></strong></h4>
+    <h4 class="modal-title"><i class="fa fa-pie-chart"></i> Kuisioner - <strong><?= e($matakuliah->nama_matakuliah) ?></strong></h4>
 </div>
 <form id="form-kuisioner" action="<?= site_url('mahasiswa/kuisioner/simpan') ?>" method="post">
+    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 <div class="modal-body">
     <?php if (count($dosen) > 0) :?>
         <p><strong>Nama Dosen : </strong></p>
         <?php $i=1; foreach ($dosen as $row) : ?>
-            <p><?= $i++ ?>. <?= $row->nama_dosen ?></p>
+            <p><?= $i++ ?>. <?= e($row->nama_dosen) ?></p>
         <?php endforeach;?>
     <?php else: ?>
         <div class="badge bg-aqua">Dosen belum ada...!!!</div>
@@ -33,13 +34,13 @@
             <?php $kategori = $row->kategori ?>
             <?php if ($kat != $kategori) : ?>
                     <tr>
-                        <td colspan="7"><strong><?= $kategori ?></strong></td>
+                        <td colspan="7"><strong><?= e($kategori) ?></strong></td>
                     </tr>
             <?php endif;?>
             <?php $kat = $kategori;?>
             <tr>
                 <td align="center"><?= $i++ ?>.</td>
-                <td ><?= $row->soal ?></td>
+                <td ><?= e($row->soal) ?></td>
                 <td align="center"><label><input required type="radio" name="hasil[<?= $row->soal_kuisioner_id ?>]" value="1"></label></td>
                 <td align="center"><label><input required type="radio" name="hasil[<?= $row->soal_kuisioner_id ?>]" value="2"></label></td>
                 <td align="center"><label><input required type="radio" name="hasil[<?= $row->soal_kuisioner_id ?>]" value="3"></label></td>

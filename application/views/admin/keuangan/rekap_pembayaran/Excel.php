@@ -40,7 +40,7 @@ header("Cache-Control: private", false);
 <body>
 <p style="text-align: center; font-weight: bold; font-size: 16pt">Rekap Pembayaran
     TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == '0' ? 'GENAP' : 'GANJIL' ?>
-    <br>Program Studi <?= $program_studi->nama_program_studi ?></p>
+    <br>Program Studi <?= e($program_studi->nama_program_studi) ?></p>
 <hr>
 <table id="customers">
     <thead>
@@ -61,8 +61,8 @@ header("Cache-Control: private", false);
     foreach ($data as $row) : ?>
         <tr>
             <td><?= $no++ ?></td>
-            <td><?= $row->nim ?></td>
-            <td><?= $row->nama_mahasiswa ?></td>
+            <td><?= e($row->nim) ?></td>
+            <td><?= e($row->nama_mahasiswa) ?></td>
             <td style="text-align: center"><?= $row->semester ?></td>
             <td style="text-align: center"><?= $row->teori ?></td>
             <td style="text-align: center"><?= $row->praktikum ?></td>

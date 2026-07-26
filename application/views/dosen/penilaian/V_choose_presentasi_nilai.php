@@ -1,4 +1,4 @@
-
+﻿
 
 <table class="table table-bordered demo-table">
     <thead>
@@ -21,20 +21,20 @@
             ?>
             <tr>
 
-                <td align="center"><?= $row->kelas_id; ?></td>
-                <td><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?> Kelas - <?= $row->nama_kelas ?></td>
+                <td align="center"><?= e($row->kelas_id) ?></td>
+                <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?> Kelas - <?= e($row->nama_kelas) ?></td>
 
-                <td><?= $row->nilai_harian ?></td>
-                <td><?= $row->nilai_uts ?></td>
-                <td><?= $row->nilai_uas ?></td>
+                <td><?= e($row->nilai_harian) ?></td>
+                <td><?= e($row->nilai_uts) ?></td>
+                <td><?= e($row->nilai_uas) ?></td>
                 <td style="white-space: nowrap;width: 1px;">
                     <?php if (($row->nilai_harian == "") || ($row->nilai_uts == "") || ($row->nilai_uas == "")): ?>
-                        <a class="btn btn-primary btn-xs btn-flat" href="#" data-toggle="modal" data-target="#isi_presentasi<?= $row->kelas_id ?>">
+                        <a class="btn btn-primary btn-xs btn-flat" href="#" data-toggle="modal" data-target="#isi_presentasi<?= e($row->kelas_id) ?>">
                             <i class="fa fa-arrow-circle-right"></i>
                             Isi Presentasi
                         </a>
 
-                        <div class="modal fade" id="isi_presentasi<?= $row->kelas_id ?>" style="display: none;">
+                        <div class="modal fade" id="isi_presentasi<?= e($row->kelas_id) ?>" style="display: none;">
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
 
@@ -50,7 +50,7 @@
                                             <div class="form-group">
                                                 <label for="">Nilai Harian <span class="text-danger">*</span></label>
                                                 <div class="input-group">
-                                                    <input type="hidden" name="kelas_id" value="<?= $row->kelas_id ?>">
+                                                    <input type="hidden" name="kelas_id" value="<?= e($row->kelas_id) ?>">
                                                     <input type="number" class="form-control " maxlength="3" min="0" max="100" required
                                                            name="nilai_harian" id="nilai_harian" placeholder="_%">
                                                     <span class="input-group-addon">%</span>
@@ -89,11 +89,11 @@
                             Isi Default
                         </a>
                     <?php else: ?>
-                        <a class="btn btn-warning btn-xs btn-flat" href="#" data-toggle="modal" data-target="#update_presentasi<?= $row->kelas_id ?>">
+                        <a class="btn btn-warning btn-xs btn-flat" href="#" data-toggle="modal" data-target="#update_presentasi<?= e($row->kelas_id) ?>">
                             <i class="fa fa-arrow-circle-right"></i>
                             Update Presentasi
                         </a>
-                        <div class="modal fade" id="update_presentasi<?= $row->kelas_id ?>" style="display: none;">
+                        <div class="modal fade" id="update_presentasi<?= e($row->kelas_id) ?>" style="display: none;">
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
 
@@ -109,9 +109,9 @@
                                             <div class="form-group">
                                                 <label for="">Nilai Harian <span class="text-danger">*</span></label>
                                                 <div class="input-group">
-                                                    <input type="hidden" name="kelas_id" value="<?= $row->kelas_id ?>">
+                                                    <input type="hidden" name="kelas_id" value="<?= e($row->kelas_id) ?>">
                                                     <input type="number" class="form-control " maxlength="3" min="0" max="100" required
-                                                           name="nilai_harian" id="nilai_harian" placeholder="%" value="<?= $row->nilai_harian ?>" >
+                                                           name="nilai_harian" id="nilai_harian" placeholder="%" value="<?= e($row->nilai_harian) ?>" >
                                                     <span class="input-group-addon">%</span>
                                                 </div>
                                             </div>
@@ -119,7 +119,7 @@
                                                 <label for="">Nilai UTS <span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" class="form-control " maxlength="3" min="0" max="100" required
-                                                           name="nilai_uts" id="nilai_uts" placeholder="_%" value="<?= $row->nilai_uts ?>">
+                                                           name="nilai_uts" id="nilai_uts" placeholder="_%" value="<?= e($row->nilai_uts) ?>">
                                                     <span class="input-group-addon">%</span>
                                                 </div>
                                             </div>
@@ -127,7 +127,7 @@
                                                 <label for="">Nilai UAS <span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <input type="number" class="form-control" maxlength="3" min="0" max="100" required
-                                                           name="nilai_uas" id="nilai_uas" placeholder="_%" value="<?= $row->nilai_uas ?>">
+                                                           name="nilai_uas" id="nilai_uas" placeholder="_%" value="<?= e($row->nilai_uas) ?>">
                                                     <span class="input-group-addon">%</span>
                                                 </div>
                                             </div>

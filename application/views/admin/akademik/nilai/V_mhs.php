@@ -11,8 +11,8 @@
             <?php foreach ($kelas as $key => $value) { ?>
             <tr>
                 <th scope="row"><?= $key+1 ?></th>
-                <td><?= $value->nim ?></td>
-                <td><?= $value->nama_mahasiswa ?></td>
+                <td><?= e($value->nim) ?></td>
+                <td><?= e($value->nama_mahasiswa) ?></td>
             </tr>
             <?php } ?>
         </tbody>

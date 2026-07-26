@@ -261,3 +261,10 @@ if (!function_exists('validasi_nilai')) {
         return '<span class="label label-success">Sudah</span>';
     }
 }
+
+if (!function_exists('e')) {
+    function e($str)
+    {
+        return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+    }
+}

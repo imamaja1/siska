@@ -7,7 +7,7 @@ echo!empty($flashmessage) ? '<p class="message">' . $flashmessage . '</p>' : '';
 ?>
 
 
-    <div class="box box-solid flat" <?= $hidden  ?>>
+    <div class="box box-solid flat" <?= e($hidden)  ?>>
         <div class="box-body"><br>
             <form class="form-horizontal" name="perwakilan_perwalian_form" method="post" action="<?php echo $form_action; ?>">
                 <div class="form-group">

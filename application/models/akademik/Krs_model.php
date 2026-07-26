@@ -56,7 +56,7 @@ class Krs_model extends CI_Model
 
     function kurikulum_penilaian($angkatan, $kode_program_studi)
     {
-        $penilaian = $this->db->query("SELECT * FROM (SELECT distinct kode_sistem_penilaian_detail, mid(angkatan,-2) as angkatan, nama_kurikulum.kode_nama_kurikulum, nilai_minimum, nilai_maksimum, grade, bobot_nilai, kategori, keterangan, nama_kurikulum, kode_program_studi FROM nama_kurikulum, kurikulum, sistem_penilaian, sistem_penilaian_detail WHERE nama_kurikulum.kode_nama_kurikulum=kurikulum.kode_nama_kurikulum and nama_kurikulum.kode_nama_kurikulum=sistem_penilaian.kode_nama_kurikulum and sistem_penilaian.kode_sistem_penilaian=sistem_penilaian_detail.kode_sistem_penilaian) as mhs WHERE angkatan=? and kode_program_studi=?", array($angkatan, $kode_program_studi))->result_array();
+        $penilaian = $this->db->query("SELECT * FROM (SELECT distinct kode_sistem_penilaian_detail, mid(angkatan1,-2) as angkatan, nama_kurikulum.kode_nama_kurikulum, nilai_minimum, nilai_maksimum, grade, bobot_nilai, kategori, keterangan, nama_kurikulum, kode_program_studi FROM nama_kurikulum, kurikulum, sistem_penilaian, sistem_penilaian_detail WHERE nama_kurikulum.kode_nama_kurikulum=kurikulum.kode_nama_kurikulum and nama_kurikulum.kode_nama_kurikulum=sistem_penilaian.kode_nama_kurikulum and sistem_penilaian.kode_sistem_penilaian=sistem_penilaian_detail.kode_sistem_penilaian) as mhs WHERE angkatan=? and kode_program_studi=?", array($angkatan, $kode_program_studi))->result_array();
 
         return $penilaian;
     }
@@ -64,13 +64,13 @@ class Krs_model extends CI_Model
     function autocomplate($keyword)
     {
 
-        return $this->db->like('nim', $keyword, 'after')->group_by('nim')->order_by('nim ASC')->limit(6)->get('krs')->result();
+        return $this->db->select('nim')->like('nim', $keyword, 'after')->group_by('nim')->order_by('nim ASC')->limit(6)->get('krs')->result();
     }
 
     function get_mahasiswa_by_angkatan_jurusan_semester($tahun_akademik, $angkatan, $jurusan, $semester, $limit, $offset)
     {
 
-        return $this->db->select('*')
+        return $this->db->select('m.nim, m.nama_mahasiswa, k.kode_krs, k.semester')
                 ->from('mahasiswa as m')
                 ->join('krs as k', 'm.nim=k.nim')
                 ->join('konsultasi_perwalian as ko', 'm.nim=ko.nim and ko.kode_tahun_akademik=k.kode_tahun_akademik')
@@ -88,7 +88,7 @@ class Krs_model extends CI_Model
     function count_mahasiswa_by_angkatan_jurusan_semester($tahun_akademik, $angkatan, $jurusan, $semester)
     {
 
-        return $this->db->select('*')
+        return $this->db->select('m.nim')
                 ->from('mahasiswa as m')
                 ->join('krs as k', 'm.nim=k.nim')
                 ->join('konsultasi_perwalian as ko', 'm.nim=ko.nim and ko.kode_tahun_akademik=k.kode_tahun_akademik')
@@ -104,7 +104,7 @@ class Krs_model extends CI_Model
 
     function get_mahasiswa_by_nim($tahun_akademik, $kata_kunci, $semester)
     {
-        return $this->db->select('*')
+        return $this->db->select('m.nim, m.nama_mahasiswa, k.kode_krs, ko.status_cetak')
                 ->from('mahasiswa as m')
                 ->join('krs as k', 'm.nim=k.nim')
                 ->join('konsultasi_perwalian as ko', 'm.nim=ko.nim and ko.kode_tahun_akademik=k.kode_tahun_akademik')
@@ -146,7 +146,7 @@ class Krs_model extends CI_Model
 
     function get_mahasiswa_by_nama($tahun_akademik, $kata_kunci, $semseter, $limit, $offset)
     {
-        return $this->db->select('*')
+        return $this->db->select('m.nim, m.nama_mahasiswa, k.kode_krs, ko.status_cetak')
                 ->from('mahasiswa as m')
                 ->join('krs as k', 'm.nim=k.nim')
                 ->join('konsultasi_perwalian as ko', 'm.nim=ko.nim and ko.kode_tahun_akademik=k.kode_tahun_akademik')
@@ -162,10 +162,10 @@ class Krs_model extends CI_Model
                 ->limit($limit, $offset)
                 ->group_by('m.nim')->get()->result();
     }
-
+    
     function count_mahasiswa_by_nama($tahun_akademik, $kata_kunci, $semseter)
     {
-        return $this->db->select('*')
+        return $this->db->select('m.nim')
                 ->from('mahasiswa as m')
                 ->join('krs as k', 'm.nim=k.nim')
                 ->join('konsultasi_perwalian as ko', 'm.nim=ko.nim and ko.kode_tahun_akademik=k.kode_tahun_akademik')
@@ -231,7 +231,7 @@ class Krs_model extends CI_Model
                 ->group_by('matakuliah.id_matakuliah')
                 ->get_compiled_select();
 
-        $query3 = $this->db->query("SELECT *, SUM(mah.jum) as jml FROM (" . $query1 . ") as mah GROUP BY mah.id_matakuliah")->result();
+        $query3 = $this->db->query("SELECT id_matakuliah, kode_matakuliah, sks_praktikum, nama_matakuliah, jum as jml FROM (" . $query1 . ") as mah")->result();
         return $query3;
     }
 
@@ -462,7 +462,7 @@ class Krs_model extends CI_Model
     {
         $tahun_akademik = $this->db->where('status', 'A')->get('tahun_akademik')->row_object();
         $semester = array('1', '2', '3', '4');
-        $query = $this->db->select('*')
+        $query = $this->db->select('mak.id_matakuliah')
                 ->from('krs')
                 ->join('krs_detail as kd', 'kd.kode_krs=krs.kode_krs')
                 ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail')

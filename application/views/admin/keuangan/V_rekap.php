@@ -7,13 +7,14 @@
     <div class="box-body">
         <form class="form-horizontal" action="<?= site_url('admin/keuangan/status_perkuliahan/filter_rekap') ?>"
               method="POST">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2">Tahun Akademik</label>
                 <div class="col-sm-3">
                     <select required class="form-control select2" name="tahun_akademik">
                         <option value="">Pilih</option>
                         <?php foreach ($tahun_akademik as $row) { ?>
-                        <option value="<?= $row->kode_tahun_akademik ?>"><?php echo $row->tahun_akademik; ?>
+                        <option value="<?= e($row->kode_tahun_akademik) ?>"><?php echo e($row->tahun_akademik); ?>
                             <?= $row->semester == 0 ? "- Genap" : "- Ganjil" ?>
                             <?php } ?>
                     </select>
@@ -25,7 +26,7 @@
                     <select required class="form-control" name="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
-                            <option value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?> - (<?= $row->nama_program_studi ?>)</option>
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> - (<?= e($row->nama_program_studi) ?>)</option>
                         <?php } ?>
                     </select>
                 </div>

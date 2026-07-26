@@ -8,7 +8,7 @@
 </div>
 <div class="box box-primary flat">
     <div class="box-header with-border">
-        <h4 class="box-title"><i class="fa fa-calendar"></i><strong> TA. <?= $tahun_akademik->tahun_akademik ?> <?= $tahun_akademik->semester == 0 ? "GENAP" : "GANJIL" ?></strong> (<?= $prodi->singkatan_program_studi ?> - <?= strtoupper($prodi->nama_program_studi )?>)</h4>
+        <h4 class="box-title"><i class="fa fa-calendar"></i><strong> TA. <?= e($tahun_akademik->tahun_akademik) ?> <?= $tahun_akademik->semester == 0 ? "GENAP" : "GANJIL" ?></strong> (<?= e($prodi->singkatan_program_studi) ?> - <?= strtoupper(e($prodi->nama_program_studi)) ?>)</h4>
         <div class="box-tools pull-right">
           <!--            <a href="--><?//= site_url('admin/laporan/rekap_ipk/cetak') ?><!--" class="btn btn-danger btn-sm flat"><i class="fa fa-file-excel-o"></i> Export</a>-->
             <a href="<?= site_url('admin/laporan/rekap_ipk/cetak_baru') ?>" class="btn btn-danger btn-sm flat"><i class="fa fa-file-excel-o"></i> Export New</a>
@@ -32,8 +32,8 @@
                 <?php $i = 1 + $this->uri->segment(5); foreach ($data as $row) : ?>
                     <tr>
                         <td width="3%" align="center"><?= $i++ ?>.</td>
-                        <td align="center"><?= $row->nim?></td>
-                        <td ><?= $row->nama_mahasiswa ?></td>
+                        <td align="center"><?= e($row->nim) ?></td>
+                        <td ><?= e($row->nama_mahasiswa) ?></td>
                         <td align="center"><?= $row->sks ?></td>
                         <td align="center"><?= $row->ip ?></td>
                         <td align="center"><?= $row->ipk ?></td>

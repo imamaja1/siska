@@ -11,8 +11,8 @@
     <div class="col-md-12">
         <div class="box box-info flat">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-chain-broken"></i><b> KELAS - <?= $data_kelas->nama_kelas ?> </b>
-                    (<?= $data_kelas->kode_matakuliah ?> - <?= $data_kelas->nama_matakuliah ?>)</h3>
+                <h3 class="box-title"><i class="fa fa-chain-broken"></i><b> KELAS - <?= e($data_kelas->nama_kelas) ?> </b>
+                    (<?= e($data_kelas->kode_matakuliah) ?> - <?= e($data_kelas->nama_matakuliah) ?>)</h3>
             </div>
             <div class="box-body">
                 <?php if (count($data) > 0): ?>
@@ -34,14 +34,14 @@
                                     <tr>
                                         <td style="text-align: center; width: 3%"><?= $no++ ?>.</td>
                                         <td style="text-align: center">
-                                            <?= $row->nim ?>
+                                            <?= e($row->nim) ?>
                                         </td>
-                                        <td><?= $row->nama_mahasiswa ?></td>
+                                        <td><?= e($row->nama_mahasiswa) ?></td>
 
                                         <td>
-                                            <div class="form-group nilai-uts-<?= $row->kode_khs_detail ?> " style="margin: 0px">
-                                                <input type="text" onchange="uts(<?= $row->kode_khs_detail ?>,<?= $row->kode_krs_detail ?>, this)" value="<?= $row->dummy_uts ?>"
-                                                       class="form-control input-uts-<?= $row->kode_khs_detail ?>"
+                                            <div class="form-group nilai-uts-<?= e($row->kode_khs_detail) ?> " style="margin: 0px">
+                                                <input type="text" onchange="uts(<?= e($row->kode_khs_detail) ?>,<?= e($row->kode_krs_detail) ?>, this)" value="<?= e($row->dummy_uts) ?>"
+                                                       class="form-control input-uts-<?= e($row->kode_khs_detail) ?>"
                                                        placeholder="Enter ..." <?php if ($data_kelas->status_nilai_uts == "T" || $exp): ?> disabled <?php endif; ?>>
                                             </div>
                                         </td>

@@ -8,6 +8,7 @@
             </div>
             <div class="box-body">
                 <form id="form-filter" method="POST" action="<?= site_url('admin/jurusan/konsultasi_perwalian/filter') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label class="control-label ">Angkatan : </label>
                         <select required name="angkatan" class="form-control">
@@ -22,7 +23,7 @@
                             <select required class="form-control" name="prodi">
                                 <option selected disabled value="" >Pilih</option>
                                 <?php foreach ($nama_jurusan as $row) { ?>
-                                    <option value="<?= $row->kode_program_studi?>"><?= $row->nama_program_studi?></option>
+                                    <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                                 <?php } ?>
                             </select>
                     </div>
@@ -37,14 +38,12 @@
                 <form id="form-cari" action="<?= site_url('admin/jurusan/konsultasi_perwalian/cari') ?>">
                     <div class="form-group" style="margin: 0px">
                         <label for="inputEmail3" class=" control-label">NIM/Nama</label>
-
                             <div class="input-group input-group-sm">
                                 <input type="text" name="keyword" class="form-control" placeholder="Keyword">
                                 <span class="input-group-btn">
                             <button class="btn btn-danger"><i class="fa fa-search"></i></button>
                         </span>
                             </div>
-
                     </div>
                 </form>
             </div>

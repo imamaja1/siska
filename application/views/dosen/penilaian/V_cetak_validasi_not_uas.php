@@ -1,4 +1,4 @@
-<html>
+﻿<html>
     <head>
         <title>title</title>
         <style>
@@ -20,7 +20,7 @@
                 $label = "GENAP";
             }
             ?>
-            FORM VALIDASI NILAI UJIAN AKHIR SEMESTER <?= $label ?> TA. <?= $query1->tahun_akademik ?>
+            FORM VALIDASI NILAI UJIAN AKHIR SEMESTER <?= e($label) ?> TA. <?= e($query1->tahun_akademik) ?>
       
 
             <br><br>
@@ -30,24 +30,24 @@
                 <tr>
                     <th style="text-align:left;">Program Studi</th>
                     <th>:<th>
-                    <td><?= $query1->nama_program_studi; ?> (<?= $query1->nama_fakultas; ?>)</td>
+                    <td><?= e($query1->nama_program_studi) ?> (<?= e($query1->nama_fakultas) ?>)</td>
                 </tr>
 
                 <tr>
                     <th style="text-align:left;">Nama Matakuliah</th>
                     <th>:<th>
-                    <td><?= $query1->mtkm; ?> - <?= $query1->nama_matakuliah; ?> (<?= $query1->sks_teori + $query1->sks_praktek + $query1->sks_praktikum; ?> SKS)</td>
+                    <td><?= e($query1->mtkm) ?> - <?= e($query1->nama_matakuliah) ?> (<?= e($query1->sks_teori + $query1->sks_praktek + $query1->sks_praktikum) ?> SKS)</td>
                 </tr>
 
                 <tr>
                     <th style="text-align:left;">Semester / Kelas</th>
                     <th>:<th>
-                    <td><?= $query1->kls; ?>/<?= $query1->nama_kelas; ?></td>
+                    <td><?= e($query1->kls) ?>/<?= e($query1->nama_kelas) ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Dosen</th>
                     <th>:<th>
-                    <td><?= $nama_dosen->nama_dosen; ?></td>
+                    <td><?= e($nama_dosen->nama_dosen) ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Tanggal Cetak Form</th>
@@ -77,13 +77,13 @@
                 foreach ($query2 as $row):
                     ?>
                     <tr>
-                        <td class="padding" align="center"><?= $no++; ?></td>
-                        <td class="padding" align="center"><?= $row->nim; ?></td>
-                        <td><?= $row->nama_mahasiswa ?></td>
-                        <td align="center"><?= $row->dummy_harian ?></td>
-                        <td align="center"><?= $row->nilai_uts ?></td>
-                        <td align="center"><?= $row->dummy_uas ?></td>
-                        <td align="center"><?= $row->dummy_na ?></td>
+                        <td class="padding" align="center"><?= e($no++) ?></td>
+                        <td class="padding" align="center"><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
+                        <td align="center"><?= e($row->dummy_harian) ?></td>
+                        <td align="center"><?= e($row->nilai_uts) ?></td>
+                        <td align="center"><?= e($row->dummy_uas) ?></td>
+                        <td align="center"><?= e($row->dummy_na) ?></td>
                         <td align="center">
                             <?php
                             $data_penilaian = sistem_penilaian($row->nim);
@@ -105,13 +105,13 @@
                 <td>
                     <table border="0">
                         <tr>
-                            <td style="text-align: center;">Kaprodi <?= $query1->nama_program_studi; ?></td>
+                            <td style="text-align: center;">Kaprodi <?= e($query1->nama_program_studi) ?></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;"><br><br><br><br><br></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"> <?= $query4->dosen_kaprodi ?> <br> NIK <?= $query4->nik_dosen_kaprodi; ?>
+                            <td style="text-align: center;"> <?= e($query4->dosen_kaprodi) ?> <br> NIK <?= e($query4->nik_dosen_kaprodi) ?>
                         </tr>
                     </table>
                 </td>
@@ -119,13 +119,13 @@
                 <td>
                     <table border="0">
                         <tr>
-                            <td style="text-align: center;">Dekan <?= $query1->nama_fakultas; ?></td>
+                            <td style="text-align: center;">Dekan <?= e($query1->nama_fakultas) ?></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;"><br><br><br><br><br></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"> <?= $query3->dosen_fakultas ?> <br> NIK <?= $query3->nik_dosen_fakultas; ?>
+                            <td style="text-align: center;"> <?= e($query3->dosen_fakultas) ?> <br> NIK <?= e($query3->nik_dosen_fakultas) ?>
                         </tr>
                     </table>
                 </td>

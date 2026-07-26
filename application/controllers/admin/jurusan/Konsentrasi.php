@@ -52,11 +52,13 @@ class Konsentrasi extends CI_Controller {
 
     public function simpan_matakuliah() {
         $this->programstudiservice->simpanMatakuliahKonsentrasi($this->input->post());
+        $this->session->set_flashdata('info', 'Data berhasil disimpan');
         return redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function delete_matakuliah($id) {
         $this->programstudiservice->hapusMatakuliahKonsentrasi($id);
+        $this->session->set_flashdata('info', 'Data berhasil dihapus');
         return redirect($_SERVER['HTTP_REFERER']);
     }
 

@@ -8,7 +8,7 @@
 <!--<div class="col-md-12 col-xs-12 col-sm-12">-->
         <div class="box box-primary flat">
             <div class="box-header">
-                <h4><span class="text-success"><i class="fa fa-calendar"></i></span><strong> TAHUN AKADEMIK - <?= $tahun_akademik->tahun_akademik ?>  (<span class="text-success"><?= $tahun_akademik->semester == 0 ? "GENAP" : "GANJIL" ?></span>)</strong></h4>
+                <h4><span class="text-success"><i class="fa fa-calendar"></i></span><strong> TAHUN AKADEMIK - <?= e($tahun_akademik->tahun_akademik) ?>  (<span class="text-success"><?= $tahun_akademik->semester == 0 ? "GENAP" : "GANJIL" ?></span>)</strong></h4>
             </div>
             <div class="box-body">
                 <?php if (count($data) > 0): ?>

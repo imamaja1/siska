@@ -19,11 +19,12 @@
                 <div class="box-body"><br>
                     <form class="form-horizontal" id="form" method="POST"
                           action="<?= site_url('admin/jurusan/dosen/ubah') ?>">
-                        <input type="hidden" value="<?= $data_dosen->kode_dosen ?>" name="kode_dosen_biodata">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                        <input type="hidden" value="<?= e($data_dosen->kode_dosen) ?>" name="kode_dosen_biodata">
                         <div class="form-group">
                             <label class="control-label col-sm-2">NIK</label>
                             <div class="col-sm-3">
-                                <input value="<?= $data_dosen->nik; ?>" type="text" name="nik" placeholder="NIK"
+                                <input value="<?= e($data_dosen->nik) ?>" type="text" name="nik" placeholder="NIK"
                                        class="form-control" title="Field NIK harus diisi">
                                 <small style="color: red;"><?= form_error('nik') ?></small>
                             </div>
@@ -31,7 +32,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Nama Dosen</label>
                             <div class="col-sm-4">
-                                <input value="<?= $data_dosen->nama_dosen; ?>" type="text" name="nama_dosen"
+                                <input value="<?= e($data_dosen->nama_dosen) ?>" type="text" name="nama_dosen"
                                        class="form-control" placeholder="Nama dosen">
                                 <small style="color: red;"><?= form_error('nama_dosen') ?></small>
                             </div>
@@ -39,7 +40,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Field Studi</label>
                             <div class="col-sm-4">
-                                <input value="<?= $data_dosen->field_studi; ?>" type="text" name="field_studi"
+                                <input value="<?= e($data_dosen->field_studi) ?>" type="text" name="field_studi"
                                        class="form-control" placeholder="Field studi">
                                 <small style="color: red;"><?= form_error('field_studi') ?></small>
                             </div>
@@ -47,7 +48,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Alumni</label>
                             <div class="col-sm-4">
-                                <input value="<?= $data_dosen->alumni; ?>" type="text" name="alumni"
+                                <input value="<?= e($data_dosen->alumni) ?>" type="text" name="alumni"
                                        class="form-control" placeholder="Alumni">
                                 <small style="color: red;"><?= form_error('alumni') ?></small>
                             </div>
@@ -58,13 +59,12 @@
                                 <select class="form-control" name="status_dosen">
                                     <option disabled>Pilih Status</option>
                                     <?php
-                                    $data_dosen->status_dosen;
-                                    if ($data_dosen == 'T') {
+                                    if ($data_dosen->status_dosen == 'T') {
                                         echo '<option selected value="T">Tetap</option>';
                                     } else {
                                         echo '<option value="T">Tetap</option>';
                                     }
-                                    if ($data_dosen == 'L') {
+                                    if ($data_dosen->status_dosen == 'L') {
                                         echo '<option selected value="L">Luar</option>';
                                     } else {
                                         echo '<option value="L">Luar</option>';
@@ -81,7 +81,7 @@
                                     <option disabled selected>Pilih Homebase</option>
                                     <?php foreach ($homebase as $row) : ?>
                                         <option <?php echo $data_dosen->homebase == $row->kode_program_studi ? "selected" : "" ?> <?= set_select('homebase', $row->kode_program_studi) ?>
-                                                value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?></option>
+                                                value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                                 <small style="color: red;"><?= form_error('homebase') ?></small>
@@ -90,7 +90,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">No. Telepon</label>
                             <div class="col-sm-4">
-                                <input value="<?= $data_dosen->no_telp; ?>" type="text" name="no_telp"
+                                <input value="<?= e($data_dosen->no_telp) ?>" type="text" name="no_telp"
                                        class="form-control" placeholder="No. Telp">
                                 <small style="color: red;"><?= form_error('no_telp') ?></small>
                             </div>
@@ -99,7 +99,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Alamat email</label>
                             <div class="col-sm-4">
-                                <input value="<?= $data_dosen->alamat_email; ?>" type="text" name="alamat_email"
+                                <input value="<?= e($data_dosen->alamat_email) ?>" type="text" name="alamat_email"
                                        class="form-control" placeholder="Email">
                                 <small style="color: red;"><?= form_error('alamat_email') ?></small>
                             </div>
@@ -140,22 +140,19 @@
         </div>
         <div class="tab-pane" id="tab_3">
             <div class="box box-solid flat">
-<!--                <div class="box-header">-->
-<!--                    <h5><b>Signature --><!--</b></h5>-->
-<!--                    <hr>-->
-<!--                </div>-->
                 <div class="box-body">
-                    <form id="form-file-<?= $data_dosen->kode_dosen ?>" action="" enctype="multipart/form-data" method="post">
-                        <input id="upload-<?= $data_dosen->kode_dosen ?>" name="foto" type="file" style="display: none" onchange="readURL(this,<?= $data_dosen->kode_dosen ?>);">
+                    <form id="form-file-<?= e($data_dosen->kode_dosen) ?>" action="" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                        <input id="upload-<?= e($data_dosen->kode_dosen) ?>" name="foto" type="file" style="display: none" onchange="readURL(this,<?= e($data_dosen->kode_dosen) ?>);">
                     </form>
 
                     <p style="text-align: center">
                         <?php if (empty($data_dosen->signature)) : ?>
-                            <img src="<?= base_url('assets/dist/img/default-50x50.gif') ?>" class="img-bordered" onclick="cot(<?= $data_dosen->kode_dosen ?>)" id="upload_link-<?= $data_dosen->kode_dosen ?>"  style="height:150px" alt=""><br>
-                            <?= $data_dosen->nama_dosen; ?>
+                            <img src="<?= base_url('assets/dist/img/default-50x50.gif') ?>" class="img-bordered" onclick="cot(<?= e($data_dosen->kode_dosen) ?>)" id="upload_link-<?= e($data_dosen->kode_dosen) ?>"  style="height:150px" alt=""><br>
+                            <?= e($data_dosen->nama_dosen) ?>
                         <?php else: ?>
-                            <img src="<?= base_url('assets/signature-dosen/'.$data_dosen->signature) ?>" class="img-bordered" onclick="cot(<?= $data_dosen->kode_dosen ?>)" id="upload_link-<?= $data_dosen->kode_dosen ?>"  style="height:150px" alt=""><br>
-                            <?= $data_dosen->nama_dosen; ?>
+                            <img src="<?= base_url('assets/signature-dosen/'.$data_dosen->signature) ?>" class="img-bordered" onclick="cot(<?= e($data_dosen->kode_dosen) ?>)" id="upload_link-<?= e($data_dosen->kode_dosen) ?>"  style="height:150px" alt=""><br>
+                            <?= e($data_dosen->nama_dosen) ?>
                         <?php endif; ?>
                     </p>
                 </div>
@@ -164,14 +161,15 @@
         <div class="tab-pane <?= isset($active_2_2) ? $active_2_2 : "" ?>" id="tab_2">
             <div class="box box-solid flat">
                 <div class="box-header">
-                    <h5><b>Ubah Password Bapak/Ibu Dosen <?= $data_dosen->nama_dosen; ?></b></h5>
+                    <h5><b>Ubah Password Bapak/Ibu Dosen <?= e($data_dosen->nama_dosen) ?></b></h5>
                     <hr>
                 </div>
                 <div class="box-body"><br>
 
                     <form class="form-horizontal" id="form" method="POST"
                           action="<?= site_url('admin/jurusan/dosen/ubah_password') ?>">
-                        <input type="hidden" value="<?= $data_dosen->kode_dosen ?>" name="kode_dosen_password">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                        <input type="hidden" value="<?= e($data_dosen->kode_dosen) ?>" name="kode_dosen_password">
                         <div class="form-group" id="group-password">
                             <label class="control-label col-sm-2">Password Baru</label>
                             <div class="col-sm-4">
@@ -218,36 +216,29 @@
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                $('#img').attr('src', e.target.result);
+                $('#upload_link-' + id).attr('src', e.target.result);
             };
 
             reader.readAsDataURL(input.files[0]);
             var action = "<?= site_url('admin/jurusan/dosen/upload_image') ?>/"+id;
             var form = $('#form-file-'+id)[0];
-            $.ajax({
-                url: action,
-                type:"post",
-                data: new FormData(form),
-                processData:false,
-                contentType:false,
-                enctype: 'multipart/form-data',
-                cache:false,
-                async:false,
-                success: function(res){
-                    console.log(res);
-                    var obj = JSON.parse(res)
-                    if (obj.status == true)
-                    {
-                        alert('Berhasil upload gambar');
-                        location.reload();
-                    }else{
-                        alert(obj.msg);
-                    }
-                },
-                error : function () {
-                    console.log('gagal');
+            var fd = new FormData(form);
+            fd.append('<?= $this->security->get_csrf_token_name() ?>', '<?= $this->security->get_csrf_hash() ?>');
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', action, true);
+            xhr.onload = function () {
+                var obj = JSON.parse(xhr.responseText);
+                if (obj.status == true) {
+                    alert('Berhasil upload gambar');
+                    location.reload();
+                } else {
+                    alert(obj.msg);
                 }
-            });
+            };
+            xhr.onerror = function () {
+                console.log('gagal');
+            };
+            xhr.send(fd);
         }
     }
 </script>

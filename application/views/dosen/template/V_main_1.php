@@ -88,7 +88,7 @@
 
                                             <p style="color: white;">
                                                 Login Sebagai:<br>
-                                                <?= $this->session->userdata('nama_dosen') ?>
+                                                <?= e($this->session->userdata('nama_dosen')) ?>
                                             </p>
                                         </li>
 
@@ -113,7 +113,7 @@
                     Content Header (Page header) 
                     <section class="content-header">
                         <div style="font-size: 18px;">
-                            <b><?= $judul ?></b>
+                            <b><?= e($judul) ?></b>
                         </div>
                         <ol class="breadcrumb">
                             <?= isset($title_h1) ? $title_h1 : ""; ?>

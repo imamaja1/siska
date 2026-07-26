@@ -1,6 +1,6 @@
-<?php if ($cek == 2) : ?>
+﻿<?php if ($cek == 2) : ?>
     <div class="alert alert-danger center" role="alert">
-        Data Mahasiswa Tersebut Bukan Termasuk Prodi <?= $prodi->nama_program_studi; ?>
+        Data Mahasiswa Tersebut Bukan Termasuk Prodi <?= e($prodi->nama_program_studi) ?>
     </div>
 <?php elseif ($cek == 3) : ?>
     <div class="alert alert-danger center" role="alert">
@@ -15,20 +15,20 @@
                 <th>Nama</th>
                 <th>Prodi</th>
                 <th>Tahun Akademik MBKM</th>
-                <th>Tindakan<?= $ta ?></th>
+                <th>Tindakan<?= e($ta) ?></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($mahasiswa as $key => $value) {  ?> 
                     <tr>
                         <td><?= $key+1 ?></td>
-                        <td><?= $value->nim ?></td>
-                        <td><?= $value->nama_mahasiswa ?></td>
-                        <td><?= $value->nama_program_studi ?></td>
-                        <td><?= $ta->semester == 1 ? "Ganjil":"Genap" ?>, <?= $ta->tahun_akademik ?></td>
+                        <td><?= e($value->nim) ?></td>
+                        <td><?= e($value->nama_mahasiswa) ?></td>
+                        <td><?= e($value->nama_program_studi) ?></td>
+                        <td><?= e($ta->semester == 1 ? "Ganjil":"Genap") ?>, <?= e($ta->tahun_akademik) ?></td>
                         <td>
                             <?php if ($cek == 0) : ?>
-                                <button type="button" class="btn btn-success btn-sm" onclick="update(<?= $value->nim ?>)">Verifikasi</button>
+                                <button type="button" class="btn btn-success btn-sm" onclick="update(<?= e($value->nim) ?>)">Verifikasi</button>
                             <?php else: ?>
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Terdaftar</button>
                             <?php endif; ?>

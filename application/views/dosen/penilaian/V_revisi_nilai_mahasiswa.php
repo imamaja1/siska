@@ -1,4 +1,4 @@
-<table class="table table-bordered demo-table">
+﻿<table class="table table-bordered demo-table">
     <thead>
         <tr>
             <th style="white-space: nowrap;width: 1px; text-align: center">No</th>
@@ -16,16 +16,16 @@
     <tbody>
         <?php foreach ($data as $key => $row) : ?>
         <tr>
-            <td align="center"><?= $key+1; ?></td>
-            <td ><?= $row->nim; ?></td>
-            <td ><?= $row->nama_mahasiswa; ?></td>
-            <td align="center"><?= $row->harian ?></td>
-            <td align="center"><?= $row->uts; ?></td>
-            <td align="center"><?= $row->uas; ?></td>
-          	<td align="center"><?= $row->na; ?></td>
-            <td align="center"><?= $row->grade; ?></td>
+            <td align="center"><?= e($key+1) ?></td>
+            <td ><?= e($row->nim) ?></td>
+            <td ><?= e($row->nama_mahasiswa) ?></td>
+            <td align="center"><?= e($row->harian) ?></td>
+            <td align="center"><?= e($row->uts) ?></td>
+            <td align="center"><?= e($row->uas) ?></td>
+          	<td align="center"><?= e($row->na) ?></td>
+            <td align="center"><?= e($row->grade) ?></td>
             <td align="center"><?= ($row->mbkm_id) ? 'MBKM' : ($row->block_id ? 'Block' : '-'); ?></td>
-            <td align="center"><?= $row->ket ? $row->ket:'-'; ?></td>
+            <td align="center"><?= e($row->ket ? $row->ket:'-') ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

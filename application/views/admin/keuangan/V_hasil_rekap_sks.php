@@ -22,9 +22,9 @@
                 <?php $no = 1; foreach ($data as $row) : ?>
                 <tr>
                     <td><?= $no++ ?></td>
-                    <td><?= $row->nim ?></td>
-                    <td><?= $row->nama_mahasiswa ?></td>
-                    <td><?= get_kode_prodi($row->nim)->nama_program_studi ?></td>
+                    <td><?= e($row->nim) ?></td>
+                    <td><?= e($row->nama_mahasiswa) ?></td>
+                    <td><?= e(get_kode_prodi($row->nim)->nama_program_studi) ?></td>
                     <td style="text-align: center"><?= $row->semester ?></td>
                     <td style="text-align: center"><span class="badge bg-aqua-active"><?= $row->teori ?></span></td>
                     <td style="text-align: center"><span class="badge bg-red"><?= $row->praktikum ?></span></td>
@@ -37,43 +37,43 @@
                                 </label>-->
                                 <!--<span id="done" ondblclick="input(this, event)" style="<?= !$row->pembayaran_spp ? 'display:none' : '' ?>" class="text-success"><i class="fa fa-check"></i> SPP</span>-->
                                 <?php if ($row->pembayaran_spp == '0') : ?>
-                                    <button onclick="bayar_spp('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SPP</button>
+                                    <button onclick="bayar_spp('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SPP</button>
                                 <?php elseif ($row->pembayaran_spp == '1') : ?>
-                                    <button onclick="bayar_spp('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SPP</button>
+                                    <button onclick="bayar_spp('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SPP</button>
                                 <?php else : ?>
-                                    <button onclick="bayar_spp('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SPP</button>
+                                    <button onclick="bayar_spp('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SPP</button>
                                 <?php endif; ?>
                             </div>&nbsp;&nbsp;
 
                             <div class="checkbox pilihan">
                                 <!--<label id="input" style=" display:none">
-                                    <input onclick="bayar_sks('<?= $row->kode_status_perkuliahan ?>', this, event)" type="checkbox" <?= $row->pembayaran_sks ? 'checked' : '' ?>>
+                                    <input onclick="bayar_sks('<?= e($row->kode_status_perkuliahan) ?>', this, event)" type="checkbox" <?= $row->pembayaran_sks ? 'checked' : '' ?>>
                                     SKS
                                 </label>
                                 <span id="done" ondblclick="input(this, event)" style="<?= !$row->pembayaran_sks ? 'display:none' : '' ?>" class="text-success"><i class="fa fa-check"></i> SKS</span>
                                 <span id="batal" ondblclick="batal(this, event)" style="<?= $row->pembayaran_sks ? 'display:none' : '' ?>" class="text-danger"><i class="fa fa-times"></i> SKS</span>-->
                                 <?php if ($row->pembayaran_sks == '0') : ?>
-                                    <button onclick="bayar_sks('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SKS</button>
+                                    <button onclick="bayar_sks('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SKS</button>
                                 <?php elseif ($row->pembayaran_sks == '1') : ?>
-                                    <button onclick="bayar_sks('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SKS</button>
+                                    <button onclick="bayar_sks('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SKS</button>
                                 <?php else : ?>
-                                    <button onclick="bayar_sks('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SKS</button>
+                                    <button onclick="bayar_sks('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SKS</button>
                                 <?php endif; ?>
                             </div>&nbsp;&nbsp;
 
                             <div class="checkbox pilihan">
                                 <!--<label id="input" style="display:none">
-                                    <input onclick="bayar_lab('<?= $row->kode_status_perkuliahan ?>', this, event)" type="checkbox" <?= $row->pembayaran_lab ? 'checked' : '' ?>>
+                                    <input onclick="bayar_lab('<?= e($row->kode_status_perkuliahan) ?>', this, event)" type="checkbox" <?= $row->pembayaran_lab ? 'checked' : '' ?>>
                                     LAB
                                 </label>
                                 <span id="done" ondblclick="input(this, event)" style="<?= !$row->pembayaran_lab ? 'display:none' : '' ?>" class="text-success"><i class="fa fa-check"></i> LAB</span>
                                 <span id="batal" ondblclick="batal(this, event)" style="<?= $row->pembayaran_lab ? 'display:none' : '' ?>" class="text-danger"><i class="fa fa-times"></i> LAB</span>-->
                                 <?php if ($row->pembayaran_lab == '0') : ?>
-                                    <button onclick="bayar_lab('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> LAB</button>
+                                    <button onclick="bayar_lab('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> LAB</button>
                                 <?php elseif ($row->pembayaran_lab == '1') : ?>
-                                    <button onclick="bayar_lab('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> LAB</button>
+                                    <button onclick="bayar_lab('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> LAB</button>
                                 <?php else : ?>
-                                    <button onclick="bayar_lab('<?= $row->kode_status_perkuliahan ?>',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> LAB</button>
+                                    <button onclick="bayar_lab('<?= e($row->kode_status_perkuliahan) ?>',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> LAB</button>
                                 <?php endif; ?>
                             </div>
                         </div>

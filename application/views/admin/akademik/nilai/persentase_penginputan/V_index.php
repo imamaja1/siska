@@ -26,7 +26,7 @@
                         <tbody>
                         <?php $total = 0; $no=1; foreach ($prodi as $row) : ?>
                         <tr>
-                            <td><?= $row['nama_program_studi'] ?></td>
+                            <td><?= e($row['nama_program_studi']) ?></td>
                             <td>
                                 <?php if ($row['status']) : ?>
                                     <span class="badge bg-green"><i class="fa fa-check-square-o"></i> Selesai</span>
@@ -35,7 +35,7 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="#" onclick="matakuliah('<?= $row['kode_program_studi'] ?>')" class="btn btn-sm btn-danger" title="Lihat"><i class="fa fa-line-chart"></i> Lihat</a>
+                                <a href="#" onclick="matakuliah('<?= e($row['kode_program_studi']) ?>')" class="btn btn-sm btn-danger" title="Lihat"><i class="fa fa-line-chart"></i> Lihat</a>
                             </td>
                         </tr>
                         <?php $total = $total + $row['persen']; endforeach; ?>

@@ -30,7 +30,7 @@
                     <select class="form-control" name="jurusan" id="jurusan">
                         <option value="" disabled selected>Pilih Program Studi</option>
                         <?php foreach ($program_studi as $row) { ?>
-                            <option <?= set_select('jurusan', $row->kode_jurusan . $row->kode_jenjang) ?> value="<?= $row->kode_jurusan ?><?= $row->kode_jenjang ?>"><?= $row->singkatan_program_studi ?></option>
+                            <option <?= set_select('jurusan', $row->kode_jurusan . $row->kode_jenjang) ?> value="<?= e($row->kode_jurusan) ?><?= e($row->kode_jenjang) ?>"><?= e($row->singkatan_program_studi) ?></option>
                         <?php } ?>
                     </select>
                     <small class="text-danger"><?= form_error('jurusan'); ?></small>

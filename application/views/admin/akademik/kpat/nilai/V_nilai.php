@@ -32,13 +32,13 @@
                             ?>
                             <tr>
                                 <td style="text-align: center;"><?= $i++ . "." ?></td>
-                                <td style="display:none;"><?= $row->kode_khs_detail ?></td>
-                                <td style="text-align: center;"><?= $row->nim ?></></td>
-                                <td><?= $row->nama_mahasiswa ?></td>
-                                <td style="text-align:center;"><?= $row->nilai_harian ?></td>
-                                <td style="text-align:center;"><?= $row->nilai_uts ?></td>
-                                <td style="text-align:center;"><?= $row->nilai_uas ?></td>
-                                <td style="text-align:center;"><?= number_format($row->nilai_akhir,2) ?></td>
+                                <td style="display:none;"><?= e($row->kode_khs_detail) ?></td>
+                                <td style="text-align: center;"><?= e($row->nim) ?></></td>
+                                <td><?= e($row->nama_mahasiswa) ?></td>
+                                <td style="text-align:center;"><?= e($row->nilai_harian) ?></td>
+                                <td style="text-align:center;"><?= e($row->nilai_uts) ?></td>
+                                <td style="text-align:center;"><?= e($row->nilai_uas) ?></td>
+                                <td style="text-align:center;"><?= e(number_format($row->nilai_akhir,2)) ?></td>
                                 <td style="text-align: center;">-</td>
                             </tr>
     <?php endforeach; ?>

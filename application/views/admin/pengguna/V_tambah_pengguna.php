@@ -6,6 +6,7 @@
 <div class="box box-solid flat">
     <div class="box-body"><br>
         <form action="<?= site_url('admin/pengguna/pengguna/simpan'); ?>" method="POST" class="form-horizontal">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Nama Pengguna :</label>
                 <div class="col-sm-4">
@@ -40,7 +41,7 @@
                     <select class="form-control" name="id_role">
                         <option selected disabled>Pilih Hak Akses Pengguna</option>
                         <?php foreach ($roles as $role) : ?>
-                        <option value="<?= $role->id_role ?>"><?= $role->nama_role ?></option>
+                        <option value="<?= e($role->id_role) ?>"><?= e($role->nama_role) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <small style="color: red"><?= form_error('id_role') ?></small>

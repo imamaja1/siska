@@ -22,11 +22,11 @@
 			<?php $i=1 + $this->uri->segment(5); foreach ($data as $row) : ?>
 				<tr>
 					<td><center><?= $i++ ?>.</center></td>
-					<td><center><?= $row->nim ?></center></td>
-					<td><?= $row->nama_mahasiswa ?></td>
-					<td><?= $row->nama_dosen ?></td>
+					<td><center><?= e($row->nim) ?></center></td>
+					<td><?= e($row->nama_mahasiswa) ?></td>
+					<td><?= e($row->nama_dosen) ?></td>
 					<td style="text-align: center;">
-						<a href="#"  onclick="view('<?= $row->nim ?>')" class="btn btn-info btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Lihat</a>&nbsp;
+						<a href="#"  onclick="view('<?= e($row->nim) ?>')" class="btn btn-info btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Lihat</a>&nbsp;
                         <a href="<?= site_url('dosen/kaprodi/konsultasi_perwalian/print_view/'.$row->nim) ?>" target="_blank" class="btn btn-danger btn-xs flat" id="coba"><i class="fa fa-print"></i> Print</a>
 					</td>
 				</tr>

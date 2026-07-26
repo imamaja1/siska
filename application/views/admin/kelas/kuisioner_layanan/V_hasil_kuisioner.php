@@ -11,7 +11,7 @@
                     - <?= $tahun_akademik->semester == 0 ? 'GENAP' : 'GANJIL' ?></strong></p>
                 <dl class="dl-horizontal">
                     <dt>Program Studi :</dt>
-                    <dd><?= $prodi->nama_program_studi ?></dd>
+                    <dd><?= e($prodi->nama_program_studi) ?></dd>
                 </dl>
             <hr>
             <?php if (count($data) > 0) : ?>
@@ -23,7 +23,7 @@
                         <th id="th" rowspan="2">NO.</th>
                         <?php $batas = 0;
                         foreach ($header as $key) : ?>
-                            <th id="th" colspan="<?= $key->colspan ?>"><?= $key->nama_bagian ?></th>
+                            <th id="th" colspan="<?= e($key->colspan) ?>"><?= e($key->nama_bagian) ?></th>
                             <?php $batas = $batas + $key->colspan; ?>
                         <?php endforeach; ?>
                     </tr>

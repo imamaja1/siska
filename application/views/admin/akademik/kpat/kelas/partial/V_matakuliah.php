@@ -22,16 +22,16 @@
                             <tr>
                                 <td><?= $no++ ?>.</td>
                                 <td>
-                                    <?= $row->kode_matakuliah ?>
+                                    <?= e($row->kode_matakuliah) ?>
                                 </td>
-                                <td><?= $row->nama_matakuliah ?></td>
+                                <td><?= e($row->nama_matakuliah) ?></td>
                                 <td>
                                     <?php if ($row->kelas_id): ?>
-                                        <button onclick="kelas('<?= $row->id_matakuliah ?>')" class="btn btn-xs btn-default"
+                                        <button onclick="kelas('<?= e($row->id_matakuliah) ?>')" class="btn btn-xs btn-default"
                                                 title="Lihat Kelas"><i class="fa fa-eye"></i> View
                                         </button>
                                     <?php else: ?>
-                                        <button onclick="generate('<?= $row->id_matakuliah ?>')" class="btn btn-xs btn-primary"
+                                        <button onclick="generate('<?= e($row->id_matakuliah) ?>')" class="btn btn-xs btn-primary"
                                                 title="Generate Kelas"><i class="fa fa-gear"></i> Generate
                                         </button>
                                     <?php endif; ?>

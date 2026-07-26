@@ -18,8 +18,8 @@
                 <?php foreach ($data as $key => $row) : ?>
                     <tr>
                         <td style="text-align: center"><?= $key+1 ?>.</td>
-                        <td><?= $row->nama_mahasiswa ?></td>
-                        <td><?= $row->nama_pembayaran ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
+                        <td><?= e($row->nama_pembayaran) ?></td>
                         <td><?= date('d M Y', strtotime($row->tgl_pembayaran)) ?></td>
                         <td style="text-align: right"><?= number_format($row->nominal_pembayaran,0) ?></td>
                     </tr>

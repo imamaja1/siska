@@ -41,11 +41,11 @@
                                      <tr  <?= in_array($d->id_matakuliah, $mk_pilihan) ? "style='font-style: italic'" : 'style="font-weight: bold"' ?> <?=($d->jenis == '1')? 'style="font-style: italic"':'';?>>
                                         <td><center><?= $i++ ?>.</center></td>
                                 		<td id="kode-matakuliah-<?= $d->kode_kurikulum ?>">
-                                			<center><?= $d->kode_matakuliah ?></center>
+                                			<center><?= e($d->kode_matakuliah) ?></center>
                                 		</td>
                                 		<td>
-                                          	<?= $d->nama_matakuliah ?>
-                                          	<?= (!empty($nama_pilihan[$d->id_matakuliah])) ? ' - (Kompetensi : ' . $nama_pilihan[$d->id_matakuliah] . ')' : '' ?>
+                                           	<?= e($d->nama_matakuliah) ?>
+                                           	<?= (!empty($nama_pilihan[$d->id_matakuliah])) ? ' - (Kompetensi : ' . e($nama_pilihan[$d->id_matakuliah]) . ')' : '' ?>
                                         	<?= ($d->jenis == 1) ? '- (Matakuliah Pilihan Umum)' : '' ?>
                                        </td>
                                 		<td width="100"><center><?= $d->sks_teori ?></center></td>

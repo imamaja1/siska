@@ -1,4 +1,4 @@
-<div class="box box-success flat">
+﻿<div class="box box-success flat">
     <div class="box-header">
         Pencarian mahasiswa
     </div>
@@ -17,10 +17,10 @@
                 foreach ($data as $row) :
                     ?>
                     <tr>
-                        <td><?= $row->nim; ?></td>
-                        <td><?= $row->nama_mahasiswa; ?></td>
+                        <td><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
                         <td align="center">
-                            <a href="#" onclick="grafik('<?= $row->nim ?>')" class="btn btn-warning btn-xs flat"><i
+                            <a href="#" onclick="grafik('<?= e($row->nim) ?>')" class="btn btn-warning btn-xs flat"><i
                                         class="fa fa-line-chart"></i> Grafik Nilai</a>
                         </td>
                     </tr>

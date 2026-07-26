@@ -17,8 +17,8 @@
                     ?>
                     <tr>
                         <td align="center"><?= $no++ ?>.</td>
-                        <td align="center"><?= $row->nim; ?></td>
-                        <td ><?= $row->nama_mahasiswa; ?></td>
+                        <td align="center"><?= e($row->nim) ?></td>
+                        <td ><?= e($row->nama_mahasiswa) ?></td>
                         <td width="200" align="center">
                             <a href="<?= site_url('admin/akademik/krs/cetak_cepat/' . $row->nim); ?>"  class="btn btn-xs btn-info flat"><i class="fa fa-download"></i> Download</a>
                             <a href="<?= site_url('admin/akademik/krs/print_view/' . $row->nim); ?>" target="_blank"  class="btn btn-xs btn-danger flat"><i class="fa fa-print"></i> Cetak</a>

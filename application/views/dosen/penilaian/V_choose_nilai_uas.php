@@ -1,4 +1,4 @@
-<?php if (count($data) > 0) : ?>
+﻿<?php if (count($data) > 0) : ?>
 
 	<div class="callout callout-success">
         <p>Penginputan nilai Harian dan UAS mahasiswa dapat dilakukan mulai tanggal 
@@ -29,14 +29,14 @@
             foreach ($data as $key => $row) :
                 ?>
                 <tr>
-                <td align="center"><?= $row->kelas_id; ?></td>
-                <td><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?> Kelas - <?= $row->nama_kelas ?></td>
+                <td align="center"><?= e($row->kelas_id) ?></td>
+                <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?> Kelas - <?= e($row->nama_kelas) ?></td>
                 <td><?= nilai_validasi($row->status_nilai) ?></td>
                 <td><?= nilai_validasi($row->validasi_nilai) ?></td>
                 <td><?= nilai_validasi($row->validasi_dekan) ?></td>
                 <td style="white-space: nowrap;width: 1px;">
-                    <a class="btn btn-<?= $row->status_nilai != 'T' ? 'warning' : 'info'; ?> btn-xs btn-flat" href="<?= site_url('dosen/penilaian/nilai_mahasiswa_uas/' . $row->kelas_id) ?>"> <i class="fa fa-arrow-circle-right"></i>
-                        <?= $row->status_nilai == 'R' ? 'Update Nilai' : ($row->status_nilai == 'T' ? 'Lihat Nilai' : 'Isi Nilai'); ?>
+                    <a class="btn btn-<?= e($row->status_nilai != 'T' ? 'warning' : 'info') ?> btn-xs btn-flat" href="<?= site_url('dosen/penilaian/nilai_mahasiswa_uas/' . $row->kelas_id) ?>"> <i class="fa fa-arrow-circle-right"></i>
+                        <?= e($row->status_nilai == 'R' ? 'Update Nilai' : ($row->status_nilai == 'T' ? 'Lihat Nilai' : 'Isi Nilai')) ?>
                     </a>
                     <?php 
                     if ($row->status_nilai == 'T' && $row->validasi_nilai == 'T' && $row->validasi_dekan == 'T') {
@@ -47,7 +47,7 @@
                     ?>
                 </td>
                 <td style="white-space: nowrap;width: 1px;">
-                    <button id="pesan_prodi_<?= $row->kelas_id ?>" onclick="pesan_uas_prodi('<?= $row->kelas_id ?>')" class="btn btn-xs
+                    <button id="pesan_prodi_<?= e($row->kelas_id) ?>" onclick="pesan_uas_prodi('<?= e($row->kelas_id) ?>')" class="btn btn-xs
                             btn-primary btn-flat badge-notif" 
                             <?php
                             if ($pesan_prodi[$key] != 0) {
@@ -55,7 +55,7 @@
                             }
                             ?> 
                             ><i class="fa fa-envelope"></i> Kaprodi</button>
-                    <button id="pesan_dekan_<?= $row->kelas_id ?>" onclick="pesan_uas_dekan('<?= $row->kelas_id ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
+                    <button id="pesan_dekan_<?= e($row->kelas_id) ?>" onclick="pesan_uas_dekan('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
                     <?php
                     if ($pesan_dekan[$key] != 0) {
                         echo 'data-badge="' . $pesan_dekan[$key] . '"';

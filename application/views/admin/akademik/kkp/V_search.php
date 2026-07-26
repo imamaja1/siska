@@ -4,6 +4,7 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/kkp/search_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Pencarian Berdasarkan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-5">

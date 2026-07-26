@@ -1,7 +1,7 @@
 <div class="box box-warning">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-list"></i> KELAS - <?= $data_kelas->nama_kelas ?>
-            / <?= $data_kelas->kode_matakuliah . " - " . $data_kelas->nama_matakuliah ?></h3>
+        <h3 class="box-title"><i class="fa fa-list"></i> KELAS - <?= e($data_kelas->nama_kelas) ?>
+            / <?= e($data_kelas->kode_matakuliah . " - " . $data_kelas->nama_matakuliah) ?></h3>
     </div>
     <div class="box-body">
         <?php if (count($data) > 0) : ?>
@@ -28,16 +28,16 @@
                     foreach ($data as $row) : ?>
                         <tr>
                             <td><?= $no++ ?>.</td>
-                            <td><?= $row->nim ?></td>
-                        	<td><?= $row->nama_mahasiswa ?></td>
-                                <td><?= $row->dummy_harian ?></td>
-                                <td><?= $row->dummy_uts ?></td>
-                                <td><?= $row->dummy_uas ?></td>
+                            <td><?= e($row->nim) ?></td>
+                        	<td><?= e($row->nama_mahasiswa) ?></td>
+                                <td><?= e($row->dummy_harian) ?></td>
+                                <td><?= e($row->dummy_uts) ?></td>
+                                <td><?= e($row->dummy_uas) ?></td>
                                 <td><?= round($row->dummy_na) ?></td>
                                <?php if (($row->grade == E) || ($row->grade == D)): ?>
-                                    <td style="text-align: center; font-weight: bold; background: red; color: white;"><?= $row->grade ?></td>
+                                    <td style="text-align: center; font-weight: bold; background: red; color: white;"><?= e($row->grade) ?></td>
                                 <?php else: ?>
-                                    <td style="text-align: center; font-weight: bold;"><?= $row->grade ?></td>
+                                    <td style="text-align: center; font-weight: bold;"><?= e($row->grade) ?></td>
 
                                 <?php endif; ?>
                         </tr>
@@ -57,7 +57,7 @@
             <?php if ($data_kelas->validasi_dekan != 'T') : ?>
                 <form action="<?= site_url('dosen/dekan/validasinilai/revisi_uas') ?>" method="post">
                     <div class="form-group">
-                        <input type="hidden" value="<?= $data_kelas->kelas_id ?>" name="kelas_id" required readonly>
+                        <input type="hidden" value="<?= e($data_kelas->kelas_id) ?>" name="kelas_id" required readonly>
                         <textarea class="form-control" name="catatan_prodi" id="catatan_prodi" required
                                placeholder="Catatan untuk dosen wajib diisi jika nilai di revisi"></textarea>
                     </div>

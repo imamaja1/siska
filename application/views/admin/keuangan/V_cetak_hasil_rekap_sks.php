@@ -61,9 +61,9 @@ header("Cache-Control: private", false);
     foreach ($data as $row) : ?>
         <tr>
             <td style="text-align: center"><?= $no++ ?></td>
-            <td style="text-align: center"><?= $row->nim ?></td>
-            <td><?= $row->nama_mahasiswa ?></td>
-            <td><?= get_kode_prodi($row->nim)->nama_program_studi ?></td>
+            <td style="text-align: center"><?= e($row->nim) ?></td>
+            <td><?= e($row->nama_mahasiswa) ?></td>
+            <td><?= e(get_kode_prodi($row->nim)->nama_program_studi) ?></td>
             <td style="text-align: center"><?= $row->semester ?></td>
             <td style="text-align: center"><?= $row->teori ?></td>
             <td style="text-align: center"><?= $row->praktikum ?></td>

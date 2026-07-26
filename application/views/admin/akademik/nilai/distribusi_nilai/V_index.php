@@ -15,13 +15,14 @@
 <!--            </div>-->
             <div class="box-body">
                 <form action="<?=site_url('admin/akademik/nilai/filter_distribusi') ?>" id="form-filter" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="row">
                         <div class="form-group col-md-4 col-xs-12">
                             <label for="">Tahun Kademik <span class="text-danger">*</span></label>
                             <select name="kode_tahun_akademik" id="" required class="form-control select2">
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($tahun_akademik as $row) : ?>
-                                    <option value="<?= $row->kode_tahun_akademik ?>" ><?= $row->tahun_akademik ?> - <?= $row->semester == '0' ? 'GENAP' : 'GANJIL' ?></option>
+                                    <option value="<?= e($row->kode_tahun_akademik) ?>" ><?= e($row->tahun_akademik) ?> - <?= e($row->semester == '0' ? 'GENAP' : 'GANJIL') ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -31,7 +32,7 @@
                                 <select name="kode_program_studi" id="" required class="form-control">
                                     <option value="" selected disabled>Pilih</option>
                                     <?php foreach ($program_studi as $row) : ?>
-                                        <option value="<?= $row->kode_program_studi ?>" ><?= $row->nama_program_studi ?></option>
+                                        <option value="<?= e($row->kode_program_studi) ?>" ><?= e($row->nama_program_studi) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                                 <div class="input-group-btn">

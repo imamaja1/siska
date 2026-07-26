@@ -6,17 +6,17 @@
     <div class="modal-body">
         <div class="form-group">
             <label>Kode Fakultas:</label>
-            <input type="text" name="kode_fakultas" value="<?= $data->kode_fakultas ?>" class="form-control" placeholder="Kode Fakultas" required readonly>
+            <input type="text" name="kode_fakultas" value="<?= e($data->kode_fakultas) ?>" class="form-control" placeholder="Kode Fakultas" required readonly>
         </div>
         <div class="form-group">
             <label>Nama Fakultas:</label>
-            <input type="text" name="nama_fakultas" value="<?= $data->nama_fakultas ?>" class="form-control" placeholder="Nama Fakultas" required>
+            <input type="text" name="nama_fakultas" value="<?= e($data->nama_fakultas) ?>" class="form-control" placeholder="Nama Fakultas" required>
         </div>
         <div class="form-group">
             <label>Dekan:</label>
             <select name="dekan" class="form-control">
                 <?php foreach ($dosen as $item) : ?>
-                    <option <?= ($data->kode_dosen == $item->kode_dosen) ? 'selected' : '' ?> value="<?= $item->kode_dosen ?>"><?= $item->nama_dosen ?></option>
+                    <option <?= ($data->kode_dosen == $item->kode_dosen) ? 'selected' : '' ?> value="<?= e($item->kode_dosen) ?>"><?= e($item->nama_dosen) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

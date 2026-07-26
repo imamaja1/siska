@@ -1,5 +1,5 @@
 <?php if ($this->session->userdata('info')) : ?>
-    <?= $this->session->userdata('info') ?>
+    <?= e($this->session->userdata('info')) ?>
 <?php endif;?>
 <div class="box box-solid">
     <div class="box-body">
@@ -12,13 +12,14 @@
     </div>
     <div class="box-body">
         <form id="filter-form" class="form-horizontal" method="post" action="<?= site_url('admin/kuisioner/mengajar/filter') ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label for="kode_program_studi" class="control-label col-sm-2"> Matakulaih</label>
                 <div class="col-sm-4">
                     <select required name="id_matakuliah" class="form-control select2" id="matakuliah" >
                         <option value="" disabled selected>Pilih</option>
                         <?php foreach ($matakuliah as $row) : ?>
-                            <option value="<?= $row->id_matakuliah ?>"><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?></option>
+                            <option value="<?= e($row->id_matakuliah) ?>"><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -52,13 +53,14 @@
                 <h4 class="modal-title">Tambah Pengajar</h4>
             </div>
             <form action="<?= site_url('admin/kuisioner/mengajar/simpan_mengajar') ?>" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="kode_matakuliah"> Kode Matakuliah</label>
                     <select required name="id_matakuliah" class="select2 form-control" id="kode-matakuliah" style="width: 100%;">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($matakuliah as $row) : ?>
-                            <option value="<?= $row->id_matakuliah ?>"><?= $row->kode_matakuliah ?> - <?= $row->nama_matakuliah ?></option>
+                            <option value="<?= e($row->id_matakuliah) ?>"><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

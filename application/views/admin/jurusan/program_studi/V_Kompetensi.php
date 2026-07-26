@@ -2,7 +2,7 @@
 <div class="box box-solid flat">
     <div class="box-body">
         <a href="#" class="btn-sm btn-primary flat" onclick="$('#tambah-kompetensi').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
-              <a href="<?=site_url('admin/jurusan/konsentrasi')?>" class="btn-sm btn-success flat" ><i class="fa fa-check-circle"></i> Data MK Komptetensi</a>
+        <a href="<?=site_url('admin/jurusan/konsentrasi')?>" class="btn-sm btn-success flat" ><i class="fa fa-check-circle"></i> Data MK Komptetensi</a>
     </div>
 </div>
 <div class="box box-primary flat">
@@ -25,13 +25,12 @@
                         ?>
                         <tr>
                             <td align="center"><?= $i++ ?></td>
-                            <td id="nama-kompetensi-<?= $row->kode_kompetensi ?>"><?= $row->nama_kompetensi ?></td>
-                            <td align="center" id="singkatan-kompetensi-<?= $row->kode_kompetensi ?>"><?= $row->singkatan_kompetensi ?></td>
-
-                            <td align="center"><?php $ns = []; foreach($kode_nama_jurusan as $n) $ns[$n->kode_program_studi ?? $n->kode_program_studi] = $n->nama_program_studi ?? $n->singkatan_program_studi; echo $ns[$row->kode_program_studi] ?? '-'; ?></td>
-                    <p hidden id="kode-nama-jurusan-<?= $row->kode_kompetensi ?>"><?= $row->kode_program_studi ?></p>
+                            <td id="nama-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= e($row->nama_kompetensi) ?></td>
+                            <td align="center" id="singkatan-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= e($row->singkatan_kompetensi) ?></td>
+                            <td align="center"><?php $ns = []; foreach($kode_nama_jurusan as $n) $ns[$n->kode_program_studi ?? $n->kode_program_studi] = $n->nama_program_studi ?? $n->singkatan_program_studi; echo e($ns[$row->kode_program_studi] ?? '-'); ?></td>
+                    <p hidden id="kode-nama-jurusan-<?= e($row->kode_kompetensi) ?>"><?= e($row->kode_program_studi) ?></p>
                     <td align="center">
-                        <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editKompetensi(<?= $row->kode_kompetensi ?>)"><i class="fa fa-edit"></i> Ubah</a>
+                        <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editKompetensi(<?= e($row->kode_kompetensi) ?>)"><i class="fa fa-edit"></i> Ubah</a>
                         <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/program_studi/kompetensi/hapus/' . $row->kode_kompetensi) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                     </td>
                     </tr>
@@ -44,7 +43,6 @@
     </div>
 </div>
 
-<!-- Tambah Jenjang -->
 <div class="modal fade" id="tambah-kompetensi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -53,6 +51,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Kompetensi</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/program_studi/Kompetensi/simpan'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Kompetensi</label>
@@ -67,7 +66,7 @@
                         <select name="kode_nama_jurusan" class="form-control">
                             <option value="" disabled selected >Pilih Program Studi</option>
                             <?php foreach ($kode_nama_jurusan as $row) { ?>
-                                <option value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?> </option>
+                                <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> </option>
                             <?php } ?>
                         </select>
                     </div>
@@ -81,7 +80,6 @@
     </div>
 </div>
 
-<!-- Edit Jenjang -->
 <div class="modal fade" id="edit-kompetensi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -90,6 +88,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Edit Kompetensi</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/program_studi/kompetensi/ubah'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Kompetensi</label>
@@ -105,7 +104,7 @@
                         <select name="kode_nama_jurusan" class="form-control" id="edit-kode-nama-jurusan">
                             <option value="" selected disabled>Pilih Program Studi</option>
                             <?php foreach ($kode_nama_jurusan as $row) { ?>
-                                <option value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?></option>
+                                <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -119,24 +118,19 @@
     </div>
 </div>
 
-<!-- Hapus Institusi -->
 <script>
     function editKompetensi(id) {
         var nama_kompetensi = $("#nama-kompetensi-" + id).html();
         var singkatan_kompetensi = $("#singkatan-kompetensi-" + id).html();
         var kode_nama_jurusan = $("#kode-nama-jurusan-" + id).html();
-
         $("#param").val(id);
         $("#edit-nama-kompetensi").val(nama_kompetensi);
         $("#edit-singkatan-kompetensi").val(singkatan_kompetensi);
         $("#edit-kode-nama-jurusan").val(kode_nama_jurusan);
-
-
         $("#edit-kompetensi").modal("show");
     }
 
-    function hapus(url)
-    {
+    function hapus(url) {
         swal({
             title: '',
             text: "Anda yakin ingin menghapus data ini?",

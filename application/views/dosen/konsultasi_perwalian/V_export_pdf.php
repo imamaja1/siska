@@ -39,10 +39,10 @@
     </tr>
     <?php foreach ($perwalian as $key => $row) : ?>
         <tr>
-            <td><?= $key + 1 ?>.</td>
-            <td><?= $row->nim ?></td>
-            <td><?= $row->nama_mahasiswa ?></td>
-            <td><?= $row->telepon ?></td>
+            <td><?= e($key + 1) ?>.</td>
+            <td><?= e($row->nim) ?></td>
+            <td><?= e($row->nama_mahasiswa) ?></td>
+            <td><?= e($row->telepon) ?></td>
             <td></td>
         </tr>
     <?php endforeach; ?>

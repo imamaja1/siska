@@ -23,13 +23,13 @@
                     ?>
                     <tr>
                         <td><center><?= $i++ ?></center></td>
-                <td align="center" id="nama-kurikulum-<?= $d->kode_nama_kurikulum ?>"><?= $d->nama_kurikulum ?> </td>
-                <td align="center" id="nama-jurusan-<?= $d->kode_nama_kurikulum ?>"><?= $d->singkatan_program_studi ?></td>
+                <td align="center" id="nama-kurikulum-<?= e($d->kode_nama_kurikulum) ?>"><?= e($d->nama_kurikulum) ?> </td>
+                <td align="center" id="nama-jurusan-<?= e($d->kode_nama_kurikulum) ?>"><?= e($d->singkatan_program_studi) ?></td>
                 <td align="center">
-                    <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editNamakurikulum('<?= $d->kode_nama_kurikulum ?>')"><i class="fa fa-edit"></i> Edit</a>&nbsp;
+                    <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editNamakurikulum('<?= e($d->kode_nama_kurikulum) ?>')"><i class="fa fa-edit"></i> Edit</a>&nbsp;
                     <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/kurikulum/nama_kurikulum/hapus/' . $d->kode_nama_kurikulum) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                 </td>
-                <div style="display: none;" id="kode-jurusan-<?= $d->kode_nama_kurikulum ?>"><?= $d->kode_program_studi ?></div>
+                <div style="display: none;" id="kode-jurusan-<?= e($d->kode_nama_kurikulum) ?>"><?= e($d->kode_program_studi) ?></div>
                 </tr>
 <?php } ?>
 
@@ -38,7 +38,6 @@
     </div>
 </div>
 
-<!-- modal tambah prasyarat-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -47,6 +46,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Nama Kurikulum</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/kurikulum/nama_kurikulum/simpan') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Kurikulum</label>
@@ -57,7 +57,7 @@
                         <select name="jurusan" class="form-control">
                             <option value="">Pilih</option>
                             <?php foreach ($prodi as $j) { ?>
-                                <option value="<?= $j->kode_program_studi ?>"><?= $j->singkatan_program_studi ?> - <?= $j->nama_program_studi ?></option>
+                                <option value="<?= e($j->kode_program_studi) ?>"><?= e($j->singkatan_program_studi) ?> - <?= e($j->nama_program_studi) ?></option>
 <?php } ?>
                         </select>
                     </div>
@@ -71,7 +71,6 @@
     </div>
 </div>
 
-<!-- model edit-matakuliah -->
 <div class="modal fade" id="edit-nama-kurikulum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -81,6 +80,7 @@
             </div>
             <div class="modal-body">
                 <form method="POST" action="<?= site_url('admin/jurusan/kurikulum/nama_kurikulum/ubah') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label>Nama Kurikulum</label>
                         <input type="hidden" name="param" id="param">
@@ -91,7 +91,7 @@
                         <select name="jurusan" class="form-control" id="edit-jurusan">  
                             <option value="">Pilih</option>
                             <?php foreach ($prodi as $j) { ?>
-                                <option value="<?= $j->kode_program_studi ?>"><?= $j->singkatan_program_studi ?> - <?= $j->nama_program_studi ?></option>
+                                <option value="<?= e($j->kode_program_studi) ?>"><?= e($j->singkatan_program_studi) ?> - <?= e($j->nama_program_studi) ?></option>
 <?php } ?>
                         </select>
                     </div>
@@ -105,7 +105,6 @@
     </div>
 </div>
 
-<!-- script -->
 <script type="text/javascript">
     $(function () {
         $('.dataTables-example').dataTable();
@@ -113,22 +112,16 @@
 </script>
 <script type="text/javascript">
     function editNamakurikulum(id) {
-
         var nama_kurikulum = $("#nama-kurikulum-" + id).html();
         var nama_jurusan = $("#kode-jurusan-" + id).html();
-
         $("#param").val(id);
         $("#edit-kurikulum").val(nama_kurikulum);
         $("#edit-jurusan").val(nama_jurusan);
-
-
         $("#edit-nama-kurikulum").modal("show");
     }
 </script>
-
 <script type="text/javascript">
-    function hapus(url)
-    {
+    function hapus(url) {
         swal({
             title: '',
             text: "Anda yakin ingin menghapus data ini?",

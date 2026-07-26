@@ -13,7 +13,7 @@
             <?php $i=1; foreach ($data as $row) : ?>
                 <tr>
                     <td align="center"><?= $i++ ?>.</td>
-                    <td align="center"><?= $row->nama_dosen ?></td>
+                    <td align="center"><?= e($row->nama_dosen) ?></td>
                     <td align="center">
                         <a href="<?= site_url('admin/kuisioner/mengajar/hapus/'.$row->mengajar_id) ?>" class="btn btn-danger btn-sm flat"><i class="fa fa-trash"></i> Hapus</a>
                     </td>

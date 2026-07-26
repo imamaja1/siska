@@ -65,8 +65,10 @@ class kurikulum extends CI_Controller {
  //            cek program studi punya kompetensi atau tidak
             $kompetensi = $this->dosenservice->getKompetensiByProdi($get_prodi->kode_program_studi);
 
-           if (count($kompetensi) > 0) {
-               $data['mk_pilihan'] = array_column($kompetensi, 'id_matakuliah');
+            $data['mk_pilihan'] = [];
+            $data['nama_pilihan'] = [];
+            if (count($kompetensi) > 0) {
+                $data['mk_pilihan'] = array_column($kompetensi, 'id_matakuliah');
                 $data['nama_pilihan'] = array_column($kompetensi, 'nama', 'id_matakuliah');
             }
         } else {

@@ -13,6 +13,7 @@ echo isset($table) ? $table : '';
         echo isset($flashmessage) ? $flashmessage : '';
         ?>
         <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/kompetensi/search'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Masukan Kata Kunci :</label>
                 <div class="col-sm-4">

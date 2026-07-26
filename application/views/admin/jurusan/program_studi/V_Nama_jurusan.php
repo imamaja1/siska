@@ -1,8 +1,7 @@
 <?= $this->session->flashdata('info') ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="#" onclick="$('#tambah-nama-jurusan').modal('toggle')" class="btn-primary btn-sm flat"><i
-                    class="fa fa-plus-circle"></i> Tambah</a>
+        <a href="#" onclick="$('#tambah-nama-jurusan').modal('toggle')" class="btn-primary btn-sm flat"><i class="fa fa-plus-circle"></i> Tambah</a>
     </div>
 </div>
 <div class="row">
@@ -28,20 +27,18 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $no++ ?>.</td>
-                                <td><?= $row->nama_fakultas ?></td>
-                                <td id="nama-program-studi-<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></td>
-                                <td id="singkatan-<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?></td>
+                                <td><?= e($row->nama_fakultas) ?></td>
+                                <td id="nama-program-studi-<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></td>
+                                <td id="singkatan-<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></td>
                                 <td><?= $row->kompetensi == 'Y' ? 'Ada' : 'Tidak Ada'; ?></td>
                                 <td width="150" align="center">
                                     <a href="#" class="btn btn-xs btn-info flat"
-                                       onclick="javascript:editNamajurusan('<?= $row->kode_program_studi ?>')"><i
-                                                class="fa fa-edit"></i> Ubah</a>
+                                       onclick="javascript:editNamajurusan('<?= e($row->kode_program_studi) ?>')"><i class="fa fa-edit"></i> Ubah</a>
                                     <a href="#" class="btn btn-xs btn-danger flat hide"
-                                       onclick="hapus('<?= site_url('admin/jurusan/program_studi/nama_jurusan/hapus/' . $row->kode_program_studi) ?>')"><i
-                                                class="fa fa-trash"></i> Hapus</a>
+                                       onclick="hapus('<?= site_url('admin/jurusan/program_studi/nama_jurusan/hapus/' . $row->kode_program_studi) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                                 </td>
-                                <p hidden id="id-jurusan-<?= $row->kode_program_studi ?>"><?= $row->id_jurusan ?></p>
-                                <p hidden id="id-jenjang-<?= $row->kode_program_studi ?>"><?= $row->id_jenjang ?></p>
+                            <p hidden id="id-jurusan-<?= e($row->kode_program_studi) ?>"><?= e($row->id_jurusan) ?></p>
+                            <p hidden id="id-jenjang-<?= e($row->kode_program_studi) ?>"><?= e($row->id_jenjang) ?></p>
                             </tr>
                         <?php } ?>
                         </tbody>
@@ -52,24 +49,22 @@
     </div>
 </div>
 
-<!-- Tambah kode jurusan -->
-<div class="modal fade" id="tambah-nama-jurusan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="tambah-nama-jurusan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                            class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Jurusan</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/program_studi/nama_jurusan/simpan'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Fakultas</label>
                         <select class="form-control" name="kode_fakultas" id="" required>
                             <option value="" disabled selected>Pilih Nama Fakultas</option>
                             <?php foreach ($fakultas as $row) { ?>
-                                <option value="<?= $row->kode_fakultas ?>"><?= $row->nama_fakultas ?></option>
+                                <option value="<?= e($row->kode_fakultas) ?>"><?= e($row->nama_fakultas) ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -84,18 +79,15 @@
                     </div>
                     <div class="form-group">
                         <label>Kode Program Studi</label>
-                        <input class="form-control" type="number" name="kode_prodi_univ" maxlength="2"
-                               placeholder="Kode Program Studi" required>
+                        <input class="form-control" type="number" name="kode_prodi_univ" maxlength="2" placeholder="Kode Program Studi" required>
                     </div>
                     <div class="form-group">
                         <label>Nama Program Studi</label>
-                        <input required class="form-control" type="text" name="nama_jurusan" id=""
-                               placeholder="Nama Jurusan" required>
+                        <input required class="form-control" type="text" name="nama_jurusan" id="" placeholder="Nama Jurusan" required>
                     </div>
                     <div class="form-group">
                         <label>Singkatan Program Studi</label>
-                        <input required class="form-control" type="text" name="singkatan" id="" placeholder="Singkatan"
-                               required>
+                        <input required class="form-control" type="text" name="singkatan" id="" placeholder="Singkatan" required>
                     </div>
                     <div class="form-group">
                         <label>Sistem Kompetensi</label>
@@ -106,29 +98,22 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default flat" data-dismiss="modal"><i class="fa fa-remove"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-success flat "><i class="fa fa-check-circle"></i> Simpan
-                    </button>
+                    <button type="button" class="btn btn-default flat" data-dismiss="modal"><i class="fa fa-remove"></i> Batal</button>
+                    <button type="submit" class="btn btn-success flat "><i class="fa fa-check-circle"></i> Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Edit kode jurusan -->
 <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="content-edit-prodi">
-
         </div>
     </div>
 </div>
 
-<!-- script -->
 <script type="text/javascript">
     function editNamajurusan(id) {
         var url = "<?= site_url('admin/jurusan/program_studi/nama_jurusan/edit') ?>/" + id;
@@ -141,10 +126,8 @@
                 console.log('gagal load');
             }
         })
-
         $('#edit-modal').modal('show');
     }
-
     function hapus(url) {
         swal({
             title: '',
@@ -159,5 +142,4 @@
             window.location.href = url;
         });
     }
-
 </script>

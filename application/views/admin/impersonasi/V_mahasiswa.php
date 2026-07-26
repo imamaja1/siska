@@ -8,7 +8,7 @@
                 <select name="prodi" class="form-control">
                     <option value="">Semua Prodi</option>
                     <?php foreach ($list_prodi as $p): ?>
-                        <option value="<?= $p->kode_program_studi ?>" <?= $prodi_filter == $p->kode_program_studi ? 'selected' : '' ?>><?= $p->nama_program_studi ?></option>
+                        <option value="<?= e($p->kode_program_studi) ?>" <?= $prodi_filter == $p->kode_program_studi ? 'selected' : '' ?>><?= e($p->nama_program_studi) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -16,12 +16,12 @@
                 <select name="angkatan" class="form-control">
                     <option value="">Semua Angkatan</option>
                     <?php foreach ($list_angkatan as $a): ?>
-                        <option value="<?= $a->angkatan ?>" <?= $angkatan_filter == $a->angkatan ? 'selected' : '' ?>>20<?= $a->angkatan ?></option>
+                        <option value="<?= e($a->angkatan) ?>" <?= $angkatan_filter == $a->angkatan ? 'selected' : '' ?>>20<?= e($a->angkatan) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="form-group">
-                <input type="text" name="q" class="form-control" placeholder="Cari nama..." value="<?= $this->input->get('q') ?>">
+                <input type="text" name="q" class="form-control" placeholder="Cari nama..." value="<?= e($this->input->get('q')) ?>">
             </div>
             <button type="submit" class="btn btn-primary flat"><i class="fa fa-search"></i> Cari</button>
             <a href="<?= site_url('admin/impersonasi_mahasiswa') ?>" class="btn btn-default flat"><i class="fa fa-refresh"></i> Reset</a>
@@ -49,11 +49,11 @@
                 <?php $i = 1 + ($this->uri->segment(4) ?: 0); foreach ($mahasiswa as $row): ?>
                 <tr>
                     <td><?= $i++ ?></td>
-                    <td><?= $row->nim ?></td>
-                    <td style="text-align: left;"><?= $row->nama_mahasiswa ?></td>
-                    <td><?= isset($row->nama_program_studi) ? $row->nama_program_studi : '-' ?></td>
+                    <td><?= e($row->nim) ?></td>
+                    <td style="text-align: left;"><?= e($row->nama_mahasiswa) ?></td>
+                    <td><?= isset($row->nama_program_studi) ? e($row->nama_program_studi) : '-' ?></td>
                     <td>
-                        <a href="<?= site_url('admin/impersonasi_mahasiswa/menyamar/' . $row->nim) ?>" class="btn btn-warning btn-xs flat" onclick="return confirm('Menyamar sebagai <?= $row->nama_mahasiswa ?>?')">
+                        <a href="<?= site_url('admin/impersonasi_mahasiswa/menyamar/' . $row->nim) ?>" class="btn btn-warning btn-xs flat" onclick="return confirm('Menyamar sebagai <?= e($row->nama_mahasiswa) ?>?')">
                             <i class="fa fa-user-secret"></i> Menyamar
                         </a>
                     </td>

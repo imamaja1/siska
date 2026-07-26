@@ -23,6 +23,7 @@
                 <p class="login-box-msg" style="font-size: 18px"><br>Sistem Informasi Akademik <b>(SISKA)</b></p>
 
                 <form action="<?= site_url('admin/login_admin/login'); ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group has-feedback">
                         <input value="<?= set_value('nama_login') ?>" type="text" class="form-control" placeholder="Nama Login" name="nama_login">
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>

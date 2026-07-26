@@ -1,7 +1,7 @@
 <div class="box box-solid flat">
     <div class="box-body">
         <a href="<?= site_url('admin/akademik/khs') ?>" class="btn btn-success btn-sm flat"><i class="fa fa-arrow-left"></i> Kembali</a>
-        <button class="btn btn-link btn-xs flat">terdapat <strong><?= isset($jumlah_data) ? $jumlah_data : " 0 " ?> Data</strong></button>
+        <button class="btn btn-link btn-xs flat">terdapat <strong><?= isset($jumlah_data) ? e($jumlah_data) : " 0 " ?> Data</strong></button>
         <div class="pull-right">
             <?= isset($halaman) ? $halaman : "" ?>
         </div>
@@ -25,8 +25,8 @@
                         foreach ($data as $row) : ?>
                             <tr>
                                 <td><center><?= $i++ ?>.</center></td>
-                        <td><center><?= $row->nim ?></center></td>
-                        <td><?= $row->nama_mahasiswa ?></td>
+                        <td><center><?= e($row->nim) ?></center></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
                         <td style="text-align: center;">
                             <a href="<?= site_url('admin/akademik/khs/lihat_khs/' . $row->kode_krs . '/' . $row->nim) ?>" class="btn btn-info btn-xs flat"><i class="fa fa-eye"></i> Lihat</a>&nbsp;
                             <a href="<?= site_url('admin/akademik/khs/cetak/' . $row->kode_krs . '/' . $row->nim) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-download"></i> Download</a></center>

@@ -6,6 +6,7 @@
 <div class="box box-primary flat">
     <div class="box-body"><br>
         <form class="form-horizontal" id="form" method="POST" action="<?= site_url('admin/jurusan/dosen/simpan') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2">NIK</label>
                 <div class="col-sm-3">
@@ -51,7 +52,7 @@
                     <select class="form-control" name="homebase">
                         <option  disabled selected>Pilih Homebase</option>
                         <?php foreach ($homebase as $row) : ?>
-                            <option <?= set_select('homebase', $row->kode_program_studi) ?> value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?></option>
+                            <option <?= set_select('homebase', $row->kode_program_studi) ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <small style="color: red;"><?= form_error('homebase') ?></small>
@@ -110,4 +111,3 @@
         </form>
     </div>
 </div>
-

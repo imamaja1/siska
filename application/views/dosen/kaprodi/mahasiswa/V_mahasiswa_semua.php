@@ -32,8 +32,8 @@
                             foreach ($jumlah_semua as $jml_semua) :
                                 ?>
                                 <tr>
-                                    <td align="center">20<?= $jml_semua->angkatan ?></td>
-                                    <td align="center"><?= $jml_semua->jumlah ?> </td>
+                                    <td align="center">20<?= e($jml_semua->angkatan) ?></td>
+                                    <td align="center"><?= e($jml_semua->jumlah) ?> </td>
                                     <td align="center"><a href="<?= site_url('dosen/kaprodi/mahasiswa/semua/' . $jml_semua->angkatan); ?>" class="btn btn-xs btn-success"><i class="fa fa-eye"></i> Lihat</a> </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -67,8 +67,8 @@
                             foreach ($jumlah_aktif as $jml_aktif) :
                                 ?>
                                 <tr>
-                                    <td align="center">20<?= $jml_aktif->angkatan ?></td>
-                                    <td align="center"><?= $jml_aktif->jumlah ?> </td>
+                                    <td align="center">20<?= e($jml_aktif->angkatan) ?></td>
+                                    <td align="center"><?= e($jml_aktif->jumlah) ?> </td>
                                     <td align="center"><a href="<?= site_url('dosen/kaprodi/mahasiswa/semua/' . $jml_aktif->angkatan); ?>" class="btn btn-xs btn-success"><i class="fa fa-eye"></i> Lihat</a> </td>
 
                                 </tr>
@@ -103,8 +103,8 @@
                             foreach ($jumlah_tidak_aktif as $jml_tidak_aktif) :
                                 ?>
                                 <tr>
-                                    <td align="center">20<?= $jml_tidak_aktif->angkatan ?></td>
-                                    <td align="center"><?= $jml_tidak_aktif->jumlah ?> </td>
+                                    <td align="center">20<?= e($jml_tidak_aktif->angkatan) ?></td>
+                                    <td align="center"><?= e($jml_tidak_aktif->jumlah) ?> </td>
                                     <td align="center"><a href="<?= site_url('dosen/kaprodi/mahasiswa/semua/' . $jml_tidak_aktif->angkatan); ?>" class="btn btn-xs btn-success"><i class="fa fa-eye"></i> Lihat</a> </td>
 
                                 </tr>
@@ -138,10 +138,10 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center"><?= $row->nim ?></td>
-                                <td><?= $row->nama_mahasiswa ?> </td>
+                                <td align="center"><?= e($row->nim) ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?> </td>
                                 <td align="center">20<?= substr($row->nim, 0, 2) ?></td>
-                                <td><?= $row->telepon ?> </td>
+                                <td><?= e($row->telepon) ?> </td>
 
 
                                 <td align="center">

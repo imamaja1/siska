@@ -1,11 +1,12 @@
 <div class="box box-solid flat">
     <div class="box-body">
         <a href="<?= site_url('admin/akademik/kpat/krs') ?>" class="btn btn-success btn-sm flat"><i class="fa fa-arrow-left"></i> Kembali</a>
-    <span class="badge bg-teal pull-right">Nama mahasiswa : <?= $mahasiswa->nama_mahasiswa ?></span>
+    <span class="badge bg-teal pull-right">Nama mahasiswa : <?= e($mahasiswa->nama_mahasiswa) ?></span>
     </div>
 </div>
 <?php if (count($data) > 0) : ?>
 <form id="form-krs-kpat" method="POST" name="krs_form" action="<?= site_url('admin/akademik/kpat/krs/simpan_krs')  ?>">
+<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 <div class="box box-primary flat">
 	<div class="box-body flat">
         <p style="text-align: center;"><strong>MATAKULIAH KPAT</strong></p>
@@ -30,21 +31,21 @@
 			<tbody>
 			<?php $i =1; $j=0; foreach ($data['data'] as $key) : ?>
 				<tr>
-					<td colspan="9" ><center><strong>SEMESTER <?= $key['semester']  ?></strong></center></td>
+					<td colspan="9" ><center><strong>SEMESTER <?= e($key['semester'])  ?></strong></center></td>
 				</tr>
 				<?php $i= 1; foreach ($key['data_nilai'] as $row) : ?>
 					<tr>
 						<td style="text-align: center;"><?= $i++."."  ?></td>
-						<td style="text-align: center;"><?= $row['kode_matakuliah']  ?></td>
-						<td><?= $row['nama_matakuliah']  ?> <?= $row['ket'] == 0 ? "<span class='badge bg-red'>Belum ambil</span>" : "" ?></td>
-						<td style="text-align: center;"><?= $row['sks_teori'] == (0) ? "" : $row['sks_teori']  ?></td>
-						<td style="text-align: center;"><?= $row['sks_praktek'] == (0) ? "" : $row['sks_praktek'] ?></td>
-						<td style="text-align: center;"><?= $row['sks_praktikum'] == (0) ? "" : $row['sks_praktikum'] ?></center></td>
-						<td style="text-align: center;"><?= number_format($row['nilai_akhir'],2)  ?></td>
-						<td style="text-align: center;"><?= $row['grade']  ?></td>
+<td style="text-align: center;"><?= e($row['kode_matakuliah'])  ?></td>
+                        <td><?= e($row['nama_matakuliah'])  ?> <?= e($row['ket'] == 0 ? "<span class='badge bg-red'>Belum ambil</span>" : "") ?></td>
+                        <td style="text-align: center;"><?= e($row['sks_teori'] == (0) ? "" : $row['sks_teori'])  ?></td>
+                        <td style="text-align: center;"><?= e($row['sks_praktek'] == (0) ? "" : $row['sks_praktek']) ?></td>
+                        <td style="text-align: center;"><?= e($row['sks_praktikum'] == (0) ? "" : $row['sks_praktikum']) ?></center></td>
+                        <td style="text-align: center;"><?= e(number_format($row['nilai_akhir'],2))  ?></td>
+                        <td style="text-align: center;"><?= e($row['grade'])  ?></td>
 						<td style="text-align: center;">
-							<input name="kpat[]" class="check-kpat" type="checkbox" value="<?= $row['id_matakuliah']  ?>,<?= $row['kode_matakuliah']  ?>" onclick="calculate()" ></input>
-                            <input name="nim" type="hidden" value="<?= $mahasiswa->nim ?>"></input>
+							<input name="kpat[]" class="check-kpat" type="checkbox" value="<?= e($row['id_matakuliah'])  ?>,<?= e($row['kode_matakuliah'])  ?>" onclick="calculate()" ></input>
+                            <input name="nim" type="hidden" value="<?= e($mahasiswa->nim) ?>"></input>
                         </td>
 					</tr>
 				<?php endforeach; ?>

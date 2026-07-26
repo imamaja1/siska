@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-<?= $this->session->flashdata('info') ? $this->session->flashdata('info') : ''?>
+<?= $this->session->flashdata('info') ? $this->session->flashdata('info') : '' ?>
 <div id="hasil-cari">
 
 </div>
@@ -44,7 +44,7 @@
                             <?php $no=1; foreach ($data as $row) : ?>
                                 <tr>
                                     <td><?= $no++ ?>.</td>
-                                    <td><?= $row->nama_dosen ?></td>
+                                    <td><?= e($row->nama_dosen) ?></td>
                                     <td align="center"><span class="badge bg-info"><?= $row->jumlah_bimbingan ?> Mahasiswa</span></td>
                                     <td align="center">
                                         <a href="<?= site_url('admin/akademik/pembimbing_kkp/view/'.$row->kode_dosen) ?>" class="btn bg-maroon btn-xs">

@@ -89,22 +89,22 @@
                         <tr>
                             <td><b>Nama</b></td>
                             <td><b>:</b></td>
-                            <td><?= $perwalian->nama_mahasiswa ?></td>
+                            <td><?= e($perwalian->nama_mahasiswa) ?></td>
                         </tr>
                         <tr>
                             <td><b>NIM</b></td>
                             <td><b>:</b></td>
-                            <td><?= $perwalian->nim ?></td>
+                            <td><?= e($perwalian->nim) ?></td>
                         </tr>
                         <tr>
                             <td><b>No. HP/Email</b></td>
                             <td><b>:</b></td>
-                            <td><?= $perwalian->telepon ?> / <?= $perwalian->email ?></td>
+                            <td><?= e($perwalian->telepon) ?> / <?= e($perwalian->email) ?></td>
                         </tr>	
                         <tr>
                             <td><b>Dosen Wali</b></td>
                             <td><b>:</b></td>
-                            <td><?= $perwalian->nama_dosen ?></td>
+                            <td><?= e($perwalian->nama_dosen) ?></td>
                         </tr>	
                     </table>
                 </td>
@@ -128,10 +128,10 @@
             <?php $no = 1; foreach ($data as $row) : ?>
                 <tr>
                     <td style="text-align: center"><?= $no++ ?>.</td>
-                    <td style="text-align: center"><?= $row->semester ?></td>
-                    <td><?= $row->date_created == null ? '(empty)' : tgl_indo($row->date_created) ?></td>
-                    <td><?= $row->isi_konsultasi ?></td>
-                    <td><?= $row->tanggapan ?></td>
+                    <td style="text-align: center"><?= e($row->semester) ?></td>
+                    <td><?= e($row->date_created == null ? '(empty)' : tgl_indo($row->date_created)) ?></td>
+                    <td><?= e($row->isi_konsultasi) ?></td>
+                    <td><?= e($row->tanggapan) ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

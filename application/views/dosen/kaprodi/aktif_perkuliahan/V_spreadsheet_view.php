@@ -5,8 +5,8 @@ header("Pragma: no-cache");
 header("Expires: 0");
 ?>
 <p style="text-align: left; font-size: 12pt">
-    Prodi : <?= $prodi->nama_program_studi ?> <br>
-    Tahun Akademik : <?= $ta->tahun_akademik ?> - <?= $ta->semester == 1 ? 'Ganjil' : 'Genap' ?>
+    Prodi : <?= e($prodi->nama_program_studi) ?> <br>
+    Tahun Akademik : <?= e($ta->tahun_akademik) ?> - <?= e($ta->semester == 1 ? 'Ganjil' : 'Genap') ?>
 </p>
 <p style="text-align: center;">Tanggal Export : <?= date('d-M-Y H:i:s') ?></p>
 <hr>

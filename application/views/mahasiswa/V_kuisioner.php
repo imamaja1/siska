@@ -24,8 +24,8 @@
                         foreach ($data as $row) : ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center"><?= $row->kode_matakuliah ?></td>
-                                <td><?= $row->nama_matakuliah ?></td>
+                                <td align="center"><?= e($row->kode_matakuliah) ?></td>
+                                <td><?= e($row->nama_matakuliah) ?></td>
                                 <td align="center">
                                     <a href="<?= site_url('mahasiswa/kuisioner/isi_kuisioner/' . $row->kelas_mahasiswa_id) ?>"
                                        data-toggle="modal" data-target="#myModal<?= $row->kelas_mahasiswa_id ?>"
@@ -72,6 +72,7 @@
             </p>
             <form id="form-kuisioner-layanan" action="<?= site_url('mahasiswa/kuisioner/simpan_layanan') ?>"
                   method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="table-responsive">
                     <table class="table demo-table">
                         <thead>
@@ -89,11 +90,11 @@
                         foreach ($soal_layanan as $item) : ?>
                             <tr style="horiz-align: center;">
                                 <td rowspan="<?= $item['rowspan'] + 1 ?>"><strong>Pelayanan
-                                        Bagian <?= $item['nama_bagian'] ?> </strong></td>
+                                        Bagian <?= e($item['nama_bagian']) ?> </strong></td>
                             </tr>
                             <?php foreach ($item['data'] as $row) : ?>
                                 <tr>
-                                    <td><?= $row->soal ?></td>
+                                    <td><?= e($row->soal) ?></td>
                                     <td align="center"><label><input required type="radio"
                                                                      name="hasil[<?= $row->id_soal_pelayanan ?>]"
                                                                      value="1"></label>

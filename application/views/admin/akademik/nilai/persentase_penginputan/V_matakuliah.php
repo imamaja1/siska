@@ -17,8 +17,8 @@
                 <?php $no=1; foreach ($matakuliah as $row) : ?>
                 <tr>
                     <td><?= $no++ ?>.</td>
-                    <td><?= $row['kode_matakuliah'] ?></td>
-                    <td><?= $row['nama_matakuliah'] ?></td>
+                    <td><?= e($row['kode_matakuliah']) ?></td>
+                    <td><?= e($row['nama_matakuliah']) ?></td>
                     <td>
                         <?php if ($row['status']) : ?>
                             <span class="badge bg-green"><i class="fa fa-check-square-o"></i> Selesai</span>

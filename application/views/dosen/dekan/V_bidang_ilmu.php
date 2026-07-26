@@ -1,4 +1,4 @@
-<?= $this->session->flashdata('info') ?>
+<?= e($this->session->flashdata('info')) ?>
 <div class="box box-solid flat">
     <div class="box-body">
         <table class="table table-bordered table-condensed">
@@ -8,14 +8,14 @@
                 <th>Yang belum ngisi</th>
             </tr>
             <tr>
-                <td><button class="btn btn-default btn-xs"><?= $total_dosen ?> Dosen (100%) </button></td>
+                <td><button class="btn btn-default btn-xs"><?= e($total_dosen) ?> Dosen (100%) </button></td>
                 <td>
-                    <button class="btn btn-default btn-xs"><?= $sudah_ngisi ?> Dosen (<?= number_format(($sudah_ngisi / $total_dosen) * 100, 2) ?>%)</button>
+                    <button class="btn btn-default btn-xs"><?= e($sudah_ngisi) ?> Dosen (<?= number_format(($sudah_ngisi / $total_dosen) * 100, 2) ?>%)</button>
                     <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal_sudah_ngisi"><i class="fa fa-eye"></i></button>
                 </td>
 
                 <td>
-                    <button class="btn btn-default btn-xs"><?= $total_dosen - $sudah_ngisi ?> Dosen (<?= number_format((($total_dosen - $sudah_ngisi) / $total_dosen) * 100, 2) ?>%)</button>
+                    <button class="btn btn-default btn-xs"><?= e($total_dosen - $sudah_ngisi) ?> Dosen (<?= number_format((($total_dosen - $sudah_ngisi) / $total_dosen) * 100, 2) ?>%)</button>
                     <!-- <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal_belum_ngisi"><i class="fa fa-eye"></i></button> -->
                 </td>
             </tr>
@@ -43,12 +43,12 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $i++ ?></td>
-                                <td><?= $dbi->nama_bidang ?></td>
-                                <td><?= $dbi->nama_program_studi ?></td>
+                                <td><?= e($dbi->nama_bidang) ?></td>
+                                <td><?= e($dbi->nama_program_studi) ?></td>
                                 <td align="center">
 
-                                    <button class="btn btn-default btn-xs"><?= $this->db->query("select count(*) as cnt from bidang_ilmu_detail where id_bidang_ilmu=?", array($dbi->id_bidang_ilmu))->row()->cnt; ?></button>
-                                    <button class="btn btn-primary btn-xs" onclick="show_jumlah_dosen('<?= $dbi->id_bidang_ilmu ?>')">Lihat</button>
+                                    <button class="btn btn-default btn-xs"><?= e($this->db->query("select count(*) as cnt from bidang_ilmu_detail where id_bidang_ilmu=?", array($dbi->id_bidang_ilmu))->row()->cnt) ?></button>
+                                    <button class="btn btn-primary btn-xs" onclick="show_jumlah_dosen('<?= e($dbi->id_bidang_ilmu) ?>')">Lihat</button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -75,8 +75,8 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $ii++ ?></td>
-                                <td><?= $dbii->nama_dosen ?></td>
-                                <td><?= $dbii->nama_bidang ?></td>
+                                <td><?= e($dbii->nama_dosen) ?></td>
+                                <td><?= e($dbii->nama_bidang) ?></td>
 
                             </tr>
                         <?php } ?>
@@ -114,7 +114,7 @@
                                         ?>
                                         <tr>
                                             <td><?= $non++ ?></td>
-                                            <td><?= $dbg->nama_dosen ?></td>
+                                            <td><?= e($dbg->nama_dosen) ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -156,7 +156,7 @@
                                         ?>
                                         <tr>
                                             <td><?= $nonx++ ?></td>
-                                            <td><?= $dbg->nama_dosen ?></td>
+                                            <td><?= e($dbg->nama_dosen) ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

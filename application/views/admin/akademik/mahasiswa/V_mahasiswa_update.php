@@ -8,6 +8,7 @@
     <div class="box-body"><br>
         <b>I. IDENTITAS CALON MAHASISWA</b> <font color="red"> - Perhatian ! form pengisian yang mengandung tanda bintang (*) harus diisi</font><hr>
         <form id="myform" class="form-horizontal" action="<?= site_url('admin/akademik/mahasiswa/simpan_update') ?>" method="POST"  enctype="multipart/form-data">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
             <div class="form-group">
                 <label class="control-label col-sm-3">Nomor Induk Mahasiswa <label style="color: red">*</label> :</label>
@@ -49,7 +50,7 @@
                     <select name="program_studi_kode" class="form-control select2">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($prodi as $row) : ?>
-                            <option <?= set_value('program_studi_kode',$data_mahasiswa->program_studi_kode) == $row->kode_program_studi ? 'selected' : '' ?> value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                            <option <?= set_value('program_studi_kode',$data_mahasiswa->program_studi_kode) == $row->kode_program_studi ? 'selected' : '' ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <small style="color: red"><?= form_error('kode_program_Studi'); ?></small>
@@ -92,7 +93,7 @@
                     <select class="form-control"name="propinsi">
                         <option value="" disabled selected>Pilih Propinsi</option>
                         <?php foreach ($provinsi as $row) { ?>
-                            <option <?= set_select('propinsi', $row->nama) ?> <?= $data_mahasiswa->propinsi == $row->nama ? "selected" : "" ?> value="<?= $row->nama ?>"><?= $row->nama; ?></option>
+                            <option <?= set_select('propinsi', $row->nama) ?> <?= $data_mahasiswa->propinsi == $row->nama ? "selected" : "" ?> value="<?= e($row->nama) ?>"><?= e($row->nama) ?></option>
                         <?php } ?>
                     </select>
                     <small style="color: red"><?= form_error('propinsi'); ?></small>
@@ -435,7 +436,7 @@
                     <select class="form-control " name="propinsi_orangtua">
                         <option value="" disabled selected>Pilih Propinsi</option>
                         <?php foreach ($provinsi as $row) { ?>
-                            <option <?= set_select('propinsi_orangtua', $row->nama) ?> <?= $data_mahasiswa->propinsi_orangtua == $row->nama ? "selected" : "" ?> value="<?= $row->nama ?>"><?= $row->nama; ?></option>
+                            <option <?= set_select('propinsi_orangtua', $row->nama) ?> <?= $data_mahasiswa->propinsi_orangtua == $row->nama ? "selected" : "" ?> value="<?= e($row->nama) ?>"><?= e($row->nama) ?></option>
                         <?php } ?>
                     </select>
                     <small style="color: red"><?= form_error('propinsi_orangtua'); ?></small>
@@ -453,13 +454,13 @@
                 <label class="control-label col-sm-3">Unggah File Foto :</label>
 <!--                <div class="col-sm-3">-->
                 <div class="col-sm-3">
-                    <input type="hidden" name="foto_lama" value="<?= $data_mahasiswa->foto ?>"/>
+                    <input type="hidden" name="foto_lama" value="<?= e($data_mahasiswa->foto) ?>"/>
                     <input type="file" name="foto" accept="image/jpeg;image/x-png;image/gif"/>
                     <br>
                     <?php if ($data_mahasiswa->foto == '') : ?>
-                        <img src="<?= base_url('assets/dist/img/default-50x50.gif') ?>" class="img-bordered" onclick="cot(<?= $data_mahasiswa->nim ?>)" id="upload_link-<?= $data_mahasiswa->nim ?>"  style="height:150px" alt=""><br>
+                        <img src="<?= base_url('assets/dist/img/default-50x50.gif') ?>" class="img-bordered" onclick="cot(<?= e($data_mahasiswa->nim) ?>)" id="upload_link-<?= e($data_mahasiswa->nim) ?>"  style="height:150px" alt=""><br>
                     <?php else: ?>
-                        <img src="<?= base_url('assets/foto/'.$data_mahasiswa->foto) ?>" class="img-bordered" onclick="cot(<?= $data_mahasiswa->nim ?>)" id="upload_link-<?= $data_mahasiswa->nim ?>"  style="height:150px" alt=""><br>
+                        <img src="<?= base_url('assets/foto/'.e($data_mahasiswa->foto)) ?>" class="img-bordered" onclick="cot(<?= e($data_mahasiswa->nim) ?>)" id="upload_link-<?= e($data_mahasiswa->nim) ?>"  style="height:150px" alt=""><br>
                     <?php endif; ?>
                 </div>
             </div>
@@ -471,8 +472,8 @@
                 </div>
             </div>
         </form>
-        <form id="form-file-<?= $data_mahasiswa->nim ?>" action="" enctype="multipart/form-data" method="post">
-            <input id="upload-<?= $data_mahasiswa->nim ?>" name="foto" type="file" style="display: none" onchange="readURL(this,<?= $data_mahasiswa->nim ?>);">
+        <form id="form-file-<?= e($data_mahasiswa->nim) ?>" action="" enctype="multipart/form-data" method="post">
+            <input id="upload-<?= e($data_mahasiswa->nim) ?>" name="foto" type="file" style="display: none" onchange="readURL(this,<?= e($data_mahasiswa->nim) ?>);">
         </form>
     </div>
 </div>

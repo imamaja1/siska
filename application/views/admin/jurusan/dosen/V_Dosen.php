@@ -3,9 +3,9 @@
     <div class="box-body">
         <a href="<?= site_url('admin/jurusan/dosen/tambah'); ?>" class="btn btn-xs btn-primary flat"> <i class="fa fa-plus-circle"></i> Tambah</a>
         <?php if (count($data_dosen) > 0): ?>
-            <button class="btn btn-flat btn-default btn-xs ">Terdapat <b><?= $jumlah_data; ?> Record</b></button>
+		<button class="btn btn-flat btn-default btn-xs ">Terdapat <b><?= e($jumlah_data) ?> Record</b></button>
             <div class="pull-right">
-                <?= $halaman; ?>
+                <?= $halaman ?>
             </div>
         <?php else: ?>
 
@@ -33,10 +33,10 @@
                 foreach ($data_dosen as $d) {
                     ?>
                     <tr>
-                        <td style="text-align: center;"><?= $i++; ?>.</td>
-                        <td id="nik-<?= $d->kode_dosen ?>"><?= $d->nik ?></td>
-                        <td id="nama-dosen-<?= $d->kode_dosen ?>"><?= $d->nama_dosen ?></td>
-                        <td ><?= $d->nama_program_studi ?></td>
+                        <td style="text-align: center;"><?= e($1) ?>.</td>
+                        <td id="nik-<?= e($d->kode_dosen) ?>"><?= e($d->nik) ?></td>
+                        <td id="nama-dosen-<?= e($d->kode_dosen) ?>"><?= e($d->nama_dosen) ?></td>
+                        <td ><?= e($d->nama_program_studi) ?></td>
                         <td style="text-align: center;"><?php
                             $status_dosen = $d->status_dosen;
                             if ($status_dosen == "T") {
@@ -53,7 +53,7 @@
                                 echo "Tidak Aktif";
                             }
                             ?></td>
-                        <td id="alamat-email-<?= $d->kode_dosen ?>"><?= $d->alamat_email ?></td>
+                        <td id="alamat-email-<?= e($d->kode_dosen) ?>"><?= e($d->alamat_email) ?></td>
                         <td align="center" width="220">
                             <a href="#" onclick="gantipassword('<?= site_url('admin/jurusan/dosen/generate_sandi/' . $d->kode_dosen) ?>')" class="btn btn-xs btn-primary flat"><i class="fa fa-refresh"></i> Reset Sandi</a>
                             <a href="<?= site_url('admin/jurusan/dosen/edit/' . $d->kode_dosen); ?>" class="btn btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>

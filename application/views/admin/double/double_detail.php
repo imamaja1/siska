@@ -35,9 +35,9 @@
                     ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= $d->kode_krs; ?></td>
-                        <td><?= $d->kode_tahun_akademik; ?></td>
-                        <td><?= $d->nim; ?></td>
+                        <td><?= e($d->kode_krs) ?></td>
+                        <td><?= e($d->kode_tahun_akademik) ?></td>
+                        <td><?= e($d->nim) ?></td>
                         <td><?= $d->semester; ?></td>
                         <td>
                             <a href="<?= site_url('admin/double/hapus_krs/' . $d->kode_krs) ?>" class="btn btn-danger btn-sm"
@@ -75,40 +75,40 @@
             ?>
             <tr>
                 <td><?= $no++ ?></td>
-                <td style="display:none;"><?= $d->kode_khs_detail ?></td>
-                <td><?= $d->kode_krs; ?></td>
-                <td><?= $d->kode_tahun_akademik; ?></td>
-                <td><?= $d->kode_krs_detail; ?></td>
-                <td><?= $d->kode_khs_detail; ?></td>
-                <td style="font-weight: bold"><?= $d->id_matakuliah; ?></td>
+                <td style="display:none;"><?= e($d->kode_khs_detail) ?></td>
+                <td><?= e($d->kode_krs) ?></td>
+                <td><?= e($d->kode_tahun_akademik) ?></td>
+                <td><?= e($d->kode_krs_detail) ?></td>
+                <td><?= e($d->kode_khs_detail) ?></td>
+                <td style="font-weight: bold"><?= e($d->id_matakuliah) ?></td>
                 <td style="text-align:center;">
                     <div class="form-group nilai-<?= $d->kode_khs_detail ?>">
                         <input style="width: 100px;" type="text" name="nilai_harian"
-                               onblur="nilai(<?= $d->kode_khs_detail ?>,this)" value="<?= $d->nilai_harian ?>"
-                               class="form-control">
-                    </div>
-                </td>
-                <td style="text-align:center;">
-                    <div class="form-group nilai-<?= $d->kode_khs_detail ?>">
-                        <input style="width: 100px;" type="text" name="nilai_uts"
-                               onblur="nilai(<?= $d->kode_khs_detail ?>,this)" value="<?= $d->nilai_uts ?>"
-                               class="form-control">
-                    </div>
-                </td>
-                <td style="text-align:center;">
-                    <div class="form-group nilai-<?= $d->kode_khs_detail ?> " style="margin: 0px">
-                        <input style="width: 100px;" type="text" name="nilai_uas"
-                               onblur="nilai(<?= $d->kode_khs_detail ?>,this)" value="<?= $d->nilai_uas ?>"
-                               class="form-control">
-                    </div>
-                </td>
-                <td style="text-align:center;">
-                    <div class="form-group" style="margin: 0px">
-                        <input style="width: 100px;" type="text" name="nilai_akhir"
-                               onblur="nilai(<?= $d->kode_khs_detail ?>,this)" value="<?= $d->nilai_akhir ?>"
-                               class="form-control">
-                    </div>
-                </td>
+                                onblur="nilai(<?= e($d->kode_khs_detail) ?>,this)" value="<?= e($d->nilai_harian) ?>"
+                                class="form-control">
+                            </div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="form-group nilai-<?= e($d->kode_khs_detail) ?>">
+                                <input style="width: 100px;" type="text" name="nilai_uts"
+                                onblur="nilai(<?= e($d->kode_khs_detail) ?>,this)" value="<?= e($d->nilai_uts) ?>"
+                                class="form-control">
+                            </div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="form-group nilai-<?= e($d->kode_khs_detail) ?> " style="margin: 0px">
+                                <input style="width: 100px;" type="text" name="nilai_uas"
+                                onblur="nilai(<?= e($d->kode_khs_detail) ?>,this)" value="<?= e($d->nilai_uas) ?>"
+                                class="form-control">
+                            </div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="form-group" style="margin: 0px">
+                                <input style="width: 100px;" type="text" name="nilai_akhir"
+                                onblur="nilai(<?= e($d->kode_khs_detail) ?>,this)" value="<?= e($d->nilai_akhir) ?>"
+                                class="form-control">
+                            </div>
+                        </td>
             </tr>
         <?php
         endforeach;

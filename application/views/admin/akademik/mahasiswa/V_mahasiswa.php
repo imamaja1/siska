@@ -15,6 +15,7 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="POST" action="<?= site_url('admin/akademik/mahasiswa/get_mahasiswa_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Angkatan :</label>
                 <div class="col-sm-3">
@@ -33,7 +34,7 @@
                     <select class="form-control" name="kode_program_studi" id="jurusan">
                         <option value="" disabled selected>Pilih Jurusan</option>
                         <?php foreach ($program_studi as $row) { ?>
-                            <option <?php echo set_select('kode_program_studi', $row->kode_program_studi) ?>  value="<?= $row->kode_program_studi?>"><?= $row->singkatan_program_studi ?> - (<?= $row->nama_program_studi ?>)</option>
+                            <option <?php echo set_select('kode_program_studi', $row->kode_program_studi) ?>  value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> - (<?= e($row->nama_program_studi) ?>)</option>
                         <?php } ?>
                         <option value="Ekstensi">S1 Ekstensi</option>
                     </select>
@@ -49,4 +50,3 @@
         </form>
     </div>
 </div>
-

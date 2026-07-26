@@ -6,19 +6,19 @@
 <div class="box box-primary flat">
 	<div class="box-body table-responsive">
 	<p style="text-align: center;"><strong>KARTU RENCANA STUDI (KRS) KPAT</strong></p>
-	<p style="text-align: center;"><strong>SEMESTER <?= $data['data_mahasiswa']->semester % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= $data['data_mahasiswa']->tahun_akademik ?></strong></p>
+	<p style="text-align: center;"><strong>SEMESTER <?= $data['data_mahasiswa']->semester % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= e($data['data_mahasiswa']->tahun_akademik) ?></strong></p>
 	<br>
 	<div class="col-sm-6 col-md-6 col-lg-6">
 		<table class="table">
 			<tr>
 				<td><strong>Nama Mahasiswa</strong></td>
 				<td><strong>:</strong></td>
-				<td><?= $data['data_mahasiswa']->nama_mahasiswa  ?></td>
-			</tr>
-			<tr>
-				<td><strong>NIM</strong></td>
-				<td><strong>:</strong></td>
-				<td><?= $data['data_mahasiswa']->nim  ?></td>
+<td><?= e($data['data_mahasiswa']->nama_mahasiswa)  ?></td>
+            </tr>
+            <tr>
+                <td><strong>NIM</strong></td>
+                <td><strong>:</strong></td>
+                <td><?= e($data['data_mahasiswa']->nim)  ?></td>
 			</tr>
 			<tr>
 				<td><strong>Semester</strong></td>
@@ -32,12 +32,12 @@
 			<tr>
 				<td><strong>Program Studi</strong></td>
 				<td><strong>:</strong></td>
-				<td><?= $prodi->nama_program_studi  ?></td>
-			</tr>
-			<tr>
-				<td><strong>Fakultas</strong></td>
-				<td><strong>:</strong></td>
-				<td><?= $prodi->nama_fakultas  ?></td>
+<td><?= e($prodi->nama_program_studi)  ?></td>
+            </tr>
+            <tr>
+                <td><strong>Fakultas</strong></td>
+                <td><strong>:</strong></td>
+                <td><?= e($prodi->nama_fakultas)  ?></td>
 			</tr>
 		</table>
 	</div>
@@ -67,11 +67,11 @@
 		$i=1; foreach ($data['data_matakuliah'] as $row) : ?>
 			<tr>
 				<td style="text-align: center;"><?= $i++."." ?></td>
-				<td style="text-align: center;"><?= $row->kode_matakuliah ?></td>
-				<td><?= $row->nama_matakuliah ?></td>
-				<td style="text-align: center;"><?= $row->sks_teori == (0) ? "" : $row->sks_teori ?></td>
-				<td style="text-align: center;"><?= $row->sks_praktek == (0) ? "" : $row->sks_praktek ?></td>
-				<td style="text-align: center;"><?= $row->sks_praktikum == (0) ? "" : $row->sks_praktikum?></td>
+<td style="text-align: center;"><?= e($row->kode_matakuliah) ?></td>
+                <td><?= e($row->nama_matakuliah) ?></td>
+                <td style="text-align: center;"><?= e($row->sks_teori == (0) ? "" : $row->sks_teori) ?></td>
+                <td style="text-align: center;"><?= e($row->sks_praktek == (0) ? "" : $row->sks_praktek) ?></td>
+                <td style="text-align: center;"><?= e($row->sks_praktikum == (0) ? "" : $row->sks_praktikum) ?></td>
 				<td style="text-align: center;"></td>
 				<td style="text-align: center;"></td>
 				<td style="text-align: center;"></td>
@@ -84,9 +84,9 @@
 		<?php endforeach; ?>
 			<tr>
 				<td id="th" colspan="3"><strong>Jumlah</strong></td>
-				<td id="th"><strong><?= $teori  ?></strong></td>
-				<td id="th"><strong><?= $praktek  ?></strong></td>
-				<td id="th"><strong><?= $praktikum  ?></strong></td>
+<td id="th"><strong><?= e($teori)  ?></strong></td>
+                <td id="th"><strong><?= e($praktek)  ?></strong></td>
+                <td id="th"><strong><?= e($praktikum)  ?></strong></td>
 				<td id="th" colspan="3"></td>
 			</tr>
 		</tbody>

@@ -2,7 +2,7 @@
     <p><b>Dosen Pengampu : </b></p>
     <ul>
         <?php foreach ($pengampu as $row) : ?>
-            <li><?= $row->nama_dosen ?> - <a href="#" onclick="hapus_pengampu('<?= $row->mengajar_id ?>')"><span class="text-danger"><i class="fa fa-trash"></i></span></a></li>
+            <li><?= e($row->nama_dosen) ?> - <a href="#" onclick="hapus_pengampu('<?= e($row->mengajar_id) ?>')"><span class="text-danger"><i class="fa fa-trash"></i></span></a></li>
         <?php endforeach; ?>
     </ul>
 <?php else: ?>

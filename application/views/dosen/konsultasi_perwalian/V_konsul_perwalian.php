@@ -1,4 +1,4 @@
-<div class="box box-solid flat">
+﻿<div class="box box-solid flat">
     <div class="box-body">
         <h5>&nbsp;DATA KONSULTASI PERWALIAN, <b><?php
                 foreach ($data as $row_title) {
@@ -21,8 +21,8 @@
             <div class="modal-body" style="padding: 0px;">
                 <form method="POST" action="<?= site_url('dosen/konsultasi_perwalian/tambah_konsultasi_perwalian'); ?>">
                     <div class="modal-body">
-                        <input type="hidden" name="kode_konsultasi_perwalian" value="<?= $row->kode_konsultasi_perwalian ?>">
-                        <input  type="hidden" required name="nim" value="<?= $row->nim ?>" class="form-control">
+                        <input type="hidden" name="kode_konsultasi_perwalian" value="<?= e($row->kode_konsultasi_perwalian) ?>">
+                        <input  type="hidden" required name="nim" value="<?= e($row->nim) ?>" class="form-control">
                         <div class="form-group">
                             <label>Isi Konsultasi :</label>
                             <textarea required class="form-control" cols="20" rows="4" name="isi_konsultasi" placeholder="Isi konsultasi sesuai dengan keluhan/permintaan/pertanyaan dari mahasiswa"></textarea>
@@ -74,14 +74,14 @@
                 foreach ($konsultasi_perwalian as $perwalian_konsul) {
                     ?>
                     <tr>
-                        <td align="center"><?= $no++; ?>.</td>
-                        <td id="isi_konsultasi_krs-<?= $perwalian_konsul->kode_konsultasi_perwalian_detail ?>"><?= $perwalian_konsul->isi_konsultasi; ?></td>
-                        <td id="tanggapan_krs-<?= $perwalian_konsul->kode_konsultasi_perwalian_detail ?>"><?= $perwalian_konsul->tanggapan; ?></td>
+                        <td align="center"><?= e($no++) ?>.</td>
+                        <td id="isi_konsultasi_krs-<?= e($perwalian_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($perwalian_konsul->isi_konsultasi) ?></td>
+                        <td id="tanggapan_krs-<?= e($perwalian_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($perwalian_konsul->tanggapan) ?></td>
                         <td align="center"><?= date('d F Y, g:i a', strtotime($perwalian_konsul->date_created)); ?></td>
-                    <p hidden id="jenis_konsultasi_krs-<?= $perwalian_konsul->kode_konsultasi_perwalian_detail ?>"><?= $perwalian_konsul->jenis_konsultasi ?></p>
-                    <p hidden id="nim-<?= $perwalian_konsul->kode_konsultasi_perwalian_detail ?>"><?= $perwalian_konsul->nim ?></p>
+                    <p hidden id="jenis_konsultasi_krs-<?= e($perwalian_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($perwalian_konsul->jenis_konsultasi) ?></p>
+                    <p hidden id="nim-<?= e($perwalian_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($perwalian_konsul->nim) ?></p>
                     <td align="center">
-                        <a href="#" onclick="javascript:editkonsultasikrs(<?= $perwalian_konsul->kode_konsultasi_perwalian_detail ?>)" class="btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
+                        <a href="#" onclick="javascript:editkonsultasikrs(<?= e($perwalian_konsul->kode_konsultasi_perwalian_detail) ?>)" class="btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
                         <a href="#!" class="btn-xs btn-danger flat" onclick="hapus('<?= site_url('dosen/konsultasi_perwalian/hapus_perwalian/' . $perwalian_konsul->kode_konsultasi_perwalian_detail . $perwalian_konsul->nim) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                     </td>
 
@@ -97,7 +97,7 @@
 </div>
 
 
-<?= $this->session->flashdata('message'); ?>
+<?= $this->session->flashdata('message') ?>
 
 <script>
     function editkonsultasikrs(id) {

@@ -11,8 +11,8 @@
             <tbody>
             <?php foreach ($data as $row) : ?>
                 <tr>
-                    <td style="text-align: center"><?= $row->kode_matakuliah ?></td>
-                    <td><?= $row->nama_matakuliah ?></td>
+                    <td style="text-align: center"><?= e($row->kode_matakuliah) ?></td>
+                    <td><?= e($row->nama_matakuliah) ?></td>
                     <td style="text-align: center"><?= $row->semester ?></td>
                 </tr>
             <?php endforeach; ?>

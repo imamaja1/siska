@@ -15,7 +15,7 @@
 <div class="col-md-12">
     <div class="box box-solid flat">
         <div class="box-header">
-            <span class="badge bg-aqua"><?= $mahasiswa->nama_mahasiswa ?> - <?= $mahasiswa->nim ?></span>
+            <span class="badge bg-aqua"><?= e($mahasiswa->nama_mahasiswa) ?> - <?= e($mahasiswa->nim) ?></span>
         </div>
         <div class="box-body">
             <table class="demo-table" width="100%">
@@ -33,10 +33,10 @@
                 <?php $sksn = 0; $no=1; foreach ($data as $row) : ?>
                     <tr>
                         <td style="text-align: center"><?= $no++ ?>.</td>
-                        <td style="text-align: center"><?= $row->kode_matakuliah ?></td>
-                        <td><?= $row->nama_matakuliah ?></td>
-                        <td style="text-align: center"><?= $sks = substr($row->kode_matakuliah,4,1)?></td>
-                        <td style="text-align: center"><?= $row->nilai_akhir ?></td>
+                        <td style="text-align: center"><?= e($row->kode_matakuliah) ?></td>
+                        <td><?= e($row->nama_matakuliah) ?></td>
+                        <td style="text-align: center"><?= e($sks = substr($row->kode_matakuliah,4,1)) ?></td>
+                        <td style="text-align: center"><?= e($row->nilai_akhir) ?></td>
                         <td style="text-align: center">
                             <a href="#" onclick="hapus('<?= site_url('admin/akademik/hapus_mak/hapus/'.$nim.'/'.$row->kode_matakuliah.'/'.$row->kode_krs_detail) ?>')" class="btn btn-xs btn-danger flat"><i class="fa fa-trash"></i> Hapus</a>
                         </td>

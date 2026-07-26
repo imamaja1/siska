@@ -54,7 +54,7 @@ class DosenAkademikService extends MY_Service {
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
             ->join('dummy_update_kelas as duk', 'duk.id_kelas=kelas.kelas_id', 'left')
             ->where('kode_dosen', $kode_dosen)
-            ->where('kode_tahun_akademik', $tahun_akademik->kode_tahun_akademik)
+            ->where('kode_tahun_akademik', $kode_tahun_akademik)
             ->get()->result_object();
     }
 
@@ -797,7 +797,7 @@ class DosenAkademikService extends MY_Service {
     }
 
     public function getNilaiRevisiLevel1($kelas_id, $level, $ta) {
-        return $this->db->select('khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, max(ket) as ket, max(dumm.harian) as nilai_harian,  max(dumm.uts) as nilai_uts,  max(dumm.uas) as nilai_uas, max(dumm.na) as nilai_akhir,block.id as block_id,mbkm.id as mbkm_id,harian,uts,uas,na,dumm.level')
+        return $this->db->select('khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, max(ket) as ket, max(dumm.harian) as nilai_harian,  max(dumm.uts) as nilai_uts,  max(dumm.uas) as nilai_uas, max(dumm.na) as nilai_akhir,block.id as block_id,mbkm.id as mbkm_id,harian,uts,uas,na,dumm.level, khd.nilai_harian as khs_harian, khd.nilai_uts as khs_uts, khd.nilai_uas as khs_uas, khd.nilai_akhir as khs_na')
             ->from('kelas_mahasiswa as km')
             ->join('kelas', 'kelas.kelas_id=km.kelas_id')
             ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
@@ -813,7 +813,7 @@ class DosenAkademikService extends MY_Service {
     }
 
     public function getNilaiRevisiLevel2($kelas_id, $level, $ta) {
-        return $this->db->select('khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, max(ket) as ket, max(dumm.harian) as nilai_harian,  max(dumm.uts) as nilai_uts,  max(dumm.uas) as nilai_uas, max(dumm.na) as nilai_akhir,block.id as block_id,mbkm.id as mbkm_id,harian,uts,uas,na,dumm.level')
+        return $this->db->select('khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, max(ket) as ket, max(dumm.harian) as nilai_harian,  max(dumm.uts) as nilai_uts,  max(dumm.uas) as nilai_uas, max(dumm.na) as nilai_akhir,block.id as block_id,mbkm.id as mbkm_id,harian,uts,uas,na,dumm.level, khd.nilai_harian as khs_harian, khd.nilai_uts as khs_uts, khd.nilai_uas as khs_uas, khd.nilai_akhir as khs_na')
             ->from('kelas_mahasiswa as km')
             ->join('kelas', 'kelas.kelas_id=km.kelas_id')
             ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
@@ -1153,6 +1153,22 @@ class DosenAkademikService extends MY_Service {
     }
 
     public function getRevisiNilaiMahasiswa($kelas, $level, $ta) {
+        return $this->db->select('mah.nim,mah.nama_mahasiswa,dun.ket,dun.harian,dun.uts,dun.uas,dun.na,khd.nilai_harian as khs_harian,khd.nilai_uts as khs_uts,khd.nilai_uas as khs_uas,khd.nilai_akhir as khs_na,mbkm.id as mbkm_id,block.id as block_id')
+            ->from('kelas_mahasiswa as km')
+            ->join('kelas', 'kelas.kelas_id=km.kelas_id')
+            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
+            ->join('krs', 'krs.kode_krs=kd.kode_krs')
+            ->join('mahasiswa as mah', 'mah.nim=krs.nim')
+            ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+            ->join('dummy_update_nilai as dun', 'dun.kode_khs_detail=khd.kode_khs_detail AND dun.level = ' . $this->db->escape($level), 'left')
+            ->join('mbkm', 'mbkm.nim = mah.nim AND mbkm.kode_ta = ' . $this->db->escape($ta), 'left')
+            ->join('block', 'block.nim = mah.nim', 'left')
+            ->where('km.kelas_id', $kelas)
+            ->group_by('mah.nim')
+            ->get()->result_object();
+    }
+
+    public function getRevisiNilaiMahasiswaKpat($kelas, $level, $ta) {
         return $this->db->select('mah.nim,mah.nama_mahasiswa,ket,grade,dun.harian,dun.uts,dun.uas,dun.na,mbkm.id as mbkm_id,block.id as block_id')
             ->from('dummy_update_nilai_kpat as dun,sistem_penilaian_detail as spd')
             ->join('khs_detail as khd', 'khd.kode_khs_detail=dun.kode_khs_detail')
@@ -1163,8 +1179,8 @@ class DosenAkademikService extends MY_Service {
             ->join('block', 'block.nim = mah.nim', 'left')
             ->where('spd.kode_sistem_penilaian', 1)
             ->where('dun.kelas_id', $kelas)
-            ->where('level', $level)
-            ->where('na >= spd.nilai_minimum AND na <= spd.nilai_maksimum')
+            ->where('dun.level', $level)
+            ->where('dun.na >= spd.nilai_minimum AND dun.na <= spd.nilai_maksimum')
             ->group_by('mah.nim')
             ->get()->result_object();
     }

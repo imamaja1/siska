@@ -1,9 +1,10 @@
 <?= $this->session->flashdata('info') ? $this->session->flashdata('info') : '' ?>
 <div class="box box-primary flat">
     <div class="box-body table-responsive">
-        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) JENJANG <?= strtoupper($prodi->nama_program_studi) ?> (<?= strtoupper($prodi->singkatan_program_studi) ?>)</strong></p>
+        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?> (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
         <p style="text-align: center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL" ?></strong></p>
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/simpan_ubah') ?>" method="post" name="krs_form">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <input type="hidden" name="total_sks_dipilih" id="total-sks-dipilih">
             <?php foreach ($data_matakuliah as $row): ?>
 
@@ -30,8 +31,8 @@
                         foreach ($row['data'] as $d) { ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center" id="kode-matakuliah-<?= $d['kode_nama_kurikulum'] ?>"><?= $d['kode_matakuliah'] ?></td>
-                                <td ><?= $d['nama_matakuliah'] ?></td>
+                                <td align="center" id="kode-matakuliah-<?= e($d['kode_nama_kurikulum']) ?>"><?= e($d['kode_matakuliah']) ?></td>
+                                <td ><?= e($d['nama_matakuliah']) ?></td>
                                 <td align="center" width="100"><?= $d['sks_teori'] ?></td>
                                 <td align="center" width="100"><?= $d['sks_praktek'] ?></td>
                                 <td align="center" width="100"><?= $d['sks_praktikum'] ?></td>
@@ -55,15 +56,15 @@
                             <?php foreach ($row['pilihan'] as $pilih) : ?>
                                 <tr>
                                     <td align="center"><?= $i++ ?>.</td>
-                                    <td align="center" id="kode-matakuliah-<?= $pilih['kode_nama_kurikulum'] ?>"><?= $pilih['kode_matakuliah'] ?></td>
+                                    <td align="center" id="kode-matakuliah-<?= e($pilih['kode_nama_kurikulum']) ?>"><?= e($pilih['kode_matakuliah']) ?></td>
                                     <?php if(substr($this->session->userdata('nim'),0,2) == '16') : ?>
                                         <?php if($pilih['kode_matakuliah'] == 'TSKB351435') : ?>
                                             <td>Animasi 2 Dimensi</td>
                                         <?php else : ?>
-                                            <td ><?= $pilih['nama_matakuliah'] ?></td>
+                                            <td ><?= e($pilih['nama_matakuliah']) ?></td>
                                         <?php endif; ?>
                                     <?php else: ?>
-                                        <td ><?= $pilih['nama_matakuliah'] ?></td>
+                                        <td ><?= e($pilih['nama_matakuliah']) ?></td>
                                     <?php endif; ?>
                                     <td align="center" width="100"><?= $pilih['sks_teori'] ?></td>
                                     <td align="center" width="100"><?= $pilih['sks_praktek'] ?></td>

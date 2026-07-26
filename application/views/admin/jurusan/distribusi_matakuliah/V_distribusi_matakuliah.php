@@ -39,18 +39,18 @@
                         <tbody>
                         <?php  $no=1; foreach ($data as $key) : ?>
                             <tr>
-                                <td rowspan="<?= $key['rowspan'] ?>"><?= $no++ ?>.</td>
-                                <td rowspan="<?= $key['rowspan'] ?>"><?= $key['nama_dosen'] ?></td>
+                                <td rowspan="<?= e($key['rowspan']) ?>"><?= $no++ ?>.</td>
+                                <td rowspan="<?= e($key['rowspan']) ?>"><?= e($key['nama_dosen']) ?></td>
                             <?php $i=0; foreach ($key['data'] as $row) : ?>
-                                <td><?= $row->nama_matakuliah ?></td>
-                                <td style="text-align: center"><?= $row->sks_teori ?></td>
-                                <td style="text-align: center"><?= $row->sks_praktek ?></td>
-                                <td style="text-align: center"><?= $row->sks_praktikum ?></td>
-                                <td style="text-align: center"><?= $row->semester ?> - (<?= $row->nama_kelas ?>)</td>
-                                <td style="text-align: center"><?= $row->jml_kelas ?></td>
-                                <td style="text-align: center"><?= $row->beban ?> - (<?= $row->singkatan_program_studi ?>)</td>
+                                <td><?= e($row->nama_matakuliah) ?></td>
+                                <td style="text-align: center"><?= e($row->sks_teori) ?></td>
+                                <td style="text-align: center"><?= e($row->sks_praktek) ?></td>
+                                <td style="text-align: center"><?= e($row->sks_praktikum) ?></td>
+                                <td style="text-align: center"><?= e($row->semester) ?> - (<?= e($row->nama_kelas) ?>)</td>
+                                <td style="text-align: center"><?= e($row->jml_kelas) ?></td>
+                                <td style="text-align: center"><?= e($row->beban) ?> - (<?= e($row->singkatan_program_studi) ?>)</td>
                                 <?php if ($i == 0) : ?>
-                                    <td rowspan="<?= $key['rowspan'] ?>" style="text-align: center"><?= $key['total_beban'] ?></td>
+                                    <td rowspan="<?= e($key['rowspan']) ?>" style="text-align: center"><?= e($key['total_beban']) ?></td>
                                 <?php $i++; endif; ?>
                                 </tr>
                             <?php  endforeach; ?>

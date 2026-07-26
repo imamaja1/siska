@@ -12,8 +12,8 @@
     <div class="col-md-12">
         <div class="box box-info flat">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-chain-broken"></i><b> KELAS - <?= $data_kelas->nama_kelas ?> </b>
-                    (<?= $data_kelas->kode_matakuliah ?> - <?= $data_kelas->nama_matakuliah ?>)</h3>
+                <h3 class="box-title"><i class="fa fa-chain-broken"></i><b> KELAS - <?= e($data_kelas->nama_kelas) ?> </b>
+                    (<?= e($data_kelas->kode_matakuliah) ?> - <?= e($data_kelas->nama_matakuliah) ?>)</h3>
                 <!-- <?php if (count($persentasi_nilai) != 0): ?>
                     <div class="box-tools">
                         <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-persentasi-nilai"><i
@@ -45,46 +45,46 @@
                                     <tr>
                                         <td style="text-align: center; width: 3%"><?= $no++ ?>.</td>
                                         <td style="text-align: center">
-                                            <?= $row->nim ?>
+                                            <?= e($row->nim) ?>
                                         </td>
-                                        <td><?= $row->nama_mahasiswa ?></td>
+                                        <td><?= e($row->nama_mahasiswa) ?></td>
                                         <td>
-                                            <div class="form-group nilai-harian-<?= $row->kode_khs_detail ?> "
+                                            <div class="form-group nilai-harian-<?= e($row->kode_khs_detail) ?> "
                                                  style="margin: 0px">
                                                 <input type="text"
-                                                       onchange="harian(<?= $row->kode_khs_detail ?>,<?= $row->kode_krs_detail ?>, this)"
-                                                       value="<?= $row->dummy_harian ?>"
-                                                       class="form-control input-harian-<?= $row->kode_khs_detail ?>"
+                                                       onchange="harian(<?= e($row->kode_khs_detail) ?>,<?= e($row->kode_krs_detail) ?>, this)"
+                                                       value="<?= e($row->dummy_harian) ?>"
+                                                       class="form-control input-harian-<?= e($row->kode_khs_detail) ?>"
                                                        placeholder="Enter ..." <?php if($exp) echo 'disabled' ?> >
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group nilai-uts-<?= $row->kode_khs_detail ?> " style="margin: 0px">
+                                            <div class="form-group nilai-uts-<?= e($row->kode_khs_detail) ?> " style="margin: 0px">
                                                 <input <?php if($homebase != 8) echo 'readonly' ?>  type="text"
-                                                       onchange="uts(<?= $row->kode_khs_detail ?>,<?= $row->kode_krs_detail ?>, this)"
-                                                       value="<?= $row->dummy_uts ?>"
-                                                       class="form-control input-uts-<?= $row->kode_khs_detail ?>"
+                                                       onchange="uts(<?= e($row->kode_khs_detail) ?>,<?= e($row->kode_krs_detail) ?>, this)"
+                                                       value="<?= e($row->dummy_uts) ?>"
+                                                       class="form-control input-uts-<?= e($row->kode_khs_detail) ?>"
                                                        placeholder="Enter ..." <?php if($exp) echo 'disabled' ?>>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group nilai-uas-<?= $row->kode_khs_detail ?> " style="margin: 0px">
+                                            <div class="form-group nilai-uas-<?= e($row->kode_khs_detail) ?> " style="margin: 0px">
                                                 <input type="text"
-                                                       onchange="uas(<?= $row->kode_khs_detail ?>,<?= $row->kode_krs_detail ?>, this)"
-                                                       value="<?= $row->dummy_uas ?>"
-                                                       class="form-control input-uas-<?= $row->kode_khs_detail ?>"
+                                                       onchange="uas(<?= e($row->kode_khs_detail) ?>,<?= e($row->kode_krs_detail) ?>, this)"
+                                                       value="<?= e($row->dummy_uas) ?>"
+                                                       class="form-control input-uas-<?= e($row->kode_khs_detail) ?>"
                                                        placeholder="Enter ..." <?php if($exp) echo 'disabled' ?>>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group nilai-<?= $row->kode_khs_detail ?> " style="margin: 0px">
+                                            <div class="form-group nilai-<?= e($row->kode_khs_detail) ?> " style="margin: 0px">
                                                 <input readonly type="text"
-                                                       onchange="nilai(<?= $row->kode_khs_detail ?>,<?= $row->kode_krs_detail ?>, this)"
-                                                       value="<?= $row->dummy_na ?>"
-                                                       class="form-control input-<?= $row->kode_khs_detail ?>" placeholder="0">
+                                                       onchange="nilai(<?= e($row->kode_khs_detail) ?>,<?= e($row->kode_krs_detail) ?>, this)"
+                                                       value="<?= e($row->dummy_na) ?>"
+                                                       class="form-control input-<?= e($row->kode_khs_detail) ?>" placeholder="0">
                                             </div>
                                         </td>
-                                        <td style="text-align:center"><?= $row->block_id ? "Block":"Aktif" ?></td>
+                                        <td style="text-align:center"><?= e($row->block_id ? "Block":"Aktif") ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -269,7 +269,7 @@
                 if ($.isNumeric(nilai)) {
                     if (nilai >= 0 && nilai <= 100) {
                         $.ajax({
-                            url: "<?= site_url('dosen/penilaian/harian') ?>/" + id + "/" + krs +"/"+ <?= $kelas_id ?>,
+                            url: "<?= site_url('dosen/penilaian/harian') ?>/" + id + "/" + krs +"/"+ <?= e($kelas_id) ?>,
                             type: "POST",
                             data: "nilai_harian=" + nilai,
                             success: function (res) {
@@ -443,7 +443,7 @@
                 if ($.isNumeric(nilai)) {
                     if (nilai >= 0 && nilai <= 100) {
                         $.ajax({
-                            url: "<?= site_url('dosen/penilaian/uas') ?>/" + id + "/" + krs +"/"+ <?= $kelas_id ?>,
+                            url: "<?= site_url('dosen/penilaian/uas') ?>/" + id + "/" + krs +"/"+ <?= e($kelas_id) ?>,
                             type: "POST",
                             data: "nilai_uas=" + nilai,
                             success: function (res) {

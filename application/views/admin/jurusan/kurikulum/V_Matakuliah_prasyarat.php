@@ -5,7 +5,7 @@
             <select id="kode-nama-kurikulum" class="form-control select2">
                 <option selected disabled value="">Pilih Kurikulum</option>
                 <?php foreach ($nama_kurikulum as $row) : ?>
-                    <option value="<?= $row->kode_nama_kurikulum ?>"> <?= $row->nama_kurikulum . " - " . $row->singkatan_program_studi ?> </option>
+                    <option value="<?= e($row->kode_nama_kurikulum) ?>"> <?= e($row->nama_kurikulum) ?> - <?= e($row->singkatan_program_studi) ?> </option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -18,7 +18,6 @@
 <div id="isi">
 
 </div>
-<!-- modal tambah prasyarat-->
 <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -27,16 +26,8 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Matakuliah Prasyarat</b></h4>
             </div>
             <form id="form-tambah" method="POST" action="<?= site_url('admin/jurusan/kurikulum/matakuliah_prasyarat/tambah_prasyarat') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
-                  <!--  <div class="form-group">
-                        <label>Nama Kurikulum</label>
-                        <select name="nama_kurikulum" class="form-control select2" id="nama-kurikulum" style="width: 100%">
-                            <option selected disabled value="">Nama Kurikulum</option>
-                            <?php foreach ($nama_kurikulum as $row) : ?>
-                                <option value="<?= $row->kode_nama_kurikulum ?>"> <?= $row->nama_kurikulum . " - " . $row->singkatan_program_studi ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>-->
                     <div class="form-group">
                         <label>Matakuliah yg diambil</label>
                         <select name="id_matakuliah_ambil" class="form-control select2" style="width: 100%;" id="yg_diambil">
@@ -66,8 +57,6 @@
     </div>
 </div>
 
-<!-- model edit-prasyarat -->
-<!--<div class="modal fade" id="edit-prasyarat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">-->
 <div class="modal fade" id="edit-prasyarat" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content" id="isi-edit">
@@ -76,7 +65,6 @@
     </div>
 </div>
 
-<!-- script -->
 <script type="text/javascript">
     var kode_nama_kurikulum_super = '';
     $(function () {
@@ -87,7 +75,6 @@
     });
 
     function editPrasyarat(id,kode_nama_kurikulum) {
-//        console.log(kode_nama_kurikulum);
         var url = "<?= site_url('admin/jurusan/kurikulum/matakuliah_prasyarat/edit_prasyarat') ?>/"+id+"/"+kode_nama_kurikulum;
         $.ajax({
             url : url,
@@ -96,23 +83,7 @@
                 $("#edit-prasyarat").modal("show");
             }
         });
-
     }
-
-    //$("#nama-kurikulum").change(function () {
-    //
-    //    var nama_kurikulum = $("#nama-kurikulum").val();
-    //    // kode_nama_kurikulum = $("#nama-kurikulum").val();
-    //    $.ajax({
-    //        url: "<?//= site_url('admin/jurusan/kurikulum/Matakuliah_prasyarat/get_matakuliah') ?>//",
-    //        type: "POST",
-    //        data: "nama_kurikulum=" + nama_kurikulum,
-    //        success: function (data) {
-    //            $("#yg_diambil").html(data);
-    //            $("#syarat").html(data);
-    //        }
-    //    });
-    //});
 
     function matakuliah(){
         $.ajax({
@@ -127,7 +98,6 @@
     }
 
     $("#kode-nama-kurikulum").change(function () {
-
         var kode_nama_kurikulum = $("#kode-nama-kurikulum").val();
         kode_nama_kurikulum_super = $("#kode-nama-kurikulum").val();
         $.ajax({
@@ -152,8 +122,7 @@
         });
     }
 
-    function hapus(id)
-    {
+    function hapus(id) {
         var url = "<?= site_url('admin/jurusan/kurikulum/matakuliah_prasyarat/hapus') ?>/" + id;
         swal({
             title: '',
@@ -164,7 +133,6 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(function () {
-            // window.location.href = url;
             $.ajax({
                 url: url,
                 type: "get",
@@ -175,7 +143,6 @@
                     console.log('gagal hapus')
                 }
             });
-            // filter();
         });
     }
 
@@ -188,10 +155,8 @@
             data : data +"&nama_kurikulum=" + kode_nama_kurikulum_super,
             type : 'post',
             success : function () {
-                // alert('data berhasil disimpan');
                 ambil();
                 $("#myModal").modal('toggle');
-                // $(".modal-backdrop").remove;
             },
             error : function (res) {
                 alert('data gagal disimpan');
@@ -199,7 +164,4 @@
             }
         })
     })
-
-
-
 </script>

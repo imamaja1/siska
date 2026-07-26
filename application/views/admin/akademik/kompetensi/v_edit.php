@@ -5,18 +5,19 @@ echo isset($flashmessage) ? $flashmessage : '';
 
 <div class="box box-primary flat">
     <div class="box-header">
-        <h5><b>Edit Data Kompetensi : <?= $data_mahasiswa->nim . ' - ' . $data_mahasiswa->nama_mahasiswa ?></b></h5>
+        <h5><b>Edit Data Kompetensi : <?= e($data_mahasiswa->nim . ' - ' . $data_mahasiswa->nama_mahasiswa) ?></b></h5>
         <hr>
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post"
               action="<?= site_url('admin/akademik/kompetensi/proses_update'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">NIM</label>
                 <div class="col-sm-4">
-                    <input value="<?= $data_mahasiswa->nim ?>" type="text" class="form-control" name="nim"
+                    <input value="<?= e($data_mahasiswa->nim) ?>" type="text" class="form-control" name="nim"
                            id="kata_kunci" readonly>
-                    <input value="<?= $data_mahasiswa->kode_kompetensi_mahasiswa ?>" type="hidden" class="form-control" name="kode_kompetensi_mahasiswa"
+                    <input value="<?= e($data_mahasiswa->kode_kompetensi_mahasiswa) ?>" type="hidden" class="form-control" name="kode_kompetensi_mahasiswa"
                            id="kata_kunci" readonly>
                 </div>
             </div>
@@ -26,7 +27,7 @@ echo isset($flashmessage) ? $flashmessage : '';
                     <select name="kode_kompetensi" class="form-control">
                         <?php foreach ($kompetensi_prodi as $row): ?>
                             <option <?= ($data_mahasiswa->kode_kompetensi == $row->kode_kompetensi) ? 'selected' : '' ?>
-                                    value="<?= $row->kode_kompetensi ?>"><?= $row->nama_kompetensi ?></option>
+                                    value="<?= e($row->kode_kompetensi) ?>"><?= e($row->nama_kompetensi) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

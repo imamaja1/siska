@@ -1,4 +1,4 @@
-<div class="box box-solid">
+﻿<div class="box box-solid">
     <div class="box-header with-border">
         <form method="post" action="<?= site_url('dosen/validasikhusus/cari'); ?>">
             <div class="row">
@@ -7,9 +7,9 @@
                         <option disabled>--Pilih Fakultas--</option>
                         <?php foreach ($kode_fakultas as $kd_fk): ?>
                             <?php if ($match_kode_fakultas == $kd_fk->dekan): ?>
-                                <option selected value="<?= $kd_fk->dekan ?>"><?= $kd_fk->nama_fakultas ?></option>
+                                <option selected value="<?= e($kd_fk->dekan) ?>"><?= e($kd_fk->nama_fakultas) ?></option>
                             <?php else: ?>
-                                <option value="<?= $kd_fk->dekan ?>"><?= $kd_fk->nama_fakultas ?></option>
+                                <option value="<?= e($kd_fk->dekan) ?>"><?= e($kd_fk->nama_fakultas) ?></option>
                             <?php endif; ?>
 
 
@@ -52,12 +52,12 @@
                         foreach ($kelas as $row) :
                             ?>
                             <tr>
-                                <td><?= $no++; ?></td>
-                                <td><?= $row->kelas_id; ?></td>
-                                <td><?= $row->singkatan_program_studi; ?></td>
-                                <td><?= $row->kode_matakuliah; ?> - <?= $row->nama_matakuliah; ?> - Kelas
-                                    : <?= $row->nama_kelas; ?></td>
-                                <td><?= $row->nama_dosen; ?></td>
+                                <td><?= e($no++) ?></td>
+                                <td><?= e($row->kelas_id) ?></td>
+                                <td><?= e($row->singkatan_program_studi) ?></td>
+                                <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?> - Kelas
+                                    : <?= e($row->nama_kelas) ?></td>
+                                <td><?= e($row->nama_dosen) ?></td>
                                 <td><?= nilai_validasi($row->status_nilai) ?></td>
                               <td><?=  date('d F Y h:i:s', strtotime($row->datecreate)); ?></td>
                                 <td><?= nilai_validasi($row->validasi_nilai); ?></td>

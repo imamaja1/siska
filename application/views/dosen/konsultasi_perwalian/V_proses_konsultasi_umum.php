@@ -29,8 +29,8 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center" id="nim-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nim ?></td>
-                                <td><?= $row->nama_mahasiswa ?></td>
+                                <td align="center" id="nim-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nim) ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?></td>
                                 <td align="center"><?php
                                     $dosen_perwakilan = $row->kode_dosen_perwakilan;
                                     if (empty($dosen_perwakilan)) {
@@ -51,9 +51,9 @@
                                 </td>
 
                             </tr>
-                        <div hidden id="kode_dosen-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->kode_dosen ?></div>
-                        <div hidden id="nama_mahasiswa-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nama_mahasiswa ?></div>
-                        <div hidden id="nama_dosen-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nama_dosen ?></div>
+                        <div hidden id="kode_dosen-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->kode_dosen) ?></div>
+                        <div hidden id="nama_mahasiswa-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nama_mahasiswa) ?></div>
+                        <div hidden id="nama_dosen-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nama_dosen) ?></div>
 
                     <?php endforeach; ?>
                     </tbody>

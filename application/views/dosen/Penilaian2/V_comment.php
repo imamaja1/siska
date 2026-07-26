@@ -10,8 +10,8 @@
         <tbody>
         <?php foreach ($komentar as $row) : ?>
             <tr>
-                <td><?= $row->kritik ?></td>
-                <td><?= $row->saran ?></td>
+                <td><?= e($row->kritik) ?></td>
+                <td><?= e($row->saran) ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>

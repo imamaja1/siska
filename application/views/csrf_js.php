@@ -14,6 +14,8 @@ $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
     if (options.type && options.type.toUpperCase() !== 'GET' && options.type.toUpperCase() !== 'HEAD') {
         if (typeof originalOptions.data === 'string') {
             options.data = originalOptions.data + '&' + csrfName + '=' + encodeURIComponent(csrfHash);
+        } else if (originalOptions.data instanceof FormData) {
+            originalOptions.data.append(csrfName, csrfHash);
         } else {
             options.data = $.param($.extend(originalOptions.data || {}, (function() {
                 var d = {};

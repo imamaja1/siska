@@ -61,7 +61,7 @@
 </table>
 <!-- Start Header KHS -->
 <hr style="border :1px solid black">
-<h4 style="font-size: 8pt; text-align: center">KARTU HASIL STUDI (KHS)<br />SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= $data['tahun_akademik'] ?></h4>
+<h4 style="font-size: 8pt; text-align: center">KARTU HASIL STUDI (KHS)<br />SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= e($data['tahun_akademik']) ?></h4>
 <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
     <tr>
         <td>
@@ -69,12 +69,12 @@
                 <tr>
                     <td><b>Nama Mahasiswa</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['nama_mahasiswa'] ?></td>
+                    <td><?= e($data['nama_mahasiswa']) ?></td>
                 </tr>
                 <tr>
                     <td><b>NIM</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['nim'] ?></td>
+                    <td><?= e($data['nim']) ?></td>
                 </tr>
             </table>
         </td>
@@ -84,17 +84,17 @@
                 <tr>
                     <td><b>Program Studi</b></td>
                     <td><b>:</b></td>
-                    <td><?= $prodi->nama_program_studi ?></td>
+                    <td><?= e($prodi->nama_program_studi) ?></td>
                 </tr>
                 <tr>
                     <td><b>Fakultas</b></td>
                     <td><b>:</b></td>
-                    <td><?= bodo_kop($data['nim'])['nama_fakultas'] ?></td>
+                    <td><?= e(bodo_kop($data['nim'])['nama_fakultas']) ?></td>
                 </tr>
                 <tr>
                     <td><b>Semester</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['semester'] ?></td>
+                    <td><?= e($data['semester']) ?></td>
                 </tr>
             </table>
         </td>
@@ -124,12 +124,12 @@
         ?>
         <tr>
             <td align="center"><?php echo $i++ .'.'; ?></td>
-            <td align="center"><?= $row['kode_matakuliah'] ?></td>
-            <td><?= $row['nama_matakuliah'] ?></td>
-            <td align="center"><?= $row['sks'] ?></center></td>
-            <td align="center"><?= $row['grade'] ?></td>
-            <td align="center"><?= $row['sksn'] ?></td>
-            <td align="center"><?= $row['tb'] == 'A' ? 'TB' : '' ?></td>
+            <td align="center"><?= e($row['kode_matakuliah']) ?></td>
+            <td><?= e($row['nama_matakuliah']) ?></td>
+            <td align="center"><?= e($row['sks']) ?></center></td>
+            <td align="center"><?= e($row['grade']) ?></td>
+            <td align="center"><?= e($row['sksn']) ?></td>
+            <td align="center"><?= e($row['tb'] == 'A' ? 'TB' : '') ?></td>
         </tr>
         <?php
         $sksn = $sksn + $row['sksn'];
@@ -138,7 +138,7 @@
     ?>
     <tr class="dark">
         <td colspan="5" style="border-left:none; border-bottom:none;">&nbsp;</td>
-        <td align="center"><?= $sksn ?></td>
+        <td align="center"><?= e($sksn) ?></td>
         <td style="border-bottom:none; border-right:none;">&nbsp;</td>
     </tr>
 </table>
@@ -146,20 +146,20 @@
     <tr>
         <td colspan="3"><strong>Jumlah SKS yang ditempuh</strong></td>
         <td><strong>=</strong></td>
-        <td><strong><?= $sks ?></strong></td>
+        <td><strong><?= e($sks) ?></strong></td>
         <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
         <td colspan="3"><strong>IP Semester ini</strong></td>
         <td><strong>=</strong></td>
-        <td><strong><?= sprintf("%.2f",$sksn / $sks) ?></td>
+        <td><strong><?= e(sprintf("%.2f",$sksn / $sks)) ?></td>
         <td colspan="2">&nbsp;</td>
     </tr>
     <?php if (substr($data['nim'],4,1) !=3) : ?>
     <tr>
         <td colspan="3"><strong>Maksimum SKS semester depan</strong></td>
         <td><strong>=</strong></td>
-        <td><strong><?= $data['maksimum_sks'] ?></td>
+        <td><strong><?= e($data['maksimum_sks']) ?></td>
         <td colspan="2">&nbsp;</td>
     </tr>
     <?php endif; ?>

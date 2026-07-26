@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <?php if (isset($judul) || isset($sub_judul)): ?>
-        <title>SISKA UBG | <?php echo $judul . " - " . $sub_judul; ?></title>
+        <title>SISKA UBG | <?= e($judul) ?> - <?= e($sub_judul) ?></title>
     <?php else: ?>
         <title>SISKA UBG</title>
     <?php endif; ?>
@@ -45,14 +45,14 @@
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
-            <a class="navbar-brand" style="font-size: 16px;"><b> <?= $this->session->userdata('sekarang') ?></b></a>
+            <a class="navbar-brand" style="font-size: 16px;"><b> <?= e($this->session->userdata('sekarang')) ?></b></a>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="<?= base_url() ?>assets/gambar/admin.png"
-                                     class="user-image"><?= $this->session->userdata('nama_pengguna'); ?>&nbsp;
+                                     class="user-image"><?= e($this->session->userdata('nama_pengguna')) ?>&nbsp;
 
                                 <span class="hidden-xs"> <i class="fa fa-angle-down"></i></span>
                             </a>
@@ -60,7 +60,7 @@
                                 <li class="user-header" style="height: 100px; color: #fff;">
 
                                     <p>
-                                        Login sebagai: <br><?= $this->session->userdata('nama_pengguna'); ?>
+                                        Login sebagai: <br><?= e($this->session->userdata('nama_pengguna')) ?>
                                     </p>
                                 </li>
                                 <li class="user-footer">
@@ -100,12 +100,12 @@
     <div class="content-wrapper">
         <section class="content-header">
             <div style="font-size: 18px;">
-                <b><?= $sub_judul ?></b>
+                <b><?= e($sub_judul) ?></b>
             </div>
             <ol class="breadcrumb">
-                <?= isset($title_h1) ? $title_h1 : ""; ?>
-                <?= isset($title_h2) ? $title_h2 : ""; ?>
-                <?= isset($title_h3) ? $title_h3 : ""; ?>
+                <?= isset($title_h1) ? e($title_h1) : "" ?>
+                <?= isset($title_h2) ? e($title_h2) : "" ?>
+                <?= isset($title_h3) ? e($title_h3) : "" ?>
             </ol>
         </section>
         <section class="content">

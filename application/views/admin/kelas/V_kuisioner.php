@@ -13,13 +13,14 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" action="<?= site_url('admin/kuisioner/kuisioner/filter') ?>" method="post">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label for="tahun_akademik" class="control-label col-sm-2">Tahun Akademik</label>
                 <div class="col-sm-4">
                     <select required name="kode_tahun_akademik" id="kode-tahun-akademik" class="form-control select2">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($tahun_akademik as $row) :?>
-                            <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?> - <?= $row->semester == 1 ? 'Ganjil' : 'Genap' ?></option>
+                            <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> - <?= $row->semester == 1 ? 'Ganjil' : 'Genap' ?></option>
                         <?php endforeach;?>
                     </select>
                 </div>

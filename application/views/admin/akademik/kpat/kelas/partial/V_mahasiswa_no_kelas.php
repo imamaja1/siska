@@ -9,6 +9,7 @@
             <div class="table-responsive">
                 <form id="form-add-mahasiswa" method="post"
                       action="<?= site_url('admin/akademik/kpat/kelas/add_mahasiswa') ?>">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
@@ -23,12 +24,12 @@
                         foreach ($semua_mhs as $row) : ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center"><?= $row->nim ?></td>
+                                <td align="center"><?= e($row->nim) ?></td>
                                 <td align="center">
                                     <input type="checkbox" class="check-kode-krs-detail" name="kode_krs_detail[]"
-                                           value="<?= $row->kode_krs_detail ?>">
+                                           value="<?= e($row->kode_krs_detail) ?>">
                                 </td>
-                                <td><?= $row->nama_mahasiswa ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -41,8 +42,8 @@
                                 <select required name="kelas_id" class="form-control">
                                     <option value="" selected disabled>Pilih</option>
                                     <?php foreach ($nama_kelas as $row) : ?>
-                                        <option value="<?= $row->kelas_id ?>">Kelas
-                                            - <?= $row->nama_kelas ?></option>
+                                        <option value="<?= e($row->kelas_id) ?>">Kelas
+                                            - <?= e($row->nama_kelas) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                                 <span class="input-group-btn">

@@ -13,8 +13,8 @@ $v = $warna[$k];
                 <select id="nilai-akademik" name="kode_nilai_akademik" class="form-control select2">
                     <option value="" selected disabled>Tahun Akademik</option>
                     <?php foreach ($tahun_akademik as $row) : ?>
-                        <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?>
-                            - <?= $row->semester == 0 ? "GENAP" : "GANJIL" ?></option>
+                        <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?>
+                            - <?= e($row->semester == 0 ? "GENAP" : "GANJIL") ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -65,8 +65,8 @@ $v = $warna[$k];
                 <select id="tahun-akademik" name="kode_tahun_akademik" class="form-control select2">
                     <option value="" selected disabled>Tahun Akademik</option>
                     <?php foreach ($tahun_akademik as $row) : ?>
-                        <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?>
-                            - <?= $row->semester == 0 ? "GENAP" : "GANJIL" ?></option>
+                        <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?>
+                            - <?= e($row->semester == 0 ? "GENAP" : "GANJIL") ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

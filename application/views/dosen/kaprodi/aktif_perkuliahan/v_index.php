@@ -11,7 +11,7 @@
                     <select required name="tahun_akademik" id="" class="form-control">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($tahun_akademik as $row) : ?>
-                            <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik?> - <?= $row->semester == 0 ? 'Genap' : 'Ganjil' ?></option>
+                            <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik)?> - <?= e($row->semester == 0 ? 'Genap' : 'Ganjil') ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -33,7 +33,7 @@
                     <select required name="prodi" id="" class="form-control">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
-                            <option value="<?= $row->kode_program_studi?>"><?= $row->singkatan_program_studi?> - <?= $row->nama_program_studi?></option>
+                            <option value="<?= e($row->kode_program_studi)?>"><?= e($row->singkatan_program_studi)?> - <?= e($row->nama_program_studi)?></option>
                         <?php } ?>
                     </select>
                 </div>

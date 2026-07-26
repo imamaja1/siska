@@ -16,13 +16,13 @@
                     <?php $no = 1; foreach ($data as $row) : ?>
                         <tr>
                             <td><?= $no++ ?>.</td>
-                            <td style="text-align: center"><?= $row->angkatan ?> <?= $row->ekstensi == 'Y' ? "<span class='badge bg-navy'>Ekstensi</span>" : ''?><?= $row->paket == 'Y' ? "<span class='badge bg-aqua'>Paket</span>" : ''?></td>
-                            <td style="text-align: left"><?= $row->nama_program_studi ?></td>
-                            <td style="text-align: center"><?= $row->nama_kurikulum ?></td>
+                            <td style="text-align: center"><?= e($row->angkatan) ?> <?= $row->ekstensi == 'Y' ? "<span class='badge bg-navy'>Ekstensi</span>" : ''?><?= $row->paket == 'Y' ? "<span class='badge bg-aqua'>Paket</span>" : ''?></td>
+                            <td style="text-align: left"><?= e($row->nama_program_studi) ?></td>
+                            <td style="text-align: center"><?= e($row->nama_kurikulum) ?></td>
                             <td style="text-align: center">
                                 <div class="btn-group btn-group-xs">
-                                    <button type="button" onclick="edit('<?= $row->kode_kurikulum_angkatan ?>')" class="btn btn-default" title="Edit"><i class="fa fa-edit"></i></button>
-                                    <button type="button" onclick="hapus('<?= $row->kode_kurikulum_angkatan ?>')" class="btn btn-danger" title="Hapus"><i class="fa fa-trash"></i></button>
+                                    <button type="button" onclick="edit('<?= e($row->kode_kurikulum_angkatan) ?>')" class="btn btn-default" title="Edit"><i class="fa fa-edit"></i></button>
+                                    <button type="button" onclick="hapus('<?= e($row->kode_kurikulum_angkatan) ?>')" class="btn btn-danger" title="Hapus"><i class="fa fa-trash"></i></button>
                                 </div>
                             </td>
                         </tr>

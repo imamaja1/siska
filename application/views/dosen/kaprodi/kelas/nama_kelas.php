@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box box-solid">
             <div class="box-body">
-                <div class="badge bg-aqua"  style="width: 100%;padding-top:10px; padding-bottom: 10px"><?= $kode_matakuliah . ' - ' . $nama_matakuliah ?></div>
+                <div class="badge bg-aqua"  style="width: 100%;padding-top:10px; padding-bottom: 10px"><?= e($kode_matakuliah . ' - ' . $nama_matakuliah) ?></div>
                 <!--                <a href="#" onclick="window.top.close()" class="btn btn-success btn-xs pull-right"><i-->
                 <!--                            class="fa fa-arrow-left"></i> Kembali</a>-->
             </div>
@@ -19,24 +19,24 @@
         <?php foreach ($nama_kelas as $row): ?>
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="info-box bg-aqua">
-                    <span class="info-box-icon"><?= $row->nama_kelas ?></i></span>
+                    <span class="info-box-icon"><?= e($row->nama_kelas) ?></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Mahasiswa</span>
-                        <span class="info-box-number"><?= $row->jml ?></span>
+                        <span class="info-box-number"><?= e($row->jml) ?></span>
                         <div class="progress">
-                            <div class="progress-bar" style="width:<?= $row->jml * (100 / 50) ?>%"></div>
+                            <div class="progress-bar" style="width:<?= e($row->jml * (100 / 50)) ?>%"></div>
                         </div>
                         <span class="progress-description">
                             <!--TODO::ubah disini untuk export data kuisioner mahasiswa-->
                             <form action="<?= site_url('admin/kuisioner/kuisioner/filter') ?>" method="post"
                                 target="_blank">
-                                <a href="#" onclick="lihat('<?= $row->kelas_id ?>')" style="color: #ffffff">Lihat Data <i
+                                <a href="#" onclick="lihat('<?= e($row->kelas_id) ?>')" style="color: #ffffff">Lihat Data <i
                                         class="fa fa-arrow-circle-right"></i></a>
                                 <input type="hidden" name="kode_tahun_akademik" id="kode_tahun_akademik"
-                                    value="<?= $_SESSION['ta_sess'] ?>">
+                                    value="<?= e($_SESSION['ta_sess']) ?>">
                                 <input type="hidden" name="id_matakuliah" id="matakuliah"
-                                    value="<?= $_SESSION['id_matakuliah_sess'] ?>">
-                                <input type="hidden" name="kelas_id" value="<?= $row->kelas_id ?>">
+                                    value="<?= e($_SESSION['id_matakuliah_sess']) ?>">
+                                <input type="hidden" name="kelas_id" value="<?= e($row->kelas_id) ?>">
                             </form>
                         </span>
                     </div>
@@ -58,7 +58,7 @@
     function lihat(kelas_id) {
         super_kelas_id = kelas_id
         $.ajax({
-            url: "<?= site_url('dosen/kaprodi/kelas/data_mahasiswa') ?>/" + kelas_id + "/" + <?= $tahun ?>,
+            url: "<?= site_url('dosen/kaprodi/kelas/data_mahasiswa') ?>/" + kelas_id + "/" + <?= e($tahun) ?>,
             type: "get",
             success: function (data) {
                 $('#landing-modal-mahasiswa').html(data);

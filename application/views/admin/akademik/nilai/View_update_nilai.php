@@ -7,17 +7,18 @@
 <div class="box box-primary flat">
     <div class="box-body"><br>
         <form class="form-horizontal" method="POST" action="<?= site_url('admin/akademik/nilai/get_update_nilai_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
             <div class="form-group">
                 <label class="control-label col-sm-3"> Jurusan <label style="color: red;">*</label> :</label>
                 <div class="col-sm-4">
                   <input type="hidden" name="kode-tahun-akademik" id="kode-tahun-akademik"
-                           value="<?= tahun_akademik()->kode_tahun_akademik ?>">
+                           value="<?= e(tahun_akademik()->kode_tahun_akademik) ?>">
                   
                     <select required class="form-control" name="jurusan" id="jurusan">
                         <option value="" selected disabled>Pilih Jurusan</option>
                         <?php foreach ($program_studi as $data) { ?>
-                            <option value="<?= $data->kode_program_studi ?>"><?= $data->nama_program_studi ?></option>
+                            <option value="<?= e($data->kode_program_studi) ?>"><?= e($data->nama_program_studi) ?></option>
                         <?php } ?>
                     </select>
                 </div>

@@ -24,9 +24,9 @@
                 <?php $no = 1; foreach ($data as $row) : ?>
                 <tr>
                     <td><?= $no++ ?></td>
-                    <td><?= $row->nim ?></td>
-                    <td><?= $row->nama_mahasiswa ?></td>
-                    <td><?= get_kode_prodi($row->nim)->nama_program_studi ?></td>
+                    <td><?= e($row->nim) ?></td>
+                    <td><?= e($row->nama_mahasiswa) ?></td>
+                    <td><?= e(get_kode_prodi($row->nim)->nama_program_studi) ?></td>
                     <td style="text-align: center"><?= $row->semester ?></td>
                     <td style="text-align: center"><span class="badge bg-aqua-active"><?= $row->teori ?></span></td>
                     <td style="text-align: center;"><?= $row->pembayaran_spp ? "<span class='text-success'><i class='fa fa-check'></i></span>" : "<span class='text-danger'><i class='fa fa-times'></i></span>" ?></td>
@@ -35,7 +35,7 @@
                     <td style="text-align: center">
                         <div class="checkbox">
                             <label>
-                                <input onclick="kumpul_krs('<?= $row->kode_status_perkuliahan ?>', this, event)" type="checkbox" <?= $row->pengumpulan_krs ? 'checked' : '' ?>>
+                                <input onclick="kumpul_krs('<?= e($row->kode_status_perkuliahan) ?>', this, event)" type="checkbox" <?= $row->pengumpulan_krs ? 'checked' : '' ?>>
                             </label>
                         </div>
                     </td>

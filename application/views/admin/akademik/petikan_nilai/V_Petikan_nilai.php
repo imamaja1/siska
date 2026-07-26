@@ -23,12 +23,12 @@
 			<?php $i=1 + $this->uri->segment(5); foreach ($data as $row) : ?>
 				<tr>
 					<td><center><?= $i++ ?>.</center></td>
-					<td><center><?= $row->nim ?></center></td>
-					<td><?= $row->nama_mahasiswa ?></td>
+					<td><center><?= e($row->nim) ?></center></td>
+					<td><?= e($row->nama_mahasiswa) ?></td>
                   	
-                  	<td style="text-align: center;">
-						<a href="#"  onclick="view_ganjil('<?= $row->nim ?>')" class="btn btn-primary btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Ganjil</a>
-                        <a href="#"  onclick="view_genap('<?= $row->nim ?>')" class="btn btn-primary btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Genap</a>
+                    <td style="text-align: center;">
+						<a href="#"  onclick="view_ganjil('<?= e($row->nim) ?>')" class="btn btn-primary btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Ganjil</a>
+                        <a href="#"  onclick="view_genap('<?= e($row->nim) ?>')" class="btn btn-primary btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Genap</a>
 					</td>
                   	<td style="text-align: center;">
 						<!--<a href="#"  onclick="view('<?= $row->nim ?>')" class="btn btn-info btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Lihat</a>&nbsp;-->

@@ -20,9 +20,9 @@
                         <?php foreach ($lists as $key => $row) : ?>
                             <tr>
                                 <td><?= $key + 1 ?>.</td>
-                                <td><?= $row->nama_kompetensi ?></td>
-                                <td><?= $row->singkatan_kompetensi ?></td>
-                                <td><?= $row->nama_program_studi ?></td>
+                                <td><?= e($row->nama_kompetensi) ?></td>
+                                <td><?= e($row->singkatan_kompetensi) ?></td>
+                                <td><?= e($row->nama_program_studi) ?></td>
                                 <td>
                                     <div class="btn-group">
                                         <a href="<?= site_url('admin/jurusan/konsentrasi/matakuliah_konsentrasi/'.$row->kode_kompetensi) ?>" class="btn btn-danger btn-sm"  title="Matakuliah Konsentrasi"><i class="fa fa-file-text"></i> Matakuliah</a>

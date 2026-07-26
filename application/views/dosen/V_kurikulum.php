@@ -1,6 +1,6 @@
-<div class="box box-solid flat">
+﻿<div class="box box-solid flat">
     <div class="box-body"><br>
-        <form name="kurikulum_form" class="form-horizontal"  action="<?= $form_action; ?>" method="POST">
+        <?= form_open($form_action, 'name="kurikulum_form" class="form-horizontal"') ?>
             <div class="form-group">
                 <label class="control-label col-sm-3">Jurusan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-3">
@@ -52,12 +52,12 @@
                                 foreach ($item['data'] as $row) :
                                     ?>
                                     <tr <?= in_array($row->id_matakuliah, $mk_pilihan) ? "style='font-style: italic'" : '' ?> <?= ($row->jenis == 1) ? "style='font-style: italic'" : ''; ?>>
-                                        <td align="center"><?= $i . '.'; ?></td>
-                                        <td align="center"><?= $row->kode_matakuliah; ?></td>
-                                        <td><?= $row->nama_matakuliah; ?> <?= ($nama_pilihan[$row->id_matakuliah] == true) ? ' - (Kompetensi : ' . $nama_pilihan[$row->id_matakuliah] . ')' : '' ?></td>
-                                        <td align="center"><?= $row->sks_teori; ?></td>
-                                        <td align="center"><?= $row->sks_praktek; ?></td>
-                                        <td align="center"><?= $row->sks_praktikum; ?></td>
+                                        <td align="center"><?= e($i . '.') ?></td>
+                                        <td align="center"><?= e($row->kode_matakuliah) ?></td>
+                                        <td><?= e($row->nama_matakuliah) ?> <?= isset($nama_pilihan[$row->id_matakuliah]) ? ' - (Kompetensi : ' . e($nama_pilihan[$row->id_matakuliah]) . ')' : '' ?></td>
+                                        <td align="center"><?= e($row->sks_teori) ?></td>
+                                        <td align="center"><?= e($row->sks_praktek) ?></td>
+                                        <td align="center"><?= e($row->sks_praktikum) ?></td>
                                     </tr>
                                     <?php
                                     $i++;

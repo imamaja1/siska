@@ -13,14 +13,15 @@
             </div>
             <div class="box-body">
                 <form id="form-pembayaran" action="<?= site_url('admin/keuangan/pembayaran/store') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label for="">Mahasiswa <span class="text-danger">*</span></label>
                             <select name="nim" class="form-control select2" required>
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($mahasiswa as $row) : ?>
-                                    <option value="<?= $row->nim ?>"><?= $row->nim ?>
-                                        - <?= $row->nama_mahasiswa ?></option>
+                                    <option value="<?= e($row->nim) ?>"><?= e($row->nim) ?>
+                                        - <?= e($row->nama_mahasiswa) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -30,7 +31,7 @@
                         <select name="jenis_pembayaran_id" id="jenis-bayar" class="form-control select2" required>
                             <option value="" selected disabled>Pilih</option>
                             <?php foreach ($jenis_pembayaran as $row) : ?>
-                                <option value="<?= $row->id ?>"><?= $row->nama_pembayaran ?></option>
+                                <option value="<?= e($row->id) ?>"><?= e($row->nama_pembayaran) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -50,7 +51,7 @@
                             <select name="rekening_id" class="form-control select2" required>
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($rekening as $row) : ?>
-                                    <option value="<?= $row->id ?>"><?= $row->nama_rek ?></option>
+                                    <option value="<?= e($row->id) ?>"><?= e($row->nama_rek) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -71,7 +72,7 @@
                             <select name="kode_tahun_akademik" class="form-control select2" required>
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($tahun_akademik as $row) : ?>
-                                    <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?> - <?= $row->semester == '0' ? 'GENAP' : 'GANJIL' ?></option>
+                                    <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> - <?= $row->semester == '0' ? 'GENAP' : 'GANJIL' ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

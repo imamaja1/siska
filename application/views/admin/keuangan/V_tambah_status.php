@@ -15,6 +15,7 @@
             <div class="box-body">
                 <?php if (count($data) > 0): ?>
                     <form class="form-horizontal" method="POST" action="<?= site_url('admin/keuangan/status_perkuliahan/tambah_status_semua')  ?>">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <table class="table demo-table" id="example1">
                             <thead>
                             <tr>
@@ -27,9 +28,9 @@
                             <?php $i=1;
                             foreach ($data as $row) { ?>
                                 <tr>
-                                    <td style="text-align: center;"><input type="checkbox" id="checkbox" name="cekbox[]" class="cek" value="<?= $row->nim?>"></td>
-                                    <td style="text-align: center;"><?= $row->nim  ?></td>
-                                    <td><?= strtoupper($row->nama_mahasiswa)  ?></td>
+                                    <td style="text-align: center;"><input type="checkbox" id="checkbox" name="cekbox[]" class="cek" value="<?= e($row->nim)?>"></td>
+                                    <td style="text-align: center;"><?= e($row->nim)  ?></td>
+                                    <td><?= e(strtoupper($row->nama_mahasiswa))  ?></td>
                                 </tr>
                             <?php } ?>
                             </tbody>

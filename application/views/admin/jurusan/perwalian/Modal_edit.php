@@ -1,6 +1,6 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">×</span></button>
+        <span aria-hidden="true">Ã—</span></button>
     <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Dosen Perwalian</h4>
 </div>
 <form onsubmit="simpan(this, event)" action="<?= site_url('admin/jurusan/perwalian/simpan_ubah_perwalian/'.$kode_perwalian."/".$filter) ?>" method="POST">
@@ -10,7 +10,7 @@
             <select name="kode_dosen" class="form-control select2" style="width: 100%;">
                 <option value="" selected>Pilih</option>
                 <?php foreach ($dosen as $row) : ?>
-                    <option <?= $data->kode_dosen == $row->kode_dosen ? 'selected' : '' ?>  value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                    <option <?= $data->kode_dosen == $row->kode_dosen ? 'selected' : '' ?>  value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -19,7 +19,7 @@
             <select name="kode_dosen_perwakilan" class="form-control select2" style="width: 100%;">
                 <option value="" selected>Pilih</option>
                 <?php foreach ($dosen as $row) : ?>
-                    <option <?= $data->kode_dosen_perwakilan == $row->kode_dosen ? 'selected' : '' ?>  value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                    <option <?= $data->kode_dosen_perwakilan == $row->kode_dosen ? 'selected' : '' ?>  value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

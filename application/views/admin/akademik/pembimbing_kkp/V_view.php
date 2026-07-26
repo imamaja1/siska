@@ -11,7 +11,7 @@
     <div class="col-md-12 col-lg-12">
         <div class="box box-primary flat">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-list"></i> Daftar Bimbingan <span class="text-orange"> <?= $dosen ?> </span></h3>
+                    <h3 class="box-title"><i class="fa fa-list"></i> Daftar Bimbingan <span class="text-orange"> <?= e($dosen) ?> </span></h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
@@ -35,8 +35,8 @@
                             <?php $no=1; foreach ($data as $row) : ?>
                                 <tr>
                                     <td><?= $no++ ?>.</td>
-                                    <td align="center"><?= $row->nim ?></td>
-                                    <td><?= $row->nama_mahasiswa ?></td>
+                                    <td align="center"><?= e($row->nim) ?></td>
+                                    <td><?= e($row->nama_mahasiswa) ?></td>
                                     <td><?= date('d M Y',strtotime($row->tgl_pelaksanaan)) ?></td>
                                     <td><?= date('d M Y',strtotime($row->batas_laporan)) ?></td>
                                     <td><?= day_left($row->batas_laporan) ?></td>
@@ -71,6 +71,7 @@
 <!--end modal tambah bimbingan-->
 <div id="form" class="hide">
     <form method="post" id="form-pindah" action="<?= site_url('admin/akademik/pembimbing_kkp/pindah') ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label for="">Dosen</label>
                 <div class="input-group">
@@ -78,7 +79,7 @@
                     <select name="kode_dosen" id="kode-dosen" required class="form-control select2">
                         <option value=""></option>
                         <?php foreach ($all_dosen as $row) : ?>
-                            <option value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                            <option value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <span class="input-group-btn">

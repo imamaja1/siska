@@ -14,6 +14,7 @@
         <hr>
         <form class="form-horizontal" action="<?= site_url('admin/akademik/mahasiswa/simpan_data_mahasiswa') ?>"
               method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Nomor Induk Mahasiswa <label style="color: red">*</label>
                     :</label>
@@ -101,7 +102,7 @@
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($prodi as $row) : ?>
                             <option <?= set_value('program_studi_kode') == $row->kode_program_studi ? 'selected' : '' ?>
-                                    value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                                    value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <small style="color: red"><?= form_error('kode_program_Studi'); ?></small>
@@ -153,7 +154,7 @@
                         <option selected disabled>Pilih Propinsi</option>
                         <?php foreach ($provinsi as $row) { ?>
                             <option <?= set_select('propinsi', $row->nama) ?>
-                                    value="<?= $row->nama ?>"><?= $row->nama; ?></option>
+                                    value="<?= e($row->nama) ?>"><?= e($row->nama) ?></option>
                         <?php } ?>
                     </select>
                     <small style="color: red"><?= form_error('propinsi'); ?></small>
@@ -355,7 +356,7 @@
                         <option selected disabled>Pilih Propinsi</option>
                         <?php foreach ($provinsi as $row) { ?>
                             <option <?= set_select('propinsi_orangtua', $row->nama) ?>
-                                    value="<?= $row->nama ?>"><?= $row->nama; ?></option>
+                                    value="<?= e($row->nama) ?>"><?= e($row->nama) ?></option>
                         <?php } ?>
                     </select>
                     <small style="color: red"><?= form_error('propinsi_orangtua'); ?></small>

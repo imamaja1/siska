@@ -63,6 +63,7 @@
     <div class="box-body">
         <form class="form-horizontal" action="<?= site_url('admin/keuangan/Status_perkuliahan/filter') ?>"
               method="POST">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2">Tahun Akademik</label>
                 <div class="col-sm-3">
@@ -71,7 +72,7 @@
                         <?php foreach ($tahun_akademik
 
                         as $row) { ?>
-                        <option value="<?= $row->kode_tahun_akademik ?>"><?php echo $row->tahun_akademik; ?>
+                        <option value="<?= e($row->kode_tahun_akademik) ?>"><?php echo e($row->tahun_akademik); ?>
                             <?= $row->semester == 0 ? "- Genap" : "- Ganjil" ?>
                             <?php } ?>
                     </select>
@@ -83,7 +84,7 @@
                     <select required class="form-control" name="angkatan">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($tahun_angkatan as $row) { ?>
-                            <option value="<?= substr($row->tahun_akademik, 2, 2) ?>"><?= substr($row->tahun_akademik, 0, 4) ?></option>
+                            <option value="<?= e(substr($row->tahun_akademik, 2, 2)) ?>"><?= e(substr($row->tahun_akademik, 0, 4)) ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -94,8 +95,8 @@
                     <select required class="form-control" name="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
-                            <option value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?> -
-                                (<?= $row->nama_program_studi ?>)
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> -
+                                (<?= e($row->nama_program_studi) ?>)
                             </option>
                         <?php } ?>
                     </select>
@@ -117,13 +118,14 @@
         <a href="#" onclick="tutup()" class="pull-right text-danger"><i class="fa fa-remove"></i></a>
         <form class="form-horizontal" method="POST"
               action="<?= site_url('admin/keuangan/Status_perkuliahan/filter1') ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2">Angkatan</label>
                 <div class="col-sm-3">
                     <select required class="form-control" name="angkatan">
                         <option value="" selected selected>Pilih</option>
                         <?php foreach ($tahun_angkatan as $row) { ?>
-                            <option value="<?= substr($row->tahun_akademik, 2, 2) ?>"><?= substr($row->tahun_akademik, 0, 4) ?></option>
+                            <option value="<?= e(substr($row->tahun_akademik, 2, 2)) ?>"><?= e(substr($row->tahun_akademik, 0, 4)) ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -134,8 +136,8 @@
                     <select required class="form-control" name="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
-                            <option value="<?= $row->kode_program_studi ?>"><?= $row->singkatan_program_studi ?>
-                                - <?= $row->nama_program_studi ?></option>
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?>
+                                - <?= e($row->nama_program_studi) ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -213,12 +215,13 @@
                 <h4 class="modal-title">Ganti Tahun Akademik</h4>
             </div>
             <form action="<?= site_url('admin/keuangan/status_perkuliahan/ganti_tahun_akademik') ?>" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="">Tahun Akademik <span class="text-danger">*</span></label>
                         <select name="kode_tahun_akademik" class="form-control">
                             <?php foreach ($tahun_akademik as $row ):?>
-                                <option <?= get_cookie('kode_tahun_akademik') ==  $row->kode_tahun_akademik ? 'selected' : '' ?> value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?> <?= $row->semester == '0' ? "GENAP" : "GANJIL" ?></option>
+                                <option <?= get_cookie('kode_tahun_akademik') ==  $row->kode_tahun_akademik ? 'selected' : '' ?> value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> <?= $row->semester == '0' ? "GENAP" : "GANJIL" ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

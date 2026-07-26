@@ -13,6 +13,7 @@
             </div>
             <div class="box-body">
                 <form id="form-quick-search" method="post" action="<?= site_url('admin/akademik/krs/quick_search_proses'); ?>">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label class="control-label">Masukan Kata Kunci <label class="text-danger">*</label> :</label>
                         <div class="input-group">

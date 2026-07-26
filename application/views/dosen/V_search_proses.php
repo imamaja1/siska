@@ -3,7 +3,7 @@
         <a href="<?= site_url('dosen/perwalian'); ?>" class="btn-sm btn-primary flat"><i class="fa fa-arrow-left"></i> Kembali</a>
     </div>
 </div>
-<div <?= $hidden ?>>
+<div <?= e($hidden) ?>>
     <?php if (count($perwalian) > 0) : ?>
         <div class="box box-primary flat">
             <div class="box-body">
@@ -15,8 +15,8 @@
                         <th>STATUS PERKULIAHAN</th>
                     </tr>
                     <?php foreach ($perwalian as $row) { ?>
-                        <td><?= $row->nim ?></td>
-                        <td><?= $row->nama_mahasiswa ?></td>
+                        <td><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
                         <?php
                         switch ($row->status_perkuliahan) {
                             case 'A':
@@ -39,7 +39,7 @@
                         }
                         ?>
                         <td>Data Akademik</td>
-                        <td><?= $status_perkuliahan ?></td>
+                        <td><?= e($status_perkuliahan) ?></td>
                     <?php } ?>
                 </table>
             </div>

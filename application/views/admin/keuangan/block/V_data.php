@@ -21,13 +21,13 @@
                     <?php foreach ($data as $key => $row) : ?>
                     <tr>
                         <td class="text-center"><?= $key + 1 ?>.</td>
-                        <td class="text-center"><?= $row->nim ?></td>
-                        <td><?= $row->nama_mahasiswa ?></td>
-                      	<td class="text-center"><?= $row->tahun_akademik ?></td>
+                        <td class="text-center"><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?></td>
+                       <td class="text-center"><?= e($row->tahun_akademik) ?></td>
                         <td class="text-center"><?= $row->semester == 1 ? 'Ganjil' : 'Genap'; ?></td>
                         <td class="text-center"><?= date('d M, Y', strtotime($row->created_at)); ?></td>
                         <td class="text-center">
-                            <button onclick="hapus('<?= $row->id ?>')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Hapus</button>
+                            <button onclick="hapus('<?= e($row->id) ?>')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Hapus</button>
                         </td>
                     </tr>
                     <?php endforeach; ?>

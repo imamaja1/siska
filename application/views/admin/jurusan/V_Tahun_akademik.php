@@ -25,21 +25,21 @@
                     ?>
                     <tr>
                         <td align="center"><?= $i++ ?></td>
-                        <td align="center" id="tahun-akademik-<?= $d->kode_tahun_akademik ?>"><?= $d->tahun_akademik ?></td>
+                        <td align="center" id="tahun-akademik-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tahun_akademik) ?></td>
                         <td align="center" ><?= $d->semester == 1 ? 'Ganjil' : 'Genap' ?></td>
-                        <td align="center" id="semester-<?= $d->kode_tahun_akademik ?>" style="display: none;"><?= $d->semester ?></td>
-                        <td align="center" id="tanggal-mulai-<?= $d->kode_tahun_akademik ?>"><?= $d->tanggal_mulai ?></td>
-                        <td align="center" id="tanggal-berakhir-<?= $d->kode_tahun_akademik ?>"><?= $d->tanggal_berakhir ?></td>
+                        <td align="center" id="semester-<?= e($d->kode_tahun_akademik) ?>" style="display: none;"><?= e($d->semester) ?></td>
+                        <td align="center" id="tanggal-mulai-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tanggal_mulai) ?></td>
+                        <td align="center" id="tanggal-berakhir-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tanggal_berakhir) ?></td>
                         <td align="center" width="90">
                             <?php if ($d->status == "N") { ?>
-                                <a href="#" id="aktifkan-<?= $d->kode_tahun_akademik ?>" onclick="aktif('<?= $d->kode_tahun_akademik ?>')" class="btn btn-xs btn-danger flat sak"><i class="fa fa-times-circle"></i> Nonaktif</a>&nbsp;
+                                <a href="#" id="aktifkan-<?= e($d->kode_tahun_akademik) ?>" onclick="aktif('<?= e($d->kode_tahun_akademik) ?>')" class="btn btn-xs btn-danger flat sak"><i class="fa fa-times-circle"></i> Nonaktif</a>&nbsp;
                             <?php } else { ?>
-                                <a href="#" id="aktifkan-<?= $d->kode_tahun_akademik ?>" onclick="nonaktif('<?= $d->kode_tahun_akademik ?>')" class="btn btn-xs btn-success flat sak"><i class="fa fa-check-circle"></i> Aktif</a>&nbsp;
+                                <a href="#" id="aktifkan-<?= e($d->kode_tahun_akademik) ?>" onclick="nonaktif('<?= e($d->kode_tahun_akademik) ?>')" class="btn btn-xs btn-success flat sak"><i class="fa fa-check-circle"></i> Aktif</a>&nbsp;
                             <?php } ?>
                         </td>
-                <p hidden id="status-<?= $d->kode_tahun_akademik ?>"><?= $d->status ?></p>
+                <p hidden id="status-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->status) ?></p>
                 <td width="130" align="center">
-                    <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editTahunakademik('<?= $d->kode_tahun_akademik ?>')"><i class="fa fa-edit"></i> Edit</a>&nbsp;
+                    <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editTahunakademik('<?= e($d->kode_tahun_akademik) ?>')"><i class="fa fa-edit"></i> Edit</a>&nbsp;
                     <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/tahun_akademik/hapus/' . $d->kode_tahun_akademik) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                 </td>
                 </tr>
@@ -57,7 +57,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Tahun Akademik</b></h4>
             </div>
-            <form class="form-horizontal" id="form" method="POST" action="<?= site_url('admin/jurusan/tahun_akademik/simpan') ?>">
+<form class="form-horizontal" id="form" method="POST" action="<?= site_url('admin/jurusan/tahun_akademik/simpan') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-sm-3">Tahun Akademik</label>

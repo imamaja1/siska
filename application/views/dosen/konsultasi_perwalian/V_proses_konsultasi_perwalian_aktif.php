@@ -23,9 +23,9 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center" id="nim-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nim ?></td>
-                                <td><?= $row->nama_mahasiswa ?> </td>
-                                <td><?= $row->telepon ?> </td>
+                                <td align="center" id="nim-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nim) ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?> </td>
+                                <td><?= e($row->telepon) ?> </td>
                                 <td align="left"><?php
                                     if ($this->session->userdata['kode_dosen'] != $row->kode_dosen) {
                                         echo $row->nama_dosen;
@@ -62,7 +62,7 @@
                                        onclick="halaman('<?= site_url('dosen/Konsultasi_perwalian/konsultasi_krs/' . $row->nim) ?>');"><i
                                             class="fa fa-file-text"></i> Aktif KRS</a>
                                 <!--<a href="#" class="btn btn-xs btn-primary flat" onclick="halaman('<?= site_url('dosen/Konsultasi_perwalian/konsultasi_perwalian/' . $row->nim) ?>');"><i class="fa fa-user-secret"></i> Perwalian</a>-->
-                                  <a href="#"  onclick="view('<?= $row->nim ?>')" class="btn btn-success btn-xs flat"><i class="fa fa-user-secret" aria-hidden="true"></i>History</a>&nbsp;
+                                  <a href="#"  onclick="view('<?= e($row->nim) ?>')" class="btn btn-success btn-xs flat"><i class="fa fa-user-secret" aria-hidden="true"></i>History</a>&nbsp;
                                 </td>
                                 <td style="text-align: center;">
                                     <?php if ($row->status_cetak == "A") : ?>
@@ -79,10 +79,10 @@
 
                                 </td>
                             </tr>
-                        <div hidden id="kode_dosen-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->kode_dosen ?></div>
+                        <div hidden id="kode_dosen-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->kode_dosen) ?></div>
                         <div hidden
-                             id="nama_mahasiswa-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nama_mahasiswa ?></div>
-                        <div hidden id="nama_dosen-<?= $row->kode_konsultasi_perwalian ?>"><?= $row->nama_dosen ?></div>
+                             id="nama_mahasiswa-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nama_mahasiswa) ?></div>
+                        <div hidden id="nama_dosen-<?= e($row->kode_konsultasi_perwalian) ?>"><?= e($row->nama_dosen) ?></div>
 
                     <?php endforeach; ?>
                     </tbody>

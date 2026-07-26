@@ -5,13 +5,14 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('admin/laporan/aktif_perkuliahan/filter') ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2"> Tahun Akademik</label>
                 <div class="col-sm-4">
                     <select required name="tahun_akademik" id="" class="form-control">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($tahun_akademik as $row) : ?>
-                            <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik?> - <?= $row->semester == 0 ? 'Genap' : 'Ganjil' ?></option>
+                            <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> - <?= $row->semester == 0 ? 'Genap' : 'Ganjil' ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -22,7 +23,7 @@
                     <select required name="angkatan" id="" class="form-control">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($tahun_angkatan as $row) { ?>
-                            <option value="<?= substr($row->tahun_akademik,2, 2)?>"><?= substr($row->tahun_akademik,0, 4)?></option>
+                            <option value="<?= e(substr($row->tahun_akademik,2, 2)) ?>"><?= e(substr($row->tahun_akademik,0, 4)) ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -33,7 +34,7 @@
                     <select required name="prodi" id="" class="form-control">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
-                            <option value="<?= $row->kode_program_studi?>"><?= $row->singkatan_program_studi?> - <?= $row->nama_program_studi?></option>
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> - <?= e($row->nama_program_studi) ?></option>
                         <?php } ?>
                     </select>
                 </div>

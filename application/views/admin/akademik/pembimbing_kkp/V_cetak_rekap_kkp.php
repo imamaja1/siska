@@ -44,13 +44,13 @@ header("Expires: 0");
         <?php $no=1; foreach ($data as $row) : ?>
             <tr>
                 <td><?= $no++ ?>.</td>
-                <td><?= $row->nim ?></td>
-                <td><?= $row->nama_mahasiswa ?></td>
-                <td><?= $row->telepon ?></td>
-                <td><?= $row->alamat ?></td>
-                <td><?= $row->lokasi_kkp ?></td>
+                <td><?= e($row->nim) ?></td>
+                <td><?= e($row->nama_mahasiswa) ?></td>
+                <td><?= e($row->telepon) ?></td>
+                <td><?= e($row->alamat) ?></td>
+                <td><?= e($row->lokasi_kkp) ?></td>
                 <td><?= tgl_indo($row->tgl_pelaksanaan) ?>/<?= tgl_indo($row->batas_pelaksanaan) ?></td>
-                <td><?= $row->bidang_kkp ?></td>
+                <td><?= e($row->bidang_kkp) ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

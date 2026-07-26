@@ -22,11 +22,11 @@
                     foreach ($fakultas as $row) : ?>
                         <tr>
                             <td align="center"><?= $no++ ?></td>
-                            <td align="center"><?= $row->kode_fakultas ?></td>
-                            <td><?= $row->nama_fakultas ?></td>
-                            <td><?= $row->dekan ?></td>
+                            <td align="center"><?= e($row->kode_fakultas) ?></td>
+                            <td><?= e($row->nama_fakultas) ?></td>
+                            <td><?= e($row->dekan) ?></td>
                             <td align="center">
-                                <a href="#!" class="btn-xs btn-info flat" onclick="edit('<?= $row->kode_fakultas ?>')"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
+                                <a href="#!" class="btn-xs btn-info flat" onclick="edit('<?= e($row->kode_fakultas) ?>')"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
                                 <a href="#!" class="btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/universitas/fakultas/delete/' . $row->kode_fakultas) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                             </td>
                         </tr>

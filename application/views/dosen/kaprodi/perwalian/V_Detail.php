@@ -6,13 +6,13 @@
         <hr>
         <dl class="dl-horizontal">
             <dt>Nama :</dt>
-            <dd><?= $perwalian->nama_mahasiswa ?></dd>
+            <dd><?= e($perwalian->nama_mahasiswa) ?></dd>
             <dt>NIM :</dt>
-            <dd><?= $perwalian->nim ?></dd>
+            <dd><?= e($perwalian->nim) ?></dd>
             <dt>No. HP/Email :</dt>
-            <dd><?= $perwalian->telepon ?> / <?= $perwalian->email ?></dd>
+            <dd><?= e($perwalian->telepon) ?> / <?= e($perwalian->email) ?></dd>
             <dt>Dosen Wali :</dt>
-            <dd><?= $perwalian->nama_dosen ?></dd>
+            <dd><?= e($perwalian->nama_dosen) ?></dd>
         </dl>
         <div id="content-edit" style="display: none; border: 1px solid gray; padding: 20px; margin-bottom: 10px">
             <div class="row">
@@ -52,12 +52,12 @@
                 foreach ($data as $row) : ?>
                     <tr>
                         <td style="text-align: center"><?= $no++ ?>.</td>
-                        <td style="text-align: center"><?= $row->semester ?></td>
-                        <td><?= $row->date_created == null ? '(empty)' : tgl_indo($row->date_created) ?></td>
-                        <td><?= $row->isi_konsultasi ?></td>
-                        <td><?= $row->tanggapan ?></td>
+                        <td style="text-align: center"><?= e($row->semester) ?></td>
+                        <td><?= e($row->date_created == null ? '(empty)' : tgl_indo($row->date_created)) ?></td>
+                        <td><?= e($row->isi_konsultasi) ?></td>
+                        <td><?= e($row->tanggapan) ?></td>
                         <td>
-                            <a href="#" onclick="edit('<?= $row->kode_konsultasi_perwalian ?>')"
+                            <a href="#" onclick="edit('<?= e($row->kode_konsultasi_perwalian) ?>')"
                                class="btn btn-primary btn-xs" title="Edit Konsultasi"><i class="fa fa-edit"></i></a>
                         </td>
                     </tr>

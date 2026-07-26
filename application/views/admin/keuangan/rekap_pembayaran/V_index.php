@@ -6,12 +6,13 @@
             </div>
             <div class="box-body">
                 <form action="<?= site_url('admin/keuangan/pembayaran/rekap') ?>" method="post" id="form-search">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="form-group">
                     <label for="">Program Studi <span class="text-danger">*</span></label>
                     <select name="kode_program_studi" required class="form-control">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($program_studi as $row) : ?>
-                            <option value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

@@ -53,21 +53,21 @@ header("Expires: 0");
     <?php foreach ($data as $row) : ?>
         <?php if (count($row['data']) > 0) : ?>
             <tr>
-                <td colspan="6" style="text-align: center">SEMESTER <?= $row['semester'] ?></td>
+                <td colspan="6" style="text-align: center">SEMESTER <?= e($row['semester']) ?></td>
             </tr>
             <?php $i = 1;
             foreach ($row['data'] as $d) :?>
                 <tr <?= in_array($d->id_matakuliah, $mk_pilihan) ? "style='font-style: italic'" : "style='font-weight: bold'" ?> <?=($d->jenis == '1')? 'style="font-style: italic"':'';?>>
                     <td style="text-align: center"><?= $i++ ?></td>
-                    <td style="text-align: center"><?= $d->kode_matakuliah ?></td>
+                    <td style="text-align: center"><?= e($d->kode_matakuliah) ?></td>
                      <td>
-                        <?= $d->nama_matakuliah ?>
+                        <?= e($d->nama_matakuliah) ?>
                         <?= ($nama_pilihan[$d->id_matakuliah] == true) ? ' - (Kompetensi : ' . $nama_pilihan[$d->id_matakuliah] . ')' : '' ?>
                         <?= ($d->jenis == 1) ? '- (Matakuliah Pilihan)' : '' ?>
                     </td>
-                    <td style="text-align: center"><?= $d->sks_teori ?></td>
-                    <td style="text-align: center"><?= $d->sks_praktek ?></td>
-                    <td style="text-align: center"><?= $d->sks_praktikum ?></td>
+                    <td style="text-align: center"><?= e($d->sks_teori) ?></td>
+                    <td style="text-align: center"><?= e($d->sks_praktek) ?></td>
+                    <td style="text-align: center"><?= e($d->sks_praktikum) ?></td>
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>

@@ -2,7 +2,7 @@
     <p><b>Dosen Pengampu : </b></p>
     <ul>
         <?php foreach ($pengampu as $row) : ?>
-            <li><?= $row->nama_dosen ?></li>
+            <li><?= e($row->nama_dosen) ?></li>
         <?php endforeach; ?>
     </ul>
 <?php else: ?>

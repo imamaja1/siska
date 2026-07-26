@@ -5,24 +5,24 @@
     </div>
     <div class="box-body table-responsive">
         <p><center><strong>Kartu Hasil Studi (KHS)</strong></center></p>
-        <p><center><strong>Semester <?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil" ; ?> TA. <?= $data['tahun_akademik'] ?></strong></center></p>
+        <p><center><strong>Semester <?= e($data['semester'] % 2 == (0) ? "Genap" : "Ganjil") ?> TA. <?= e($data['tahun_akademik']) ?></strong></center></p>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <table class="table">
                 <tr>
                     <td><strong>Nama Mahasiswa</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['nama_mahasiswa']  ?></td>
+                    <td><?= e($data['nama_mahasiswa'])  ?></td>
                 </tr>
                 <tr>
                     <td><strong>NIM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['nim']  ?></td>
+                    <td><?= e($data['nim'])  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Semester</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil" ; ?></td>
+                    <td><?= e($data['semester'] % 2 == (0) ? "Genap" : "Ganjil") ?></td>
                 </tr>
             </table>
         </div>
@@ -31,7 +31,7 @@
                 <tr>
                     <td><strong>Program Studi</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['prodi']  ?></td>
+                    <td><?= e($data['prodi'])  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Fakultas</strong></td>
@@ -41,7 +41,7 @@
                 <tr>
                     <td><strong>Kurikulum</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $data['kurikulum']?></td>
+                    <td><?= e($data['kurikulum'])?></td>
                 </tr>
             </table>
         </div>
@@ -61,11 +61,11 @@
             <?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
                 <tr>
                     <td><center><?= $i++ ?></center></td>
-                    <td><center><?= $row['kode_matakuliah'] ?></center></td>
-                    <td><?= $row['nama_matakuliah'] ?></td>
-                    <td><center><?= $row['sks'] ?></center></td>
-                    <td><center><?= $row['grade'] ?></center></td>
-                    <td><center><?= $row['sksn'] ?></center></td>
+                    <td><center><?= e($row['kode_matakuliah']) ?></center></td>
+                    <td><?= e($row['nama_matakuliah']) ?></td>
+                    <td><center><?= e($row['sks']) ?></center></td>
+                    <td><center><?= e($row['grade']) ?></center></td>
+                    <td><center><?= e($row['sksn']) ?></center></td>
                     <td><center>-</center></td>
                 </tr>
                 <?php
@@ -76,7 +76,7 @@
             <?php endforeach; ?>
             <tr>
                 <td colspan="5"></td>
-                <td class="th-color"><center><strong><?= $sksn ?></strong></center></td>
+                <td class="th-color"><center><strong><?= e($sksn) ?></strong></center></td>
             </tr>
             </tbody>
         </table>
@@ -132,7 +132,7 @@
                 <tr>
                     <td><strong>Jumlah SKS yang ditempuh</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $sks  ?></td>
+                    <td><?= e($sks)  ?></td>
                 </tr>
                 <tr>
                     <td><strong>IP Semester ini</strong></td>
@@ -142,7 +142,7 @@
                 <tr>
                     <td><strong>Maksismum SKS Semester Depan</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $jumlah_maksimum_sks ?></td>
+                    <td><?= e($jumlah_maksimum_sks) ?></td>
                 </tr>
             </table>
         </div>

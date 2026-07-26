@@ -30,27 +30,27 @@ header("Expires: 0");
 <table style="font-size: 12px;">
     <tr>
         <td colspan="2">Nama Mahasiswa</td>
-        <td colspan="3">: <?= $data->nama_mahasiswa ?></td>
+        <td colspan="3">: <?= e($data->nama_mahasiswa) ?></td>
     </tr>
     <tr>
         <td colspan="2">Nim</td>
-        <td colspan="3">: <?= $data->nim ?></td>
+        <td colspan="3">: <?= e($data->nim) ?></td>
     </tr>
     <tr>
         <td colspan="2">Prodi</td>
-        <td colspan="3">: <?= get_kode_prodi($data->nim)->nama_program_studi ?></td>
+        <td colspan="3">: <?= e(get_kode_prodi($data->nim)->nama_program_studi) ?></td>
     </tr>
     <tr>
         <td colspan="2">Lokasi Kerja Praktek</td>
-        <td colspan="3">: <?= $data->lokasi_kkp ?></td>
+        <td colspan="3">: <?= e($data->lokasi_kkp) ?></td>
     </tr>
     <tr>
         <td colspan="2">Pembimbing </td>
-        <td colspan="3">: <?=  $data->nama_dosen ?></td>
+        <td colspan="3">: <?= e($data->nama_dosen) ?></td>
     </tr>
     <tr>
         <td colspan="2">Topik / Bidang</td>
-        <td colspan="3">: <?= $data->bidang_kkp ?></td>
+        <td colspan="3">: <?= e($data->bidang_kkp) ?></td>
     </tr>
 
     <thead>
@@ -117,7 +117,7 @@ header("Expires: 0");
 <p align="right" style="margin-right: 500px;">Mataram,................20 <br> Yang Menilai(Pembimbing)</p>
 <br>
 <p align="right" style="margin-right: 500px;">(&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;) <br>
-NIK/NIP. <?= $data->nik ?>&emsp;&emsp;&emsp;&emsp;&emsp;</p>
+NIK/NIP. <?= e($data->nik) ?>&emsp;&emsp;&emsp;&emsp;&emsp;</p>
 
 </body>
 </html>

@@ -30,16 +30,16 @@ foreach ($matakuliah as $mak)
             <tr>
                 <td colspan="2">Nama Dosen </td>
                 <td colspan="7"> : <?php foreach ($top['dosen'] as $row) :?>
-                        <?= $row->nama_dosen ?> /
+                        <?= e($row->nama_dosen) ?> /
                     <?php endforeach;?></td>
             </tr>
             <tr>
                 <td colspan="2">Kelas</td>
-                <td colspan="7"> : <?= $nama_kelas ?></td>
+                <td colspan="7"> : <?= e($nama_kelas) ?></td>
             </tr>
             <tr>
                 <td colspan="2">Matakuliah</td>
-                <td colspan="7"> : <?= $top['nama_matakuliah']->nama_matakuliah ?></td>
+                <td colspan="7"> : <?= e($top['nama_matakuliah']->nama_matakuliah) ?></td>
             </tr>
             <tr><td></td></tr>
             <!--    CEK MATAKULIAH PRAKTIKUM DAN TEORI-->
@@ -49,7 +49,7 @@ foreach ($matakuliah as $mak)
                 <tr>
                     <th id="th" rowspan="2" style="border: 0.1pt solid black;">NO.</th>
                     <?php $batas=0; foreach ($data['soal_kuisioner']['T'] as $key) : ?>
-                        <th id="th" colspan="<?= $key->colspan ?>" style="border: 0.1pt solid black;"><?= $key->kategori ?></th>
+                        <th id="th" colspan="<?= e($key->colspan) ?>" style="border: 0.1pt solid black;"><?= e($key->kategori) ?></th>
                         <?php $batas = $batas + $key->colspan; ?>
                     <?php endforeach;?>
                     <th id="th" rowspan="2" style="border: 0.1pt solid black;">Skor</th>
@@ -109,7 +109,7 @@ foreach ($matakuliah as $mak)
                 <tr>
                     <th id="th" rowspan="2" style="border: 0.1pt solid black;">NO.</th>
                     <?php $batas2=0; foreach ($data['soal_kuisioner']['P'] as $key) : ?>
-                        <th id="th" colspan="<?= $key->colspan ?>" style="border: 0.1pt solid black;"><?= $key->kategori ?></th>
+                        <th id="th" colspan="<?= e($key->colspan) ?>" style="border: 0.1pt solid black;"><?= e($key->kategori) ?></th>
                         <?php $batas2 = $batas2 + $key->colspan; ?>
                     <?php endforeach;?>
                     <th id="th" rowspan="2" style="border: 0.1pt solid black;">Skor</th>
@@ -165,11 +165,11 @@ foreach ($matakuliah as $mak)
                 <tr><dt></dt></tr>
                 <tr>
                     <td colspan="3"><strong>Di tingkatkan</strong></td>
-                    <td colspan="10"> : <?= $tingkatkan ?></td>
+                    <td colspan="10"> : <?= e($tingkatkan) ?></td>
                 </tr>
                 <tr>
                     <td colspan="3"><strong>Di pethanakan</strong></td>
-                    <td colspan="10"> : <?= $pertahankan ?> </td>
+                    <td colspan="10"> : <?= e($pertahankan) ?> </td>
                 </tr>
                 </tbody>
                 <!--        MATKULIAH TEORI SAJA-->
@@ -178,7 +178,7 @@ foreach ($matakuliah as $mak)
                 <tr>
                     <th id="th" rowspan="2" style="border: 0.1pt solid black;">NO.</th>
                     <?php $batas3=0; foreach ($data['soal_kuisioner'] as $key) : ?>
-                        <th id="th" colspan="<?= $key->colspan ?>" style="border: 0.1pt solid black;"><?= $key->kategori ?></th>
+                        <th id="th" colspan="<?= e($key->colspan) ?>" style="border: 0.1pt solid black;"><?= e($key->kategori) ?></th>
                         <?php $batas3 = $batas3 + $key->colspan; ?>
                     <?php endforeach;?>
                     <th id="th" rowspan="2" style="border: 0.1pt solid black;">Di tingkatkan</th>
@@ -215,8 +215,8 @@ foreach ($matakuliah as $mak)
                             $index++;
                         endforeach;
                         $total = $jml;?>
-                        <td style="border: 0.1pt solid black;"> <?= $pertahankan ?> </td>
-                        <td style="border: 0.1pt solid black;"> <?= $tingkatkan ?> </td>
+                    <td style="border: 0.1pt solid black;"> <?= e($pertahankan) ?> </td>
+                    <td style="border: 0.1pt solid black;"> <?= e($tingkatkan) ?> </td>
                     </tr>
                 <?php endforeach;?>
                 <tr>

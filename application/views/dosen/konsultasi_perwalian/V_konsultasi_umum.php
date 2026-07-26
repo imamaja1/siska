@@ -1,4 +1,4 @@
-<div class="box box-solid flat">
+﻿<div class="box box-solid flat">
     <div class="box-body">
         <h5>&nbsp;DATA KONSULTASI UMUM, <b><?php
                 foreach ($data as $row_title) {
@@ -25,9 +25,9 @@
                     ?>
                     <form method="POST" action="<?= site_url('dosen/konsultasi_perwalian/tambah_konsultasi_umum'); ?>">
                         <div class="modal-body">
-                            <input type="hidden" name="kode_konsultasi_perwalian" value="<?= $row->kode_konsultasi_perwalian ?>">
-                            <input  type="hidden" required name="nim" value="<?= $row->nim ?>" class="form-control">
-                            <input  type="hidden" required name="nama_mahasiswa" value="<?= $row->nama_mahasiswa ?>" class="form-control">
+                            <input type="hidden" name="kode_konsultasi_perwalian" value="<?= e($row->kode_konsultasi_perwalian) ?>">
+                            <input  type="hidden" required name="nim" value="<?= e($row->nim) ?>" class="form-control">
+                            <input  type="hidden" required name="nama_mahasiswa" value="<?= e($row->nama_mahasiswa) ?>" class="form-control">
 
                             <div class="form-group">
                                 <label>Isi Konsultasi :</label>
@@ -78,14 +78,14 @@
                     foreach ($konsultasi_umum as $umum_konsul) {
                         ?>
                         <tr>
-                            <td align="center"><?= $no++; ?>.</td>
-                            <td id="isi_konsultasi_umum-<?= $umum_konsul->kode_konsultasi_perwalian_detail ?>"><?= $umum_konsul->isi_konsultasi; ?></td>
-                            <td id="tanggapan_umum-<?= $umum_konsul->kode_konsultasi_perwalian_detail ?>"><?= $umum_konsul->tanggapan; ?></td>
-                            <td align="center"><?= $umum_konsul->date_created ?></td>
-                        <p hidden id="jenis_konsultasi_umum-<?= $umum_konsul->kode_konsultasi_perwalian_detail ?>"><?= $umum_konsul->jenis_konsultasi ?></p>
-                        <p hidden id="nim-<?= $umum_konsul->kode_konsultasi_perwalian_detail ?>"><?= $umum_konsul->nim ?></p>
+                            <td align="center"><?= e($no++) ?>.</td>
+                            <td id="isi_konsultasi_umum-<?= e($umum_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($umum_konsul->isi_konsultasi) ?></td>
+                            <td id="tanggapan_umum-<?= e($umum_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($umum_konsul->tanggapan) ?></td>
+                            <td align="center"><?= e($umum_konsul->date_created) ?></td>
+                        <p hidden id="jenis_konsultasi_umum-<?= e($umum_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($umum_konsul->jenis_konsultasi) ?></p>
+                        <p hidden id="nim-<?= e($umum_konsul->kode_konsultasi_perwalian_detail) ?>"><?= e($umum_konsul->nim) ?></p>
                         <td align="center">
-                            <a href="#" onclick="javascript:editkonsultasiumum(<?= $umum_konsul->kode_konsultasi_perwalian_detail ?>)" class="btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
+                            <a href="#" onclick="javascript:editkonsultasiumum(<?= e($umum_konsul->kode_konsultasi_perwalian_detail) ?>)" class="btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
                             <a href="#!" class="btn-xs btn-danger flat" onclick="hapus('<?= site_url('dosen/konsultasi_perwalian/hapus_umum/' . $umum_konsul->kode_konsultasi_perwalian_detail . $umum_konsul->nim) ?>')"><i class="fa fa-trash"></i> Hapus</a> 
                         </td>
                         </tr>   
@@ -140,7 +140,7 @@
     </div>
 </div>
 
-<?= $this->session->flashdata('message'); ?>
+<?= $this->session->flashdata('message') ?>
 
 <script>
     function editkonsultasiumum(id) {

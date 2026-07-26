@@ -3,6 +3,7 @@
         <div class="box-body">
             <br>
             <form method="Post" action="<?= site_url('auth/create_group') ?>" class="form-horizontal">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="form-group">
                     <label class="control-label col-sm-3">Nama Group</label>
                     <div class="col-sm-7">
@@ -14,7 +15,6 @@
                     <label class="control-label col-sm-3">Deskripsi Group</label>
                     <div class="col-sm-7">
                         <textarea cols="20" rows="5" class="form-control" id="description" name="description" placeholder="Deskripsi Group"></textarea>
-                        <!--<input type="text" name="description" id="description" class="form-control" placeholder="Deskripsi Group">-->
                     </div>
                 </div>
                 <div class="box-footer">

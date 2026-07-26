@@ -22,15 +22,15 @@
                 <?php foreach ($pembayaran as $key => $row) : ?>
                 <tr>
                     <td style="text-align: center"><?= $key + 1 ?>.</td>
-                    <td style="text-align: center"><?= $row->nim ?></td>
-                    <td><?= $row->nama_mahasiswa ?></td>
-                    <td><?= $row->nama_pembayaran ?></td>
+                    <td style="text-align: center"><?= e($row->nim) ?></td>
+                    <td><?= e($row->nama_mahasiswa) ?></td>
+                    <td><?= e($row->nama_pembayaran) ?></td>
                     <td style="text-align: right"><?= number_format($row->nominal_pembayaran,0,',','.')  ?></td>
-                    <td><?= $row->nama_rek ?></td>
+                    <td><?= e($row->nama_rek) ?></td>
                     <td><?= $row->jml_sks ?></td>
                     <td><?= date('d M Y',strtotime($row->tgl_pembayaran)) ?></td>
                     <td style="text-align: center">
-                        <a href="#" onclick="hapus('<?= $row->pembayaran_id ?>')" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"></i></a>
+                        <a href="#" onclick="hapus('<?= e($row->pembayaran_id) ?>')" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

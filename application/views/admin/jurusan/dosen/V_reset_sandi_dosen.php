@@ -1,17 +1,18 @@
+<?= ->session->flashdata('info') ?>
 <div class="box box-solid flat">
     <div class="box-body">
         <a href="<?= site_url('admin/jurusan/dosen'); ?>" class="btn btn-xs btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>
         <button class="btn btn-flat btn-default btn-xs ">Terdapat <b><?php
-                if ($jumlah_data > 0) {
-                    echo $jumlah_data;
+                if ( > 0) {
+                    echo e();
                 } else {
                     echo "0";
                 }
                 ?> Record</b></button>
     </div>
 </div>
-<?php if (count($data_dosen) > 0): ?>
-    <div class="box box-primary flat" <?= $hidden ?>>
+<?php if (count() > 0): ?>
+    <div class="box box-primary flat" <?=  ?>>
         <div class="box-body table-responsive">
             <table class="table demo-table">
                 <thead>
@@ -28,40 +29,38 @@
                 </thead>
                 <tbody>
                     <?php
-                    $i = 1;
-                    foreach ($data_dosen as $d) {
+                     = 1;
+                    foreach ( as ) {
                         ?>
                         <tr>
-                            <td align="center"><?= $i++; ?>.</td>
-                            <td align="center" id="nik-<?= $d->kode_dosen ?>"><?= $d->nik ?></td>
-                            <td id="nama-dosen-<?= $d->kode_dosen ?>"><?= $d->nama_dosen ?></td>
-                            <td ><?= $d->nama_program_studi ?></td>
+                            <td align="center"><?= ++ ?>.</td>
+                            <td align="center" id="nik-<?= e(->kode_dosen) ?>"><?= e(->nik) ?></td>
+                            <td id="nama-dosen-<?= e(->kode_dosen) ?>"><?= e(->nama_dosen) ?></td>
+                            <td ><?= e(->nama_program_studi) ?></td>
                             <td style="text-align: center;"><?php
-                                $status_dosen = $d->status_dosen;
-                                if ($status_dosen == "T") {
+                                 = ->status_dosen;
+                                if ( == "T") {
                                     echo "Tetap";
                                 } else {
                                     echo "Tidak Tetap";
                                 }
                                 ?></td>
                             <td style="text-align: center;"><?php
-                                $status_login = $d->status_login;
-                                if ($status_login == "A") {
+                                 = ->status_login;
+                                if ( == "A") {
                                     echo "Aktif";
                                 } else {
                                     echo "Tidak Aktif";
                                 }
                                 ?></td>
-                            <td><?= $d->alamat_email ?></td>
+                            <td><?= e(->alamat_email) ?></td>
                             <td align="center" width="220">
-                                <a href="#" onclick="gantipassword('<?= site_url('admin/jurusan/dosen/generate_sandi/' . $d->kode_dosen) ?>')" class="btn btn-xs btn-primary flat"><i class="fa fa-refresh"></i> Reset Sandi</a>
-
-                                <a href="<?= site_url('admin/jurusan/dosen/edit/' . $d->kode_dosen); ?>" class="btn btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
-                                <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/dosen/hapus') . '/' . $d->kode_dosen ?>')"><i class="fa fa-trash"></i> Hapus</a>
+                                <a href="#" onclick="gantipassword('<?= site_url('admin/jurusan/dosen/generate_sandi/' . ->kode_dosen) ?>')" class="btn btn-xs btn-primary flat"><i class="fa fa-refresh"></i> Reset Sandi</a>
+                                <a href="<?= site_url('admin/jurusan/dosen/edit/' . ->kode_dosen); ?>" class="btn btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
+                                <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/dosen/hapus') . '/' . ->kode_dosen ?>')"><i class="fa fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
                     <?php } ?>
-
                 </tbody>
             </table>
         </div>
@@ -75,6 +74,7 @@
 <div class="box box-primary flat"><br>
     <div class="box-body">
         <form class="form-horizontal" method="POST" action="<?= site_url('admin/jurusan/dosen/search') ?>">
+	<input type="hidden" name="<?= ->security->get_csrf_token_name() ?>" value="<?= ->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Kata Kunci:</label>
                 <div class="col-sm-4">
@@ -83,7 +83,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary flat"><i class="fa fa-cog"></i> Proses</button>
             </div>
-
         </form>
     </div>
 </div>

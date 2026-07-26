@@ -69,14 +69,14 @@
                                 }
                                 ?>
                                 <span><img src="<?= base_url('assets/foto/' . $image); ?>" class="user-image"
-                                           alt="User Image">&nbsp;<?= substr($this->session->userdata('nama_mahasiswa'), 0, 10) ?>... <i
-                                            class="fa fa-angle-down"></i></span>
+                                           alt="User Image">&nbsp;<?= e(substr($this->session->userdata('nama_mahasiswa'), 0, 10)) ?>... <i
+                                                class="fa fa-angle-down"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header" style="height: 100px;">
                                     <p style="color: white;">
                                         Login Sebagai:<br>
-                                        <?= $this->session->userdata('nama_mahasiswa') ?>
+                                        <?= e($this->session->userdata('nama_mahasiswa')) ?>
                                     </p>
                                 </li>
                                 <li class="user-footer">
@@ -100,7 +100,7 @@
         <div class="container">
             <section class="content-header">
                 <div style="font-size: 18px;">
-                    <b><?= isset($judul) ? $judul : "" ?></b>
+                    <b><?= isset($judul) ? e($judul) : "" ?></b>
                 </div>
             </section>
             <section class="content">

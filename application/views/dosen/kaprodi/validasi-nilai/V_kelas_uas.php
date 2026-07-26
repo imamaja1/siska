@@ -24,28 +24,28 @@
                 if (count($kelas) > 0) :
                     foreach ($kelas as $row) : ?>
                         <tr>
-                            <td><?= $row->kelas_id; ?></td>
-                            <td><?= $row->singkatan_program_studi; ?></td>
-                            <td><?= $row->kode_matakuliah; ?> - <?= $row->nama_matakuliah; ?> - Kelas
-                                : <?= $row->nama_kelas; ?></td>
-                            <td><?= $row->nama_kelas; ?>/<?= $row->semester ?></td>
-                            <td><?= $row->nama_dosen; ?></td>
+                            <td><?= e($row->kelas_id); ?></td>
+                            <td><?= e($row->singkatan_program_studi); ?></td>
+                            <td><?= e($row->kode_matakuliah); ?> - <?= e($row->nama_matakuliah); ?> - Kelas
+                                : <?= e($row->nama_kelas); ?></td>
+                            <td><?= e($row->nama_kelas); ?>/<?= e($row->semester) ?></td>
+                            <td><?= e($row->nama_dosen); ?></td>
                             <td><?= nilai_validasi($row->status_nilai) ?></td>
                             <td><?= nilai_validasi($row->validasi_nilai); ?></td>
                             <td><?= nilai_validasi($row->validasi_dekan); ?></td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" onclick="lihat_mhs('<?= $row->kelas_id ?>')" title="Lihat Mahasiswa" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></a>
+                                    <a href="#" onclick="lihat_mhs('<?= e($row->kelas_id) ?>')" title="Lihat Mahasiswa" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></a>
                                     <?php if ($row->status_nilai == 'T') : ?>
-                                        <a href="#" onclick="lihat('<?= $row->kelas_id ?>')" class="btn btn-xs btn-warning btn-flat" title="Validasi Nilai"><i class="fa fa-check-circle"></i></a>
+                                        <a href="#" onclick="lihat('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-warning btn-flat" title="Validasi Nilai"><i class="fa fa-check-circle"></i></a>
                                     <?php endif; ?>
-                                    <a href="#" id="pesan_<?= $row->kelas_id ?>"  onclick="pesan_uas('<?= $row->kelas_id ?>')" class="btn btn-xs btn-primary btn-flat badge-notif" 
+                                    <a href="#" id="pesan_<?= e($row->kelas_id) ?>"  onclick="pesan_uas('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-primary btn-flat badge-notif" 
                                     <?php if ($pesan_dosen[$row->kelas_id] != 0) {
                                         echo 'data-badge="' . $pesan_dosen[$row->kelas_id] . '"';
                                     } ?>
                                         title="Pesan Untuk Dosen"><i class="fa fa-envelope"></i></a>
                                     <?php if (cek_komentar_revisi($row->kelas_id)) : ?>
-                                                <!-- <a href="#" onclick="show_history_comment('<?= $row->kelas_id ?>')" class="btn btn-xs bg-purple btn-flat pull-right"><i class="fa fa-comments"></i></a> -->
+                                                <!-- <a href="#" onclick="show_history_comment('<?= e($row->kelas_id) ?>')" class="btn btn-xs bg-purple btn-flat pull-right"><i class="fa fa-comments"></i></a> -->
                                     <?php endif; ?>
                                 </div>
                             </td>

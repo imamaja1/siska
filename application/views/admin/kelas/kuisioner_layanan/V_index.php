@@ -7,6 +7,7 @@
             <div class="box-body">
                 <form id="form-filter" class="form-horizontal"
                       action="<?= site_url('admin/kuisioner/kuisioner/filter_layanan') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label for="tahun_akademik" class="control-label col-sm-2">Tahun Akademik <span
                                     class="text-danger">*</span></label>
@@ -15,7 +16,7 @@
                                     class="form-control select2">
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($tahun_akademik as $row) : ?>
-                                    <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?>
+                                    <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?>
                                         - <?= $row->semester == 1 ? 'Ganjil' : 'Genap' ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -29,7 +30,7 @@
                                     class="form-control select2">
                                 <option value="" selected disabled>Pilih</option>
                                 <?php foreach ($prodi as $row) : ?>
-                                    <option value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?></option>
+                                    <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

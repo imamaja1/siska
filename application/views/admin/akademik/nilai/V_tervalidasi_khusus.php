@@ -1,15 +1,16 @@
 <div class="box box-solid">
     <div class="box-header with-border">
         <form method="post" action="<?= site_url('admin/akademik/validasi_khusus/cari'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="row">
                 <div class="col-md-3">
                     <select name="kd_fk" class="form-control select2">
                         <option disabled>--Pilih Fakultas--</option>
                         <?php foreach ($kode_fakultas as $kd_fk): ?>
                             <?php if ($match_kode_fakultas == $kd_fk->dekan): ?>
-                                <option selected value="<?= $kd_fk->dekan ?>"><?= $kd_fk->nama_fakultas ?></option>
+                                <option selected value="<?= e($kd_fk->dekan) ?>"><?= e($kd_fk->nama_fakultas) ?></option>
                             <?php else: ?>
-                                <option value="<?= $kd_fk->dekan ?>"><?= $kd_fk->nama_fakultas ?></option>
+                                <option value="<?= e($kd_fk->dekan) ?>"><?= e($kd_fk->nama_fakultas) ?></option>
                             <?php endif; ?>
 
                         <?php endforeach; ?>
@@ -20,8 +21,8 @@
                         <select name="kode_tahun_akademik" class="form-control select2" id='ta'>
                             <option value="" selected disabled>Tahun Akademik</option>
                             <?php foreach ($tahun_akademik as $row) : ?>
-                                <option value="<?= $row->kode_tahun_akademik ?>" <?= $row->kode_tahun_akademik == $ta ? 'selected' :'' ?>><?= $row->tahun_akademik ?>
-                                    - <?= $row->semester == 0 ? "GENAP" : "GANJIL" ?></option>
+                                <option value="<?= e($row->kode_tahun_akademik) ?>" <?= e($row->kode_tahun_akademik == $ta ? 'selected' :'') ?>><?= e($row->tahun_akademik) ?>
+                                    - <?= e($row->semester == 0 ? "GENAP" : "GANJIL") ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -61,15 +62,15 @@
                         ?>
                         <tr>
                             <td><?= $no++; ?></td>
-                            <td><?= $row->kelas_id; ?></td>
-                            <td><?= $row->singkatan_program_studi; ?></td>
-                            <td><?= $row->kode_matakuliah; ?> - <?= $row->nama_matakuliah; ?> - Kelas
-                                : <?= $row->nama_kelas; ?></td>
-                            <td><?= $row->nama_dosen; ?></td>
+                            <td><?= e($row->kelas_id); ?></td>
+                            <td><?= e($row->singkatan_program_studi); ?></td>
+                            <td><?= e($row->kode_matakuliah); ?> - <?= e($row->nama_matakuliah); ?> - Kelas
+                                : <?= e($row->nama_kelas); ?></td>
+                            <td><?= e($row->nama_dosen); ?></td>
                             <td>
                                 <?php foreach ($row->nilai_validasi as $key => $value): ?>
                                     <?php if ($value) : ?>
-                                        <b>Nilai Ke-<?= $value->level ?></b> :
+                                        <b>Nilai Ke-<?= e($value->level) ?></b> :
                                     <?php else : ?>
                                         <span class="label label-success"> bangke </span>
                                     <?php endif; ?>
@@ -120,10 +121,10 @@
                             </td>
                           	<td> 
                                 <div class=" btn-goup" style="display: flex;" >
-                                    <a class="btn btn-primary btn-xs btn-flat mr-1" href="#" onclick='mhs("<?= $row->kelas_id ?>")' data-toggle="modal" data-target="#mhs"> 
+                                    <a class="btn btn-primary btn-xs btn-flat mr-1" href="#" onclick='mhs("<?= e($row->kelas_id) ?>")' data-toggle="modal" data-target="#mhs"> 
                                         <i class="fa fa-users" aria-hidden="true"></i> View
                                     </a>
-                                    <a class=" btn btn-success btn-xs btn-flat" href="#" onclick='show_nilai_validasi("<?= $row->kelas_id ?>")' data-toggle="modal" data-target="#ModalNilaiValidasi">
+                                    <a class=" btn btn-success btn-xs btn-flat" href="#" onclick='show_nilai_validasi("<?= e($row->kelas_id) ?>")' data-toggle="modal" data-target="#ModalNilaiValidasi">
                                         <i class="fa fa-file-text-o" aria-hidden="true"></i> Nilai
                                     </a>
                                 </div>

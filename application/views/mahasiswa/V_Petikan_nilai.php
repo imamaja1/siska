@@ -2,19 +2,19 @@
     <div class="box-body">
         <p align="right"><a href="<?= site_url('mahasiswa/Petikan_nilai/cetak') ?>" class="btn btn-danger btn-xs" style="margin-right:5px"><i class="fa fa-download"></i> Sebelumnya </a><a href="<?= site_url('mahasiswa/Petikan_nilai/cetak_now') ?>" class="btn btn-danger btn-xs" ><i class="fa fa-download"></i> Terbaru </a></p>
         <p align="center"><strong>PETIKAN NILAI MAHASISWA</strong></p>
-        <P align="center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= $tahun_akademik->ta ?></strong></P>
-        <P align="center"><strong>Angkatan  20<?= substr($mahasiswa->nim, 0, 2) ?> </strong></P>
+        <P align="center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= e($tahun_akademik->ta) ?></strong></P>
+        <P align="center"><strong>Angkatan  20<?= e(substr($mahasiswa->nim, 0, 2)) ?> </strong></P>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <table class="table">
-                <tr><td><strong>NAMA</strong></td><td><strong>:</strong></td><td><?= $mahasiswa->nama_mahasiswa ?></td></tr>
-                <tr><td><strong>NIM</strong></td><td><strong>:</strong></td><td><?= $mahasiswa->nim ?></td></tr>
+                <tr><td><strong>NAMA</strong></td><td><strong>:</strong></td><td><?= e($mahasiswa->nama_mahasiswa) ?></td></tr>
+                <tr><td><strong>NIM</strong></td><td><strong>:</strong></td><td><?= e($mahasiswa->nim) ?></td></tr>
             </table>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <table class="table">
-                <tr><td><strong>JURUSAN</strong></td><td><strong>:</strong></td><td><?= $prodi->nama_program_studi ?></td></tr>
-                <tr><td><strong>FAKULTAS</strong></td><td><strong>:</strong></td><td><?= $prodi->nama_fakultas ?></td></tr>
+                <tr><td><strong>JURUSAN</strong></td><td><strong>:</strong></td><td><?= e($prodi->nama_program_studi) ?></td></tr>
+                <tr><td><strong>FAKULTAS</strong></td><td><strong>:</strong></td><td><?= e($prodi->nama_fakultas) ?></td></tr>
             </table>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12">
@@ -47,8 +47,8 @@
                                     ?>
                                     <tr>
                                 <td><?= $j++ ?></td>
-                                <td><?= $row['kode_matakuliah'] ?></td>
-                                <td style="text-align: left;"><?= $row['nama_matakuliah'] ?></td>
+                                <td><?= e($row['kode_matakuliah']) ?></td>
+                                <td style="text-align: left;"><?= e($row['nama_matakuliah']) ?></td>
                                 <td><?= isset($row['nilai_akhir']) ? $row['sks'] : '-' ?></td>
                                 <td style="font-size: 11px;">
                                     <?php if (isset($row['attempts']) && count($row['attempts']) > 0): ?>

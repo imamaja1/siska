@@ -6,13 +6,13 @@
        
         <dl class="dl-horizontal">
             <dt>Nama :</dt>
-            <dd><?= $perwalian->nama_mahasiswa ?></dd>
+            <dd><?= e($perwalian->nama_mahasiswa) ?></dd>
             <dt>NIM :</dt>
-            <dd><?= $perwalian->nim ?></dd>
+            <dd><?= e($perwalian->nim) ?></dd>
             <dt>No. HP/Email :</dt>
-            <dd><?= $perwalian->telepon ?> / <?= $perwalian->email ?></dd>
+            <dd><?= e($perwalian->telepon) ?> / <?= e($perwalian->email) ?></dd>
             <dt>Dosen Wali :</dt>
-            <dd><?= $perwalian->nama_dosen ?></dd>
+            <dd><?= e($perwalian->nama_dosen) ?></dd>
             <?php if($dosen): ?>
                 <button class="btn btn-small btn-primary pull-right" data-toggle="modal" data-target="#exampleModal">Tambah Konsultasi</button>
             <?php endif; ?>
@@ -34,10 +34,10 @@
                 <?php $no = 1; foreach ($data as $row) : ?>
                     <tr>
                         <td style="text-align: center"><?= $no++ ?>.</td>
-                        <td style="text-align: center"><?= $row->semester ?></td>
+                        <td style="text-align: center"><?= e($row->semester) ?></td>
                         <td><?= $row->date_created == null ? '(empty)' : tgl_indo($row->date_created ) ?></td>
-                        <td><?= $row->isi_konsultasi ?></td>
-                        <td><?= $row->tanggapan ?></td>
+                        <td><?= e($row->isi_konsultasi) ?></td>
+                        <td><?= e($row->tanggapan) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -72,7 +72,7 @@
                     <button type="button" class="btn btn-default flat" onclick="tutup()"><i class="fa fa-remove"></i>
                         Tutup
                     </button>
-                    <button type="submit" class="btn btn-success flat " onclick="input(<?= $perwalian->nim ?>)"><i class="fa fa-check-circle"></i> Simpan
+                    <button type="submit" class="btn btn-success flat " onclick="input(<?= e($perwalian->nim) ?>)"><i class="fa fa-check-circle"></i> Simpan
                     </button>
                 </div>
             </div>

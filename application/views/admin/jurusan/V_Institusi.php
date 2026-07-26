@@ -25,11 +25,11 @@
                         ?>
                         <tr>
                             <td align="center" width="10"><?= $no++; ?></td>
-                            <td align="center"><?= $row->kode_institusi; ?></td>
-                            <td id="nama-<?= $row->kode_institusi ?>"><?= $row->nama_institusi; ?></td>
-                            <td id="singkatan-<?= $row->kode_institusi ?>"><?= $row->singkatan; ?></td>
+                            <td align="center"><?= e($row->kode_institusi) ?></td>
+                            <td id="nama-<?= e($row->kode_institusi) ?>"><?= e($row->nama_institusi) ?></td>
+                            <td id="singkatan-<?= e($row->kode_institusi) ?>"><?= e($row->singkatan) ?></td>
                             <td align="center" width="150">
-                                <a href="#!" class="btn-xs btn-info flat" onclick="javascript:editInstitusi(<?= $row->kode_institusi ?>)"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
+                                <a href="#!" class="btn-xs btn-info flat" onclick="javascript:editInstitusi(<?= e($row->kode_institusi) ?>)"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
                                 <a href="#!" class="btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/institusi/hapus/' . $row->kode_institusi) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
@@ -55,6 +55,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Institusi</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/institusi/tambah'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Kode Institusi:</label>
@@ -87,6 +88,7 @@
                 <h4 class="modal-title" id="myModalLabel"><b>Edit Institusi</b></h4>
             </div>
             <form method="POST" action="<?= site_url('admin/jurusan/institusi/ubah'); ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <input required readonly type="hidden" class="form-control" placeholder="Kode Institusi" name="kode-edit" id="kode-edit">
                     <div class="form-group">

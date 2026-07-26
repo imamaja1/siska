@@ -12,8 +12,8 @@
     <div class="col-md-12">
         <div class="box box-info flat">
             <div class="box-header with-border">
-                <h3 class="box-title"><b> KELAS - <?= $data_kelas->nama_kelas ?> </b>
-                    (<?= $data_kelas->kode_matakuliah ?> - <?= $data_kelas->nama_matakuliah ?>)</h3>
+                <h3 class="box-title"><b> KELAS - <?= e($data_kelas->nama_kelas) ?> </b>
+                    (<?= e($data_kelas->kode_matakuliah) ?> - <?= e($data_kelas->nama_matakuliah) ?>)</h3>
             </div>
 
 
@@ -42,14 +42,14 @@
                                     ?>
                                     <tr>
                                         <td style="text-align: center; width: 3%"><?= $no++ ?>.</td>
-                                        <td style="text-align: center"><?= $row->nim ?></td>
-                                        <td><?= $row->nama_mahasiswa ?></td>
-                                        <td><?= $row->dummy_harian ?></td>
-                                        <td><?= $row->dummy_uts ?></td>
-                                        <td><?= $row->dummy_uas ?></td>
+                                        <td style="text-align: center"><?= e($row->nim) ?></td>
+                                        <td><?= e($row->nama_mahasiswa) ?></td>
+                                        <td><?= e($row->dummy_harian) ?></td>
+                                        <td><?= e($row->dummy_uts) ?></td>
+                                        <td><?= e($row->dummy_uas) ?></td>
                                         <td><?= round($row->dummy_na) ?></td>
-                                        <td><?= $row->grade ?></td>
-                                        <td style="text-align:center"><?= $row->block_id ? "Block":"Aktif" ?></td>
+                                        <td><?= e($row->grade) ?></td>
+                                        <td style="text-align:center"><?= e($row->block_id ? "Block":"Aktif") ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

@@ -4,7 +4,7 @@
     <?php $this->load->model('jurusan/m_dosen') ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <span class="badge bg-aqua pull-right">Perwalian <i class="fa fa-arrow-circle-o-right"></i> <b><?= $nama_dosen ?></b></span>
+        <span class="badge bg-aqua pull-right">Perwalian <i class="fa fa-arrow-circle-o-right"></i> <b><?= e($nama_dosen) ?></b></span>
         <!--<a href="<?= site_url('admin/jurusan/perwalian') ?>" class="btn btn-danger btn-sm flat"><i class="fa fa-arrow-left"></i> Kembali</a>-->
     </div>
 </div>
@@ -27,17 +27,17 @@
                 <tr>
                     <td style="text-align: center;"><?=$i++ ?>.</td>
                     <td style="text-align: center;">
-                        <input type="checkbox" class="cek" name="kode_perwalian[]" value="<?= $row->kode_perwalian ?>">
+                        <input type="checkbox" class="cek" name="kode_perwalian[]" value="<?= e($row->kode_perwalian) ?>">
                     </td>
-                    <td style="text-align: center;"><?=$row->nim ?></td>
-                    <td ><?=$row->nama_mahasiswa ?></td>
+                    <td style="text-align: center;"><?= e($row->nim) ?></td>
+                    <td ><?= e($row->nama_mahasiswa) ?></td>
                     <td class="dosen-perwakilan">
                         <?php if ($row->kode_dosen_perwakilan) : ?>
-                            <?= $this->m_dosen->get_nama($row->kode_dosen_perwakilan) ?>&nbsp;
-                            <a href="#" onclick="hapus_perwakilan('<?= $row->kode_perwalian ?>', this)"><span class="text-danger"><i class="fa fa-times"></i></span></a>
+                            <?= e($this->m_dosen->get_nama($row->kode_dosen_perwakilan)) ?>&nbsp;
+                            <a href="#" onclick="hapus_perwakilan('<?= e($row->kode_perwalian) ?>', this)"><span class="text-danger"><i class="fa fa-times"></i></span></a>
                         <?php endif; ?>
                     <td style="text-align: center;">
-                        <a href="#" class="text-info" onclick="ubah('<?= $row->kode_perwalian ?>')"><i class="fa fa-edit"></i> Edit</a>
+                        <a href="#" class="text-info" onclick="ubah('<?= e($row->kode_perwalian) ?>')"><i class="fa fa-edit"></i> Edit</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -67,7 +67,7 @@
                 <select name="kode_dosen" class="form-control select2" required>
                     <option value="" selected disabled>Pilih</option>
                     <?php foreach ($dosen_perwalian as $row) : ?>
-                        <option value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?> (<?= $row->singkatan_program_studi ?>)</option>
+                        <option value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?> (<?= e($row->singkatan_program_studi) ?>)</option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -127,7 +127,7 @@
     </script>
 <?php else: ?>
     <div class="alert alert-info alert-dismissible flat">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
         <h4><i class="icon fa fa-warning"></i> Info!</h4>
         Data Tidak ditemukan...
     </div>

@@ -3,13 +3,14 @@
         <h4 class="modal-title" id="myModalLabel"><b>Tambah Matakuliah Prasyarat</b></h4>
     </div>
     <form id="form-edit" method="POST" action="<?= site_url('admin/jurusan/kurikulum/matakuliah_prasyarat/ubah') ?>">
+	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
         <div class="modal-body">
             <div class="form-group">
                 <label>Matakuliah ambil</label>
-                <input type="hidden" name="id" value="<?= $data->kode_matakuliah_prasyarat ?>">
+                <input type="hidden" name="id" value="<?= e($data->kode_matakuliah_prasyarat) ?>">
                 <select name="id_matakuliah_ambil" class="form-control select2" style="width: 100%;">
                     <?php foreach ($data_kurikulum as $row) : ?>
-                        <option value="<?= $row->id_matakuliah ?>" <?= $row->id_matakuliah == $data->id_matakuliah_ambil ? "selected" : '' ?>><?= $row->kode_matakuliah." - ".$row->nama_matakuliah  ?></option>
+                        <option value="<?= e($row->id_matakuliah) ?>" <?= $row->id_matakuliah == $data->id_matakuliah_ambil ? "selected" : '' ?>><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -17,7 +18,7 @@
                 <label>Matakuliah prasyarat</label>
                 <select name="id_matakuliah_syarat" class="form-control select2" style="width: 100%;">
                     <?php foreach ($data_kurikulum as $row) : ?>
-                        <option value="<?= $row->id_matakuliah ?>" <?= $row->id_matakuliah == $data->id_matakuliah_syarat ? "selected" : '' ?>><?= $row->kode_matakuliah." - ".$row->nama_matakuliah  ?></option>
+                        <option value="<?= e($row->id_matakuliah) ?>" <?= $row->id_matakuliah == $data->id_matakuliah_syarat ? "selected" : '' ?>><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

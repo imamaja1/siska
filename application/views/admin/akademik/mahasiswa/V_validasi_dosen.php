@@ -14,12 +14,13 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/mahasiswa/Mahasiswa_Validasi_KRS'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Tahun Akademik :</label>
                 <div class="col-sm-4">
                     <select name="ta" id="" class="form-control">
                         <?php foreach ($data_ta as $key => $value) : ?>
-                            <option value="<?= $value->kode_tahun_akademik ?>" <?= ($value->kode_tahun_akademik == $ta ? 'selected' :'')  ?>><?= $value->tahun_akademik.' Semester '.($value->semester == 0 ? 'Genap' : 'Ganjil') ?></option>
+                            <option value="<?= e($value->kode_tahun_akademik) ?>" <?= ($value->kode_tahun_akademik == $ta ? 'selected' :'')  ?>><?= e($value->tahun_akademik.' Semester '.($value->semester == 0 ? 'Genap' : 'Ganjil')) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -29,7 +30,7 @@
                 <div class="col-sm-4">
                      <select name="prodi" id="" class="form-control">
                         <?php foreach ($data_prodi as $key => $value) : ?>
-                            <option value="<?= $value->kode_program_studi ?>" <?= ($value->kode_program_studi == $prodi ? 'selected' :'')  ?>><?= $value->nama_program_studi ?></option>
+                            <option value="<?= e($value->kode_program_studi) ?>" <?= ($value->kode_program_studi == $prodi ? 'selected' :'')  ?>><?= e($value->nama_program_studi) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -68,9 +69,9 @@
                     <?php foreach ($data_mhs as $key => $value) : ?>
                     <tr>
                         <th scope="row"><?= $key+1 ?></th>
-                        <td><?= $value->nim ?></td>
-                        <td><?= $value->nama_mahasiswa ?></td>
-                        <td><?= $value->nama_dosen ?></td>
+                        <td><?= e($value->nim) ?></td>
+                        <td><?= e($value->nama_mahasiswa) ?></td>
+                        <td><?= e($value->nama_dosen) ?></td>
                         <td><?= $value->status_cetak == "A" ? '<span class="badge btn-success"> Divalidasi</span>':'<span class="badge btn-danger">Belum Divaldiasi</span>' ?></td>
                       	<td><?= $value->pembayaran_sks != '0' ? '<span class="badge btn-success"> Divalidasi</span>':'<span class="badge btn-danger">Belum Divaldiasi</span>' ?></td>
                     </tr>

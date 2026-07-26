@@ -16,7 +16,7 @@
             <label>Dekan:</label>
             <select name="dekan" class="form-control">
                 <?php foreach ($dosen as $item) : ?>
-                    <option value="<?= $item->kode_dosen ?>"><?= $item->nama_dosen ?></option>
+                    <option value="<?= e($item->kode_dosen) ?>"><?= e($item->nama_dosen) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

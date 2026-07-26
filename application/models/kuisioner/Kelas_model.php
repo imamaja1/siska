@@ -166,7 +166,7 @@ class Kelas_model extends CI_Model
 
     function get_matakuliah_by_kode_tahun_akademik($kode_tahun_akademik)
     {
-        return $this->db->select('*')
+        return $this->db->select('kelas.id_matakuliah, mak.kode_matakuliah, mak.nama_matakuliah')
             ->from('kelas')
             ->join('matakuliah as mak', 'kelas.id_matakuliah=mak.id_matakuliah')
             ->where('kode_tahun_akademik', $kode_tahun_akademik)

@@ -1,15 +1,15 @@
-<div class="table-responsive">
+﻿<div class="table-responsive">
     <dl class="dl-horizontal">
         <dt>Dosen</dt>
         <?php
         foreach ($dosen as $item) :
             ?>
-            <dd><?= $item->nama_dosen; ?></dd>
+            <dd><?= e($item->nama_dosen) ?></dd>
         <?php
         endforeach;
         ?>
         <dt>Matakuliah</dt>
-        <dd><?= $detail->kode_matakuliah; ?> - <?= $detail->nama_matakuliah; ?> - Kelas : <?= $detail->nama_kelas; ?></dd>
+        <dd><?= e($detail->kode_matakuliah) ?> - <?= e($detail->nama_matakuliah) ?> - Kelas : <?= e($detail->nama_kelas) ?></dd>
     </dl>
     <table class="table demo-table">
         <thead>
@@ -34,8 +34,8 @@
                 <td><?= nilai_validasi($row->isian) ?></td>
                 <td><?= nilai_validasi($row->validasi_prodi) ?></td>
                 <td><?= nilai_validasi($row->validasi_dekan) ?></td>
-                <td><?= $row->catatan_prodi ?></td>
-                <td><?= $row->catatan_dekan ?></td>
+                <td><?= e($row->catatan_prodi) ?></td>
+                <td><?= e($row->catatan_dekan) ?></td>
                 <td><?= timespan(strtotime($row->updated_at), $time) . ' ago' ?></td>
             </tr>
         <?php endforeach; ?>

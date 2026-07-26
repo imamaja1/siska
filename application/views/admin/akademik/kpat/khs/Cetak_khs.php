@@ -47,7 +47,7 @@
 <body>
 <!-- Start Header KHS -->
 <br><br><br>
-<h4>KARTU HASIL STUDI (KHS) KULIAH PROGRAM ALIH TAHUN (KPAT)<br />SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= $data['tahun_akademik'] ?></h4>
+<h4>KARTU HASIL STUDI (KHS) KULIAH PROGRAM ALIH TAHUN (KPAT)<br />SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= e($data['tahun_akademik']) ?></h4>
 <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
     <tr>
         <td>
@@ -55,12 +55,12 @@
                 <tr>
                     <td><b>Nama Mahasiswa</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['nama_mahasiswa']  ?></td>
+                    <td><?= e($data['nama_mahasiswa'])  ?></td>
                 </tr>
                 <tr>
                     <td><b>NIM</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['nim']  ?></td>
+                    <td><?= e($data['nim'])  ?></td>
                 </tr>
             </table>
         </td>
@@ -70,17 +70,17 @@
                 <tr>
                     <td><b>Program Studi</b></td>
                     <td><b>:</b></td>
-                    <td><?= $prodi->nama_program_studi  ?></td>
+                    <td><?= e($prodi->nama_program_studi)  ?></td>
                 </tr>
                 <tr>
                     <td><b>Fakultas</b></td>
                     <td><b>:</b></td>
-                    <td><?= bodo_kop($data['nim'])['nama_fakultas'] ?></td>
+                    <td><?= e(bodo_kop($data['nim'])['nama_fakultas']) ?></td>
                 </tr>
                 <tr>
                     <td><b>Semester</b></td>
                     <td><b>:</b></td>
-                    <td><?= $semester ?></td>
+                    <td><?= e($semester) ?></td>
                 </tr>
             </table>
         </td>
@@ -102,11 +102,11 @@
     <?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
         <tr>
             <td style="text-align: center;"><?= $i++ ?></td>
-            <td style="text-align: center;"><?= $row['kode_matakuliah'] ?></td>
-            <td><?= $row['nama_matakuliah'] ?></td>
-            <td style="text-align: center;"><?= $row['sks'] ?></td>
-            <td style="text-align: center;"><?= $row['grade'] ?></td>
-            <td style="text-align: center;"><?= $row['sksn'] ?></td>
+            <td style="text-align: center;"><?= e($row['kode_matakuliah']) ?></td>
+            <td><?= e($row['nama_matakuliah']) ?></td>
+            <td style="text-align: center;"><?= e($row['sks']) ?></td>
+            <td style="text-align: center;"><?= e($row['grade']) ?></td>
+            <td style="text-align: center;"><?= e($row['sksn']) ?></td>
             <td style="text-align: center;">-</td>
         </tr>
         <?php

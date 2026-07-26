@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box box-solid">
             <div class="box-body">
-                <div class="badge bg-aqua"><?= $kode_matakuliah . ' - ' . $nama_matakuliah ?></div>
+                <div class="badge bg-aqua"><?= e($kode_matakuliah) . ' - ' . e($nama_matakuliah) ?></div>
 <!--                <a href="#" onclick="window.top.close()" class="btn btn-success btn-xs pull-right"><i-->
                 <!--                            class="fa fa-arrow-left"></i> Kembali</a>-->
             </div>
@@ -14,10 +14,10 @@
         <?php foreach ($nama_kelas as $row) : ?>
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="info-box bg-aqua">
-                    <span class="info-box-icon"><?= $row->nama_kelas ?></i></span>
+                    <span class="info-box-icon"><?= e($row->nama_kelas) ?></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Mahasiswa</span><a href="#"
-                                                                       onclick="hapus_kelas('<?= $row->kelas_id ?>')"
+                                                                        onclick="hapus_kelas('<?= e($row->kelas_id) ?>')"
                                                                        class="pull-right" style="color: white"
                                                                        title="Hapus"><i class="fa fa-times"></i></a>
                         <span class="info-box-number"><?= $row->jml ?></span>
@@ -26,14 +26,15 @@
                         </div>
                         <span class="progress-description">
                             <!--TODO::ubah disini untuk export data kuisioner mahasiswa-->
-                            <form action="<?= site_url('admin/kuisioner/kuisioner/filter') ?>" method="post" target="_blank">
-                                <a href="#" onclick="lihat('<?= $row->kelas_id ?>')" style="color: #ffffff">Lihat Data <i
+            <form action="<?= site_url('admin/kuisioner/kuisioner/filter') ?>" method="post" target="_blank">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                                <a href="#" onclick="lihat('<?= e($row->kelas_id) ?>')" style="color: #ffffff">Lihat Data <i
                                         class="fa fa-arrow-circle-right"></i></a>
                                 <input type="hidden" name="kode_tahun_akademik" id="kode_tahun_akademik"
-                                       value="<?= $_SESSION['ta_sess'] ?>">
+                                       value="<?= e($_SESSION['ta_sess']) ?>">
                                 <input type="hidden" name="id_matakuliah" id="matakuliah"
-                                       value="<?= $_SESSION['id_matakuliah_sess'] ?>">
-                                <input type="hidden" name="kelas_id" value="<?= $row->kelas_id ?>">
+                                       value="<?= e($_SESSION['id_matakuliah_sess']) ?>">
+                                <input type="hidden" name="kelas_id" value="<?= e($row->kelas_id) ?>">
                                 <button type="submit"
                                         class="btn btn-success btn-xs pull-right"
                                         target="_blank" title="Cetak Data Quisioner PBM"><i
@@ -65,6 +66,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <form id="form-tambah-kelas" action="<?= site_url('admin/kuisioner/kelas/add_kelas') ?>" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
@@ -75,7 +77,7 @@
                         <select name="nama_kelas_id" class="form-control" required>
                             <option value="" selected disabled>Pilih Kelas</option>
                             <?php foreach ($kelas as $row) : ?>
-                                <option value="<?= $row->nama_kelas_id ?>"><?= $row->nama_kelas ?></option>
+                                <option value="<?= e($row->nama_kelas_id) ?>"><?= e($row->nama_kelas) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

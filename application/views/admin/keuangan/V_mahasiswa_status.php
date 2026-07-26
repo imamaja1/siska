@@ -28,20 +28,20 @@
                         foreach ($data as $row) { ?>
                             <tr>
                                 <td width="3%"><?= $i++  ?></td>
-                                <td><?= $row->nim  ?></td>
-                                <td><?= $row->nama_mahasiswa  ?></td>
+                                <td><?= e($row->nim)  ?></td>
+                                <td><?= e($row->nama_mahasiswa)  ?></td>
                                 <?php if ($row->status_perkuliahan == 'A') : ?>
-                                    <td id="edit-<?= $row->kode_status_perkuliahan ?>"><span class="badge bg-green"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= $row->kode_status_perkuliahan ?>')"><i class="fa fa-pencil"></i></span></td>
+                                    <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-green"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php elseif ($row->status_perkuliahan == 'C') : ?>
-                                    <td id="edit-<?= $row->kode_status_perkuliahan ?>"><span class="badge bg-orange"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= $row->kode_status_perkuliahan ?>')"><i class="fa fa-pencil"></i></span></td>
+                                    <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-orange"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php elseif ($row->status_perkuliahan == 'P') : ?>
-                                    <td id="edit-<?= $row->kode_status_perkuliahan ?>"><span class="badge bg-aqua"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= $row->kode_status_perkuliahan ?>')"><i class="fa fa-pencil"></i></span></td>
+                                    <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-aqua"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php elseif ($row->status_perkuliahan == 'B') : ?>
-                                    <td id="edit-<?= $row->kode_status_perkuliahan ?>"><span class="badge bg-red"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= $row->kode_status_perkuliahan ?>')"><i class="fa fa-pencil"></i></span></td>
+                                    <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-red"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php elseif ($row->status_perkuliahan == 'T') : ?>
-                                    <td id="edit-<?= $row->kode_status_perkuliahan ?>"><span class="badge bg-navy"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= $row->kode_status_perkuliahan ?>')"><i class="fa fa-pencil"></i></span></td>
+                                    <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-navy"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php elseif ($row->status_perkuliahan == 'L') : ?>
-                                    <td id="edit-<?= $row->kode_status_perkuliahan ?>"><span class="badge bg-navy"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= $row->kode_status_perkuliahan ?>')"><i class="fa fa-pencil"></i></span></td>
+                                    <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-navy"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php endif; ?>
                             </tr>
                         <?php } ?>

@@ -9,17 +9,17 @@
                 <tr>
                     <td><strong>NAMA</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $mahasiswa->nama_mahasiswa ?></td>
+                    <td><?= e($mahasiswa->nama_mahasiswa) ?></td>
                 </tr>
                 <tr>
                     <td><strong>NIM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $mahasiswa->nim ?></td>
+                    <td><?= e($mahasiswa->nim) ?></td>
                 </tr>
                 <tr>
                     <td><strong>NPM</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $mahasiswa->npm ?></td>
+                    <td><?= e($mahasiswa->npm) ?></td>
                 </tr>
             </table>
         </div>
@@ -28,12 +28,12 @@
                 <tr>
                     <td><strong>JURUSAN</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $prodi->nama_program_studi ?></td>
+                    <td><?= e($prodi->nama_program_studi) ?></td>
                 </tr>
                 <tr>
                     <td><strong>FAKULTAS</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= $prodi->nama_fakultas ?></td>
+                    <td><?= e($prodi->nama_fakultas) ?></td>
                 </tr>
             </table>
         </div>
@@ -59,11 +59,11 @@
                     $sks=0; $sksn=0; $j=1; foreach ($key['data_nilai'] as $row) : ?>
                         <tr>
                             <td><center><?= $j++?>.</center></td>
-                            <td><center><?= $row['kode_matakuliah'] ?></center></td>
-                            <td><?= $row['nama_matakuliah'] ?></td>
-                            <td><center><?= $row['sks'] ?></center></td>
-                            <td><center><?= $row['grade'] ?></center></td>
-                            <td><center><?= $row['sksn'] ?></center></td>
+                            <td><center><?= e($row['kode_matakuliah']) ?></center></td>
+                            <td><?= e($row['nama_matakuliah']) ?></td>
+                            <td><center><?= e($row['sks']) ?></center></td>
+                            <td><center><?= e($row['grade']) ?></center></td>
+                            <td><center><?= e($row['sksn']) ?></center></td>
                         </tr>
                     <?php endforeach;
                         $total_sks = $total_sks = $key['sks'];

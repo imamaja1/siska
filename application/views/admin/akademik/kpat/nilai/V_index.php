@@ -5,13 +5,14 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="POST" action="<?= site_url('admin/akademik/kpat/Nilai/filter') ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">	
                 <label class="control-label col-sm-2">Tahun Akadmeik : </label>
                 <div class="col-sm-4">
                     <select required class="form-control" name="tahun_akademik" id="kode-tahun-akademik">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($tahun_akademik as $row) : ?>
-                            <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?> - <?= $row->semester % 2 == (0) ? "Genap" : "Ganjil" ?></option>
+                            <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> - <?= $row->semester % 2 == (0) ? "Genap" : "Ganjil" ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -22,7 +23,7 @@
                     <select required class="form-control" name="prodi" id="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($prodi as $row) : ?>
-                            <option value="<?= $row->kode_program_studi ?>"><?= $row->nama_program_studi ?> </option>
+                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?> </option>
                         <?php endforeach; ?>
                     </select>
                 </div>

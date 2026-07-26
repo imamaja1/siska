@@ -20,9 +20,9 @@
             </thead>
             <?php foreach ($data_mahasiswa as $data) { ?>
                 <tr>
-                    <td align="center"><?= $data->nim; ?></td>
-                    <td align="center"><?= $data->nama_mahasiswa; ?></td>
-                    <td align="center" style='font-size: 17px;'><b><?= $kirim_string; ?></b></td>
+                    <td align="center"><?= e($data->nim); ?></td>
+                    <td align="center"><?= e($data->nama_mahasiswa); ?></td>
+                    <td align="center" style='font-size: 17px;'><b><?= e($kirim_string); ?></b></td>
                 </tr>
             <?php } ?>
         </table>

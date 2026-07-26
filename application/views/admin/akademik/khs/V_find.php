@@ -18,9 +18,9 @@
                         <?php $i=1; foreach ($data as $row) : ?>
                             <tr>
                                 <td><?= $i++ ?>.</td>
-                                <td align="center"><?= $row->nim ?></td>
-                                <td><?= $row->nama_mahasiswa ?></td>
-                                <td align="center"><?= $row->semester ?></td>
+                                <td align="center"><?= e($row->nim) ?></td>
+                                <td><?= e($row->nama_mahasiswa) ?></td>
+                                <td align="center"><?= e($row->semester) ?></td>
                                 <td style="text-align: center;">
                                     <a href="<?= site_url('admin/akademik/khs/lihat_khs/'.$row->kode_krs.'/'.$row->nim) ?>" class="btn btn-info btn-xs flat"><i class="fa fa-eye"></i> Lihat</a>&nbsp;
                                     <a href="<?= site_url('admin/akademik/khs/cetak/'.$row->kode_krs.'/'.$row->nim) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-download"></i> Download</a></center>

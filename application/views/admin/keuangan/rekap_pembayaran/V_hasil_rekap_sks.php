@@ -24,8 +24,8 @@
                 <?php $no = 1; foreach ($data as $row) : ?>
                 <tr>
                     <td><?= $no++ ?></td>
-                    <td><?= $row->nim ?></td>
-                    <td><?= $row->nama_mahasiswa ?></td>
+                    <td><?= e($row->nim) ?></td>
+                    <td><?= e($row->nama_mahasiswa) ?></td>
                     <td style="text-align: center"><?= $row->semester ?></td>
                     <td style="text-align: center"><span class="badge bg-aqua-active"><?= $row->teori ?></span></td>
                     <td style="text-align: center"><span class="badge bg-red"><?= $row->praktikum ?></span></td>

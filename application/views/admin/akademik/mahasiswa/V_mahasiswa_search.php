@@ -3,9 +3,9 @@
         <a href="<?= site_url('admin/akademik/mahasiswa'); ?>" class="btn btn-success btn-xs flat"><i class="fa fa-arrow-left"></i> Kembali</a>
         <a href="<?= site_url('admin/akademik/mahasiswa/cetak_per_angkatan_jurusan'); ?>" class=" btn btn-xs btn-info flat"><i class="fa fa-file-excel-o"></i> Cetak Ke Excel</a>
         <?php if (count($data_mahasiswa) > 0): ?>
-            <span class="btn-default flat btn-xs btn" style="cursor: default">Terdapat <b><?= $jumlah_data; ?> Record</b></span>
+            <span class="btn-default flat btn-xs btn" style="cursor: default">Terdapat <b><?= e($jumlah_data) ?> Record</b></span>
             <div class="pull-right">
-                <?= $halaman; ?>
+                <?= $halaman ?>
             </div>
         <?php else: ?>
 
@@ -36,10 +36,10 @@
 
                         <tr>
                             <td align="center"><?= $no++; ?></td>
-                            <td align="center"><?= $row->nim; ?> </td>
-                            <td align="center"><?= $row->npm; ?> </td>
+                            <td align="center"><?= e($row->nim) ?> </td>
+                            <td align="center"><?= e($row->npm) ?> </td>
 
-                            <td><?= $row->nama_mahasiswa ?></td>
+                            <td><?= e($row->nama_mahasiswa) ?></td>
                             <td align="center" width="190">
 
                                    <!--<a href="#!" class="btn-sm btn-danger flat"><i class="fa fa-refresh"></i> Reset Sandi</a>-->

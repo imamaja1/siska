@@ -19,6 +19,7 @@ echo isset($flashmessage) ? $flashmessage : '';
     <div class="box-body">
         <form class="form-horizontal" method="post"
               action="<?= site_url('admin/akademik/mahasiswa/reset_sandi_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
             <div class="form-group">
                 <label class="control-label col-sm-3">Masukan NIM <label class="text-danger">* &nbsp;</label>:</label>

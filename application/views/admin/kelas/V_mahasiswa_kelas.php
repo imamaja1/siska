@@ -25,7 +25,7 @@
     }
 </style>
 <?php foreach ($nama_kelas as $row) : ?>
-<button class="nama-kelas <?= $kelas_id == $row->kelas_id ? 'idup' : '' ?>" onclick="pilih(this, '<?= $row->kelas_id ?>')"><?= $row->nama_kelas ?></button>
+<button class="nama-kelas <?= $kelas_id == $row->kelas_id ? 'idup' : '' ?>" onclick="pilih(this, '<?= e($row->kelas_id) ?>')"><?= e($row->nama_kelas) ?></button>
 <?php endforeach; ?>
 <div class="modal-content" style="border-radius: 20px">
     <div id="dosen-pengampu"
@@ -33,11 +33,12 @@
         <div class="row">
             <div class="col-md-6 col-xs-12">
                 <form id="form-tambah-pengampu" action="" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <select name="kode_dosen[]" required multiple data-placeholder="Dosen Pengampu"
                                 class="form-control select2" style="width: 100%">
                           <?php foreach ($dosen as $row) : ?>
-                              <option value="<?= $row->kode_dosen ?>"><?= $row->nama_dosen ?></option>
+                              <option value="<?= e($row->kode_dosen) ?>"><?= e($row->nama_dosen) ?></option>
                           <?php endforeach; ?>
                         </select>
                     </div>
@@ -83,8 +84,9 @@
               </div>
               <div class="box-body">
                   <div class="table-responsive">
-                      <form id="form-pindah-kelas" method="post"
+                          <form id="form-pindah-kelas" method="post"
                             action="<?= site_url('admin/kuisioner/kelas/pindah_kelas') ?>">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                           <table class="table table-striped table-bordered">
                               <thead>
                               <tr>
@@ -100,7 +102,7 @@
                               foreach ($data as $row) : ?>
                                   <tr>
                                       <td align="center"><?= $i++ ?>.</td>
-                                      <td align="center"><?= $row->nim ?></td>
+                                      <td align="center"><?= e($row->nim) ?></td>
                                       <td align="center">
                                           <a href="#"
                                              onclick="hapus('<?= site_url('admin/kuisioner/kelas/hapus/' . $row->kelas_mahasiswa_id) ?>')"><i
@@ -108,9 +110,9 @@
                                       </td>
                                       <td align="center">
                                           <input type="checkbox" name="kelas_mahasiswa_id[]"
-                                                 value="<?= $row->kelas_mahasiswa_id ?>">
+                                                 value="<?= e($row->kelas_mahasiswa_id) ?>">
                                       </td>
-                                      <td><?= $row->nama_mahasiswa ?></td>
+                                      <td><?= e($row->nama_mahasiswa) ?></td>
                                   </tr>
                               <?php endforeach; ?>
                               </tbody>
@@ -123,8 +125,8 @@
                                       <select required name="kelas_id" class="form-control">
                                           <option value="" selected disabled>Pilih</option>
                                         <?php foreach ($nama_kelas as $row) : ?>
-                                            <option value="<?= $row->kelas_id ?>">Kelas
-                                                - <?= $row->nama_kelas ?></option>
+                                            <option value="<?= e($row->kelas_id) ?>">Kelas
+                                                - <?= e($row->nama_kelas) ?></option>
                                         <?php endforeach; ?>
                                       </select>
                                       <span class="input-group-btn">
@@ -143,6 +145,7 @@
               <div class="box-header">
                   <form id="form-tambah-mahasiswa" action="<?= site_url('admin/kuisioner/kelas/tambah_mahasiswa') ?>"
                         method="post">
+                      <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                       <div class="col-sm-4" style="padding-left: 0%">
                           <div>
                               <input autocomplete="off" required type="text" name="nim" id="search-box"
@@ -173,7 +176,7 @@
 
 <script>
   
-  $('#matakuliah').val("<?= $matakuliah->id_matakuliah ?>");
+  $('#matakuliah').val("<?= e($matakuliah->id_matakuliah) ?>");
     $('#nama-kelas-id').val(super_kelas_id);
     $('#kode_tahun_akademik').val(kode_tahun_akademik_mega);
   
@@ -181,7 +184,7 @@
 
     $("#search-box").keyup(function () {
         var keyword = $(this).val();
-        var id_matakuliah = "<?= $matakuliah->id_matakuliah ?>";
+        var id_matakuliah = "<?= e($matakuliah->id_matakuliah) ?>";
         $.ajax({
             url: '<?= site_url("admin/kuisioner/kelas/autocomplate") ?>',
             type: 'post',

@@ -7,13 +7,14 @@
             </div>
             <div class="box-body">
                 <form id="form-block" action="<?= site_url('admin/keuangan/block/store') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label for="">NIM/Nama Mahasiswa <span class="text-danger">*</span></label>
 <!--                        <input type="nim" class="form-control" id="nim">-->
                         <select name="nim" class="form-control select2" id="nim">
                             <option value="" selected disabled>Pilih</option>
                             <?php foreach ($mahasiswa as $row) : ?>
-                                <option value="<?= $row->nim ?>"><?= $row->nim ?> - <?= $row->nama_mahasiswa ?></option>
+                                <option value="<?= e($row->nim) ?>"><?= e($row->nim) ?> - <?= e($row->nama_mahasiswa) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -22,8 +23,8 @@
                         <select name="kode_tahun_akademik" class="form-control select2" id="kode_tahun_akademik">
                             <?php foreach ($ta as $row) : ?>
                                 <option <?= ($row->status == 'A' ? 'selected' : '') ?>
-                                        value="<?= $row->kode_tahun_akademik ?>">
-                                    <?= $row->tahun_akademik ?> - <?= $row->semester == 1 ? 'Ganjil' : 'Genap'; ?>
+                                        value="<?= e($row->kode_tahun_akademik) ?>">
+                                    <?= e($row->tahun_akademik) ?> - <?= $row->semester == 1 ? 'Ganjil' : 'Genap'; ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

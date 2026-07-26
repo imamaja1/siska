@@ -7,7 +7,7 @@
                         <label for="">Tahun Akademik <span class="text-danger">*</span></label>
                         <select name="kode_tahun_akademik" class="form-control select2" id="kode-tahun-akademik">
                             <?php foreach ($tahun_akademik as $row) : ?>
-                                <option value="<?= $row->kode_tahun_akademik ?>"><?= $row->tahun_akademik ?> <?= $row->semester == '1' ? 'GANJIL' : 'GENAP' ?></option>
+                                <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> <?= $row->semester == '1' ? 'GANJIL' : 'GENAP' ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

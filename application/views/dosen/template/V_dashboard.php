@@ -27,7 +27,7 @@
                           <li>Download dan install aplikasi telegram yang bisa anda dapatkan secara gratis di <b>PlayStore atau Appstore</b> </li>
                             <li>Temukan dan pilih Bot dengan nama <b>universitasbumigorabot</b> pada telegram dengan memanfaatkan fitur pencarian aplikasi telegram</li>
                             <li>Tekan <b>Start</b> atau <b>Mulai</b> untuk masuk ke Bot <b>universitasbumigorabot</b></li>
-                            <li>Tulis dan Kirim pesan yang isinya hanya alamat email ini: <b><?= $this->session->userdata('alamat_email'); ?></b> ke <b>universitasbumigorabot</b></li>
+                            <li>Tulis dan Kirim pesan yang isinya hanya alamat email ini: <b><?= e($this->session->userdata('alamat_email')) ?></b> ke <b>universitasbumigorabot</b></li>
                         </ol>
                         <table class="table">
                             <tr>

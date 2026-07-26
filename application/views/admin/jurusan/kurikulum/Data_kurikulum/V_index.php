@@ -6,7 +6,7 @@
                 <select required class="form-control select2" name="nama_kurikulum">
                     <option selected disabled>Pilih Kurikulum</option>
                     <?php foreach ($nama_kurikulum as $row) : ?>
-                        <option value="<?= $row->kode_nama_kurikulum ?>"> <?= $row->nama_kurikulum . " (" . $row->singkatan_program_studi . ")" ?> </option>
+                        <option value="<?= e($row->kode_nama_kurikulum) ?>"> <?= e($row->nama_kurikulum . " (" . $row->singkatan_program_studi . ")") ?> </option>
                     <?php endforeach; ?>
                 </select>
             </div>

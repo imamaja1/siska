@@ -18,7 +18,7 @@
                         <select name="kode_tahun_akademik" id="kode_tahun_akademik" required class="form-control select2">
                             <option value="" selected disabled>Pilih</option>
                             <?php foreach ($tahun_akademik as $row) : ?>
-                                <option value="<?= $row->kode_tahun_akademik ?>" ><?= $row->tahun_akademik ?> - <?= $row->semester == '0' ? 'GENAP' : 'GANJIL' ?></option>
+                                <option value="<?= e($row->kode_tahun_akademik) ?>" ><?= e($row->tahun_akademik) ?> - <?= $row->semester == '0' ? 'GENAP' : 'GANJIL' ?></option>
                             <?php endforeach; ?>
                         </select>
                         <div class="input-group-btn">

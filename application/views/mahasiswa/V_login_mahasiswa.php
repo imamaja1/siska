@@ -54,7 +54,7 @@
         ?>
         <div class="alert alert-dismissible flat animated fadeInDown" style="background-color: #3c8dbc; color: #fff;">
             <button type="button" class="close" data-dismiss="alert" style="color: #fff;" aria-hidden="true">×</button>
-            <p><?= $pesan; ?></p>
+            <p><?= e($pesan); ?></p>
         </div>
     <?php else:endif; ?>
 </div>

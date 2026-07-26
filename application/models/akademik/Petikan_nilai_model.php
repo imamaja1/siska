@@ -244,7 +244,7 @@ class Petikan_nilai_model extends CI_Model {
         $t_sks = 0;
         $t_sksn = 0;
         for ($j = 1; $j <= 8; $j++) {
-            $data_kurikulum = $this->db->select('*,mk.id_matakuliah as kompetensi')
+            $data_kurikulum = $this->db->select('mak.kode_matakuliah, mak.nama_matakuliah, mak.sks_teori, mak.sks_praktek, mak.sks_praktikum, mak.param1, mk.id_matakuliah as kompetensi')
                             ->from('kurikulum as kur')
                             ->join('matakuliah as mak', 'kur.id_matakuliah=mak.id_matakuliah')
                             ->join('matakuliah_kompetensi as mk', 'mk.id_matakuliah=mak.id_matakuliah','left')

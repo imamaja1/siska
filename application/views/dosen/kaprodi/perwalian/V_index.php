@@ -8,12 +8,13 @@
             </div>
             <div class="box-body">
                 <form id="form-filter" method="POST" action="<?= site_url('dosen/kaprodi/konsultasi_perwalian/filter') ?>">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
 						<label class="control-label ">Cari per Angkatan : </label>
                         <select required name="angkatan" class="form-control">
                             <option selected disabled value="">Pilih</option>
                             <?php foreach ($tahun_angkatan as $row) { ?>
-                                <option value="<?= substr($row->tahun_akademik,2, 2)?>"><?= substr($row->tahun_akademik,0, 4)?></option>
+                                <option value="<?= e(substr($row->tahun_akademik,2, 2))?>"><?= e(substr($row->tahun_akademik,0, 4))?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -43,6 +44,7 @@
                 <br>
                 <hr>
                 <form id="form-cari-dosen" action="#" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <label for="inputEmail3" class=" control-label">Cari Nama Dosen</label>
                     <div class="form-group">
                         <input type="hidden" name="kode_dosen_cari" id="kode-dosen-cari">

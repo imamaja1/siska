@@ -23,6 +23,7 @@
                 <p class="login-box-msg" style="font-size: 18px"> <br>Sistem Informasi Akademik <b>(SISKA)</b></p>
 
                 <form action="<?= site_url('dosen/login_dosen/login'); ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group has-feedback">
                         <input value="<?= set_value('email') ?>" type="text" class="form-control" placeholder="Alamat Email" name="email">
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -54,7 +55,7 @@
 
         <script src="<?= site_url('assets/plugins/jQuery/jQuery-2.2.0.min.js') ?>"></script>
         <script src="<?= site_url('assets/bootstrap/js/bootstrap.js') ?>"></script>
-        <script src="<?= site_url('assets/plugins/js/iCheck/icheck.js') ?>"></script>
+        <script src="<?= site_url('assets/plugins/iCheck/icheck.js') ?>"></script>
     <?php $this->load->view('csrf_js'); ?>
     </body>
 </html>

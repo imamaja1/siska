@@ -151,7 +151,7 @@
                             <img src="<?= base_url('assets/dist/img/default-50x50.gif') ?>" class="img-bordered" onclick="cot(<?= e($data_dosen->kode_dosen) ?>)" id="upload_link-<?= e($data_dosen->kode_dosen) ?>"  style="height:150px" alt=""><br>
                             <?= e($data_dosen->nama_dosen) ?>
                         <?php else: ?>
-                            <img src="<?= base_url('assets/signature-dosen/'.$data_dosen->signature) ?>" class="img-bordered" onclick="cot(<?= e($data_dosen->kode_dosen) ?>)" id="upload_link-<?= e($data_dosen->kode_dosen) ?>"  style="height:150px" alt=""><br>
+                            <img src="<?= file_exists(FCPATH . 'assets/signature-dosen/'.$data_dosen->signature) ? base_url('assets/signature-dosen/'.$data_dosen->signature) : base_url('assets/gambar/notfound.png') ?>" class="img-bordered" onclick="cot(<?= e($data_dosen->kode_dosen) ?>)" id="upload_link-<?= e($data_dosen->kode_dosen) ?>"  style="height:150px" alt=""><br>
                             <?= e($data_dosen->nama_dosen) ?>
                         <?php endif; ?>
                     </p>

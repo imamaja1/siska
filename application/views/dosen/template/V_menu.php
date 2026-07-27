@@ -52,10 +52,11 @@
                     <!-- <li class="<?= isset($a_penilaian_uts) ? $a_penilaian_uts : ''; ?>"><a href="<?php echo site_url('dosen/penilaian/penilaian_uts'); ?>"><i class="fa fa-circle-o"></i> UTS</a></li>
                     <li><a href="<?php echo site_url('dosen/penilaian/penilaian_harian_uas'); ?>"><i class="fa fa-circle-o"></i> Harian & UAS</a></li> -->
                     <li><a href="<?php echo site_url('dosen/penilaian/penilaian_revisi'); ?>"><i class="fa fa-circle-o"></i> Penilaian Mahasiswa </a></li>
+                    <li><a href="<?php echo site_url('dosen/penilaian/penilaian_final'); ?>"><i class="fa fa-circle-o"></i> Penilaian Final</a></li>
                     <li><a href="<?php echo site_url('dosen/penilaian/penilaian_kuisioner'); ?>"><i class="fa fa-circle-o"></i> Hasil Kuisioner Dosen</a></li>
                 </ul>
             </li>
-          <li class="<?= isset($a_penilaian_kpat) ? $a_penilaian_kpat : ''; ?> treeview">
+          <!-- <li class="<?= isset($a_penilaian_kpat) ? $a_penilaian_kpat : ''; ?> treeview">
                 <a href="#">
                     <i class="glyphicon glyphicon-sort-by-order"></i>
                     <span>Penilaian KPAT</span>
@@ -65,7 +66,7 @@
                     <li class="<?= isset($a_presentasi_penilaian_kpat) ? $a_presentasi_penilaian_kpat : ''; ?>"><a href="<?php echo site_url('dosen/penilaian_kpat/presentasi_penilaian'); ?>"><i class="fa fa-circle-o"></i> Presentasi Penilaian</a></li>
                     <li><a href="<?php echo site_url('dosen/penilaian_kpat/penilaian_revisi'); ?>"><i class="fa fa-circle-o"></i> Penilaian Mahasiswa </a></li>
                 </ul>
-            </li>
+            </li> -->
 
             <!-- <li class="<?= isset($a_update_penilaian) ? $a_update_penilaian : ''; ?> treeview">
                 <a href="#">

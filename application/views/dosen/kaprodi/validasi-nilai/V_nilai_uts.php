@@ -42,6 +42,7 @@
         <?php if ($data_kelas->status_nilai_uts == 'T') : ?>
             <?php if ($data_kelas->validasi_nilai_uts != 'T') : ?>
                 <form action="<?= site_url('dosen/kaprodi/validasinilai/rev_uts') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <input type="hidden" value="<?= e($data_kelas->kelas_id) ?>" name="kelas_id" required readonly>
                         <textarea class="form-control" name="catatan_prodi" id="catatan_prodi" required

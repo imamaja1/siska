@@ -233,7 +233,7 @@ class Mahasiswa extends CI_Controller {
                     'sub_judul' => 'Mahasiswa',
                     'title_h1' => '<li>Akademik</li>',
                     'title_h2' => '<li>Mahasiswa</li>',
-                    'title_h3' => '<li>Pencarian dengan kata kunci <b>' . $kata_kunci . '</b></li>',
+                    'title_h3' => '<li>Pencarian dengan kata kunci <b>' . e($kata_kunci) . '</b></li>',
                     'jumlah_data' => '<button class="btn btn-xs btn-default flat">Terdapat <b>' . $res['count'] . ' Record</b></button>',
                 );
 
@@ -289,7 +289,7 @@ class Mahasiswa extends CI_Controller {
             'jumlah_data' => '<button class="btn btn-xs btn-default flat">Terdapat <b>' . $res['count'] . ' Record</b></button>',
             'title_h1' => '<li>Akademik</li>',
             'title_h2' => '<li>Mahasiswa</li>',
-            'title_h3' => '<li>Pencarian dengan kata kunci <b>' . $kunci . '</b></li>',
+            'title_h3' => '<li>Pencarian dengan kata kunci <b>' . e($kunci) . '</b></li>',
         );
 
         if ($res['count'] > 0) {

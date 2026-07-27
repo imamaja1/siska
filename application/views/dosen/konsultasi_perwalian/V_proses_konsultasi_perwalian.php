@@ -46,7 +46,7 @@
                                     //                                        echo "-";
                                     //                                    } else {
                                     if ($this->session->userdata['kode_dosen'] != $row->kode_dosen) {
-                                        echo $row->nama_dosen;
+                                        echo e($row->nama_dosen);
                                     }
                                     //                                    }
                                     ?></td>

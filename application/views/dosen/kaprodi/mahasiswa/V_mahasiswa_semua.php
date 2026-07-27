@@ -140,7 +140,7 @@
                                 <td align="center"><?= $i++ ?>.</td>
                                 <td align="center"><?= e($row->nim) ?></td>
                                 <td><?= e($row->nama_mahasiswa) ?> </td>
-                                <td align="center">20<?= substr($row->nim, 0, 2) ?></td>
+                                <td align="center">20<?= e(substr($row->nim, 0, 2)) ?></td>
                                 <td><?= e($row->telepon) ?> </td>
 
 

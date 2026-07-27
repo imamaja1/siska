@@ -380,7 +380,7 @@ $config['encryption_key'] = 'dX7pQm2sL9vR5nK8wY1jF3cH6tA0bE4g';
 */
 
 $config['sess_driver'] = 'files';
-$config['sess_save_path'] = 'C:\laragon\tmp';
+$config['sess_save_path'] = APPPATH . 'cache/sessions/';
 $config['sess_cookie_name'] = 'ci_session';
 $config['sess_expiration'] = 7200;
 $config['sess_match_ip'] = FALSE;
@@ -462,15 +462,25 @@ $config['csrf_exclude_uris'] = array(
     'admin/login_admin/logout',
     'mahasiswa/Login_mahasiswa',
     'dosen/Login_dosen',
-    'mahasiswa',
-    'dosen',
-    'login',
-    'login/admin',
-    'login/dosen',
-    'login/logout',
+    'mahasiswa(.*)',
+    'dosen/penilaian/nilai_revisi',
+    'dosen/penilaian/revisi_dosen_selesai',
+    'dosen/penilaian/revisi_new_penilaian',
+    'dosen/penilaian/revisi_pebatalan_penilaian',
+    'dosen/penilaian/revisi_nilai_mahasiswa',
+    'dosen/penilaian/revisi_ket',
+    'dosen/penilaian/revisi_ket_val',
+    'dosen/penilaian_kpat/nilai_revisi',
+    'dosen/penilaian_kpat/revisi_dosen_selesai',
+    'dosen/penilaian_kpat/revisi_new_penilaian',
+    'dosen/penilaian_kpat/revisi_pebatalan_penilaian',
+    'dosen/penilaian_kpat/revisi_nilai_mahasiswa',
+    'dosen/penilaian_kpat/revisi_ket',
+    'dosen/penilaian_kpat/revisi_ket_val',
+    'login(.*)',
     'auth/login',
     'auth/v_login',
-    'api',
+    'api(.*)',
 );
 
 /*

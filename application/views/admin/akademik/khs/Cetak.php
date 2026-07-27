@@ -172,7 +172,7 @@
     <tr>
         <td height="10px">&nbsp;</td>
         <td>&nbsp;</td>
-        <td><img src="<?php echo base_url('assets/signature-dosen/'.$signature);?>" onclick="cot(6)" id="upload_link-6"  style="height: 70px" alt=""></td>
+        <td><img src="<?= !empty($signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $signature) ? base_url('assets/signature-dosen/'.$signature) : base_url('assets/gambar/notfound.png') ?>" onclick="cot(6)" id="upload_link-6"  style="height: 70px" alt=""></td>
         
       	
     </tr>

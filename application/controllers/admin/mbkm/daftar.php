@@ -24,13 +24,21 @@ class Daftar extends CI_Controller {
     }
 
     public function index() {
+        $ta = $this->input->get('ta');
+        $prodi = $this->input->get('prodi');
+        if (!$ta) {
+            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+        }
+        
         $data['content'] = 'admin/mbkm/V_mahasiswa';
         $data['judul'] = 'mbkm';
         $data['sub_judul'] = 'MBKM';
         $data['semester'] = $this->m_tahun_akademik->get_semester();        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();   
-        $data['kode_tahun_akademik'] = $data['semester']->kode_tahun_akademik;   
-        // echo json_encode($data);
+        $data['kode_tahun_akademik'] = $ta;
+        $data['kode_program_studi_filter'] = $prodi;
+        $data['prodi'] = $this->nama_jurusan_model->get();
+        $data['mahasiswa'] = $this->mbkmservice->getMahasiswaMbkm($ta, $prodi);
         $this->load->view('admin/template/V_main', $data);
     } 
 
@@ -93,28 +101,50 @@ class Daftar extends CI_Controller {
     }
 
     public function nilai($id, $ta){
-        $data['content'] = 'admin/mbkm/V_nilai';
-        $data['judul'] = 'mbkm';
-        $data['sub_judul'] = 'Nilai Mahasiswa';
         $data['data_mhs'] = $this->mbkmservice->getNilaiMahasiswa($id, $ta);
-        
         $kode_kurikulum = kode_nama_kurikulum($data['data_mhs']->nim);
-
         $data['kurikulum'] = $this->mbkmservice->getKurikulum($kode_kurikulum);
-
         $data['data_nilai'] = $this->mbkmservice->getDataNilai($id, $ta);
         $data['semester'] = $this->m_tahun_akademik->get_tahun_akademik_by_kode($ta);        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
-        $this->load->view('admin/template/V_main', $data);
+
+        if ($this->input->is_ajax_request()) {
+            $this->load->view('admin/mbkm/V_nilai', $data);
+        } else {
+            $data['content'] = 'admin/mbkm/V_nilai';
+            $data['judul'] = 'mbkm';
+            $data['sub_judul'] = 'Nilai Mahasiswa';
+            $this->load->view('admin/template/V_main', $data);
+        }
     }
     public function nilai_mhs($id,$nilai){
-       	$update = $this->mbkmservice->updateNilaiMhs($id, $nilai);
-      	
-            if ($update) {
-                $res['status'] = 1;
-            } else {
-                $res['status'] = 0;
+        $update = $this->mbkmservice->updateNilaiMhs($id, $nilai);
+        
+        if ($update) {
+            $nim_row = $this->db->select('mhs.nim')
+                ->from('khs_detail as khd')
+                ->join('krs_detail as krd','krd.kode_krs_detail = khd.kode_krs_detail')
+                ->join('krs','krs.kode_krs = krd.kode_krs')
+                ->join('mahasiswa as mhs','mhs.nim = krs.nim')
+                ->where('khd.kode_khs_detail', $id)
+                ->get()->row_object();
+
+            $grade = '-';
+            if ($nim_row) {
+                $data_penilaian = sistem_penilaian($nim_row->nim);
+                foreach ($data_penilaian as $key) {
+                    if (($key['nilai_minimum'] <= $nilai) && ($nilai <= $key['nilai_maksimum'])) {
+                        $grade = $key['grade'];
+                        break;
+                    }
+                }
             }
+
+            $res['status'] = 1;
+            $res['grade'] = $grade;
+        } else {
+            $res['status'] = 0;
+        }
         echo json_encode($res);
     }
     public function status($id){

@@ -170,8 +170,8 @@
                                                 <?= e($row->mbkm_id ? 'disabled' : '') ?>>
                                         </div>
                                     </td>
-                                    <td style="text-align:center"><p id="na<?= e($key) ?>"><?= trunc($row->na ? $row->na : $row->nilai_akhir,1) ?> </p></td>
-                                    <td style="text-align:center"><p id="grade<?= e($key) ?>"><?= e($row->grade ? $row->grade : '-') ?></p></td>
+                                    <td style="text-align:center"><p id="na<?= e($key) ?>"><?= e(trunc($row->na ? $row->na : $row->nilai_akhir,1)) ?> </p></td>
+                                    <td style="text-align:center"><p id="grade<?= e($key) ?>"><?= e(isset($row->grade) ? $row->grade : '-') ?></p></td>
                                     <td style="text-align: center">
                                         <button class="btn <?= e($row->ket ? "btn-success" : "btn-primary") ?> btn-xs btn-flat" id="ket<?= e($key) ?>" data-toggle="modal" data-target="#ModalKet" onclick="show_ket(<?= e($row->kode_khs_detail) ?>,<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>,<?= e($key) ?>)" <?= e($data_kelas->status_dosen == 'T' ? 'disabled' : '') ?>></i><?= e($row->ket ? "Ubah" : "Tambah") ?></button>
                                     </td>
@@ -182,14 +182,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="margin-top: 15px;margin-buttom: 15px">
+                <div class="row" style="margin-top: 15px;margin-bottom: 15px">
                     <div class="col-md-12 col-xs-12" style="padding: 15px">
-                        <?php if ($data_kelas->status_dosen != 'F'): ?>
-                            <button class="btn btn-success pull-right" onclick="selesai(<?= e($kelas_id) ?>,<?= e($key) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Kirim Nilai</button>
-                        <?php endif; ?>
-                        <?php if ($data_kelas->status_prodi != 'F'): ?>
-                            <button class="btn btn-danger pull-right" style="margin : 0 15px 0 0"  onclick="pembatalan(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Batal</button>
-                        <?php endif; ?>
+                        <button class="btn btn-success pull-right" onclick="selesai(<?= e($kelas_id) ?>,<?= e($key) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i> Kirim Nilai</button>
+                        <button class="btn btn-danger pull-right" style="margin: 0 15px 0 0" onclick="pembatalan(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i> Batal</button>
                     </div>
                 </div>
             </div>
@@ -244,6 +240,7 @@
         <h5 class="modal-title" id="exampleModalLabel">Import Nilai Excel</h5>
       </div>
       <form action="<?= base_url('dosen/penilaian/import_excel/'.$kelas_id.'/'.$data_kelas->level) ?>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
         <div class="modal-body">
             <div class="mb-3">
                 <label for="formFile" class="form-label">File Excel</label>

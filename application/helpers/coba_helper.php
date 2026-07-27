@@ -101,7 +101,7 @@ if (!function_exists('sistem_penilaian')) {
     function sistem_penilaian($nim) { return _helper_service()->sistemPenilaian($nim); }
 }
 
-function data_penilaian($nim, $semester) { return _helper_service()->dataPenilaian($nim, $semester); }
+function data_penilaian($nim, $semester = null) { return _helper_service()->dataPenilaian($nim, $semester); }
 
 function get_matakuliah($id_matakuliah) { return _helper_service()->getMatakuliah($id_matakuliah); }
 

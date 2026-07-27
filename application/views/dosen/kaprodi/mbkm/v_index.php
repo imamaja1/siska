@@ -147,6 +147,7 @@
         })
     }
     function hapus(id){
+        if (!confirm('Apakah anda yakin ingin menghapus mahasiswa MBKM ini?')) return;
         $.ajax({
             //url : '<? //= site_url('admin/kuisioner/kelas/dropdown_makul') ?>///'+id,
             url: '<?= site_url('dosen/kaprodi/mbkm/hapus_mhs_mbkm') ?>/'+id ,

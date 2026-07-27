@@ -117,7 +117,7 @@
     <?php endforeach; ?>
     <tr class="dark">
         <td colspan="5" style="border-left:none; border-bottom:none;">&nbsp;</td>
-        <td align="center"><?php echo $sksn; ?></td>
+        <td align="center"><?php echo e($sksn); ?></td>
         <td style="border-bottom:none; border-right:none;">&nbsp;</td>
     </tr>
 </table>
@@ -125,7 +125,7 @@
     <tr>
         <td colspan="3"><strong>Jumlah SKS yang ditempuh</strong></td>
         <td><strong>=</strong></td>
-        <td><strong><?php echo $sks; ?></strong></td>
+        <td><strong><?php echo e($sks); ?></strong></td>
         <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
@@ -135,7 +135,7 @@
                 <?php
                 $ipk = $sks ? $sksn / $sks : 0;
                 $ipk = number_format($ipk,2);
-                echo $ipk;
+                echo e($ipk);
                 ?></strong>
         </td>
         <td colspan="2">&nbsp;</td>

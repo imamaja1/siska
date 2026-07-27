@@ -20,7 +20,7 @@
         <!-- Start Header Petikan Nilai -->
         <div align="center">
             <h4>
-                <b><?= strtoupper($nama_prodi) . ' (Kurikulum : ' . $nama_kurikulum->nama_kurikulum . ')'; ?></b>
+                <b><?= e(strtoupper($nama_prodi) . ' (Kurikulum : ' . $nama_kurikulum->nama_kurikulum . ')') ?></b>
             </h4>
         </div>
         <br/>

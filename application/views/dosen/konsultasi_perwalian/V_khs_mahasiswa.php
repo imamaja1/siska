@@ -36,7 +36,7 @@
                 <tr>
                     <td><strong>Fakultas</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= bodo_kop($data['nim'])['nama_fakultas']  ?></td>
+                    <td><?= e(bodo_kop($data['nim'])['nama_fakultas'])  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Kurikulum</strong></td>
@@ -82,7 +82,7 @@
         </table>
         <br>
         <?php
-        $ipk = $sksn/$sks;
+        $ipk = $sks > 0 ? $sksn/$sks : 0;
 
         if ($ipk >= 3.5)
         {

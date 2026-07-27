@@ -2,6 +2,7 @@
 <div class="box box-success flat">
     <div class="box-body"><br>
         <form class="form-horizontal" method="POST" action="<?= site_url('dosen/ganti_sandi/ganti_sandi_proses'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-2">Sandi Pengguna <small class="text-danger">*</small> :</label>
                 <div class="col-sm-4">

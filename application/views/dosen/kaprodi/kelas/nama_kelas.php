@@ -30,6 +30,7 @@
                             <!--TODO::ubah disini untuk export data kuisioner mahasiswa-->
                             <form action="<?= site_url('admin/kuisioner/kuisioner/filter') ?>" method="post"
                                 target="_blank">
+                                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                                 <a href="#" onclick="lihat('<?= e($row->kelas_id) ?>')" style="color: #ffffff">Lihat Data <i
                                         class="fa fa-arrow-circle-right"></i></a>
                                 <input type="hidden" name="kode_tahun_akademik" id="kode_tahun_akademik"

@@ -89,7 +89,7 @@
         </table>
         <br>
         <?php
-        $ipk = $sksn/$sks;
+        $ipk = $sks > 0 ? $sksn/$sks : 0;
 
         if ($ipk >= 3.5)
         {

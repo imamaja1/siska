@@ -213,7 +213,7 @@ class DosenAkademikService extends MY_Service {
     // ========== NILAI MAHASISWA ==========
 
     public function getNilaiMahasiswaUts($kelas_id) {
-        return $this->db->select('dummy_id,khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, dummy_harian, dummy_uts, dummy_uas, dummy_na')
+        return $this->db->select('dummy_id,khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, dummy_harian, dummy_uts, dummy_uas, dummy_na, khd.nilai_uts as final_khs')
             ->from('kelas_mahasiswa as km')
             ->join('kelas', 'kelas.kelas_id=km.kelas_id')
             ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
@@ -227,7 +227,7 @@ class DosenAkademikService extends MY_Service {
     }
 
     public function getNilaiMahasiswaUas($kelas_id) {
-        return $this->db->select('dummy_id,khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, dummy_harian, dummy_uts, dummy_uas, dummy_na,block.id as block_id')
+        return $this->db->select('dummy_id,khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, dummy_harian, dummy_uts, dummy_uas, dummy_na,block.id as block_id, khd.nilai_akhir as final_khs')
             ->from('kelas_mahasiswa as km')
             ->join('kelas', 'kelas.kelas_id=km.kelas_id')
             ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
@@ -242,7 +242,7 @@ class DosenAkademikService extends MY_Service {
     }
 
     public function getNilaiMahasiswaUasWithGrade($kelas_id) {
-        return $this->db->select('grade, dummy_id,khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, dummy_harian, dummy_uts, dummy_uas, dummy_na,block.id as block_id')
+        return $this->db->select('grade, dummy_id,khd.kode_khs_detail, khd.kode_krs_detail, mah.nim, nama_mahasiswa, dummy_harian, dummy_uts, dummy_uas, dummy_na,block.id as block_id, khd.nilai_akhir as final_khs')
             ->from('kelas_mahasiswa as km, sistem_penilaian_detail as spd')
             ->join('kelas', 'kelas.kelas_id=km.kelas_id')
             ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
@@ -915,6 +915,27 @@ class DosenAkademikService extends MY_Service {
             )")
             ->where('kode_dosen', $kode_dosen)
             ->where('kode_tahun_akademik', $kode_tahun_akademik)
+            ->get()->result_object();
+    }
+
+    public function getChooseFinal($kode_dosen, $kode_tahun_akademik) {
+        return $this->db->select('kelas.*, mak.*, nk.*, meng.kode_dosen, duk.id_kelas as cek')
+            ->from('mengajar as meng')
+            ->join('kelas', 'kelas.kelas_id=meng.kelas_id')
+            ->join('matakuliah as mak', 'kelas.id_matakuliah=mak.id_matakuliah')
+            ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
+            ->join('dummy_update_kelas as duk', 'duk.id_kelas=kelas.kelas_id', 'left')
+            ->where("EXISTS (
+                SELECT 1 FROM kelas_mahasiswa km
+                JOIN krs_detail kd ON kd.kode_krs_detail = km.kode_krs_detail
+                JOIN krs ON krs.kode_krs = kd.kode_krs
+                JOIN mahasiswa m ON m.nim = krs.nim
+                WHERE km.kelas_id = kelas.kelas_id
+                AND LEFT(m.nim, 2) <= '24'
+            )")
+            ->where('kode_dosen', $kode_dosen)
+            ->where('kode_tahun_akademik', $kode_tahun_akademik)
+            ->group_by('kelas.kelas_id')
             ->get()->result_object();
     }
 

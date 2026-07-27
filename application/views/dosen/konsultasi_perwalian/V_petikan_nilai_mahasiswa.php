@@ -2,7 +2,7 @@
     <div class="box-body table-responsive">
         <p><center><strong>PETIKAN NILAI MAHASISWA</strong></center></p>
         <P><center><strong>SEMESTER <?= e($tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL")  ?> TA. <?= e($tahun_akademik->ta)  ?></strong></center></P>
-        <P><center><strong>ANGKATAN  20<?= substr($mahasiswa->nim, 0,2) ?> </strong></center></P>
+        <P><center><strong>ANGKATAN  20<?= e(substr($mahasiswa->nim, 0,2)) ?> </strong></center></P>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
             <table class="table">
@@ -60,7 +60,7 @@
                             <td><center><?= $j++ ?></center></td>
                             <td><center><?= e($row['kode_matakuliah']) ?></center></td>
                             <td><?= e($row['nama_matakuliah']) ?></td>
-                            <td><center><?= substr($row['kode_matakuliah'], 4,1) ?></center></td>
+                            <td><center><?= e(substr($row['kode_matakuliah'], 4,1)) ?></center></td>
                             <td><center><?= e($row['grade']) ?></center></td>
                             <td><center><?= e($row['sksn']) ?></center></td>
                         </tr>

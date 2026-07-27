@@ -636,9 +636,9 @@ class nilai extends CI_Controller {
     public function import() {
         // Load plugin PHPExcel nya
         $file_name = $this->session->userdata('file_name');
-        include APPPATH . 'third_party/PHPExcel.php';
+        require_once FCPATH . 'vendor/autoload.php';
 
-        $excelreader = new PHPExcel_Reader_Excel2007();
+        $excelreader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $loadexcel = $excelreader->load('assets/excel/' . $file_name); // Load file yang telah diupload ke folder excel
         $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
         $kode_matakuliah = $loadexcel->getActiveSheet()->getCell('C1')->getValue();
@@ -699,9 +699,9 @@ class nilai extends CI_Controller {
     public function data_upload() {
         $file_name = $this->session->userdata('file_name');
         // Load plugin PHPExcel nya
-        include APPPATH . 'third_party/PHPExcel.php';
+        require_once FCPATH . 'vendor/autoload.php';
 
-        $excelreader = new PHPExcel_Reader_Excel2007();
+        $excelreader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $loadexcel = $excelreader->load('assets/excel/' . $file_name); // Load file yang telah diupload ke folder excel
         $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
         $kode_matakuliah = $loadexcel->getActiveSheet()->getCell('C1')->getValue();

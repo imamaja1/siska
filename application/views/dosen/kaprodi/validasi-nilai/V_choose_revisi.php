@@ -21,7 +21,7 @@
                 <tbody>
                 <?php
                 if (count($kelas) > 0) :
-                    foreach ($kelas as $row) : ?>
+                    foreach ($kelas as $key => $row) : ?>
                         <tr>
                             <td><?= e($row->kelas_id); ?></td>
                             <td><?= e($row->singkatan_program_studi); ?></td>
@@ -58,7 +58,7 @@
                                     <button class="btn btn-success btn-xs btn-flat" data-toggle="modal" data-target="#ModalNilai" onclick="show_nilai(<?= e($row->kelas_id) ?>,<?= e($row->data_kelas->level) ?>)"><i class="fa fa-check-circle"></i></button>
                                     <button id="pesan_dekan_<?= e($row->kelas_id) ?>" onclick="pesan_uas_dosen('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
                                     <?php
-                                    if ($pesan_dekan[$key] != 0) {
+                                    if (!empty($pesan_dekan[$key])) {
                                         echo 'data-badge="' . $pesan_dekan[$key] . '"';
                                     }
                                     ?> 

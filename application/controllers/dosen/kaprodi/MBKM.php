@@ -27,9 +27,9 @@ class MBKM extends CI_Controller
         $data['content'] = 'dosen/kaprodi/mbkm/v_index';
         $data['judul'] = 'MBKM';
         $data['sub_judul'] = 'Data Mahasiswa';
-        $data['sub_judul'] = 'Halaman Mahasiswa';
         $data['semester'] = $this->m_tahun_akademik->get_semester();        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();   
+        $data['kode_tahun_akademik'] = $data['semester']->kode_tahun_akademik;
         $this->load->view('dosen/template/V_main', $data);
         
     }
@@ -38,13 +38,17 @@ class MBKM extends CI_Controller
             $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
-        $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
-        $data['mahasiswa'] = $this->kaprodiservice->get_mahasiswa_mbkm($ta, $kode_program_studi['kode_program_studi']);
+        $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_row_array($kode_dosen);
+        $data['mahasiswa'] = $this->kaprodiservice->get_mahasiswa_mbkm($ta, $kode_program_studi['kode_program_studi'] ?? '');
         $this->load->view('dosen/kaprodi/mbkm/v_data_mhs_mbkm',$data);
     }
     public function search_mahasiswa($nim, $ta) {
         $kode_dosen = $this->session->userdata('kode_dosen');
         $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_row_array($kode_dosen);
+        if (!$kode_program_studi) {
+            show_error('Kaprodi tidak ditemukan.', 500);
+            return;
+        }
         $nama_program_studi = $this->kaprodiservice->get_prodi_nama($kode_program_studi['kode_program_studi']);
         
         $cek_mahasiswa = $this->kaprodiservice->search_mahasiswa_mbkm($nim, $kode_program_studi['kode_program_studi'], $ta);

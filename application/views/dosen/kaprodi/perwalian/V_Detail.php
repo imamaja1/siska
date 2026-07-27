@@ -17,6 +17,7 @@
         <div id="content-edit" style="display: none; border: 1px solid gray; padding: 20px; margin-bottom: 10px">
             <div class="row">
                 <form id="form-update" action="#" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="">Materi Konsultasi</label>

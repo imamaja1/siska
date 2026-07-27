@@ -189,7 +189,7 @@ class Kkp extends CI_Controller {
                 $data['message'] = 'Kata kunci <strong>'.$kata_kunci.'</strong> tidak ditemukan';
                 $data['content'] = 'admin/akademik/kkp/V_search_find';
                 $data['judul'] = 'Akademik';
-                $data['sub_judul'] = 'Pencarian "<i>'.$kata_kunci.'</i>"';
+                $data['sub_judul'] = 'Pencarian "<i>'.e($kata_kunci).'</i>"';
 
                 $this->load->view('admin/template/V_main',$data);
             }else{
@@ -198,7 +198,7 @@ class Kkp extends CI_Controller {
                 $data['message'] = 'Kata kunci <strong>'.$kata_kunci.'</strong> tidak ditemukan';
                 $data['content'] = 'admin/akademik/kkp/V_search_find';
                 $data['judul'] = 'Akademik';
-                $data['sub_judul'] = 'Pencarian "<i>'.$kata_kunci.'</i>"';
+                $data['sub_judul'] = 'Pencarian "<i>'.e($kata_kunci).'</i>"';
 
                 $this->load->view('admin/template/V_main',$data);
             }

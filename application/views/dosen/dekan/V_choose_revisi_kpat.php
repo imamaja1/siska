@@ -61,7 +61,7 @@
                                     <button id="pesan_dekan_<?= e($row->kelas_id) ?>" onclick="pesan_uas_dosen('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-flat btn-primary badge-notif" 
                                     <?php
                                     if ($pesan_dekan[$key] != 0) {
-                                        echo 'data-badge="' . $pesan_dekan[$key] . '"';
+                                        echo 'data-badge="' . e($pesan_dekan[$key]) . '"';
                                     }
                                     ?> 
                                     ><i class="fa fa-envelope"></i></button>

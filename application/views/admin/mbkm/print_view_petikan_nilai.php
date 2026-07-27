@@ -237,14 +237,14 @@
                     <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                     <td width="25%" style="border-bottom:1px solid black;" align="center">&#931; SKSN</td>
                     <td width="5%" rowspan="2" valign="middle" align="center">=</td>
-                    <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo $sksn; ?></td>
+                    <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($sksn); ?></td>
                     <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                     <!-- <td width="15%" rowspan="2" valign="middle" align="center"><?php echo number_format($ipk, 2, '.', ''); ?></td> -->
                     <td width="15%" rowspan="2" valign="middle" align="center"><?= sprintf("%.2f", $ipk); ?>
                 </tr>
                 <tr>
                     <td align="center">&#931; SKS</td>
-                    <td align="center"><?php echo $sks; ?></td>
+                    <td align="center"><?php echo e($sks); ?></td>
                     <td>&nbsp;</td>
                 </tr>
             </table>
@@ -259,7 +259,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <img style="height: 50px;" src="<?= base_url('assets/signature-dosen/' . $ttd); ?>">
+                        <img style="height: 50px;" src="<?= !empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.$ttd) : base_url('assets/gambar/notfound.png') ?>">
                     </td>
                 </tr>
                 <tr>

@@ -168,19 +168,19 @@
                                   if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
                                             echo "0";
                                         } else {
-                                            echo $row['sks'];
+                                             echo e($row['sks']);
                                         }
                                         ?>
                                     </td>
                                     <td align="center">
-                                        <?= isset($row['grade']) ? $row['grade'] : '-' ?>
+                                        <?= isset($row['grade']) ? e($row['grade']) : '-' ?>
                                     </td>
                                     <td align="center">
                                       <?php
                                         if ($row['grade'] == "E"|| !$row['nilai_harian'] || !$row['nilai_uas']) {
                                             echo "0";
                                         } else {
-                                            echo $row['sksn'];
+                                            echo e($row['sksn']);
                                         }
                                         ?>
                                   </td>
@@ -261,7 +261,7 @@
                                             if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
                                                 echo "-";
                                             } else {
-                                                echo $row['grade'];
+                                                echo e($row['grade']);
                                             }
                                             ?>
                                         </td>
@@ -270,7 +270,7 @@
                                             if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
                                                 echo "0";
                                             } else {
-                                                echo $row['sksn'];
+                                                echo e($row['sksn']);
                                             }
                                             ?>
                                       </td>
@@ -323,14 +323,14 @@
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="25%" style="border-bottom:1px solid black;" align="center">&#931; SKSN</td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
-                        <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo $super_sksn; ?></td>
+                        <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($super_sksn); ?></td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="15%" rowspan="2" valign="middle"
-                            align="center"><?php echo number_format($ipk, 2, '.', ''); ?></td>
+                            align="center"><?php echo e(number_format($ipk, 2, '.', '')); ?></td>
                     </tr>
                     <tr>
                         <td align="center">&#931; SKS</td>
-                        <td align="center"><?php echo $super_sks; ?></td>
+                        <td align="center"><?php echo e($super_sks); ?></td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
@@ -344,7 +344,7 @@
                         <td>Dekan,</td>
                     </tr>
                     <tr>
-                       <img style="height: 50px" src="<?= base_url('assets/signature-dosen/' . $ttd) ?>"/>
+                       <img style="height: 50px" src="<?= !empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.$ttd) : base_url('assets/gambar/notfound.png') ?>"/>
                     </tr>
                     <tr>
                         <td>

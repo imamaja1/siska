@@ -10,8 +10,8 @@ class Nama_jurusan_model extends CI_Model
     public function get()
     {
         return $this->db->select('*')
-                ->join('jenjang as je', 'p.id_jenjang=je.id_jenjang')
-                ->join('jurusan as ju', 'p.id_jurusan = ju.id_jurusan')
+                ->join('jenjang as je', 'p.id_jenjang=je.id_jenjang', 'left')
+                ->join('jurusan as ju', 'p.id_jurusan = ju.id_jurusan', 'left')
                 ->get('program_studi as p')->result();
     }
 

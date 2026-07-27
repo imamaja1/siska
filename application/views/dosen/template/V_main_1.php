@@ -80,7 +80,7 @@
                                 <li class="dropdown user user-menu">
                                     Menu Toggle Button 
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <span><img src="<?= base_url('assets/gambar/dosen.png'); ?>" class="user-image" alt="User Image">&nbsp;<?= substr($this->session->userdata('nama_dosen'), 0, 10) ?>... <i class="fa fa-angle-down"></i></span>
+                                        <span><img src="<?= base_url('assets/gambar/dosen.png'); ?>" class="user-image" alt="User Image">&nbsp;<?= e(substr($this->session->userdata('nama_dosen'), 0, 10)) ?>... <i class="fa fa-angle-down"></i></span>
                                     </a>
                                     <ul class="dropdown-menu">
 

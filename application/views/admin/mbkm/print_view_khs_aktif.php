@@ -186,7 +186,7 @@
     <tr>
         <td>&nbsp;</td>
         <td >&nbsp;</td>
-        <td><img style="height: 60px" src="<?= base_url('assets/signature-dosen/' .signatur_nik(bodo_kop($data['nim'])['nik'])) ?>"/></td>
+        <td><img style="height: 60px" src="<?php $sig = signatur_nik(bodo_kop($data['nim'])['nik']); echo !empty($sig) && file_exists(FCPATH . 'assets/signature-dosen/' . $sig) ? base_url('assets/signature-dosen/'.$sig) : base_url('assets/gambar/notfound.png') ?>"/></td>
     </tr>
     <tr>
         <td>&nbsp;</td>

@@ -116,6 +116,7 @@ class Laporan_model extends CI_Model
 //            ->offset($offset)
             ->get()->result_object();
 
+        $data = [];
         $i = 0;
         foreach ($mahasiswa as $mah) {
             $kode_nama_kurikulum = kode_nama_kurikulum($mah->nim);
@@ -158,6 +159,7 @@ class Laporan_model extends CI_Model
             ->group_by('krs.nim')
             ->get()->result_object();
 
+        $data = [];
         $i = 0;
         foreach ($mahasiswa as $mah) {
             $kode_nama_kurikulum = kode_nama_kurikulum($mah->nim);
@@ -688,6 +690,7 @@ class Laporan_model extends CI_Model
             return $data;
 
         }
+        return array('ip' => 0, 'sks' => 0);
     }
 
     public function semester_saat_ini($nim, $kode_tahun_akademik)
@@ -698,6 +701,7 @@ class Laporan_model extends CI_Model
             ->where('kode_tahun_akademik', $kode_tahun_akademik)
             ->get('tahun_akademik')
             ->row_object();;
+        if (!$tahun) return 1;
         $sem = $tahun->semester;
         $tahun_akademik = $tahun->tahun_akademik;
 

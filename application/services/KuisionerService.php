@@ -152,4 +152,36 @@ class KuisionerService extends MY_Service {
     public function getTahunAkademikByKode($kode_tahun_akademik) {
         return $this->db->where('kode_tahun_akademik', $kode_tahun_akademik)->get('tahun_akademik')->row_object();
     }
+
+    public function getKelasByTahunProdi($kode_tahun_akademik, $kode_program_studi) {
+        return $this->db->select('kelas.kelas_id, kelas.id_matakuliah, mak.kode_matakuliah, mak.nama_matakuliah, nk.nama_kelas, kelas.kode_program_studi')
+            ->from('kelas')
+            ->join('matakuliah as mak', 'mak.id_matakuliah=kelas.id_matakuliah')
+            ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
+            ->where('kelas.kode_tahun_akademik', $kode_tahun_akademik)
+            ->where('kelas.kode_program_studi', $kode_program_studi)
+            ->order_by('mak.kode_matakuliah ASC, nk.nama_kelas ASC')
+            ->get()->result_object();
+    }
+
+    public function getMahasiswaKuisionerLayananByKelas($kelas_id, $kode_tahun_akademik) {
+        $sub = $this->db->select('krs.nim')
+            ->from('kelas_mahasiswa as km')
+            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
+            ->join('krs', 'krs.kode_krs=kd.kode_krs')
+            ->where('km.kelas_id', $kelas_id)
+            ->get()->result();
+        $data = [];
+        foreach ($sub as $row) {
+            $item = $this->db->select('*')
+                ->from('kuisioner_layanan')
+                ->where('nim', $row->nim)
+                ->where('kode_tahun_akademik', $kode_tahun_akademik)
+                ->get()->result();
+            if (count($item) > 0) {
+                $data[] = $item;
+            }
+        }
+        return $data;
+    }
 }

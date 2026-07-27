@@ -54,6 +54,7 @@
 
     <div class="box-footer">
         <form action="#" method="post">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="input-group">
                 <input type="text" name="message" placeholder="Tulis Pesan" class="form-control">
                 <span class="input-group-btn">

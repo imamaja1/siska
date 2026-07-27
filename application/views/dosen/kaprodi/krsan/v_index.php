@@ -17,7 +17,7 @@
                         <select class="form-control select2" id="angkatan">
                             <option value="0"> Semua </option>
                             <?php foreach ($angkatan as $key => $value) { ?>
-                                <option value='<?= substr($value->tahun_akademik,2,2) ?>' ><?= e($value->tahun_akademik) ?></option>
+                                <option value='<?= e(substr($value->tahun_akademik,2,2)) ?>' ><?= e($value->tahun_akademik) ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -56,10 +56,8 @@
     function mahasiswa() {
         var ta = $('#ta').val();
         var angkatan = $('#angkatan').val();
-        // var status = $('#status').val();
-        console.log(status);
         $.ajax({
-            url: '<?= site_url('dosen/kaprodi/KRSAN/get_mahasiswa/') ?>/'+ta+'/'+angkatan+'/'+status,
+            url: '<?= site_url('dosen/kaprodi/KRSAN/get_mahasiswa/') ?>/'+ta+'/'+angkatan,
             type: 'get',
             beforeSend: function () {
                 $('#landing-mahasiswa').html(loader);

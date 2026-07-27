@@ -62,8 +62,8 @@
         }
         ?>
         <!--Start Header KRS--> 
-        <h4>KARTU RENCANA STUDI PROGRAM STUDI <?php echo strtoupper($jurusan->nama_program_studi); ?><br />
-            SEMESTER <?php echo $semester; ?> <?php echo $krs_mahasiswa->tahun_akademik; ?></h4>
+        <h4>KARTU RENCANA STUDI PROGRAM STUDI <?php echo e(strtoupper($jurusan->nama_program_studi)); ?><br />
+            SEMESTER <?php echo $semester; ?> <?php echo e($krs_mahasiswa->tahun_akademik); ?></h4>
         <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
             <tr>
                 <td>
@@ -71,22 +71,22 @@
                         <tr>
                             <td><b>Nama Mahasiswa</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->nama_mahasiswa; ?></td>					
+                            <td><?php echo e($krs_mahasiswa->nama_mahasiswa); ?></td>					
                         </tr>
                         <tr>
                             <td><b>NIM</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->nim; ?></td>					
+                            <td><?php echo e($krs_mahasiswa->nim); ?></td>					
                         </tr>
                         <tr>
                             <td><b>Semester</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->semester; ?></td>					
+                            <td><?php echo e($krs_mahasiswa->semester); ?></td>					
                         </tr>	
                         <tr>
                             <td><b>Dosen Wali</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->nama_dosen; ?></td>					
+                            <td><?php echo e($krs_mahasiswa->nama_dosen); ?></td>					
                         </tr>	
                     </table>
                 </td>
@@ -96,17 +96,17 @@
                         <tr>
                             <td><b>Alamat Sekarang</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->alamat . ', ' . $krs_mahasiswa->kota . '<br />' . strtoupper($krs_mahasiswa->propinsi); ?></td>		
+                            <td><?php echo e($krs_mahasiswa->alamat) . ', ' . e($krs_mahasiswa->kota) . '<br />' . e(strtoupper($krs_mahasiswa->propinsi)); ?></td>		
                         </tr>
                         <tr>
                             <td><b>Telp/HP</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->telepon; ?></td>		
+                            <td><?php echo e($krs_mahasiswa->telepon); ?></td>		
                         </tr>
                         <tr>
                             <td><b>Alamat Ortu/Wali/Libur</b></td>
                             <td><b>:</b></td>
-                            <td><?php echo $krs_mahasiswa->alamat_orangtua . ',' . $krs_mahasiswa->kota_orangtua . '<br />' . strtoupper($krs_mahasiswa->propinsi_orangtua); ?></td>
+                            <td><?php echo e($krs_mahasiswa->alamat_orangtua) . ',' . e($krs_mahasiswa->kota_orangtua) . '<br />' . e(strtoupper($krs_mahasiswa->propinsi_orangtua)); ?></td>
                         </tr>	
                         <tr>
                             <td><b>Telp</b></td>
@@ -115,7 +115,7 @@
                                 if (empty($krs_mahasiswa->telepon_orangtua)) {
                                     echo '-';
                                 } else {
-                                    echo $krs_mahasiswa->telepon_orangtua;
+                                    echo e($krs_mahasiswa->telepon_orangtua);
                                 }
                                 ?></td>
                         </tr>	
@@ -129,7 +129,7 @@
         <div align="center">Tanda <strong>&radic;</strong> di kolom <strong>B</strong> atau <strong>U</strong> menandakan matakuliah yang dipilih.</div>
         <table border="1" class="items" width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">
             <tr>
-                <th colspan="10" align="center">SEMESTER <?php echo $krs_mahasiswa->semester; ?></th>
+                <th colspan="10" align="center">SEMESTER <?php echo e($krs_mahasiswa->semester); ?></th>
             </tr>
             <tr>
                 <th rowspan="2" width="5%">NO</th>
@@ -157,21 +157,21 @@
                 ?>  
                 <tr>
                     <td align="center"><?php echo $i . '.'; ?></td>
-                    <td align="center"><?php echo $row->kode_matakuliah; ?></td>
+                    <td align="center"><?php echo e($row->kode_matakuliah); ?></td>
                     <td><?= e($row->nama_matakuliah) ?></td>
                     <td align="center"><?php
                         if ($row->sks_teori != 0) {
-                            echo $row->sks_teori;
+                            echo e($row->sks_teori);
                         }
                         ?></td>
                     <td align="center"><?php
                         if ($row->sks_praktek != 0) {
-                            echo $row->sks_praktek;
+                            echo e($row->sks_praktek);
                         }
                         ?></td>
                     <td align="center"><?php
                         if ($row->sks_praktikum != 0) {
-                            echo $row->sks_praktikum;
+                            echo e($row->sks_praktikum);
                         }
                         ?></td>
                     <td align="center"><?php
@@ -197,9 +197,9 @@
             ?>  
             <tr class="dark">    
                 <td colspan="3" align="center">JUMLAH</td>    
-                <td align="center"><?php echo $jumlah_sks_teori; ?></td>
-                <td align="center"><?php echo $jumlah_sks_praktek; ?></td>
-                <td align="center"><?php echo $jumlah_sks_praktikum; ?></td>
+                <td align="center"><?php echo e($jumlah_sks_teori); ?></td>
+                <td align="center"><?php echo e($jumlah_sks_praktek); ?></td>
+                <td align="center"><?php echo e($jumlah_sks_praktikum); ?></td>
                 <td colspan="4">&nbsp;</td>    
             </tr>
         </table>	
@@ -231,7 +231,7 @@
                                 if ($krs_mahasiswa->semester == '1') {
                                     echo '-';
                                 } else {
-                                    echo number_format($beban_sks['ip_semester_lalu'],2);
+                                    echo e(number_format($beban_sks['ip_semester_lalu'],2));
                                 }
                                 ?>
                             </td>
@@ -259,9 +259,9 @@
                                  * maka cek IP ditabel KHS. (Tanyakan Proses selanjutnya di jurusan).
                                  */
                                 if ($krs_mahasiswa->semester == '1') {
-                                    echo $jumlah_sks;
+                                    echo e($jumlah_sks);
                                 } else {
-                                    echo $beban_sks['beban_sks'];
+                                    echo e($beban_sks['beban_sks']);
                                 }
                                 ?>
                             </td>
@@ -278,7 +278,7 @@
                                  * dari matakuliah yang ada di semester 1.
                                  */
                                 $jumlah_kredit_yg_diambil = $jumlah_sks;
-                                echo $jumlah_kredit_yg_diambil;
+                                echo e($jumlah_kredit_yg_diambil);
                                 ?>
                             </td>
                             <td width="16%" class="right">SKS</td>
@@ -301,7 +301,7 @@
                                     }
                                 } else {
                                     $jumlah_kredit_yg_batal = 0;
-                                    echo $jumlah_kredit_yg_batal;
+                                    echo e($jumlah_kredit_yg_batal);
                                 }
                                 ?>        
                             </td>
@@ -325,7 +325,7 @@
                                     }
                                 } else {
                                     $jumlah_penambahan_kredit = 0;
-                                    echo $jumlah_penambahan_kredit;
+                                    echo e($jumlah_penambahan_kredit);
                                 }
                                 ?>        
                             </td>
@@ -337,7 +337,7 @@
                             <td class="right">
                                 <?php
                                 $jumlah_kredit_terakhir = ($jumlah_kredit_yg_diambil - $jumlah_kredit_yg_batal) + $jumlah_penambahan_kredit;
-                                echo $jumlah_kredit_terakhir;
+                                echo e($jumlah_kredit_terakhir);
                                 ?>
                             </td>
                             <td class="right">SKS</td>
@@ -353,26 +353,26 @@
                 <td width="34%">Mataram, <?= tgl_indo(date('d F Y')); ?></td>
             </tr>
             <tr>
-                <td>Ka. Prodi <?php echo $jurusan->singkatan_program_studi; ?></td>
+                <td>Ka. Prodi <?php echo e($jurusan->singkatan_program_studi); ?></td>
                 <td>Dosen Wali</td>
                 <td>Mahasiswa yang bersangkutan,</td>
             </tr>
             <tr>
                 <td height="60px">
                     <!--<img style="height: 60px" src="<?= base_url('assets/signature_kaprodi/' . $kajur->tanda_tangan) ?>"/>-->
-                    <img style="height: 60px" src="<?= base_url('assets/signature-dosen/' . $kajur->signature) ?>"/>
+                    <img style="height: 60px" src="<?= !empty($kajur->signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $kajur->signature) ? base_url('assets/signature-dosen/'.$kajur->signature) : base_url('assets/gambar/notfound.png') ?>"/>
                 </td>
                 <td height="60px">
                     <?php if (!empty($krs_mahasiswa->signature)) : ?>
-                        <img style="height: 60px" src="<?= base_url('assets/signature-dosen/' . $krs_mahasiswa->signature) ?>"/>
+                        <img style="height: 60px" src="<?= file_exists(FCPATH . 'assets/signature-dosen/' . $krs_mahasiswa->signature) ? base_url('assets/signature-dosen/'.$krs_mahasiswa->signature) : base_url('assets/gambar/notfound.png') ?>"/>
                     <?php endif; ?>
                 </td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
-                <td><div class="garis_bawah"><?php echo $kajur->nama_dosen; ?></div>NIP/NIK: <?php echo $kajur->nik; ?></td>
-                <td><div class="garis_bawah"><?php echo $krs_mahasiswa->nama_dosen; ?></div>NIP/NIK: <?php echo $krs_mahasiswa->nik; ?></td>
-                <td><div class="garis_bawah"><?php echo $krs_mahasiswa->nama_mahasiswa; ?></div>NIM: <?php echo $krs_mahasiswa->nim; ?></td>
+                <td><div class="garis_bawah"><?php echo e($kajur->nama_dosen); ?></div>NIP/NIK: <?php echo e($kajur->nik); ?></td>
+                <td><div class="garis_bawah"><?php echo e($krs_mahasiswa->nama_dosen); ?></div>NIP/NIK: <?php echo e($krs_mahasiswa->nik); ?></td>
+                <td><div class="garis_bawah"><?php echo e($krs_mahasiswa->nama_mahasiswa); ?></div>NIM: <?php echo e($krs_mahasiswa->nim); ?></td>
             </tr>
         </table>
         <p class="keterangan"><br />Keterangan:</p>

@@ -42,7 +42,7 @@
                                         <?php endif; ?>
                                         <a href="#" id="pesan_<?= e($row->kelas_id) ?>"  onclick="pesan('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-primary btn-flat badge-notif" 
                                         <?php if ($pesan_dosen[$row->kelas_id] != 0) {
-                                            echo 'data-badge="' . $pesan_dosen[$row->kelas_id] . '"';
+                                            echo 'data-badge="' . e($pesan_dosen[$row->kelas_id]) . '"';
                                         } ?>
                                            title="Pesan Untuk Dosen"><i class="fa fa-envelope"></i></a>
                                         <?php if (cek_komentar_revisi($row->kelas_id)) : ?>

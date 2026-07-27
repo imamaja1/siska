@@ -149,7 +149,7 @@
                                     <td align="center">
                                         <?php
                                   if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                            echo $row['sks'];
+                                              echo e($row['sks']);
                                         } else {
                                             echo '0';
                                         }
@@ -158,7 +158,7 @@
                                     <td align="center">
                                         <?php
                                         if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                            echo $row['grade'];
+                                            echo e($row['grade']);
                                         } else {
                                             echo "-";
                                         }
@@ -167,7 +167,7 @@
                                     <td align="center">
                                       <?php
                                         if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                            echo $row['sksn'];
+                                            echo e($row['sksn']);
                                         } else {
                                             echo "0";
                                         }
@@ -232,25 +232,25 @@
                                         <td align="center">
                                             <?php
                                             if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                               echo $row['sks'];
-                                            } else {
-                                                 echo "0";
-                                            }
-                                            ?>
-                                        </td>
-                                        <td align="center">
-                                            <?php
-                                            if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                              	echo $row['grade'];
-                                            } else {
-                                                echo "-";
-                                            }
-                                            ?>
-                                        </td>
-                                        <td align="center">
-                                          <?php
-                                            if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                                echo $row['sksn'];
+                                               echo e($row['sks']);
+                                             } else {
+                                                  echo "0";
+                                             }
+                                             ?>
+                                         </td>
+                                         <td align="center">
+                                             <?php
+                                             if ($row['semester'] <= $semester || $row['semester'] =='K') {
+                                               	echo e($row['grade']);
+                                             } else {
+                                                 echo "-";
+                                             }
+                                             ?>
+                                         </td>
+                                         <td align="center">
+                                           <?php
+                                             if ($row['semester'] <= $semester || $row['semester'] =='K') {
+                                                 echo e($row['sksn']);
                                             } else {
                                                 echo "0";
                                             }
@@ -286,14 +286,14 @@
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="25%" style="border-bottom:1px solid black;" align="center">&#931; SKSN</td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
-                        <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo $total_sksn; ?></td>
+                        <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($total_sksn); ?></td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="15%" rowspan="2" valign="middle"
-                            align="center"><?php echo sprintf("%.2f",$ipk); ?></td>
+                            align="center"><?php echo e(sprintf("%.2f",$ipk)); ?></td>
                     </tr>
                     <tr>
                         <td align="center">&#931; SKS</td>
-                        <td align="center"><?= $total_sks; ?></td>
+                        <td align="center"><?= e($total_sks); ?></td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
@@ -307,7 +307,7 @@
                         <td>Dekan,</td>
                     </tr>
                     <tr>
-                        <td><img style="height: 50px;" src="<?= base_url('assets/signature-dosen/' .$ttd); ?>">	</td>
+                        <td><img style="height: 50px;" src="<?= !empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.$ttd) : base_url('assets/gambar/notfound.png') ?>">	</td>
                     </tr>
                     <tr>
                         <td>

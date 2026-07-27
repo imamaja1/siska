@@ -4,22 +4,21 @@
         <h4 class="box-title"><i class="fa fa-users"></i> Data Mahasiswa MBKM</h4>
     </div>
     <div class="box-body">
-        <form action="<?= site_url('admin/mbkm/mahasiswa') ?>" method="post">
-            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+        <form action="<?= site_url('admin/mbkm/daftar') ?>" method="get">
             <div class="form-group">
                 <label for="kode_tahun_akademik">Tahun Akademik</label>
-                <select name="kode_tahun_akademik" id="kode_tahun_akademik" class="form-control">
+                <select name="ta" id="kode_tahun_akademik" class="form-control">
                     <?php foreach ($tahun_akademik as $value): ?>
-                        <option value='<?= e($value->kode_tahun_akademik) ?>' <?php if($value->kode_tahun_akademik == $semester->kode_tahun_akademik){ echo 'selected';}  ?>>Semester <?= $value->semester == '1' ? 'Ganjil Tahun '.$value->tahun_akademik:'Genap Tahun '.$value->tahun_akademik?></option>
+                        <option value='<?= e($value->kode_tahun_akademik) ?>' <?= ($value->kode_tahun_akademik == $kode_tahun_akademik) ? 'selected' : '' ?>>Semester <?= $value->semester == '1' ? 'Ganjil Tahun '.$value->tahun_akademik:'Genap Tahun '.$value->tahun_akademik?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="form-group">
                 <label for="kode_program_studi">Program Studi</label>
-                <select name="kode_program_studi" id="kode_program_studi" class="form-control">
-                    <option value="">Pilih</option>
+                <select name="prodi" id="kode_program_studi" class="form-control">
+                    <option value="">Semua</option>
                     <?php foreach ($prodi as $value): ?>
-                        <option value="<?= e($value->kode_program_studi) ?>"><?= e($value->singkatan_program_studi) ?></option>
+                        <option value="<?= e($value->kode_program_studi) ?>" <?= ($kode_program_studi_filter == $value->kode_program_studi) ? 'selected' : '' ?>><?= e($value->singkatan_program_studi) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -28,22 +27,46 @@
             </div>
         </form>
         <hr>
-        <div id="data-mahasiswa"></div>
+        <?php if (!empty($mahasiswa)): ?>
+        <div class="table-responsive">
+            <table class="table demo-table data-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>NIM</th>
+                        <th>Nama</th>
+                        <th>Prodi</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($mahasiswa as $key => $value): ?>
+                        <tr>
+                            <td><?= $key + 1 ?></td>
+                            <td><?= e($value->nim) ?></td>
+                            <td><?= e($value->nama_mahasiswa) ?></td>
+                            <td><?= e($value->nama_program_studi) ?></td>
+                            <td>
+                                <a href="<?= site_url('admin/mbkm/daftar/nilai/'.$value->id_fix.'/'.$kode_tahun_akademik) ?>" class="btn btn-success btn-sm">Penilaian</a>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="hapus(<?= e($value->id_fix) ?>)">Hapus</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $('.data-table').DataTable();
+            function hapus(id) {
+                if (confirm('Anda yakin ingin menghapus data ini?')) {
+                    $.get('<?= site_url('admin/mbkm/daftar/hapus_mhs_mbkm') ?>/' + id, function(res) {
+                        location.reload();
+                    });
+                }
+            }
+        </script>
+        <?php else: ?>
+        <p class="text-muted">Tidak ada data mahasiswa MBKM.</p>
+        <?php endif; ?>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('#kode_tahun_akademik, #kode_program_studi').change(function () {
-            var kode_tahun_akademik = $('#kode_tahun_akademik').val();
-            var kode_program_studi = $('#kode_program_studi').val();
-            $.ajax({
-                url: '<?= site_url('admin/mbkm/mahasiswa/filter') ?>',
-                type: 'post',
-                data: {kode_tahun_akademik: kode_tahun_akademik, kode_program_studi: kode_program_studi},
-                success: function (data) {
-                    $('#data-mahasiswa').html(data);
-                }
-            });
-        });
-    });
-</script>

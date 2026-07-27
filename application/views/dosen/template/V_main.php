@@ -199,7 +199,7 @@
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="<?= base_url('assets/gambar/dosen.png'); ?>" class="user-image" alt="User Image">
-                                    <span class="hidden-xs">&nbsp;<?= substr($this->session->userdata('nama_dosen'), 0, 10) ?>... <i class="fa fa-angle-down"></i></span>
+                                    <span class="hidden-xs">&nbsp;<?= e(substr($this->session->userdata('nama_dosen'), 0, 10)) ?>... <i class="fa fa-angle-down"></i></span>
 
                                 </a>
                                 <ul class="dropdown-menu">
@@ -239,7 +239,7 @@
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="#"><i class="fa fa-dashboard"></i> <?= e($judul) ?></a></li>
-                        <li class="active"><?= isset($sub_judul) ? $sub_judul : '' ?></li>
+                        <li class="active"><?= e(isset($sub_judul) ? $sub_judul : '') ?></li>
                     </ol>
                 </section>
 

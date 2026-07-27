@@ -22,7 +22,7 @@
                                     <img style="width: 170px; height: 220px; border:#899bc1  solid 2px; margin: auto;" src="<?= base_url('assets/foto/P.png'); ?>" alt="Foto">
                                 <?php } ?>
                             <?php } else { ?>
-                                <img style="width: 170px; height: 220px; border:#899bc1  solid 2px; margin: auto;" src="<?= base_url('assets/foto/' . $data->foto); ?>" alt="Foto">
+                                <img style="width: 170px; height: 220px; border:#899bc1  solid 2px; margin: auto;" src="<?= base_url('assets/foto/' . e($data->foto)); ?>" alt="Foto">
                             <?php } ?>
 
                         </div>
@@ -84,7 +84,7 @@
                         if (empty($foto) or ( $foto == "P.png") or ( $foto == "L.png")) {
                             echo "<b> Belum ada foto</b>";
                         } else {
-                            echo "<b>" . $data->nama_mahasiswa . "</b>";
+                                echo "<b>" . e($data->nama_mahasiswa) . "</b>";
                         }
                         ?>
 
@@ -120,7 +120,7 @@
                 <tr style="height: 30px;">
                     <td width="20%"><strong>Nama Ayah</strong></td>
                     <td width="1%"><strong>:</strong></td>
-                    <td><?= strtoupper($data->nama_ayah) ?></td>
+                    <td><?= e(strtoupper($data->nama_ayah)) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Agama Ayah</strong></td>
@@ -135,7 +135,7 @@
                 <tr style="height: 30px;">
                     <td><strong>Nama Ibu</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= strtoupper($data->nama_ibu) ?></td>
+                    <td><?= e(strtoupper($data->nama_ibu)) ?></td>
                 </tr>
                 <tr style="height: 30px;">
                     <td><strong>Agama Ibu</strong></td>

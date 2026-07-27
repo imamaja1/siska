@@ -87,12 +87,12 @@ class validasinilai extends CI_Controller {
     public function revisi_uas() {
         $note = htmlspecialchars($this->input->post('catatan_prodi'));
         $kelas_id = htmlspecialchars($this->input->post('kelas_id'));
-        
+
         $this->dekanservice->update('kelas', array('catatan_dekan' => $note, 'status_nilai' => 'R', 'validasi_dekan' => 'R', 'validasi_nilai' => 'R'), array('kelas_id' => $kelas_id));
         $this->dekanservice->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian' => 'R', 'validasi_dekan' => 'R', 'validasi_prodi' => 'R']);
 
         $query_dosen_kelas = $this->dekanservice->get_query_dosen_kelas_dekan($kelas_id);
-        
+
         $query_prodi = $this->dekanservice->get_query_prodi_dekan($kelas_id);
 
         $query_fakultas = $this->dekanservice->get_query_fakultas_dekan($kelas_id);
@@ -101,7 +101,7 @@ class validasinilai extends CI_Controller {
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
         kirim_ke_telegram($query_prodi['chatid'], $message_text);
 
-        $massage1 = array('kelas_id' => $kelas_id, 
+        $massage1 = array('kelas_id' => $kelas_id,
                             'pesan_dekan' => $note,
                             'param_dekan' => 1,
                             'kode_dosen' => 1,
@@ -115,12 +115,12 @@ class validasinilai extends CI_Controller {
     public function revisi_uts() {
         $note = htmlspecialchars($this->input->post('catatan_prodi'));
         $kelas_id = htmlspecialchars($this->input->post('kelas_id'));
-        
+
         $this->dekanservice->update('kelas', array('catatan_dekan' => $note, 'status_nilai_uts' => 'R', 'validasi_dekan_uts' => 'R', 'validasi_nilai_uts' => 'R'), array('kelas_id' => $kelas_id));
         $this->dekanservice->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian_uts' => 'R', 'validasi_dekan_uts' => 'R', 'validasi_prodi_uts' => 'R']);
 
         $query_dosen_kelas = $this->dekanservice->get_query_dosen_kelas_dekan($kelas_id);
-        
+
         $query_prodi = $this->dekanservice->get_query_prodi_dekan($kelas_id);
 
         $query_fakultas = $this->dekanservice->get_query_fakultas_dekan($kelas_id);
@@ -129,7 +129,7 @@ class validasinilai extends CI_Controller {
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
         kirim_ke_telegram($query_prodi['chatid'], $message_text);
 
-        $massage1 = array('kelas_id' => $kelas_id, 
+        $massage1 = array('kelas_id' => $kelas_id,
                             'pesan_dekan' => $note,
                             'param_dekan' => 1,
                             'kode_dosen' => 1,
@@ -167,13 +167,13 @@ class validasinilai extends CI_Controller {
         $message_text = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", nilai per matakuliah dapat dicetak pada menu penilaian untuk keperluan BKD/Lainnya, Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
-        $massage1 = array('kelas_id' => $kelas_id, 
+        $massage1 = array('kelas_id' => $kelas_id,
                             'pesan_dekan' => $message_text,
                             'param_dekan' => 1,
                             'kode_dosen' => 1,
                             'kode_dekan' => 1,
                             'tgl_dekan' => date_create('now', timezone_open('Asia/Singapore'))->format('Y-m-d H:i:s'));
-       
+
         $resss = $this->dekanservice->insert('catatan_revisi',$massage1);
         echo $resss;
     }
@@ -204,13 +204,13 @@ class validasinilai extends CI_Controller {
         $message_text = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", nilai per matakuliah dapat dicetak pada menu penilaian untuk keperluan BKD/Lainnya, Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
-        $massage1 = array('kelas_id' => $kelas_id, 
+        $massage1 = array('kelas_id' => $kelas_id,
                             'pesan_dekan' => $message_text,
                             'param_dekan' => 1,
                             'kode_dosen' => 1,
                             'kode_dekan' => 1,
                             'tgl_dekan' => date_create('now', timezone_open('Asia/Singapore'))->format('Y-m-d H:i:s'));
-       
+
         $resss = $this->dekanservice->insert('catatan_revisi_uas',$massage1);
         echo $resss;
     }
@@ -226,11 +226,11 @@ class validasinilai extends CI_Controller {
         $data['content'] = 'dosen/dekan/V_penilaian_uas';
         $data['judul'] = 'Validas Nilai UAS';
         $data['kelas'] = $kelas;
-        
+
         $data['a_validasi_nilai_dekan'] = 'active';
         $data['a_validasi_nilai_uas_dekan'] = 'active';
 
-       
+
         $this->load->view('dosen/template/V_main', $data);
     }
     public function validasi_nilai_uts($ta = null) {
@@ -244,7 +244,7 @@ class validasinilai extends CI_Controller {
         $data['content'] = 'dosen/dekan/V_penilaian_uts';
         $data['judul'] = 'Validas Nilai UTS';
         $data['kelas'] = $kelas;
-        
+
         $data['a_validasi_nilai_dekan'] = 'active';
         $data['a_validasi_nilai_uts_dekan'] = 'active';
 
@@ -308,12 +308,13 @@ class validasinilai extends CI_Controller {
             if(count($nama_dosen) > 0){
                 $new_kelas[$key] = $kelas[$key];
                 $new_kelas[$key]->data_kelas = $tmp;
-                $new_kelas[$key]->order = $tmp->status ? $tmp->status : '5';
+                $new_kelas[$key]->order = $tmp ? ($tmp->status ?: '5') : '5';
                 $new_kelas[$key]->dosen_pengampu = $nama_dosen;
             }
         }
         $orderedObjects = $this->customSort($new_kelas);
         $data['kelas'] = $orderedObjects;
+        $data['pesan_dekan'] = [];
         $this->load->view('dosen/dekan/V_choose_revisi', $data);
     }
 
@@ -338,11 +339,11 @@ class validasinilai extends CI_Controller {
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
         $kode_ta = $this->input->POST('kode_ta');
-   
+
         $data['data'] = $this->dekanservice->get_revisi_nilai_validasi_dekan($kelas, $level, $kode_ta);
-        
+
         $data['kelas'] = $this->dekanservice->get_revisi_nilai_kelas_dekan($kelas, $level);
-                        
+
         $data['nilai'] = true;
         $this->load->view('dosen/dekan/V_revisi_nilai_mahasiswa', $data);
     }
@@ -351,7 +352,7 @@ class validasinilai extends CI_Controller {
         $kode_ta = $this->input->POST('kode_ta');
 
         $data['kelas'] = $this->dekanservice->get_revisi_nilai_divalidasi_dekan($kelas);
-        
+
         foreach ($data['kelas'] as $key => $value) {
             $data['kelas'][$key]->isi_nilai = $this->dekanservice->get_isi_nilai_divalidasi_dekan($kelas, $value->level, $kode_ta);
         }
@@ -360,7 +361,7 @@ class validasinilai extends CI_Controller {
     public function revisi_nilai_validasi_mhs(){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
-   
+
         $data['data'] = $this->dekanservice->get_mahasiswa_kelas_only_dekan($kelas);
         $data['nilai'] = false;
         $this->load->view('dosen/dekan/V_revisi_nilai_mahasiswa', $data);
@@ -377,10 +378,7 @@ class validasinilai extends CI_Controller {
                 'nilai_uas' => $row->uas,
                 'nilai_akhir' => $row->na,
             );
-            $tmp = $this->dekanservice->get_khs_detail_row($row->kode_khs_detail);
-            if($row->na > $tmp->nilai_akhir){
-                $this->dekanservice->update_khs_detail($row->kode_khs_detail, $data_nilai);
-            }
+            $this->dekanservice->update_khs_detail($row->kode_khs_detail, $data_nilai);
         }
         echo json_encode(array('status'=> true));
     }
@@ -390,7 +388,7 @@ class validasinilai extends CI_Controller {
         $pesan = $this->input->POST('pesan');
 
         $this->dekanservice->update('dummy_update_kelas', array('status_prodi' => 'R','status_dosen' => 'R','status_dekan' => 'R','status' => '4'), array('id_kelas' => $kelas, 'level' => $level));
-        
+
         $massage1 = array('kelas_id' => $kelas,
             'pesan_dekan' => $pesan,
             'param_dekan' => 1,
@@ -402,7 +400,7 @@ class validasinilai extends CI_Controller {
 
         echo json_encode(array('status'=> true));
     }
-    
+
     public function revisi_nilai_all_mahasiswa(){
         $kelas = $this->input->POST('kelas');
         $saber = $this->dekanservice->get_dummy_update_kelas_all($kelas);

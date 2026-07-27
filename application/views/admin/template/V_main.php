@@ -103,9 +103,9 @@
                 <b><?= e($sub_judul) ?></b>
             </div>
             <ol class="breadcrumb">
-                <?= isset($title_h1) ? e($title_h1) : "" ?>
-                <?= isset($title_h2) ? e($title_h2) : "" ?>
-                <?= isset($title_h3) ? e($title_h3) : "" ?>
+                <?= isset($title_h1) ? $title_h1 : "" ?>
+                <?= isset($title_h2) ? $title_h2 : "" ?>
+                <?= isset($title_h3) ? $title_h3 : "" ?>
             </ol>
         </section>
         <section class="content">

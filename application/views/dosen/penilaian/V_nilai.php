@@ -46,7 +46,7 @@
                                         <td><?= e($row->dummy_harian) ?></td>
                                         <td><?= e($row->dummy_uts) ?></td>
                                         <td><?= e($row->dummy_uas) ?></td>
-                                        <td><?= round($row->dummy_na) ?></td>
+                                        <td><?= e(round($row->dummy_na)) ?></td>
                                         <td><?= e($row->grade) ?></td>
                                     </tr>
                                 <?php endforeach; ?>

@@ -61,7 +61,7 @@
                                                 class="fa fa-check-circle"></i></a>
                                 <?php endif; ?>
                                 <a href="#" id="pesan_<?= e($row->kelas_id) ?>" onclick="pesan_uts('<?= e($row->kelas_id) ?>')" class="btn btn-xs btn-primary  btn-flat pull-right badge-notif" 
-                                <?php if ($pesan_dosen[$row->kelas_id] != 0) { echo 'data-badge="'.$pesan_dosen[$row->kelas_id].'"'; } ?>
+                                <?php if ($pesan_dosen[$row->kelas_id] != 0) { echo 'data-badge="'.e($pesan_dosen[$row->kelas_id]).'"'; } ?>
                                 title="Pesan Ke Dosen"><i class="fa fa-envelope"></i></a>
                                 </div>
                             </td>

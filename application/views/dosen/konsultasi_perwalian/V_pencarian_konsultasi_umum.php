@@ -11,6 +11,7 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('dosen/konsultasi_perwalian/proses_pencarian_konsultasi_umum'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
             <div class="form-group">
                 <label class="control-label col-sm-3">NIM <label class="text-danger">*</label> :</label>

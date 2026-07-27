@@ -265,4 +265,24 @@ class Update_nilai extends CI_Controller {
             }
         }
     }
+
+    public function uts_final($kelas_id) {
+        $data_kelas = $this->dosenakademikservice->getKelasByIdWithUpdate($kelas_id);
+        $cek = $this->dosenakademikservice->checkDummyUpdateKelas($kelas_id);
+        if (!$cek) {
+            $this->dosenakademikservice->insertDummyUpdateKelas(array('id_kelas' => $kelas_id));
+        }
+        $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUpdateUts($kelas_id);
+        $data['content'] = 'dosen/penilaian/V_update_input_penilaian_uts_final';
+        $data['judul'] = 'Penilaian Mahasiswa';
+        $data['a_update_penilaian'] = 'active';
+        $data['a_update_penilaian_uts'] = 'active';
+        $data['data'] = $kelas_mahasiswa;
+        $data['data_kelas'] = $data_kelas;
+        $data['exp'] = false;
+        $data['kelas_id'] = $kelas_id;
+        $data['persentasi_nilai'] = $this->dosenakademikservice->getPersentasiNilai($kelas_id);
+        $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
+        $this->load->view('dosen/template/V_main', $data);
+    }
 }

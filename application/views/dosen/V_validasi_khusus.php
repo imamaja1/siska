@@ -1,6 +1,7 @@
 ﻿<div class="box box-solid">
     <div class="box-header with-border">
         <form method="post" action="<?= site_url('dosen/validasikhusus/cari'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="row">
                 <div class="col-md-4">
                     <select name="kd_fk" class="form-control">

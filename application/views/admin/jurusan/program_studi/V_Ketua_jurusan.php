@@ -28,13 +28,12 @@
                             <td><?= e($row->nama_dosen) ?></td>
                             <td align="center">
                                 <form id="form-file-<?= e($row->kode_kaprodi) ?>" action="" enctype="multipart/form-data" method="post">
-	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                                     <input id="upload-<?= e($row->kode_kaprodi) ?>" name="foto" type="file" style="display: none" onchange="readURL(this,<?= e($row->kode_kaprodi) ?>);">
                                 </form>
-                                <?php if (empty($row->tanda_tangan)) : ?>
-                                    <img src="<?= base_url('assets/gambar/notfound.png') ?>" onclick="cot(<?= e($row->kode_kaprodi) ?>)" id="upload_link-<?= e($row->kode_kaprodi) ?>"  style="height:70px" alt="">
+                                <?php if (empty($row->tanda_tangan) || !file_exists(FCPATH . 'assets/signature_kaprodi/' . $row->tanda_tangan)) : ?>
+                                    <img src="<?= base_url('assets/gambar/notfound.png') ?>" onclick="cot(<?= e($row->kode_kaprodi) ?>)" id="upload_link-<?= e($row->kode_kaprodi) ?>"  style="height:70px; cursor:pointer;" alt="Klik untuk upload">
                                 <?php else: ?>
-                                    <img src="<?= base_url('assets/signature_kaprodi/'.$row->tanda_tangan) ?>" onclick="cot(<?= e($row->kode_kaprodi) ?>)" id="upload_link-<?= e($row->kode_kaprodi) ?>"  style="height: 70px" alt="">
+                                    <img src="<?= base_url('assets/signature_kaprodi/'.$row->tanda_tangan) ?>" onclick="cot(<?= e($row->kode_kaprodi) ?>)" id="upload_link-<?= e($row->kode_kaprodi) ?>"  style="height:70px; cursor:pointer;" alt="Klik untuk ganti">
                                 <?php endif; ?>
                             </td>
                             <td align="center">

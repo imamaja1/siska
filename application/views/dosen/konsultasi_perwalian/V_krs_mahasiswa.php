@@ -1,7 +1,7 @@
 <?php if(count($data) > 0) : ?>
 <div class="box box-primary flat">
     <div class="box-body flat table-responsive">
-        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) PROGRAM STUDI <?= strtoupper($prodi->nama_program_studi) ?> (<?= strtoupper($prodi->singkatan_program_studi) ?>)</strong></p>
+        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) PROGRAM STUDI <?= e(strtoupper($prodi->nama_program_studi)) ?> (<?= e(strtoupper($prodi->singkatan_program_studi)) ?>)</strong></p>
         <p style="text-align: center"><strong>SEMESTER <?= e($tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL") ?> <?= e($tahun_akademik->ta) ?></strong></p>
         <table class="table" width="100%">
             <tr>

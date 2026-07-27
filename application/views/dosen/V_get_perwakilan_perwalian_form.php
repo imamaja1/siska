@@ -10,6 +10,7 @@ echo!empty($flashmessage) ? '<p class="message">' . $flashmessage . '</p>' : '';
     <div class="box box-solid flat" <?= e($hidden)  ?>>
         <div class="box-body"><br>
             <form class="form-horizontal" name="perwakilan_perwalian_form" method="post" action="<?php echo $form_action; ?>">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="form-group">
                     <label class="control-label col-sm-2">Nama Dosen</label>
                     <div class="col-sm-4">

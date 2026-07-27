@@ -159,7 +159,9 @@ class Penilaian_kpat extends CI_Controller {
                 $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
                     return $obj->nilai_minimum <= ceil($tmp) && $obj->nilai_maksimum >= ceil($tmp);
                 });
-                if (!empty($result)) { $kelas_mahasiswa[$key]->grade = reset($result)->grade; } else { $kelas_mahasiswa[$key]->grade = ''; }
+                if (!empty($result)) { $kelas_mahasiswa[$key]->grade = reset($result)->grade; } else { $kelas_mahasiswa[$key]->grade = '-'; }
+            } else {
+                if (!isset($kelas_mahasiswa[$key]->grade)) { $kelas_mahasiswa[$key]->grade = '-'; }
             }
         }
 
@@ -191,7 +193,7 @@ class Penilaian_kpat extends CI_Controller {
         if (!$persentase) {
             echo json_encode(array(
                     'status' => false,
-                    'data' =>$new_nilai,
+                    'data' => null,
                 )   
             );
         }else{
@@ -221,14 +223,13 @@ class Penilaian_kpat extends CI_Controller {
                 );
                 $this->dosenakademikservice->insertDummyUpdateNilaiKpat($data);
             }
-            $new_nilai = $this->dosenakademikservice->getGradeNilaiKpatRevisi($id);
             $sistem_nilai = $this->dosenakademikservice->getSistemPenilaian();
             
             $tmp = $data['na'];
             $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
                 return $obj->nilai_minimum <= $tmp && $obj->nilai_maksimum >= $tmp;
             });
-            if (!empty($result)) { $data['grade'] = reset($result)->grade; } else { $data['grade'] = ''; }
+            if (!empty($result)) { $data['grade'] = reset($result)->grade; } else { $data['grade'] = '-'; }
 
             echo json_encode(array(
                     'status' => true,
@@ -282,6 +283,9 @@ class Penilaian_kpat extends CI_Controller {
             'id_kelas' => $kelas,
             'level' => $level+1,
             'status' => '4',
+            'status_dosen' => 'T',
+            'status_prodi' => 'T',
+            'status_dekan' => 'T',
         );
         $this->dosenakademikservice->insertDummyUpdateKelasKpat($new_data);
         echo json_encode(array('status' => 'success'));

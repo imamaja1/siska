@@ -115,8 +115,8 @@
                             <tr>
                                 <td><?= e($grad->grade) ?></td>
                                 <td>=</td>
-                                <td><?= str_replace(".00", "", $grad->nilai_minimum) ?> - <?php $rplc1 = str_replace(".99", "", $grad->nilai_maksimum);
-                        echo str_replace(".00", "", $rplc1)
+                                <td><?= e(str_replace(".00", "", $grad->nilai_minimum)) ?> - <?php $rplc1 = str_replace(".99", "", $grad->nilai_maksimum);
+                        echo e(str_replace(".00", "", $rplc1))
                             ?></td>
                             </tr> 
                             <?php

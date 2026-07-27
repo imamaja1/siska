@@ -1,7 +1,7 @@
 <h1><?php echo lang('edit_user_heading');?></h1>
 <p><?php echo lang('edit_user_subheading');?></p>
 
-<div id="infoMessage"><?php echo $message;?></div>
+<div id="infoMessage"><?php echo e($message);?></div>
 
 <?php echo form_open(uri_string());?>
 
@@ -51,7 +51,7 @@
                       }
                   }
               ?>
-              <input type="checkbox" name="groups[]" value="<?php echo $group['id'];?>"<?php echo $checked;?>>
+              <input type="checkbox" name="groups[]" value="<?php echo e($group['id']);?>"<?php echo e($checked);?>>
               <?php echo htmlspecialchars($group['name'],ENT_QUOTES,'UTF-8');?>
               </label>
           <?php endforeach?>

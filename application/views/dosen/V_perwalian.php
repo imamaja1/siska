@@ -7,13 +7,14 @@
 <div class="box box-primary flat">
     <div class="box-body"><br>
         <form class="form-horizontal" action="<?= site_url('dosen/perwalian/get_perwalian_prosess'); ?>" method="POST">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Angkatan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-3">
                     <select class="form-control" id="angkatan" name="angkatan">
                         <option value="" selected disabled>Pilih Angkatan</option>
                         <?php foreach ($tahun_akademik as $row) { ?>
-                            <option <?= set_select('angkatan', substr($row->tahun_akademik, 2, 2)) ?> value="<?= substr($row->tahun_akademik, 2, 2) ?>"><?= substr($row->tahun_akademik, 0, 4) ?></option>
+                            <option <?= set_select('angkatan', substr($row->tahun_akademik, 2, 2)) ?> value="<?= e(substr($row->tahun_akademik, 2, 2)) ?>"><?= e(substr($row->tahun_akademik, 0, 4)) ?></option>
                         <?php } ?>
                     </select>
                     <small class="text-danger"><?= form_error('angkatan'); ?></small>

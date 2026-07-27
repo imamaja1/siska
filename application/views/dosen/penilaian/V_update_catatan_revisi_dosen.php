@@ -1,4 +1,4 @@
-﻿<div class="box box-warning direct-chat direct-chat-warning">
+<div class="box box-warning direct-chat direct-chat-warning">
     <div class="box-header with-border">
     <h3 class="box-title"><i class="fa fa-envelope"></i> UBGChat V.1</h3>
 
@@ -33,18 +33,18 @@
                             <span class="direct-chat-name pull-left">
                                 <?php 
                                 if($row->kode_prodi){
-                                    echo $prodi;
+                                    echo e($prodi);
                                 }else{
-                                    echo $dekan;
+                                    echo e($dekan);
                                 }
                                 ?>
                             </span>
                             <span class="direct-chat-timestamp pull-right">
                             <?php 
                                 if($row->tgl_prodi){
-                                    echo $row->tgl_prodi;
+                                    echo e($row->tgl_prodi);
                                 }else{
-                                    echo $row->tgl_dekan;
+                                    echo e($row->tgl_dekan);
                                 }
                             ?>    
                             </span>
@@ -52,9 +52,9 @@
                         <div class="direct-chat-text">
                             <?php 
                                 if($row->pesan_prodi){
-                                    echo $row->pesan_prodi;
+                                    echo e($row->pesan_prodi);
                                 }else{
-                                    echo $row->pesan_dekan;
+                                    echo e($row->pesan_dekan);
                                 }
                             ?>
                         </div>
@@ -69,6 +69,7 @@
      <!-- /.box-body -->
     <div class="box-footer">
         <form action="#" method="post">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="input-group">
                 <input type="text" name="message" placeholder="Tulisan Pesan ..." class="form-control tulis-pesan">
                 <span class="input-group-btn">

@@ -73,7 +73,7 @@
 if (!empty($link)) {
     echo '<p id="bottom_link">';
     foreach ($link as $links) {
-        echo $links . ' ';
+        echo e($links) . ' ';
     }
     echo '</p>';
 }

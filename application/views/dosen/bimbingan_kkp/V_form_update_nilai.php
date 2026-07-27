@@ -1,4 +1,5 @@
 <form role="form" method="post" action="<?= site_url('dosen/bimbingan_kkp/update_nilai/'.$id) ?>">
+    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="box-body">
         <div class="form-group">
             <label for=""><span class="small text-blue">BAB I (15%)</span></label>

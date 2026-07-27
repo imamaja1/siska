@@ -911,6 +911,40 @@ class Penilaian extends CI_Controller {
         return redirect($_SERVER['HTTP_REFERER']);
     }
 
+    // ===================== PENILAIAN FINAL =====================
+    public function penilaian_final() {
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        $ta = $this->m_tahun_akademik->get();
+        $tahun_akademik = tahun_akademik();
+        $data['content'] = 'dosen/penilaian/V_penilaian_final';
+        $data['judul'] = 'Penilaian Final';
+        $data['a_penilaian'] = 'active';
+        $data['tahun_akademik'] = $ta;
+        $data['select'] = $tahun_akademik->kode_tahun_akademik;
+        $this->load->view('dosen/template/V_main', $data);
+    }
+
+    public function choose_final() {
+        if ($this->input->post('kode_nilai_akademik')) {
+            $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
+        } else {
+            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        }
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        $data_kelas = $this->dosenakademikservice->getChooseFinal($kode_dosen, $kode_tahun_akademik);
+        foreach ($data_kelas as $key => $row) {
+            if ($row->cek) {
+                $data_kelas[$key]->final_route = 'revisi_final';
+            } elseif ($row->param_uts == '1') {
+                $data_kelas[$key]->final_route = 'uts_final';
+            } else {
+                $data_kelas[$key]->final_route = 'uas_final';
+            }
+        }
+        $data['data'] = $data_kelas;
+        $this->load->view('dosen/penilaian/V_choose_final', $data);
+    }
+
     // revisiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
     public function penilaian_revisi() {
         $kode_dosen = $this->session->userdata('kode_dosen');
@@ -1014,12 +1048,23 @@ class Penilaian extends CI_Controller {
                 $kelas_mahasiswa2[$key]->uts = $kelas_mahasiswa1[$key]->uts ?? $kelas_mahasiswa1[$key]->khs_uts;
                 $kelas_mahasiswa2[$key]->harian = $kelas_mahasiswa1[$key]->harian ?? $kelas_mahasiswa1[$key]->khs_harian;
             }
+            $tmp = $val->khs_na;
+            if ($val->khs_na) {
+                $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
+                    return $obj->nilai_minimum <= ceil($tmp) && $obj->nilai_maksimum >= ceil($tmp);
+                });
+                if (!empty($result)) { $kelas_mahasiswa2[$key]->khs_grade = reset($result)->grade; } else { $kelas_mahasiswa2[$key]->khs_grade = '-'; }
+            } else {
+                $kelas_mahasiswa2[$key]->khs_grade = '-';
+            }
             if ($kelas_mahasiswa2[$key]->na) {
                 $tmp = $kelas_mahasiswa2[$key]->na;
                 $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
                     return $obj->nilai_minimum <= ($tmp) && $obj->nilai_maksimum >= ($tmp);
                 });
-                $kelas_mahasiswa2[$key]->grade = reset($result)->grade;
+                if (!empty($result)) { $kelas_mahasiswa2[$key]->grade = reset($result)->grade; } else { $kelas_mahasiswa2[$key]->grade = '-'; }
+            } else {
+                if (!isset($kelas_mahasiswa2[$key]->grade)) { $kelas_mahasiswa2[$key]->grade = '-'; }
             }
         }
         // echo json_encode($kelas_mahasiswa2);die();
@@ -1038,6 +1083,7 @@ class Penilaian extends CI_Controller {
         $this->load->view('dosen/template/V_main', $data);
     }
     function nilai_revisi() {
+        try {
         $id = $this->input->POST('id');
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
@@ -1045,79 +1091,93 @@ class Penilaian extends CI_Controller {
         if (!$persentase) {
             echo json_encode(array(
                     'status' => false,
-                    'data' =>$new_nilai,
+                    'data' => null,
                 )   
             );
+            return;
+        }
+        $harian = (float) $this->input->POST('harian');
+        $uts = (float) $this->input->POST('uts');
+        $uas = (float) $this->input->POST('uas');
+        $status = $this->dosenakademikservice->checkDummyUpdateNilai($id, $level);
+        $na = round($harian*$persentase->nilai_harian/100 + $uts*$persentase->nilai_uts/100 + $uas*$persentase->nilai_uas/100, 1);
+        if ($status) {
+            $data = array(
+                'kelas_id' => $kelas,
+                'harian' => $harian,
+                'uts' => $uts,
+                'uas' => $uas,
+                'na' => $na,
+                'level' => $level,
+            );
+            $this->dosenakademikservice->updateDummyUpdateNilai($id, $level, $data);
         }else{
-            $harian = $this->input->POST('harian');
-            $uts = $this->input->POST('uts');
-            $uas = $this->input->POST('uas');
-            $status = $this->dosenakademikservice->checkDummyUpdateNilai($id, $level);
-            if ($status) {
-                $data = array(
-                    'kelas_id' => $kelas,
-                    'harian' => $harian,
-                    'uts' => $uts,
-                    'uas' => $uas,
-                    'na' => round($harian*$persentase->nilai_harian/100 + $uts*$persentase->nilai_uts/100 + $uas*$persentase->nilai_uas/100,1),
-                    'level' => $level,
-                );
-                $this->dosenakademikservice->updateDummyUpdateNilai($id, $level, $data);
-            }else{
-                $data = array(
-                    'kelas_id' => $kelas,
-                    'kode_khs_detail' => $id,
-                    'harian' => $harian,
-                    'uts' => $uts,
-                    'uas' => $uas,
-                    'na' => round($harian*$persentase->nilai_harian/100 + $uts*$persentase->nilai_uts/100 + $uas*$persentase->nilai_uas/100,1),
-                    'level' => $level,
-                );
-                $this->dosenakademikservice->insertDummyUpdateNilai($data);
-            }
-            $new_nilai = $this->dosenakademikservice->getGradeNilaiRevisi($id, $level);
-            $sistem_nilai = $this->dosenakademikservice->getSistemPenilaian();
-            
-            $tmp = $data['na'];
+            $data = array(
+                'kelas_id' => $kelas,
+                'kode_khs_detail' => $id,
+                'harian' => $harian,
+                'uts' => $uts,
+                'uas' => $uas,
+                'na' => $na,
+                'level' => $level,
+            );
+            $this->dosenakademikservice->insertDummyUpdateNilai($data);
+        }
+        $sistem_nilai = $this->dosenakademikservice->getSistemPenilaian();
+        
+        $tmp = $na;
+        $grade = '-';
+        if (!empty($sistem_nilai)) {
             $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
                 return $obj->nilai_minimum <= $tmp && $obj->nilai_maksimum >= $tmp;
             });
-            
-            
-            $data['grade'] = reset($result)->grade;
-
-            echo json_encode(array(
-                    'status' => true,
-                    'data' =>$data,
-                )   
-            );
+            if (!empty($result)) {
+                $grade = reset($result)->grade;
+            }
         }
-        
+
+        echo json_encode(array(
+                'status' => true,
+                'data' => array(
+                    'grade' => $grade,
+                    'na' => $na,
+                ),
+            )   
+        );
+        } catch (\Exception $e) {
+            echo json_encode(array('status' => false, 'error' => $e->getMessage()));
+        }
     }
     public function revisi_dosen_selesai(){
         $kelas = $this->input->POST('kelas');
         $jum = $this->input->POST('jum');
         $level = $this->input->POST('level');
         $persentase = $this->dosenakademikservice->getPersentaseFrom('persentasi_nilai_dosen', $kelas);
+        if (!$persentase) {
+            echo json_encode(array('status' => false, 'msg' => 'Persentase penilaian belum diisi'));
+            return;
+        }
         for ($i=0; $i <= $jum; $i++) { 
             $obj = $this->input->POST('data'.$i);
+            if (!$obj || !isset($obj['id'])) continue;
             $num = $this->dosenakademikservice->checkDummyUpdateNilai($obj['id'], $level);
             if (!$num) {
                 $xxxx = $this->dosenakademikservice->getDummyUpdateNilaiDataPrev($obj['id'], $level);
                 $new_obj = array(
                     'kelas_id' => $kelas,
                     'kode_khs_detail' => $obj['id'],
-                    'harian' => $obj['harian'],
-                    'uts' => $obj['uts'],
-                    'uas' => $obj['uas'],
-                    'ket' => $xxxx->ket,
-                    'na' => round($obj['harian']*$persentase->nilai_harian/100 + $obj['uts']*$persentase->nilai_uts/100 + $obj['uas']*$persentase->nilai_uas/100,1),
+                    'harian' => (float) $obj['harian'],
+                    'uts' => (float) $obj['uts'],
+                    'uas' => (float) $obj['uas'],
+                    'ket' => $xxxx ? $xxxx->ket : '',
+                    'na' => round((float)$obj['harian']*$persentase->nilai_harian/100 + (float)$obj['uts']*$persentase->nilai_uts/100 + (float)$obj['uas']*$persentase->nilai_uas/100,1),
                     'level' => $level
                 );
                 $this->dosenakademikservice->insertDummyUpdateNilai($new_obj);
             }
         }
-        $this->dosenakademikservice->updateDummyUpdateKelas($kelas, $level);        
+        $this->dosenakademikservice->updateDummyUpdateKelas($kelas, $level);
+        echo json_encode(array('status' => true));
     }
     public function revisi_dosen_update($id){
          $this->dosenakademikservice->updateDosenKelasRevisi($id);
@@ -1130,6 +1190,9 @@ class Penilaian extends CI_Controller {
             'id_kelas' => $kelas,
             'level' => $level+1,
             'status' => '4',
+            'status_dosen' => 'T',
+            'status_prodi' => 'T',
+            'status_dekan' => 'T',
         );
         $this->dosenakademikservice->insertDummyUpdateKelas($new_data);
         echo json_encode(array('status' => 'success'));
@@ -1252,8 +1315,8 @@ class Penilaian extends CI_Controller {
             redirect($_SERVER['HTTP_REFERER']);
         }
 
-        include APPPATH . 'third_party/PHPExcel.php';
-        $excel = new PHPExcel();
+        require_once FCPATH . 'vendor/autoload.php';
+        $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $excel->setActiveSheetIndex(0);
         $sheet = $excel->getActiveSheet();
 
@@ -1284,20 +1347,20 @@ class Penilaian extends CI_Controller {
         header("Content-Disposition: attachment; filename=\"$filename.xlsx\"");
         header("Cache-Control: max-age=0");
 
-        $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
         $writer->save('php://output');
         exit;
         
     }
     public function import_excel($kelas,$level){
-        include APPPATH . 'third_party/PHPExcel.php';
+        require_once FCPATH . 'vendor/autoload.php';
         if (!isset($_FILES['file_excel']) || $_FILES['file_excel']['error'] != 0) {
             $this->session->set_flashdata('fail_download', 'Tidak DapaT Mengupload Excel Anda');
             redirect($_SERVER['HTTP_REFERER']);
         }
         $tmp_file = $_FILES['file_excel']['tmp_name'];
-        $fileType = PHPExcel_IOFactory::identify($tmp_file);
-        $reader = PHPExcel_IOFactory::createReader($fileType);
+        $fileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($tmp_file);
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($fileType);
         $excel = $reader->load($tmp_file);
         $sheet = $excel->getActiveSheet()->toArray(null, true, true, true);
    
@@ -1326,5 +1389,109 @@ class Penilaian extends CI_Controller {
         $this->dosenakademikservice->insertBatchDummyUpdateNilai($obj);
         $this->session->set_flashdata('success', 'Data Berhasil di Import');
         redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    public function uts_final($kelas_id) {
+        $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUts($kelas_id);
+        $data['content'] = 'dosen/penilaian/V_input_penilaian_uts_final';
+        $data['judul'] = 'Penilaian Mahasiswa';
+        $data['a_penilaian'] = 'active';
+        $data['data'] = $kelas_mahasiswa;
+        $data['data_kelas'] = $data_kelas;
+        $data['exp'] = false;
+        $data['kelas_id'] = $kelas_id;
+        $data['persentasi_nilai'] = $this->dosenakademikservice->getPersentasiNilai($kelas_id);
+        $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
+        $this->load->view('dosen/template/V_main', $data);
+    }
+
+    public function uas_final($kelas_id) {
+        $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
+        $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if ($data_kelas->status_nilai != 'T') {
+            $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUas($kelas_id);
+        } else {
+            $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUasWithGrade($kelas_id);
+        }
+        $data['content'] = 'dosen/penilaian/V_input_penilaian_uas_final';
+        $data['judul'] = 'Penilaian Mahasiswa';
+        $data['a_penilaian'] = 'active';
+        $data['data'] = $kelas_mahasiswa;
+        $data['data_kelas'] = $data_kelas;
+        $data['kelas_id'] = $kelas_id;
+        $data['persentasi_nilai'] = $this->dosenakademikservice->getPersentasiNilai($kelas_id);
+        $data['exp'] = false;
+        $data['homebase'] = $this->dosenakademikservice->getHomebaseDosen();
+        $this->load->view('dosen/template/V_main', $data);
+    }
+
+    public function revisi_final($kelas_id, $ta = null) {
+        $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
+        $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $ta = ($ta) ? $ta : $tahun_akademik;
+        $semua_kelas = $this->dosenakademikservice->getDummyUpdateKelas($kelas_id);
+        if (!$semua_kelas) {
+            $this->dosenakademikservice->insertDummyUpdateKelas(array('id_kelas' => $kelas_id, 'level' => '1'));
+            $semua_kelas = $this->dosenakademikservice->getDummyUpdateKelas($kelas_id);
+        }
+        $level = $semua_kelas[0]->level;
+        $data_kelas = $this->dosenakademikservice->getKelasRevisi($kelas_id);
+        $kelas_mahasiswa1 = $this->dosenakademikservice->getNilaiRevisiLevel1($kelas_id, $level, $ta);
+        $kelas_mahasiswa2 = $this->dosenakademikservice->getNilaiRevisiLevel2($kelas_id, $level, $ta);
+        $sistem_nilai = $this->dosenakademikservice->getSistemPenilaian();
+        foreach ($kelas_mahasiswa1 as $key => $val) {
+            $tmp = $val->nilai_akhir;
+            if ($val->nilai_akhir) {
+                $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
+                    return $obj->nilai_minimum <= ceil($tmp) && $obj->nilai_maksimum >= ceil($tmp);
+                });
+                if (!empty($result)) { $kelas_mahasiswa1[$key]->grade = reset($result)->grade; } else { $kelas_mahasiswa1[$key]->grade = ''; }
+            }
+        }
+        foreach ($kelas_mahasiswa2 as $key => $val) {
+            $tmp = $val->nilai_akhir;
+            if ($val->nilai_akhir) {
+                $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
+                    return $obj->nilai_minimum <= ceil($tmp) && $obj->nilai_maksimum >= ceil($tmp);
+                });
+                if (!empty($result)) { $kelas_mahasiswa2[$key]->grade = reset($result)->grade; } else { $kelas_mahasiswa2[$key]->grade = ''; }
+            }
+        }
+        foreach ($kelas_mahasiswa2 as $key => $val) {
+            if ($kelas_mahasiswa2[$key]->na == null) {
+                $kelas_mahasiswa2[$key]->na = $kelas_mahasiswa1[$key]->na ?? $kelas_mahasiswa1[$key]->khs_na;
+                $kelas_mahasiswa2[$key]->uas = $kelas_mahasiswa1[$key]->uas ?? $kelas_mahasiswa1[$key]->khs_uas;
+                $kelas_mahasiswa2[$key]->uts = $kelas_mahasiswa1[$key]->uts ?? $kelas_mahasiswa1[$key]->khs_uts;
+                $kelas_mahasiswa2[$key]->harian = $kelas_mahasiswa1[$key]->harian ?? $kelas_mahasiswa1[$key]->khs_harian;
+            }
+            $tmp = $val->khs_na;
+            if ($val->khs_na) {
+                $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
+                    return $obj->nilai_minimum <= ceil($tmp) && $obj->nilai_maksimum >= ceil($tmp);
+                });
+                if (!empty($result)) { $kelas_mahasiswa2[$key]->khs_grade = reset($result)->grade; } else { $kelas_mahasiswa2[$key]->khs_grade = '-'; }
+            } else {
+                $kelas_mahasiswa2[$key]->khs_grade = '-';
+            }
+            if ($kelas_mahasiswa2[$key]->na) {
+                $tmp = $kelas_mahasiswa2[$key]->na;
+                $result = array_filter($sistem_nilai, function($obj) use ($tmp) {
+                    return $obj->nilai_minimum <= ($tmp) && $obj->nilai_maksimum >= ($tmp);
+                });
+                if (!empty($result)) { $kelas_mahasiswa2[$key]->grade = reset($result)->grade; } else { $kelas_mahasiswa2[$key]->grade = '-'; }
+            } else {
+                if (!isset($kelas_mahasiswa2[$key]->grade)) { $kelas_mahasiswa2[$key]->grade = '-'; }
+            }
+        }
+        $data['semua_kelas'] = $semua_kelas;
+        $data['content'] = 'dosen/penilaian/V_nilai_revisi_final';
+        $data['judul'] = 'Penilaian Mahasiswa';
+        $data['data'] = $kelas_mahasiswa2;
+        $data['data_kelas'] = $data_kelas;
+        $data['kelas_id'] = $kelas_id;
+        $data['ta'] = $ta;
+        $data['persentasi_nilai'] = $this->dosenakademikservice->getPersentasiNilai($kelas_id);
+        $this->load->view('dosen/template/V_main', $data);
     }
 }

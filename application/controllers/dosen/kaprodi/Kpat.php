@@ -47,6 +47,7 @@ class Kpat extends CI_Controller
         $data['semester'] = $this->m_tahun_akademik->get_semester();        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
         $data['angkatan'] = $this->m_tahun_akademik->tahun_angkatan();
+        $data['kode_tahun_akademik'] = $data['semester']->kode_tahun_akademik;
         $this->load->view('dosen/template/V_main', $data);
     }
     public function get_mahasiswa($ta = null, $angkatan = null, $kode_matakuliah = null) {

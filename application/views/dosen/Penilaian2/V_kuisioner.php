@@ -10,7 +10,7 @@
                     <span class="info-box-number">KELAS - <?= e($row->nama_kelas) ?></span>
 
                     <div class="progress">
-                        <div class="progress-bar" style="width: <?= ($row->jml_mhs/$kuisioner['mhs'][$key])*100 ?>%"></div>
+                        <div class="progress-bar" style="width: <?= ($kuisioner['mhs'][$key] > 0 ? ($row->jml_mhs/$kuisioner['mhs'][$key])*100 : 0) ?>%"></div>
                     </div>
                     <span class="progress-description">
                         <a href="#" style="color: #ffffff"><i class="fa fa-user"></i> <?= e($row->jml_mhs) ?> dari <?= e($kuisioner['mhs'][$key]) ?> mahasiswa</a>

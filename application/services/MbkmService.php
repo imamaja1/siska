@@ -7,14 +7,19 @@ class MbkmService extends MY_Service {
         parent::__construct();
     }
 
-    public function getMahasiswaMbkm($ta) {
-        return $this->db->select('mahasiswa.nim,mahasiswa.nama_mahasiswa,nama_program_studi,tahun_akademik.semester,mbkm.id as id_fix')
+    public function getMahasiswaMbkm($ta, $kode_program_studi = null) {
+        $this->db->select('mahasiswa.nim,mahasiswa.nama_mahasiswa,nama_program_studi,tahun_akademik.semester,mbkm.id as id_fix')
             ->from('mbkm')
             ->join('mahasiswa','mahasiswa.nim = mbkm.nim')
             ->join('tahun_akademik','tahun_akademik.kode_tahun_akademik = mbkm.kode_ta')
             ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode')
-            ->where('mbkm.kode_ta', $ta)
-            ->order_by('mbkm.id','DESC')
+            ->where('mbkm.kode_ta', $ta);
+        
+        if ($kode_program_studi) {
+            $this->db->where('program_studi.kode_program_studi', $kode_program_studi);
+        }
+        
+        return $this->db->order_by('mbkm.id','DESC')
             ->get()->result_object();
     }
 

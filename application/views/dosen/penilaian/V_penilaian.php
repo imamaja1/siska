@@ -102,17 +102,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <?php if ($data_kelas->status_nilai != 'T'): ?>
-                        <div class="row" style="margin-top: 15px">
-                            <div class="col-md-3 col-xs-12">
-                                <a href="#" onclick="selesai()" class="btn btn-success"><i class="fa fa-check-square-o"></i>
-                                    Kirim Nilai</a>
-                            </div>
-                            <div class="col-md-9 col-xs-12 text-right text-danger">Nilai yang diinputkan akan otomatis
-                                tersimpan. Tombol kirim nilai di klik jika semua nilai
-                                telah selesai diinputkan dan siap untuk di validasi oleh Ketua Prodi dan Dekan</div>
+                    <div class="row" style="margin-top: 15px">
+                        <div class="col-md-3 col-xs-12">
+                            <a href="#" onclick="selesai()" class="btn btn-success"><i class="fa fa-check-square-o"></i>
+                                Kirim Nilai</a>
                         </div>
-                    <?php endif; ?>
+                        <div class="col-md-9 col-xs-12 text-right text-danger">Nilai yang diinputkan akan otomatis
+                            tersimpan. Tombol kirim nilai di klik jika semua nilai
+                            telah selesai diinputkan dan siap untuk di validasi oleh Ketua Prodi dan Dekan</div>
+                    </div>
                 <?php else: ?>
                 <?php endif; ?>
             </div>
@@ -159,6 +157,7 @@
             <div class="modal-content">
                 <form action="<?= site_url('dosen/penilaian/update_persentasi_penilaian/' . $persentasi_nilai->id) ?>"
                       method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span></button>
@@ -209,6 +208,7 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <form action="<?= site_url('dosen/penilaian/store_persentasi_penilaian') ?>" method="post">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span></button>

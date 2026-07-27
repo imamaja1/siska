@@ -5,7 +5,7 @@
         <a href="<?= site_url('auth/create_group') ?>" class="btn btn-success flat"><i class="fa fa-plus-circle"></i> Tambah Group</a>
     </div>
 </div>
-<div id="infoMessage"><?php echo $message; ?></div>
+<div id="infoMessage"><?php echo e($message); ?></div>
 <div class="box box-primary flat">
     <div class="box-body">
         <table class="table table-bordered">

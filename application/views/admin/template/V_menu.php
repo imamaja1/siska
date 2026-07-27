@@ -122,6 +122,19 @@
                     <li><a href="<?= site_url('admin/kuisioner/mengajar'); ?>"><i class="fa fa-circle-o"></i> Mengajar</a></li>
                     <li><a href="<?= site_url('admin/kuisioner/kuisioner'); ?>"><i class="fa fa-circle-o"></i> Kuisioner PBM</a></li>
                     <li><a href="<?= site_url('admin/kuisioner/kuisioner/kuisioner_layanan'); ?>"><i class="fa fa-circle-o"></i> Kuisioner Pelayanan</a></li>
+                    <li><a href="<?= site_url('admin/kuisioner/kuisioner/download_pmb'); ?>"><i class="fa fa-circle-o"></i> Download PBM</a></li>
+                </ul>
+            </li>
+
+            <!-- Audit Nilai -->
+            <li class="<?= ($judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-check-square-o"></i>
+                    <span>Audit Nilai</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?= site_url('admin/audit'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
                 </ul>
             </li>
 

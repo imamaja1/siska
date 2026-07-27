@@ -331,12 +331,13 @@ class Validasinilai extends CI_Controller {
             if(count($nama_dosen) > 0){
                 $new_kelas[$key] = $kelas[$key];
                 $new_kelas[$key]->data_kelas = $tmp;
-                $new_kelas[$key]->order = $tmp->status ? $tmp->status : '5';
+                $new_kelas[$key]->order = $tmp ? ($tmp->status ?: '5') : '5';
                 $new_kelas[$key]->dosen_pengampu = $nama_dosen;
             }
         }
         $orderedObjects = $this->customSort($new_kelas);
         $data['kelas'] = $orderedObjects;
+        $data['pesan_dekan'] = [];
         $this->load->view('dosen/kaprodi/validasi-nilai/V_choose_revisi', $data);
     }
 

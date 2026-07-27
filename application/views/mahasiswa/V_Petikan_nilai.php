@@ -70,7 +70,7 @@
                                 if (!isset($row['nilai_akhir'])) {
                                 } elseif ($row['grade'] == "E") {
                                     if($row['jumlah_data']==0){
-                                      $sks = ($sks + $row['sks']) - ($row['sks_teori'] + $row['sks_praktek'] + $sks['sks_praktikum']);
+                                      $sks = ($sks + $row['sks']) - ($row['sks_teori'] + $row['sks_praktek'] + $row['sks_praktikum']);
                                       $sksn = $sksn + $row['sksn'];
                                     }
                                 } else {

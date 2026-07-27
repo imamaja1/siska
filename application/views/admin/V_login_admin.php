@@ -56,7 +56,7 @@
 
         <script src="<?= site_url('assets/plugins/jQuery/jQuery-2.2.0.min.js') ?>"></script>
         <script src="<?= site_url('assets/bootstrap/js/bootstrap.js') ?>"></script>
-        <script src="<?= site_url('assets/plugins/js/iCheck/icheck.js') ?>"></script>
+        <script src="<?= site_url('assets/plugins/iCheck/icheck.js') ?>"></script>
     <?php $this->load->view('csrf_js'); ?>
     </body>
 </html>

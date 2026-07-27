@@ -271,28 +271,42 @@ class ProgramStudiService extends MY_Service {
     public function uploadImageKetuaJurusan($kode_kaprodi) {
         $kaprodi = $this->getKetuaJurusanById($kode_kaprodi);
 
-        $config['upload_path']   = './assets/signature_kaprodi/';
+        if (!$kaprodi) {
+            return array('status' => false, 'msg' => 'Data kaprodi tidak ditemukan');
+        }
+
+        $upload_path = FCPATH . 'assets/signature_kaprodi/';
+        if (!is_dir($upload_path)) {
+            mkdir($upload_path, 0755, true);
+        }
+
+        $config['upload_path']   = $upload_path;
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['max_size']      = 1024;
         $config['file_name']     = $kaprodi->kode_dosen;
+        $config['overwrite']     = true;
 
-        $this->load->library('upload', $config);
+        $this->load->library('upload');
+        $this->upload->initialize($config);
 
         if (!$this->upload->do_upload('foto')) {
             $error = $this->upload->display_errors('','');
             return array('status' => false, 'msg' => $error);
-        } else {
-            $this->db->where('kode_kaprodi', $kode_kaprodi)
-                     ->update('kaprodi', array('tanda_tangan' => $this->upload->data('file_name')));
-            
-            $old_file = './assets/signature_kaprodi/' . $kaprodi->tanda_tangan;
-            if (file_exists($old_file) && $kaprodi->tanda_tangan != $this->upload->data('file_name')) {
-                unlink($old_file);
-            }
-            
-            
-            return array('status' => true, 'msg' => 'Upload gambar berhasil');
         }
+
+        $new_file = $this->upload->data('file_name');
+
+        $this->db->where('kode_kaprodi', $kode_kaprodi)
+                 ->update('kaprodi', array('tanda_tangan' => $new_file));
+
+        if (!empty($kaprodi->tanda_tangan) && $kaprodi->tanda_tangan !== $new_file) {
+            $old_file = $upload_path . $kaprodi->tanda_tangan;
+            if (is_file($old_file)) {
+                @unlink($old_file);
+            }
+        }
+
+        return array('status' => true, 'msg' => 'Upload gambar berhasil');
     }
 
     // --- KONSENTRASI / MATAKULIAH KOMPETENSI LOGIC ---

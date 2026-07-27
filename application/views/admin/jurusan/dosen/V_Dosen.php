@@ -33,7 +33,7 @@
                 foreach ($data_dosen as $d) {
                     ?>
                     <tr>
-                        <td style="text-align: center;"><?= e($1) ?>.</td>
+                        <td style="text-align: center;"><?= $i++ ?>.</td>
                         <td id="nik-<?= e($d->kode_dosen) ?>"><?= e($d->nik) ?></td>
                         <td id="nama-dosen-<?= e($d->kode_dosen) ?>"><?= e($d->nama_dosen) ?></td>
                         <td ><?= e($d->nama_program_studi) ?></td>

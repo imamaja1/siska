@@ -25,7 +25,7 @@
                             <td><?= e($value->nilai_uts) ?></td>
                             <td><?= e($value->nilai_uas) ?></td>
                             <td><?= e($value->nilai_akhir) ?></td>
-                            <td><?= substr($value->nim,1,2) < 22 ? $value->grade1:$value->grade2 ?></td>
+                            <td><?= e(substr($value->nim,1,2) < 22 ? $value->grade1:$value->grade2) ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>

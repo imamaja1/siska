@@ -17,7 +17,7 @@
                         <select class="form-control select2" id="angkatan">
                             <option value="0"> Semua </option>
                             <?php foreach ($angkatan as $key => $value) { ?>
-                                <option value='<?= substr($value->tahun_akademik,2,2) ?>' ><?= substr($value->tahun_akademik,0,4) ?></option>
+                                <option value='<?= e(substr($value->tahun_akademik,2,2)) ?>' ><?= e(substr($value->tahun_akademik,0,4)) ?></option>
                             <?php } ?>
                         </select>
                     </div>

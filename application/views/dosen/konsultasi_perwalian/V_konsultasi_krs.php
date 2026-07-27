@@ -2,9 +2,9 @@
     <div class="box-body">
         <h5>&nbsp;DATA KONSULTASI PENGAKTIFAN KRS, <b><?php
                 foreach ($data as $row_title) {
-                    echo "[" . $row_title->nim . "] ";
+                    echo "[" . e($row_title->nim) . "] ";
                     $nama = $row_title->nama_mahasiswa;
-                    echo $nama;
+                    echo e($nama);
                 }
                 ?></b></h5>
     </div>
@@ -24,6 +24,7 @@
                 foreach ($data as $row) {
                     ?>
                     <form method="POST" action="<?= site_url('dosen/konsultasi_perwalian/tambah_konsultasi_krs'); ?>">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                         <div class="modal-body">
                             <input type="hidden" name="kode_konsultasi_perwalian" value="<?= e($row->kode_konsultasi_perwalian) ?>">
                             <input  type="hidden" required name="nim" value="<?= e($row->nim) ?>" class="form-control">

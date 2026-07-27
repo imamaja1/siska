@@ -178,7 +178,7 @@
                          * dari matakuliah yang ada di semester 1.
                          */
                         $jumlah_kredit_yg_diambil = $jumlah_sks;
-                        echo $jumlah_kredit_yg_diambil;
+                        echo e($jumlah_kredit_yg_diambil);
                         ?>
                     </td>
                     <td width="16%" class="right">SKS</td>
@@ -189,7 +189,7 @@
                     <td class="right">
                         <?php
                         $jumlah_kredit_yg_batal = 0;
-                        echo $jumlah_kredit_yg_batal;
+                        echo e($jumlah_kredit_yg_batal);
                         ?>
                     </td>
                     <td align="right">SKS</td>
@@ -200,7 +200,7 @@
                     <td style="border-bottom: 1px solid #000000;" class="right">
                         <?php
                         $jumlah_penambahan_kredit = 0;
-                        echo $jumlah_penambahan_kredit;
+                        echo e($jumlah_penambahan_kredit);
                         ?>
                     </td>
                     <td style="border-bottom: 1px solid #000000;" class="right">SKS</td>
@@ -211,7 +211,7 @@
                     <td class="right">
                         <?php
                         $jumlah_kredit_terakhir = ($jumlah_kredit_yg_diambil - $jumlah_kredit_yg_batal) + $jumlah_penambahan_kredit;
-                        echo $jumlah_kredit_terakhir;
+                        echo e($jumlah_kredit_terakhir);
                         ?>
                     </td>
                     <td class="right">SKS</td>
@@ -233,7 +233,7 @@
     </tr>
     <tr>
         <td>
-            <img style="height: 50px" src="<?= base_url('assets/signature_kaprodi/'.$kaprodi->tanda_tangan) ?>" />
+            <img style="height: 50px" src="<?= !empty($kaprodi->tanda_tangan) && file_exists(FCPATH . 'assets/signature_kaprodi/' . $kaprodi->tanda_tangan) ? base_url('assets/signature_kaprodi/'.$kaprodi->tanda_tangan) : base_url('assets/gambar/notfound.png') ?>" />
         <td>&nbsp;</td>
         <td>&nbsp;</td>
     </tr>

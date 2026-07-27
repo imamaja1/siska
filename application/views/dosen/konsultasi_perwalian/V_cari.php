@@ -36,7 +36,7 @@
                                         if (empty($dosen_perwakilan)) {
                                             echo "-";
                                         } else {
-                                            echo $dosen_perwakilan;
+                                            echo e($dosen_perwakilan);
                                         }
                                         ?></td>
                                     <td align="center">
@@ -93,6 +93,7 @@
 
             </div>
             <form method="POST" action="<?= site_url('dosen/konsultasi_perwalian/ubah_konsultasi_perwalian_nim_nama'); ?>">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <input type="hidden" name="kode-edit" id="kode-edit">
                     <input type="hidden" name="kode_dosen-edit" id="kode_dosen-edit">
@@ -152,6 +153,7 @@
     </div>
     <div class="box-body">
         <form class="form-horizontal" method="post" action="<?= site_url('dosen/konsultasi_perwalian/search_process'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
                 <label class="control-label col-sm-3">Pencarian Berdasarkan <label class="text-danger">*</label>
                     :</label>

@@ -127,8 +127,8 @@
                                                 <?= e($row->mbkm_id ? 'disabled':'') ?>>
                                         </div>
                                     </td>
-                                    <td style="text-align:center"><p id="na<?= e($key) ?>"><?= ceil($row->na ? $row->na:$row->nilai_akhir) ?> </p></td>
-                                    <td style="text-align:center"><p id="grade<?= e($key) ?>"><?= e($row->grade ? $row->grade: '-') ?></p></td>
+                                    <td style="text-align:center"><p id="na<?= e($key) ?>"><?= e(ceil($row->na ? $row->na:$row->nilai_akhir)) ?> </p></td>
+                                    <td style="text-align:center"><p id="grade<?= e($key) ?>"><?= e(isset($row->grade) ? $row->grade : '-') ?></p></td>
                                     <td style="text-align: center">
                                         <button class="btn <?= e($row->ket ? "btn-success":"btn-primary") ?> btn-xs btn-flat" id="ket<?= e($key) ?>" data-toggle="modal" data-target="#ModalKet" onclick="show_ket(<?= e($row->kode_khs_detail) ?>,<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>,<?= e($key) ?>)"></i><?= e($row->ket ? "Ubah":"Tambah") ?></button>
                                     </td>
@@ -139,22 +139,19 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row" style="margin-top: 15px;margin-buttom: 15px">
+                <div class="row" style="margin-top: 15px;margin-bottom: 15px">
                     <div class="col-md-12 col-xs-12" style="padding: 15px">
-                        <button class="btn btn-success pull-right" onclick="selesai(<?= e($kelas_id) ?>,<?= e($key) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Kirim Nilai</button>
-                        <button class="btn btn-danger pull-right" style="margin : 0 15px 0 0"  onclick="pembatalan(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Batal</button>
+                        <button class="btn btn-success pull-right" onclick="selesai(<?= e($kelas_id) ?>,<?= e($key) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i> Kirim Nilai</button>
+                        <button class="btn btn-danger pull-right" style="margin: 0 15px 0 0" onclick="pembatalan(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i> Batal</button>
                     </div>
-                    <?php endif; ?>
-                </div>
                 </div>
                 <?php else: ?>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-3 col-xs-12">
-                            <button class="btn btn-success" onclick="new_penilaian(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i>Pengajuan Baru</button>
-                        </div>
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <button class="btn btn-success" onclick="new_penilaian(<?= e($kelas_id) ?>,<?= e($data_kelas->level) ?>)" ><i class="fa fa-check-square-o"></i> Pengajuan Baru</button>
                     </div>
                 </div>
+                <?php endif; ?>
                 <?php endif; ?>
         </div>
     </div>

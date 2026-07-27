@@ -8,6 +8,7 @@
             </div>
             <div class="box-body">
                 <form id="form-filter" method="POST" action="<?= site_url('dosen/kaprodi/ipk/filter') ?>">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
                     <div class="form-group">
                         <label class="control-label"> Tahun Akademik</label>
@@ -26,7 +27,7 @@
                         <select required name="angkatan" class="form-control">
                             <option selected disabled value="">Pilih</option>
                             <?php foreach ($tahun_angkatan as $row) { ?>
-                                <option value="<?= substr($row->tahun_akademik, 2, 2) ?>"><?= substr($row->tahun_akademik, 0, 4) ?></option>
+                                <option value="<?= e(substr($row->tahun_akademik, 2, 2)) ?>"><?= e(substr($row->tahun_akademik, 0, 4)) ?></option>
                             <?php } ?>
                         </select>
                     </div>

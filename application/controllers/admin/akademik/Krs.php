@@ -344,7 +344,7 @@ class Krs extends CI_Controller {
                     'sub_judul' => 'KRS',
                     'title_h1' => '<li>Akademik</li>',
                     'title_h2' => '<li> KRS</li>',
-                    'title_h3' => '<li> Pencarian Mahasiswa Semester <b>' . $semester . '</b> Kata Kunci <b>' . $kata_kunci . '</b></li>',
+                    'title_h3' => '<li> Pencarian Mahasiswa Semester <b>' . e($semester) . '</b> Kata Kunci <b>' . e($kata_kunci) . '</b></li>',
                 );
 
                 if ($data_count > 0) {

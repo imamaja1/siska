@@ -39,6 +39,7 @@
                                 <div class="modal-content">
 
                                     <form action="<?= site_url('dosen/penilaian/store_persentasi_penilaian') ?>" method="post">
+                                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span></button>
@@ -97,7 +98,8 @@
                             <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
 
-                                    <form action="<?= site_url('dosen/penilaian/udpate_persentasi_penilaian/'.$row->id) ?>" method="post">
+                                    <form action="<?= site_url('dosen/penilaian/update_persentasi_penilaian/'.$row->id) ?>" method="post">
+                                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span></button>

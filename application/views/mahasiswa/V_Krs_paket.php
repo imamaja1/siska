@@ -1,8 +1,8 @@
 <div class="box box-solid flat">
     <div class="box-body">
-        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= $dosen_wali ?></span>&nbsp;
+        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= e($dosen_wali) ?></span>&nbsp;
         <?php if (isset($dosen_perwakilan)) : ?>
-            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= $dosen_perwakilan ?></span>
+            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= e($dosen_perwakilan) ?></span>
         <?php endif; ?>
     </div>
 </div>
@@ -19,6 +19,7 @@
         <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) JENJANG <?= strtoupper($prodi->nama_program_studi) ?> (<?= strtoupper($prodi->singkatan_program_studi) ?>)</strong></p>
         <p style="text-align: center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL" ?></strong></p>
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/simpan_krs') ?>" method="post" name="krs_form">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <?php foreach ($data_matakuliah as $row): ?>
 
                 <?php if (count($row['data']) > 0) : ?>
@@ -43,8 +44,8 @@
                         foreach ($row['data'] as $d) { ?>
                             <tr>
                                 <td align="center"><?= $i++ ?>.</td>
-                                <td align="center" id="kode-matakuliah-<?= $d['kode_nama_kurikulum'] ?>"><?= $d['kode_matakuliah'] ?></td>
-                                <td ><?= $d['nama_matakuliah'] ?></td>
+                                <td align="center" id="kode-matakuliah-<?= $d['kode_nama_kurikulum'] ?>"><?= e($d['kode_matakuliah']) ?></td>
+                                <td ><?= e($d['nama_matakuliah']) ?></td>
                                 <td align="center" width="100"><?= $d['sks_teori'] ?></td>
                                 <td align="center" width="100"><?= $d['sks_praktek'] ?></td>
                                 <td align="center" width="100"><?= $d['sks_praktikum'] ?></td>
@@ -60,8 +61,8 @@
                             <?php foreach ($row['pilihan'] as $pilih) : ?>
                                 <tr>
                                     <td align="center"><?= $i++ ?>.</td>
-                                    <td align="center" id="kode-matakuliah-<?= $pilih['kode_nama_kurikulum'] ?>"><?= $pilih['kode_matakuliah'] ?></td>
-                                    <td ><?= $pilih['nama_matakuliah'] ?></td>
+                                    <td align="center" id="kode-matakuliah-<?= $pilih['kode_nama_kurikulum'] ?>"><?= e($pilih['kode_matakuliah']) ?></td>
+                                    <td ><?= e($pilih['nama_matakuliah']) ?></td>
                                     <td align="center" width="100"><?= $pilih['sks_teori'] ?></td>
                                     <td align="center" width="100"><?= $pilih['sks_praktek'] ?></td>
                                     <td align="center" width="100"><?= $pilih['sks_praktikum'] ?></td>

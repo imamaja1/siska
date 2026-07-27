@@ -36,7 +36,7 @@
                                     if (empty($dosen_perwakilan)) {
                                         echo "-";
                                     } else {
-                                        echo $dosen_perwakilan;
+                                        echo e($dosen_perwakilan);
                                     }
                                     ?></td>
                                 <td align="center">

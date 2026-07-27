@@ -37,7 +37,7 @@
                         <td align="center"><?= e($row->uts); ?></td>
                         <td align="center"><?= e($row->uas); ?></td>
                         <td align="center"><?= e($row->grade); ?></td>
-                        <td align="center"><?= e($row->mbkm_id ? 'MBKM' : $row->block_id ? 'Block' : '-') ?></td>
+                        <td align="center"><?= e($row->mbkm_id ? 'MBKM' : ($row->block_id ? 'Block' : '-')) ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -56,6 +56,10 @@ class Ipk extends CI_Controller
         $kode_tahun_akademik = $this->session->userdata('sess_kode_tahun_akademik');
         $tahun_angkatan = $this->session->userdata('sess_tahun_angkatan');
         $kode_program_studi = $this->session->userdata('sess_kode_program_studi');
+        if (!$kode_program_studi || !$tahun_angkatan || !$kode_tahun_akademik) {
+            echo 'Silakan lakukan filter terlebih dahulu.';
+            return;
+        }
         $prodi = $this->Nama_jurusan_model->get_all_byid($kode_program_studi);
 
         $data_count = $this->laporan_model->rekap_ipk_count($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi);
@@ -82,8 +86,8 @@ class Ipk extends CI_Controller
         $semester = $ta->semester == 0 ? 'Genap' : 'Ganjil';
         $data['file_name'] = 'Rekap IPK - ' . $prodi->singkatan_program_studi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta->tahun_akademik . '-' . $semester;
 
-        include APPPATH . 'third_party/PHPExcel.php';
-        $excel = new PHPExcel();
+        require_once FCPATH . 'vendor/autoload.php';
+        $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
         $excel->getProperties()->setCreator('SISKA')
             ->setLastModifiedBy('Administrator');
@@ -91,26 +95,26 @@ class Ipk extends CI_Controller
         $style_col = array(
             'font' => array('bold' => true),
             'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
             ),
             'borders' => array(
-                'top' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                'right' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                'left' => array('style' => PHPExcel_Style_Border::BORDER_THIN)
+                'top' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),
+                'right' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),
+                'bottom' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),
+                'left' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN)
             )
         );
 
         $style_row = array(
             'alignment' => array(
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
             ),
             'borders' => array(
-                'top' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                'right' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                'left' => array('style' => PHPExcel_Style_Border::BORDER_THIN)
+                'top' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),
+                'right' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),
+                'bottom' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),
+                'left' => array('style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN)
             )
         );
 
@@ -118,7 +122,7 @@ class Ipk extends CI_Controller
         $excel->getActiveSheet()->mergeCells('A1:G1');
         $excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE);
         $excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
-        $excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
         $excel->setActiveSheetIndex(0)->setCellValue('A3', "NO");
         $excel->setActiveSheetIndex(0)->setCellValue('B3', "NIM");
@@ -177,7 +181,7 @@ class Ipk extends CI_Controller
 
         $excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
 
-        $excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        $excel->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
         $excel->getActiveSheet(0)->setTitle("Laporan IPK");
         $excel->setActiveSheetIndex(0);
@@ -188,7 +192,7 @@ class Ipk extends CI_Controller
         header("Content-Disposition: attachment;filename=" . $filename);
         header('Cache-Control: max-age=0');
 
-        $write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $write = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
         $write->save('php://output');
 
     }

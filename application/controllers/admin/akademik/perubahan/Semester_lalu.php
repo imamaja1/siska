@@ -143,9 +143,6 @@ class Semester_lalu extends CI_Controller {
         } else if (isset($input['action']) && $input['action'] === 'delete') {
             $this->nilaiservice->delete_krs_detail_cascade(isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : '');
             echo json_encode(array('status' => true, 'action' => 'delete'));
-        } else if (isset($input['action']) && $input['action'] === 'restore') {
-            $this->nilaiservice->restore_khs_detail(isset($input['kode_khs_detail']) ? $input['kode_khs_detail'] : '');
-            echo json_encode(array('status' => true, 'action' => 'restore'));
         } else {
             echo json_encode(array('status' => false));
         }

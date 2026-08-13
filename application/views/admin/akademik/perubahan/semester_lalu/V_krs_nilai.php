@@ -153,6 +153,7 @@
 	$('#table-edit').Tabledit({
         url: "<?= site_url('admin/akademik/perubahan/Semester_lalu/ubah_krs_nilai')  ?>",
         hideIdentifier: true,
+        restoreButton: false,
         onAjax: function (action, serialize) {
             if (action === 'edit') {
                 var match = serialize.match(/(?:^|&)kode_krs_detail=([^&]*)/);
@@ -174,9 +175,8 @@
                     });
                     swal("Berhasil!", "Pembaruan selesai", "success");
                 } else if (data.action === 'delete') {
+                    $('#table-edit tbody tr.tabledit-deleted-row').remove();
                     swal("Berhasil!", "Penghapusan berhasil", "success");
-                } else if (data.action === 'restore') {
-                    swal("Berhasil!", "Pemulihan berhasil", "success");
                 }
             } else {
                 swal("Gagal!", "Gagal memperbarui data", "error");

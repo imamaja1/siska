@@ -202,7 +202,7 @@ class KrsKhsService extends MY_Service {
         $khs['nama_mahasiswa'] = $this->db->get_where('mahasiswa', array('nim' => $nim))->row_object()->nama_mahasiswa;
         $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($get_semester->kode_tahun_akademik);
         $khs['semester'] = $semester;
-        $khs['kurikulum'] = isset($data_penilaian[0]['nama_kurikulum']) ? $data_penilaian[0]['nama_kurikulum'] : '';
+        $khs['kurikulum'] = nama_kurikulum_nama($nim);
         $khs['data_nilai'] = array();
         
         $sksn_total = 0;

@@ -194,7 +194,7 @@ class Daftar extends CI_Controller {
         $i = 0;
         foreach ($data_krs as $row) {
             $khs['nim'] = $nim;
-            $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+            $khs['kurikulum'] = nama_kurikulum_nama($nim);
             $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
             $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
             $khs['data_nilai'][$i]['sks'] = $row->sks;
@@ -239,7 +239,7 @@ class Daftar extends CI_Controller {
         $i = 0;
         foreach ($data_krs as $row) {
             $khs['nim'] = $nim;
-            $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+            $khs['kurikulum'] = nama_kurikulum_nama($nim);
             $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
             $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
             $khs['data_nilai'][$i]['sks'] = $row->sks;

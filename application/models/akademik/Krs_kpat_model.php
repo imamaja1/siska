@@ -70,7 +70,7 @@ class Krs_kpat_model extends CI_Model {
 			foreach ($value as $row) {
 //				$khs[$j]['nim'] = $row->nim;
 				$khs[$j]['nim'] = $data_krs['nim'];
-				$khs[$j]['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+				$khs[$j]['kurikulum'] = nama_kurikulum_nama($nim);
 				$khs[$j]['semester'] = $row->semester;
 				//$khs['nama_mahasiswa'] = $row->nama_mahasiswa;
 				$khs[$j]['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah; 

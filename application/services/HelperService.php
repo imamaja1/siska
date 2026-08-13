@@ -147,6 +147,12 @@ class HelperService extends MY_Service
         return $query;
     }
 
+    public function namaKurikulumNama($nim)
+    {
+        $k = $this->namaKurikulum($nim);
+        return $k ? $k->nama_kurikulum : '';
+    }
+
     public function tahunAkademik()
     {
         return $this->db->select('*')->from('tahun_akademik')->where('status', 'A')->get()->row_object();

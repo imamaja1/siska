@@ -97,6 +97,10 @@ if (!function_exists('kode_nama_kurikulum')) {
 
 function nama_kurikulum($nim) { return _helper_service()->namaKurikulum($nim); }
 
+if (!function_exists('nama_kurikulum_nama')) {
+    function nama_kurikulum_nama($nim) { return _helper_service()->namaKurikulumNama($nim); }
+}
+
 if (!function_exists('sistem_penilaian')) {
     function sistem_penilaian($nim) { return _helper_service()->sistemPenilaian($nim); }
 }

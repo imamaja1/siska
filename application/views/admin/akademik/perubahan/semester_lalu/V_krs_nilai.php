@@ -148,26 +148,42 @@
     </div>
 <?php endif; ?>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
+	var lastKodeKrsDetail = '';
 	$('#table-edit').Tabledit({
         url: "<?= site_url('admin/akademik/perubahan/Semester_lalu/ubah_krs_nilai')  ?>",
         hideIdentifier: true,
+        onAjax: function (action, serialize) {
+            if (action === 'edit') {
+                var match = serialize.match(/(?:^|&)kode_krs_detail=([^&]*)/);
+                lastKodeKrsDetail = match ? decodeURIComponent(match[1]) : '';
+            }
+            return true;
+        },
         columns: {
             identifier: [1, 'kode_krs_detail'],
             editable: [[4, 'nilai_harian'], [5, 'nilai_uts'],[6, 'nilai_uas'], [7, 'nilai_akhir'], [9, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']],
         },
         onSuccess: function(data, textStatus, jqXHR) {
-            console.log(data);
-            if (data) {
-                window.location.reload();    
-            }else{
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'Data Selain Skripsi dan KPP/KKN/Magang Tidak dapat Diubah',
-                    icon: 'error'
-                });
+            if (data && data.status === true) {
+                if (data.action === 'edit' && lastKodeKrsDetail) {
+                    $('#table-edit tbody tr').each(function () {
+                        if ($(this).find('td:eq(1)').text() === lastKodeKrsDetail) {
+                            $(this).find('td:eq(8)').text(data.grade || '-');
+                        }
+                    });
+                    swal("Berhasil!", "Pembaruan selesai", "success");
+                } else if (data.action === 'delete') {
+                    swal("Berhasil!", "Penghapusan berhasil", "success");
+                } else if (data.action === 'restore') {
+                    swal("Berhasil!", "Pemulihan berhasil", "success");
+                }
+            } else {
+                swal("Gagal!", "Gagal memperbarui data", "error");
             }
+        },
+        onFail: function (jqXHR, textStatus, errorThrown) {
+            swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
         }
     });
 </script>

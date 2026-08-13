@@ -450,15 +450,6 @@ class NilaiService extends MY_Service {
         return $this->db->where(array('nim' => $nim, 'kode_tahun_akademik' => $kode_tahun_akademik))->get('krs')->row_object();
     }
 
-    public function cek_matakuliah_khusus($kode_krs_detail) {
-        return $this->db->select('*')
-            ->from('krs_detail as krd')
-            ->join('matakuliah as mak', 'krd.id_matakuliah=mak.id_matakuliah')
-            ->where('(nama_matakuliah like "%kuliah kerja profesi%" or nama_matakuliah like "%magang%" or nama_matakuliah like "%KKN%" or nama_matakuliah like "%magang%" or nama_matakuliah like "%skripsi%" or nama_matakuliah like "%tugas akhir%" or nama_matakuliah like "%KKP%" or nama_matakuliah like "%proyek akhir%" or nama_matakuliah like "%Seminar Proposal%" or nama_matakuliah like "%Tesis%" or nama_matakuliah like "%Publikasi Ilmiah%" or nama_matakuliah like "%PKL%" or nama_matakuliah like "%Kuliah Kerja Praktek%" or nama_matakuliah like "%Seminar%" or nama_matakuliah like "%Kerja Praktik%" or nama_matakuliah like "%Proposal%" or nama_matakuliah like "%Thesis%")')
-            ->where('krd.kode_krs_detail', $kode_krs_detail)
-            ->get()->num_rows();
-    }
-
     public function edit_khs_detail_full($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak) {
         return $this->db->where('kode_krs_detail', $kode_krs_detail)->update('khs_detail', array(
             'nilai_harian' => $nilai_harian,

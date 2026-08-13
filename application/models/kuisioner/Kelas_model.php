@@ -222,4 +222,34 @@ class Kelas_model extends CI_Model
             ->get()->result_object();
     }
 
+    function get_kelas_angkatan_bawah($id_matakuliah, $kode_tahun_akademik)
+    {
+        $sql = "SELECT k.kelas_id, nk.nama_kelas, COUNT(km.kode_krs_detail) AS jml
+                FROM kelas k
+                JOIN nama_kelas nk ON k.nama_kelas_id = nk.nama_kelas_id
+                LEFT JOIN kelas_mahasiswa km ON km.kelas_id = k.kelas_id
+                LEFT JOIN krs_detail kd ON kd.kode_krs_detail = km.kode_krs_detail
+                LEFT JOIN krs ON krs.kode_krs = kd.kode_krs
+                LEFT JOIN mahasiswa mah ON mah.nim = krs.nim
+                WHERE k.id_matakuliah = ? AND k.kode_tahun_akademik = ?
+                GROUP BY k.kelas_id, nk.nama_kelas
+                HAVING IFNULL(MAX(CAST(SUBSTR(mah.nim,1,2) AS UNSIGNED)), 0) <= 24
+                ORDER BY nk.nama_kelas ASC";
+        return $this->db->query($sql, array($id_matakuliah, $kode_tahun_akademik))->result();
+    }
+
+    function get_mahasiswa_kelas_nilai($kelas_id)
+    {
+        return $this->db->select('mah.nim, mah.nama_mahasiswa, kd.kode_krs_detail, khd.nilai_harian, khd.nilai_uts, khd.nilai_uas, khd.nilai_akhir, khd.tidak_berhak, krs.semester')
+            ->from('kelas_mahasiswa as km')
+            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail')
+            ->join('khs_detail as khd', 'khd.kode_krs_detail=km.kode_krs_detail', 'left')
+            ->join('krs', 'krs.kode_krs=kd.kode_krs')
+            ->join('mahasiswa as mah', 'mah.nim=krs.nim')
+            ->where('km.kelas_id', $kelas_id)
+            ->where('substr(mah.nim,1,2) <=', 24)
+            ->order_by('mah.nim', 'ASC')
+            ->get()->result();
+    }
+
 }

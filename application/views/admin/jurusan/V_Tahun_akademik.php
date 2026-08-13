@@ -6,7 +6,7 @@
 </div>
 <div class="box box-primary flat">
     <div class="box-body">
-        <table class="table demo-table">
+        <table class="table data-table">
             <thead>
                 <tr>
                     <th id="th">No</th>
@@ -26,7 +26,7 @@
                     <tr>
                         <td align="center"><?= $i++ ?></td>
                         <td align="center" id="tahun-akademik-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tahun_akademik) ?></td>
-                        <td align="center" ><?= $d->semester == 1 ? 'Ganjil' : 'Genap' ?></td>
+                        <td align="center" ><?= $d->semester == 1 ? '<span class="label label-info">Ganjil</span>' : '<span class="label label-success">Genap</span>' ?></td>
                         <td align="center" id="semester-<?= e($d->kode_tahun_akademik) ?>" style="display: none;"><?= e($d->semester) ?></td>
                         <td align="center" id="tanggal-mulai-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tanggal_mulai) ?></td>
                         <td align="center" id="tanggal-berakhir-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tanggal_berakhir) ?></td>

@@ -89,20 +89,7 @@
             </div>
         </nav>
     </header>
-    <?php
-    if ($this->session->userdata('id_role') == 1) {
-        $this->load->view('admin/template/V_menu');
-    }elseif($this->session->userdata('id_role') == 2)
-    {
-        $this->load->view('admin/template/V_menu_admin');
-    }elseif($this->session->userdata('id_role') == 3)
-    {
-        $this->load->view('admin/template/V_menu_bpm');
-    }elseif($this->session->userdata('id_role') == 4)
-    {
-        $this->load->view('admin/template/V_menu_keuangan');
-    }
-    ?>
+    <?php $this->load->view('admin/template/V_menu'); ?>
     <div class="content-wrapper">
         <section class="content-header">
             <div style="font-size: 18px;">

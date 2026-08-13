@@ -173,24 +173,41 @@ class Semester_ini extends CI_Controller {
     }
 
     public function ubah_krs_nilai() {
-        
+
         $input = filter_input_array(INPUT_POST);
 
-        $editdata = $this->nilaiservice->cek_matakuliah_khusus($input['kode_krs_detail']);
+        if (isset($input['action']) && $input['action'] === 'edit') {
+            $kode_krs_detail = isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : '';
+            $nilai_harian = isset($input['edit_nilai_harian']) ? $input['edit_nilai_harian'] : null;
+            $nilai_uts = isset($input['edit_nilai_uts']) ? $input['edit_nilai_uts'] : null;
+            $nilai_uas = isset($input['edit_nilai_uas']) ? $input['edit_nilai_uas'] : null;
+            $nilai_akhir = isset($input['edit_nilai_akhir']) ? $input['edit_nilai_akhir'] : null;
+            $tidak_berhak = isset($input['tidak_berhak']) ? $input['tidak_berhak'] : 'N';
 
-        if ($input['action'] === 'edit') {
-            if ($editdata) {
-                $this->nilaiservice->edit_khs_detail_full($input['kode_krs_detail'], $input['edit_nilai_harian'], $input['edit_nilai_uts'], $input['edit_nilai_uas'], $input['edit_nilai_akhir'], $input['tidak_berhak']);
-                 echo json_encode(true);
-            }else{
-                echo json_encode(false);
+            $this->nilaiservice->edit_khs_detail_full($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak);
+
+            $grade = '';
+            if ($nilai_akhir !== null && $nilai_akhir !== '') {
+                $mhs = $this->db->select('krs.nim, krs.semester')
+                    ->from('krs_detail as kd')
+                    ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                    ->where('kd.kode_krs_detail', $kode_krs_detail)
+                    ->get()->row_object();
+                if ($mhs) {
+                    $grade_data = $this->nilaiservice->get_grade($mhs->nim, $mhs->semester, $nilai_akhir);
+                    $grade = $grade_data['grade'];
+                }
             }
-        } else if ($input['action'] === 'delete') {
-            $this->nilaiservice->delete_krs_detail_cascade($input['kode_krs_detail']);
-             echo json_encode(true);
-        } else if ($input['action'] === 'restore') {
-            $this->nilaiservice->restore_khs_detail($input['kode_khs_detail']);
-             echo json_encode(true);
+
+            echo json_encode(array('status' => true, 'action' => 'edit', 'grade' => $grade));
+        } else if (isset($input['action']) && $input['action'] === 'delete') {
+            $this->nilaiservice->delete_krs_detail_cascade(isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : '');
+            echo json_encode(array('status' => true, 'action' => 'delete'));
+        } else if (isset($input['action']) && $input['action'] === 'restore') {
+            $this->nilaiservice->restore_khs_detail(isset($input['kode_khs_detail']) ? $input['kode_khs_detail'] : '');
+            echo json_encode(array('status' => true, 'action' => 'restore'));
+        } else {
+            echo json_encode(array('status' => false));
         }
     }
 

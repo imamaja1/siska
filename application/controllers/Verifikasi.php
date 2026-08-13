@@ -251,7 +251,7 @@ class Verifikasi extends CI_Controller {
         $mahasiswa = $this->verifikasiservice->getAllKelas();
         foreach ($mahasiswa as $row) {
             $data['data'] = base_url() . 'verifikasi/nilai/' . hash("sha256", $row->kelas_id);
-            $data['level'] = 'C';
+            $data['level'] = 'L';
             $data['size'] = 2;
             $data['savename'] = FCPATH . 'qrcodeimage/' . $row->kelas_id . '.png';
             $this->ciqrcode->generate($data);

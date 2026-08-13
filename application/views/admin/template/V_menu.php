@@ -47,6 +47,7 @@
                     <li><a href="<?= site_url('admin/jurusan/dosen') ?>"><i class="fa fa-circle-o"></i> Dosen</a></li>
                     <li><a href="<?= site_url('admin/jurusan/perwalian') ?>"><i class="fa fa-circle-o"></i> Perwalian</a></li>
                     <li><a href="<?= site_url('admin/jurusan/konsultasi_perwalian') ?>"><i class="fa fa-circle-o"></i> Konsultasi Perwalian</a></li>
+                    <li><a href="<?= site_url('admin/jurusan/tahun_akademik') ?>"><i class="fa fa-circle-o"></i> Tahun Akademik</a></li>
                     <li><a href="<?= site_url('admin/jurusan/distribusi_matakuliah'); ?>"><i class="fa fa-circle-o"></i> Distribusi Matakuliah</a></li>
                 </ul>
             </li>
@@ -173,7 +174,7 @@
 
             <?php if ($this->session->userdata('is_impersonating')): ?>
             <li>
-                <a href="<?= site_url('admin/impersonasi_dosen/kembali'); ?>" style="background-color: #f39c12; color: white;" onclick="return confirm('Kembali ke akun admin?')">
+                <a href="<?= site_url('admin/pengguna/pengguna/kembali'); ?>" style="background-color: #f39c12; color: white;" onclick="return confirm('Kembali ke akun admin?')">
                     <i class="fa fa-undo"></i> <span>Kembali ke Admin</span>
                 </a>
             </li>

@@ -12,9 +12,10 @@ class pengguna extends CI_Controller
         $this->load->library(['pagination', 'form_validation']);
 
         $class = $this->router->fetch_class();
+        $method = $this->router->fetch_method();
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
-        } else {
+        } elseif ($method !== 'kembali') {
             $id_user = $this->session->userdata('id');
             $cek = rbac_cek($class, $id_user);
             if (!$cek) {
@@ -131,6 +132,64 @@ class pengguna extends CI_Controller
             $this->session->set_flashdata('pesan', '<script>swal("Sukses!","Hapus data berhasil","success")</script>');
             redirect('admin/pengguna/pengguna');
         }
+    }
+
+    function menyamar($kode)
+    {
+        $pengguna = $this->pengguna_model->edit($kode);
+        if (!$pengguna) {
+            show_404();
+        }
+
+        if ($kode == $this->session->userdata('kode_pengguna')) {
+            $this->session->set_flashdata('pesan', '<script>swal("Info!","Anda tidak bisa menyamar sebagai diri sendiri","info")</script>');
+            redirect('admin/pengguna/pengguna');
+        }
+
+        $this->session->set_userdata('is_impersonating', true);
+        $this->session->set_userdata('original_admin', array(
+            'nama_pengguna' => $this->session->userdata('nama_pengguna'),
+            'nama_login'    => $this->session->userdata('nama_login'),
+            'kode_pengguna' => $this->session->userdata('kode_pengguna'),
+            'id_role'       => $this->session->userdata('id_role'),
+            'id'            => $this->session->userdata('id'),
+            'sekarang'      => $this->session->userdata('sekarang'),
+        ));
+
+        $this->session->set_userdata(array(
+            'nama_pengguna' => $pengguna->nama_pengguna,
+            'nama_login'    => $pengguna->nama_login,
+            'kode_pengguna' => $pengguna->kode_pengguna,
+            'id_role'       => $pengguna->id_role,
+            'id'            => $pengguna->kode_pengguna,
+            'sekarang'      => $this->_tanggal_indo(),
+        ));
+
+        redirect('home/admin');
+    }
+
+    function kembali()
+    {
+        $original = $this->session->userdata('original_admin');
+        if (!$original) {
+            redirect('home/admin');
+        }
+
+        $this->session->unset_userdata('is_impersonating');
+        $this->session->unset_userdata('original_admin');
+        $this->session->set_userdata($original);
+
+        redirect('home/admin');
+    }
+
+    private function _tanggal_indo()
+    {
+        $hari = date('w');
+        $bulan = date('n');
+        $nama_hari = array('Ahad', 'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu');
+        $nama_bulan = array(1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+
+        return $nama_hari[$hari] . ', ' . date('d') . ' ' . $nama_bulan[$bulan] . ' ' . date('Y');
     }
 
     function ubah_data()

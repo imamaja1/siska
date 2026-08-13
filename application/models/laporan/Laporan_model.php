@@ -559,7 +559,8 @@ class Laporan_model extends CI_Model
                     $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                     $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                     $khs['semester'] = $row->semester;
-                    $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+                    $nama_kurikulum = $this->db->select('nama_kurikulum')->from('nama_kurikulum')->where('kode_nama_kurikulum', $kode_nama_kurikulum)->get()->row_object();
+                    $khs['kurikulum'] = $nama_kurikulum ? $nama_kurikulum->nama_kurikulum : '';
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
@@ -614,7 +615,8 @@ class Laporan_model extends CI_Model
                         $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                         $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                         $khs['semester'] = $row->semester;
-                        $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+                        $nama_kurikulum = $this->db->select('nama_kurikulum')->from('nama_kurikulum')->where('kode_nama_kurikulum', $kode_nama_kurikulum)->get()->row_object();
+                        $khs['kurikulum'] = $nama_kurikulum ? $nama_kurikulum->nama_kurikulum : '';
                         $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                         $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                         $khs['data_nilai'][$i]['sks'] = $row->sks;
@@ -663,7 +665,8 @@ class Laporan_model extends CI_Model
                 $khs['nama_mahasiswa'] = $row->nama_mahasiswa;
                 $khs['tahun_akademik'] = $this->m_tahun_akademik->get_byid($row->kode_tahun_akademik);
                 $khs['semester'] = $row->semester;
-                $khs['kurikulum'] = $data_penilaian[0]['nama_kurikulum'];
+                $nama_kurikulum = $this->db->select('nama_kurikulum')->from('nama_kurikulum')->where('kode_nama_kurikulum', $kode_nama_kurikulum)->get()->row_object();
+                $khs['kurikulum'] = $nama_kurikulum ? $nama_kurikulum->nama_kurikulum : '';
                 $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                 $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                 $khs['data_nilai'][$i]['sks'] = $row->sks;
@@ -824,8 +827,8 @@ class Laporan_model extends CI_Model
         }     
         return $data_new;
     }
-  	public function rekap_ipk_new($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi, $limit, $offset){
-        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin')->from('krs')
+   	public function rekap_ipk_new($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi, $limit, $offset){
+        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin,mah.status_pendaftaran')->from('krs')
                         ->join('mahasiswa as mah','krs.nim=mah.nim')
                         ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                         ->where('mid(mah.nim,1,2)', $tahun_angkatan)
@@ -835,6 +838,9 @@ class Laporan_model extends CI_Model
                         ->group_by('krs.nim')
                         ->limit($limit, $offset)
                         ->get()->result_object();
+
+        $mk_skripsi = get_kode_matakuliah_skripsi();
+        $mk_kkp = get_kode_matakuliah_kkp();
 
         foreach ($data_new as $key => $value) {
             $tmp = $this->db->select('mak.sks_teori,mak.sks_praktek,mak.sks_praktikum,mak.id_matakuliah, max(khd.nilai_akhir) as nilai_akhir,mak.kode_matakuliah')
@@ -879,8 +885,8 @@ class Laporan_model extends CI_Model
         }     
         return $data_new;
     }
-  	public function cetak_rekap_ipk_new($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi, $limit, $offset){
-        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin')->from('krs')
+   	public function cetak_rekap_ipk_new($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi, $limit, $offset){
+        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin,mah.status_pendaftaran')->from('krs')
                         ->join('mahasiswa as mah','krs.nim=mah.nim')
                         ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                         ->where('mid(mah.nim,1,2)', $tahun_angkatan)
@@ -890,6 +896,9 @@ class Laporan_model extends CI_Model
                         ->group_by('krs.nim')
                         //->limit($limit, $offset)
                         ->get()->result_object();
+
+        $mk_skripsi = get_kode_matakuliah_skripsi();
+        $mk_kkp = get_kode_matakuliah_kkp();
 
         foreach ($data_new as $key => $value) {
             $tmp = $this->db->select('mak.sks_teori,mak.sks_praktek,mak.sks_praktikum,mak.id_matakuliah, max(khd.nilai_akhir) as nilai_akhir,mak.kode_matakuliah')

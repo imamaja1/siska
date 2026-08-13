@@ -35,6 +35,12 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 
+<?php if ($this->session->userdata('is_impersonating')): ?>
+<div style="background-color: #f39c12; color: white; text-align: center; padding: 5px; font-size: 13px;">
+    Mode Impersonasi Pengguna | <a href="<?= site_url('admin/pengguna/pengguna/kembali') ?>" style="color: white; text-decoration: underline;" onclick="return confirm('Kembali ke akun admin?')">Kembali ke Admin</a>
+</div>
+<?php endif; ?>
+
 <div class="wrapper">
     <header class="main-header">
         <a href="<?php echo site_url('home/admin'); ?>" class="logo">

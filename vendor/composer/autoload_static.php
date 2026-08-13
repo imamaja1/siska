@@ -16,6 +16,11 @@ class ComposerStaticInitc02fa765ae97cbe60b353fee20e138fc
         array (
             'setasign\\Fpdi\\' => 14,
         ),
+        'c' =>
+        array (
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
+        ),
         'Z' =>
         array (
             'ZipStream\\' => 10,
@@ -49,6 +54,14 @@ class ComposerStaticInitc02fa765ae97cbe60b353fee20e138fc
         'setasign\\Fpdi\\' =>
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'chillerlan\\Settings\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+        ),
+        'chillerlan\\QRCode\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'ZipStream\\' =>
         array (

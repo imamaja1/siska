@@ -43,7 +43,7 @@ function array_to_xml($array, $level = 1)
                 }
 				else
 				{
-                    if (trim($value2)!='')
+                    if (isset($value2) && trim($value2)!='')
 					{
                         if (htmlspecialchars($value2)!=$value2)
 						{
@@ -66,7 +66,7 @@ function array_to_xml($array, $level = 1)
         }
 		else
 		{
-            if (trim($value)!='')
+            if (isset($value) && trim($value)!='')
 			{
                 if (htmlspecialchars($value)!=$value)
 				{

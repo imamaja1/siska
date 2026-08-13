@@ -8,6 +8,7 @@
  * @author		Josh Campbell<josh.campbell@ajillion.com>
  * @link		https://github.com/ajillion/CodeIgniter-jQuery-Ajax
  */
+#[AllowDynamicProperties]
 class Ajax
 {
 	function __construct()

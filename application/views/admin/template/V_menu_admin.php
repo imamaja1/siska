@@ -47,9 +47,7 @@
                     <li><a href="<?= site_url('admin/jurusan/dosen') ?>"><i class="fa fa-circle-o"></i> Dosen</a></li>
                     <li><a href="<?= site_url('admin/jurusan/perwalian') ?>"><i class="fa fa-circle-o"></i> Perwalian</a></li>
                     <li><a href="<?= site_url('admin/jurusan/konsultasi_perwalian') ?>"><i class="fa fa-circle-o"></i> Konsultasi Perwalian</a></li>
-                    <?php if ($this->session->nama_pengguna == 'PUSTIK'): ?>
                     <li><a href="<?= site_url('admin/jurusan/tahun_akademik') ?>"><i class="fa fa-circle-o"></i> Tahun Akademik</a></li>
-                    <?php endif; ?>
                     <li><a href="<?= site_url('admin/jurusan/distribusi_matakuliah'); ?>"><i class="fa fa-circle-o"></i> Distribusi Matakuliah</a></li>
                     <li><a href="<?= site_url('admin/akademik/pembimbing_kkp'); ?>"><i class="fa fa-circle-o"></i> Pembimbing KKP</a></li>
                 </ul>

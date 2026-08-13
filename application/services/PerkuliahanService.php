@@ -296,6 +296,7 @@ class PerkuliahanService extends MY_Service {
         $tidak_berhak = $input['tidak_berhak'];
 
         if ($input['action'] === 'edit') {
+            $row = $this->db->where('kode_krs_detail', $input['kode_krs_detail'])->get('khs_detail')->row();
             $this->db->set('nilai_harian', $nilai_harian)
                 ->set('nilai_uts', $nilai_uts)
                 ->set('nilai_uas', $nilai_uas)
@@ -303,10 +304,36 @@ class PerkuliahanService extends MY_Service {
                 ->set('tidak_berhak', $tidak_berhak)
                 ->where('kode_krs_detail', $input['kode_krs_detail'])
                 ->update('khs_detail');
+            $data = array('nilai_harian' => $nilai_harian, 'nilai_uts' => $nilai_uts, 'nilai_uas' => $nilai_uas, 'nilai_akhir' => $nilai_akhir);
+            if ($row) {
+                $lama = array();
+                $baru = array();
+                foreach ($data as $field => $b) {
+                    $l = isset($row->$field) ? $row->$field : null;
+                    if ($l != $b) {
+                        $lama[$field] = $l;
+                        $baru[$field] = $b;
+                    }
+                }
+                if (!empty($lama)) {
+                    log_aktivitas_nilai('update', array_keys($lama), $lama, $baru, 'konversi', null, $input['kode_krs_detail']);
+                }
+            }
         } else if ($input['action'] === 'delete') {
+            $row = $this->db->where('kode_krs_detail', $input['kode_krs_detail'])->get('khs_detail')->row();
+            if ($row) {
+                $lama = array(
+                    'nilai_harian' => isset($row->nilai_harian) ? $row->nilai_harian : null,
+                    'nilai_uts' => isset($row->nilai_uts) ? $row->nilai_uts : null,
+                    'nilai_uas' => isset($row->nilai_uas) ? $row->nilai_uas : null,
+                    'nilai_akhir' => isset($row->nilai_akhir) ? $row->nilai_akhir : null,
+                );
+                log_aktivitas_nilai('delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $lama, null, 'konversi', null, $input['kode_krs_detail']);
+            }
             $this->db->where('kode_krs_detail', $input['kode_krs_detail'])->delete('krs_detail');
         } else if ($input['action'] === 'restore') {
             $this->db->set('deleted', 0)->where('kode_khs_detail', $input['kode_khs_detail'])->update('khs_detail');
+            log_aktivitas_nilai('restore', 'deleted', '1', '0', 'konversi', $input['kode_khs_detail']);
         }
         return $input;
     }

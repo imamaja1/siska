@@ -272,3 +272,80 @@ if (!function_exists('e')) {
         return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
     }
 }
+
+if (!function_exists('log_aktivitas_nilai')) {
+    function log_aktivitas_nilai($aksi, $kolom = null, $nilai_lama = null, $nilai_baru = null, $sumber = 'perubahan', $kode_khs_detail = null, $kode_krs_detail = null, $kode_krs = null)
+    {
+        $CI = get_instance();
+        $nim = null;
+        $id_matakuliah = null;
+        $kode_tahun_akademik = null;
+
+        if ($kode_krs_detail) {
+            $row = $CI->db->select('krs.nim, kd.id_matakuliah, krs.kode_tahun_akademik')
+                ->from('krs_detail as kd')
+                ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                ->where('kd.kode_krs_detail', $kode_krs_detail)
+                ->get()->row();
+            if ($row) {
+                $nim = $row->nim;
+                $id_matakuliah = $row->id_matakuliah;
+                $kode_tahun_akademik = $row->kode_tahun_akademik;
+            }
+            if (!$kode_khs_detail) {
+                $khs = $CI->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+                if ($khs) {
+                    $kode_khs_detail = $khs->kode_khs_detail;
+                }
+            }
+        } elseif ($kode_khs_detail) {
+            $row = $CI->db->select('krs.nim, kd.id_matakuliah, krs.kode_tahun_akademik, khd.kode_krs_detail')
+                ->from('khs_detail as khd')
+                ->join('krs_detail as kd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                ->where('khd.kode_khs_detail', $kode_khs_detail)
+                ->get()->row();
+            if ($row) {
+                $nim = $row->nim;
+                $id_matakuliah = $row->id_matakuliah;
+                $kode_tahun_akademik = $row->kode_tahun_akademik;
+                if (!$kode_krs_detail) {
+                    $kode_krs_detail = $row->kode_krs_detail;
+                }
+            }
+        } elseif ($kode_krs) {
+            $row = $CI->db->select('nim, kode_tahun_akademik')
+                ->where('kode_krs', $kode_krs)
+                ->get('krs')->row();
+            if ($row) {
+                $nim = $row->nim;
+                $kode_tahun_akademik = $row->kode_tahun_akademik;
+            }
+        }
+
+        if (is_array($kolom)) {
+            $kolom = implode(',', $kolom);
+        }
+        if (is_array($nilai_lama)) {
+            $nilai_lama = json_encode($nilai_lama);
+        }
+        if (is_array($nilai_baru)) {
+            $nilai_baru = json_encode($nilai_baru);
+        }
+
+        return $CI->db->insert('log_aktivitas_nilai', array(
+            'kode_khs_detail' => $kode_khs_detail,
+            'kode_krs_detail' => $kode_krs_detail,
+            'nim' => $nim,
+            'id_matakuliah' => $id_matakuliah,
+            'kode_tahun_akademik' => $kode_tahun_akademik,
+            'aksi' => $aksi,
+            'kolom' => $kolom,
+            'nilai_lama' => $nilai_lama,
+            'nilai_baru' => $nilai_baru,
+            'sumber' => $sumber,
+            'id_user' => $CI->session->userdata('id'),
+            'nama_login' => $CI->session->userdata('nama_login'),
+        ));
+    }
+}

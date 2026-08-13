@@ -376,6 +376,7 @@ class NilaiService extends MY_Service {
             if ($hasil < 144) {
                 return array('status' => false, 'message' => 'Tidak bisa melakukan penghapusan, SKSN akan menjadi kurang dari 144');
             } else {
+                $this->catat_hapus_khs($kode_krs_detail, 'perubahan');
                 $del = $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('krs_detail');
                 if ($del) {
                     return array('status' => true, 'message' => 'Matakuliah berhasil di hapus');
@@ -401,25 +402,35 @@ class NilaiService extends MY_Service {
     }
 
     public function update_khs_detail_field($kode_khs_detail, $field, $value) {
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array($field => $value));
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $lama = $row && isset($row->$field) ? $row->$field : null;
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array($field => $value));
+        if ($lama != $value) {
+            log_aktivitas_nilai('update', $field, $lama, $value, 'perubahan', $kode_khs_detail);
+        }
+        return true;
     }
 
     public function set_tidak_berhak_status($kode_khs_detail, $status) {
-        if ($status == 1) {
-            $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('tidak_berhak' => 'N'));
-        } elseif ($status == 2) {
-            $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('tidak_berhak' => 'A', 'nilai_uas' => '0'));
-        } else {
-            $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('tidak_berhak' => 'N'));
-        }
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $data = ($status == 2) ? array('tidak_berhak' => 'A', 'nilai_uas' => '0') : array('tidak_berhak' => 'N');
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $this->catat_diff_khs($row, $data, 'perubahan', $kode_khs_detail);
     }
 
     public function delete_khs_detail($kode_khs_detail) {
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('deleted' => 1));
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('deleted' => 1));
+        if ($row) {
+            log_aktivitas_nilai('soft_delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $this->nilai_json($row), null, 'perubahan', $kode_khs_detail);
+        }
+        return true;
     }
 
     public function restore_khs_detail($kode_khs_detail) {
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('deleted' => 0));
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', array('deleted' => 0));
+        log_aktivitas_nilai('restore', 'deleted', '1', '0', 'perubahan', $kode_khs_detail);
+        return true;
     }
 
     public function get_id_matakuliah_by_kode_kurikulum($kode_matakuliah, $kode_nama_kurikulum) {
@@ -443,7 +454,10 @@ class NilaiService extends MY_Service {
     }
 
     public function update_khs_detail($kode_khs_detail, $data) {
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $this->catat_diff_khs($row, $data, 'perubahan', $kode_khs_detail);
+        return true;
     }
 
     public function get_krs_by_nim_ta($nim, $kode_tahun_akademik) {
@@ -451,18 +465,56 @@ class NilaiService extends MY_Service {
     }
 
     public function edit_khs_detail_full($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak) {
-        return $this->db->where('kode_krs_detail', $kode_krs_detail)->update('khs_detail', array(
+        $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+        $data = array(
             'nilai_harian' => $nilai_harian,
             'nilai_uts' => $nilai_uts,
             'nilai_uas' => $nilai_uas,
             'nilai_akhir' => $nilai_akhir,
             'tidak_berhak' => $tidak_berhak
-        ));
+        );
+        $this->db->where('kode_krs_detail', $kode_krs_detail)->update('khs_detail', $data);
+        $this->catat_diff_khs($row, $data, 'perubahan', null, $kode_krs_detail);
+        return true;
     }
 
     public function delete_krs_detail_cascade($kode_krs_detail) {
+        $this->catat_hapus_khs($kode_krs_detail, 'perubahan');
         $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('krs_detail');
         $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('khs_detail');
+    }
+
+    private function nilai_json($row) {
+        return array(
+            'nilai_harian' => isset($row->nilai_harian) ? $row->nilai_harian : null,
+            'nilai_uts' => isset($row->nilai_uts) ? $row->nilai_uts : null,
+            'nilai_uas' => isset($row->nilai_uas) ? $row->nilai_uas : null,
+            'nilai_akhir' => isset($row->nilai_akhir) ? $row->nilai_akhir : null,
+        );
+    }
+
+    private function catat_diff_khs($row, $data, $sumber, $kode_khs_detail = null, $kode_krs_detail = null) {
+        if (!$row) return;
+        $lama = array();
+        $baru = array();
+        foreach (array('nilai_harian', 'nilai_uts', 'nilai_uas', 'nilai_akhir') as $field) {
+            if (array_key_exists($field, $data)) {
+                $l = isset($row->$field) ? $row->$field : null;
+                if ($l != $data[$field]) {
+                    $lama[$field] = $l;
+                    $baru[$field] = $data[$field];
+                }
+            }
+        }
+        if (!empty($lama)) {
+            log_aktivitas_nilai('update', array_keys($lama), $lama, $baru, $sumber, $kode_khs_detail, $kode_krs_detail);
+        }
+    }
+
+    private function catat_hapus_khs($kode_krs_detail, $sumber) {
+        $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+        if (!$row) return;
+        log_aktivitas_nilai('delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $this->nilai_json($row), null, $sumber, null, $kode_krs_detail);
     }
 
     public function get_user_by_username($username) {

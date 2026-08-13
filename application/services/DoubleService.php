@@ -31,10 +31,17 @@ class DoubleService extends MY_Service {
 
     public function updateKhsDetail($kode_khs_detail, $field, $nilai) {
         $data = array($field => $nilai);
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $lama = $row && isset($row->$field) ? $row->$field : null;
+        if ($lama != $nilai) {
+            log_aktivitas_nilai('update', $field, $lama, $nilai, 'double', $kode_khs_detail);
+        }
+        return true;
     }
 
     public function deleteKrs($kode_krs) {
+        log_aktivitas_nilai('delete', 'kode_krs', $kode_krs, null, 'double', null, null, $kode_krs);
         return $this->db->where('kode_krs', $kode_krs)->delete('krs');
     }
 }

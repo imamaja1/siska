@@ -321,7 +321,25 @@ class KaprodiService extends MY_Service {
     }
 
     public function update_khs_detail($kode_khs_detail, $data) {
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        if ($row) {
+            $lama = array();
+            $baru = array();
+            foreach (array('nilai_harian', 'nilai_uts', 'nilai_uas', 'nilai_akhir') as $field) {
+                if (array_key_exists($field, $data)) {
+                    $l = isset($row->$field) ? $row->$field : null;
+                    if ($l != $data[$field]) {
+                        $lama[$field] = $l;
+                        $baru[$field] = $data[$field];
+                    }
+                }
+            }
+            if (!empty($lama)) {
+                log_aktivitas_nilai('update', array_keys($lama), $lama, $baru, 'kaprodi', $kode_khs_detail);
+            }
+        }
+        return true;
     }
 
     // ===================== KELAS =====================

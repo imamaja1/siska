@@ -179,8 +179,26 @@ class Nilai_model extends CI_Model {
   
     public function validasi_dekan($kode_khs_detail, $data_nilai)
     {
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
         $this->db->where('kode_khs_detail', $kode_khs_detail);
-        return $this->db->update('khs_detail', $data_nilai);
+        $this->db->update('khs_detail', $data_nilai);
+        if ($row) {
+            $lama = array();
+            $baru = array();
+            foreach (array('nilai_harian', 'nilai_uts', 'nilai_uas', 'nilai_akhir') as $field) {
+                if (array_key_exists($field, $data_nilai)) {
+                    $l = isset($row->$field) ? $row->$field : null;
+                    if ($l != $data_nilai[$field]) {
+                        $lama[$field] = $l;
+                        $baru[$field] = $data_nilai[$field];
+                    }
+                }
+            }
+            if (!empty($lama)) {
+                log_aktivitas_nilai('update', array_keys($lama), $lama, $baru, 'validasi_dekan', $kode_khs_detail);
+            }
+        }
+        return true;
     }
 
 }

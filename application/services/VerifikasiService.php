@@ -52,7 +52,12 @@ class VerifikasiService extends MY_Service {
     }
 
     public function updateKrsSemester($kode_krs, $semester) {
+        $row = $this->db->where('kode_krs', $kode_krs)->get('krs')->row();
         $this->db->where('kode_krs', $kode_krs)->update('krs', array('semester' => $semester));
+        $lama = $row && isset($row->semester) ? $row->semester : null;
+        if ($lama != $semester) {
+            log_aktivitas_nilai('update', 'semester', array('semester' => $lama), array('semester' => $semester), 'verifikasi', null, null, $kode_krs);
+        }
     }
 
     public function getRekapMatakuliahQuery($kode_program_studi, $kode_tahun_akademik) {

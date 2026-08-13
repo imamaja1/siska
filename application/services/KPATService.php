@@ -72,6 +72,7 @@ class KPATService extends MY_Service {
     }
 
     public function updateKhsDetailRaw($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak) {
+        $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
         $this->db->set('nilai_harian', $nilai_harian)
             ->set('nilai_uts', $nilai_uts)
             ->set('nilai_uas', $nilai_uas)
@@ -79,18 +80,51 @@ class KPATService extends MY_Service {
             ->set('tidak_berhak', $tidak_berhak)
             ->where('kode_krs_detail', $kode_krs_detail)
             ->update('khs_detail');
+        $data = array('nilai_harian' => $nilai_harian, 'nilai_uts' => $nilai_uts, 'nilai_uas' => $nilai_uas, 'nilai_akhir' => $nilai_akhir);
+        if ($row) {
+            $lama = array();
+            $baru = array();
+            foreach ($data as $field => $b) {
+                $l = isset($row->$field) ? $row->$field : null;
+                if ($l != $b) {
+                    $lama[$field] = $l;
+                    $baru[$field] = $b;
+                }
+            }
+            if (!empty($lama)) {
+                log_aktivitas_nilai('update', array_keys($lama), $lama, $baru, 'kpat', null, $kode_krs_detail);
+            }
+        }
     }
 
     public function deleteKrsDetail($kode_krs_detail) {
+        $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+        if ($row) {
+            log_aktivitas_nilai('delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $this->nilaiJson($row), null, 'kpat', null, $kode_krs_detail);
+        }
         $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('krs_detail');
     }
 
     public function deleteKhsDetail($kode_krs_detail) {
+        $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+        if ($row) {
+            log_aktivitas_nilai('delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $this->nilaiJson($row), null, 'kpat', null, $kode_krs_detail);
+        }
         $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('khs_detail');
     }
 
     public function restoreKhsDetail($kode_khs_detail) {
         $this->db->set('deleted', 0)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+        log_aktivitas_nilai('restore', 'deleted', '1', '0', 'kpat', $kode_khs_detail);
+    }
+
+    private function nilaiJson($row) {
+        return array(
+            'nilai_harian' => isset($row->nilai_harian) ? $row->nilai_harian : null,
+            'nilai_uts' => isset($row->nilai_uts) ? $row->nilai_uts : null,
+            'nilai_uas' => isset($row->nilai_uas) ? $row->nilai_uas : null,
+            'nilai_akhir' => isset($row->nilai_akhir) ? $row->nilai_akhir : null,
+        );
     }
 
     // --- Nilai ---
@@ -112,14 +146,24 @@ class KPATService extends MY_Service {
         if (!in_array($field, $allowed)) {
             return;
         }
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $lama = $row && isset($row->$field) ? $row->$field : null;
         $this->db->set($field, $value)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+        if ($lama != $value) {
+            log_aktivitas_nilai('update', $field, array($field => $lama), array($field => $value), 'kpat', $kode_khs_detail);
+        }
     }
 
     public function softDeleteKhsDetail($kode_khs_detail) {
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
         $this->db->set('deleted', 1)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+        if ($row) {
+            log_aktivitas_nilai('soft_delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $this->nilaiJson($row), null, 'kpat', $kode_khs_detail);
+        }
     }
 
     public function restoreKhsDetailNilai($kode_khs_detail) {
         $this->db->set('deleted', 0)->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail');
+        log_aktivitas_nilai('restore', 'deleted', '1', '0', 'kpat', $kode_khs_detail);
     }
 }

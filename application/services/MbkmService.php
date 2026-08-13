@@ -96,7 +96,23 @@ class MbkmService extends MY_Service {
             'nilai_uts' => $nilai,
             'nilai_akhir' => $nilai,
         );
-        return $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        $row = $this->db->where('kode_khs_detail', $kode_khs_detail)->get('khs_detail')->row();
+        $this->db->where('kode_khs_detail', $kode_khs_detail)->update('khs_detail', $data);
+        if ($row) {
+            $lama = array();
+            $baru = array();
+            foreach ($data as $field => $b) {
+                $l = isset($row->$field) ? $row->$field : null;
+                if ($l != $b) {
+                    $lama[$field] = $l;
+                    $baru[$field] = $b;
+                }
+            }
+            if (!empty($lama)) {
+                log_aktivitas_nilai('update', array_keys($lama), $lama, $baru, 'mbkm', $kode_khs_detail);
+            }
+        }
+        return true;
     }
 
     public function getStatusMbkm($kode_krs_detail) {

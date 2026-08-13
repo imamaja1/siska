@@ -73,7 +73,12 @@ class Kkp_model extends CI_Model {
     }
 
     function update_nilai_akhir($kode_krs_detail, $nilai_akhir) {
+        $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('krs_detail')->row();
         $this->db->where('kode_krs_detail', $kode_krs_detail)->update('krs_detail', array('nilai_akhir' => $nilai_akhir));
+        $lama = $row && isset($row->nilai_akhir) ? $row->nilai_akhir : null;
+        if ($lama != $nilai_akhir) {
+            log_aktivitas_nilai('update', 'nilai_akhir', array('nilai_akhir' => $lama), array('nilai_akhir' => $nilai_akhir), 'kkp', null, $kode_krs_detail);
+        }
     }
 
     function get_nilai_kkp_by_nama_mahasiswa($nama_mahasiswa)

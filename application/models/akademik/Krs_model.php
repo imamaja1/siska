@@ -397,6 +397,7 @@ class Krs_model extends CI_Model
 
     function hapus($kode_krs)
     {
+        log_aktivitas_nilai('delete', 'kode_krs', $kode_krs, null, 'krs', null, null, $kode_krs);
         return $this->db->where('kode_krs', $kode_krs)->delete($this->table);
     }
 

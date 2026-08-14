@@ -79,7 +79,31 @@ class Krs_mahasiswa extends CI_Controller {
     public function ubah_krs_nilai() {
         $input = filter_input_array(INPUT_POST);
 
-        if (isset($input['action']) && $input['action'] === 'delete') {
+        if (isset($input['action']) && $input['action'] === 'edit') {
+            $kode_krs_detail = isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : '';
+            $nilai_harian = isset($input['edit_nilai_harian']) ? $input['edit_nilai_harian'] : null;
+            $nilai_uts = isset($input['edit_nilai_uts']) ? $input['edit_nilai_uts'] : null;
+            $nilai_uas = isset($input['edit_nilai_uas']) ? $input['edit_nilai_uas'] : null;
+            $nilai_akhir = isset($input['edit_nilai_akhir']) ? $input['edit_nilai_akhir'] : null;
+            $tidak_berhak = isset($input['tidak_berhak']) ? $input['tidak_berhak'] : 'N';
+
+            $this->nilaiservice->edit_khs_detail_full($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak);
+
+            $grade = '';
+            if ($nilai_akhir !== null && $nilai_akhir !== '') {
+                $mhs = $this->db->select('krs.nim, krs.semester')
+                    ->from('krs_detail as kd')
+                    ->join('krs', 'krs.kode_krs=kd.kode_krs')
+                    ->where('kd.kode_krs_detail', $kode_krs_detail)
+                    ->get()->row_object();
+                if ($mhs) {
+                    $grade_data = $this->nilaiservice->get_grade($mhs->nim, $mhs->semester, $nilai_akhir);
+                    $grade = $grade_data['grade'];
+                }
+            }
+
+            echo json_encode(array('status' => true, 'action' => 'edit', 'grade' => $grade));
+        } else if (isset($input['action']) && $input['action'] === 'delete') {
             $this->nilaiservice->delete_krs_detail_cascade(isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : '');
             echo json_encode(array('status' => true, 'action' => 'delete'));
         } else {

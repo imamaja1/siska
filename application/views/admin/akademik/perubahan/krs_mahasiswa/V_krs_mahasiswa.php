@@ -52,8 +52,12 @@
                                 <th>Kode MK</th>
                                 <th>Nama Matakuliah</th>
                                 <th style="text-align:center">SKS</th>
-                                <th style="text-align:center">Nilai</th>
+                                <th style="text-align:center">Nilai Harian</th>
+                                <th style="text-align:center">Nilai UTS</th>
+                                <th style="text-align:center">Nilai UAS</th>
+                                <th style="text-align:center">Nilai Akhir</th>
                                 <th style="text-align:center">Grade</th>
+                                <th style="text-align:center">Ket</th>
                                 <th style="text-align:center">Status</th>
                             </tr>
                         </thead>
@@ -67,8 +71,12 @@
                                 <td><?= e($row->kode_matakuliah) ?></td>
                                 <td><?= e($row->nama_matakuliah) ?></td>
                                 <td style="text-align:center"><?= e($row->sks_teori + $row->sks_praktek + $row->sks_praktikum) ?></td>
-                                <td style="text-align:center"><?= ($row->status == 'K' || $row->nilai_akhir === null || $row->nilai_akhir === '') ? '-' : e($row->nilai_akhir) ?></td>
+                                <td style="text-align:center"><?= ($row->nilai_harian === null || $row->nilai_harian === '') ? '' : e($row->nilai_harian) ?></td>
+                                <td style="text-align:center"><?= ($row->nilai_uts === null || $row->nilai_uts === '') ? '' : e($row->nilai_uts) ?></td>
+                                <td style="text-align:center"><?= ($row->nilai_uas === null || $row->nilai_uas === '') ? '' : e($row->nilai_uas) ?></td>
+                                <td style="text-align:center"><?= ($row->nilai_akhir === null || $row->nilai_akhir === '') ? '' : e($row->nilai_akhir) ?></td>
                                 <td style="text-align:center"><?= ($row->status == 'K' || empty($row->grade)) ? '-' : e($row->grade) ?></td>
+                                <td style="text-align:center"><?= $row->tidak_berhak == 'A' ? 'TB' : '' ?></td>
                                 <td style="text-align:center">
                                     <?php if ($row->status == 'K') : ?>
                                         <span class="label label-danger">K</span>
@@ -93,6 +101,8 @@
 </div>
 
 <script type="text/javascript">
+    var lastKodeKrsDetail = '';
+
     $(document).ready(function () {
         $('#table-edit').dataTable({
             "ordering": false,
@@ -109,21 +119,52 @@
             url: "<?= site_url('admin/akademik/perubahan/Krs_mahasiswa/ubah_krs_nilai') ?>",
             hideIdentifier: true,
             restoreButton: false,
-            editButton: false,
+            onAjax: function (action, serialize) {
+                if (action === 'edit') {
+                    var match = serialize.match(/(?:^|&)kode_krs_detail=([^&]*)/);
+                    lastKodeKrsDetail = match ? decodeURIComponent(match[1]) : '';
+                }
+                return true;
+            },
+            buttons: {
+                confirm: {
+                    class: 'btn btn-sm btn-danger',
+                    html: 'Confirm'
+                },
+                save: {
+                    class: 'btn btn-sm btn-success',
+                    html: 'Save'
+                }
+            },
             columns: {
                 identifier: [1, 'kode_krs_detail'],
-                editable: []
+                editable: [
+                    [7, 'edit_nilai_harian'],
+                    [8, 'edit_nilai_uts'],
+                    [9, 'edit_nilai_uas'],
+                    [10, 'edit_nilai_akhir'],
+                    [12, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']
+                ]
             },
             onSuccess: function (data, textStatus, jqXHR) {
-                if (data && data.status === true && data.action === 'delete') {
-                    $('#table-edit tbody tr.tabledit-deleted-row').remove();
-                    swal("Berhasil!", "Penghapusan berhasil", "success");
+                if (data && data.status === true) {
+                    if (data.action === 'edit' && lastKodeKrsDetail) {
+                        $('#table-edit tbody tr').each(function () {
+                            if ($(this).find('td:eq(1)').text() === lastKodeKrsDetail) {
+                                $(this).find('td:eq(11)').text(data.grade || '-');
+                            }
+                        });
+                        swal("Berhasil!", "Pembaruan selesai", "success");
+                    } else if (data.action === 'delete') {
+                        $('#table-edit tbody tr.tabledit-deleted-row').remove();
+                        swal("Berhasil!", "Penghapusan berhasil", "success");
+                    }
                 } else {
-                    swal("Gagal!", "Gagal menghapus data", "error");
+                    swal("Gagal!", "Gagal memperbarui data", "error");
                 }
             },
             onFail: function (jqXHR, textStatus, errorThrown) {
-                swal("Gagal!", "Terjadi kesalahan saat menghapus", "error");
+                swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
             }
         });
     });

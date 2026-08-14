@@ -31,7 +31,7 @@
 <script src="<?= base_url('assets/plugins/chartjs/Chart.min.js'); ?>"></script>
 <script src="<?= base_url('assets/sweetalert/dist/sweetalert2.min.js') ?>"></script>
 <script>window.addEventListener('unhandledrejection',function(e){if(e.reason&&(e.reason==='overlay'||e.reason==='cancel'||e.reason==='close'))e.preventDefault()});</script>
-<script src="<?= base_url('assets/tableedit/jquery.tabledit.min.js') ?>"></script>
+<script src="<?= base_url('assets/tableedit/jquery.tabledit.min.js') ?>?v=2"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 

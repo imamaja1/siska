@@ -29,18 +29,18 @@ class Daftar extends CI_Controller {
         if (!$ta) {
             $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
         }
-        
+
         $data['content'] = 'admin/mbkm/V_mahasiswa';
         $data['judul'] = 'mbkm';
         $data['sub_judul'] = 'MBKM';
-        $data['semester'] = $this->m_tahun_akademik->get_semester();        
-        $data['tahun_akademik'] = $this->m_tahun_akademik->get();   
+        $data['semester'] = $this->m_tahun_akademik->get_semester();
+        $data['tahun_akademik'] = $this->m_tahun_akademik->get();
         $data['kode_tahun_akademik'] = $ta;
         $data['kode_program_studi_filter'] = $prodi;
         $data['prodi'] = $this->nama_jurusan_model->get();
         $data['mahasiswa'] = $this->mbkmservice->getMahasiswaMbkm($ta, $prodi);
         $this->load->view('admin/template/V_main', $data);
-    } 
+    }
 
     public function get_mahasiswa($ta = null) {
         if (!$ta) {
@@ -54,9 +54,9 @@ class Daftar extends CI_Controller {
 
     public function search_mahasiswa($nim, $ta) {
         $cek_mahasiswa = $this->mbkmservice->searchMahasiswaMbkm($nim, $ta);
-            
+
         $data['ta'] =  $this->m_tahun_akademik->get_tahun_akademik_by_kode_one($ta);
-        
+
         if ($cek_mahasiswa) {
             $data['mahasiswa'] = $cek_mahasiswa;
             $data['cek'] = 1;
@@ -105,7 +105,7 @@ class Daftar extends CI_Controller {
         $kode_kurikulum = kode_nama_kurikulum($data['data_mhs']->nim);
         $data['kurikulum'] = $this->mbkmservice->getKurikulum($kode_kurikulum);
         $data['data_nilai'] = $this->mbkmservice->getDataNilai($id, $ta);
-        $data['semester'] = $this->m_tahun_akademik->get_tahun_akademik_by_kode($ta);        
+        $data['semester'] = $this->m_tahun_akademik->get_tahun_akademik_by_kode($ta);
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
 
         if ($this->input->is_ajax_request()) {
@@ -119,7 +119,7 @@ class Daftar extends CI_Controller {
     }
     public function nilai_mhs($id,$nilai){
         $update = $this->mbkmservice->updateNilaiMhs($id, $nilai);
-        
+
         if ($update) {
             $nim_row = $this->db->select('mhs.nim')
                 ->from('khs_detail as khd')
@@ -185,7 +185,7 @@ class Daftar extends CI_Controller {
         $khs['sksn'] = 0;
         $khs['total_sks'] = 0;
         $khs['total_bobot'] = 0;
-      
+
       	$khs['nim'] = $nim;
         $khs['nama_mahasiswa'] = $this->mbkmservice->getNamaMahasiswa($nim);
         $khs['tahun_akademik'] = $ta->tahun_akademik;
@@ -230,12 +230,12 @@ class Daftar extends CI_Controller {
         $khs['sksn'] = 0;
         $khs['total_sks'] = 0;
         $khs['total_bobot'] = 0;
-      
+
        	$khs['nim'] = $nim;
         $khs['nama_mahasiswa'] = $this->mbkmservice->getNamaMahasiswa($nim);
         $khs['tahun_akademik'] = $ta->tahun_akademik;
         $khs['semester'] = $semester;
-        
+
         $i = 0;
         foreach ($data_krs as $row) {
             $khs['nim'] = $nim;

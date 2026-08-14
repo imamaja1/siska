@@ -42,6 +42,20 @@ class Daftar extends CI_Controller {
         $this->load->view('admin/template/V_main', $data);
     }
 
+    public function log() {
+        $data['content'] = 'admin/mbkm/V_log_mbkm';
+        $data['judul'] = 'mbkm';
+        $data['sub_judul'] = 'Log Aktivitas MBKM';
+        $this->db->select('l.*, mak.nama_matakuliah, mak.kode_matakuliah, mhs.nama_mahasiswa');
+        $this->db->from('log_aktivitas_nilai as l');
+        $this->db->join('matakuliah as mak', 'mak.id_matakuliah=l.id_matakuliah', 'left');
+        $this->db->join('mahasiswa as mhs', 'mhs.nim=l.nim', 'left');
+        $this->db->where('l.sumber', 'mbkm');
+        $this->db->order_by('l.id', 'DESC');
+        $data['log'] = $this->db->get()->result();
+        $this->load->view('admin/template/V_main', $data);
+    }
+
     public function get_mahasiswa($ta = null) {
         if (!$ta) {
             $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;

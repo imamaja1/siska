@@ -49,6 +49,18 @@ class MbkmService extends MY_Service {
     }
 
     public function hapusMbkm($id) {
+        $mbkm = $this->db->where('id', $id)->get('mbkm')->row_object();
+        $kode_krs = null;
+        if ($mbkm) {
+            $krs = $this->db->select('kode_krs')
+                ->where('nim', $mbkm->nim)
+                ->where('kode_tahun_akademik', $mbkm->kode_ta)
+                ->get('krs')->row_object();
+            if ($krs) {
+                $kode_krs = $krs->kode_krs;
+            }
+            log_aktivitas_nilai('delete', 'mbkm', $id, null, 'mbkm', null, null, $kode_krs);
+        }
         return $this->db->where('id', $id)->delete('mbkm');
     }
 
@@ -129,11 +141,20 @@ class MbkmService extends MY_Service {
     }
 
     public function updateStatusMbkm($kode_krs_detail, $status) {
+        $row = $this->db->select('status')->where('kode_krs_detail', $kode_krs_detail)->get('mk_mbkm')->row_object();
+        $lama = $row && isset($row->status) ? $row->status : null;
         $this->db->where('kode_krs_detail', $kode_krs_detail)->update('mk_mbkm', array('status' => $status));
+        if ($lama != $status) {
+            log_aktivitas_nilai('update', 'status_mbkm', array('status_mbkm' => $lama), array('status_mbkm' => $status), 'mbkm', null, $kode_krs_detail);
+        }
     }
 
     public function insertStatusMbkm($data) {
         $this->db->insert('mk_mbkm', $data);
+        $kode_krs_detail = isset($data['kode_krs_detail']) ? $data['kode_krs_detail'] : null;
+        if ($kode_krs_detail) {
+            log_aktivitas_nilai('update', 'status_mbkm', array('status_mbkm' => null), array('status_mbkm' => '1'), 'mbkm', null, $kode_krs_detail);
+        }
     }
 
     public function getTahunAkademik($kode_ta) {

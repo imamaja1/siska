@@ -140,6 +140,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?= site_url('admin/mbkm/daftar'); ?>"><i class="fa fa-circle-o"></i> Daftar Mahasiswa</a></li>
+                        <li><a href="<?= site_url('admin/mbkm/daftar/log'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas MBKM</a></li>
                     </ul>
                 </li>
 

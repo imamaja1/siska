@@ -56,9 +56,7 @@
                                 <th style="text-align:center">Nilai UTS</th>
                                 <th style="text-align:center">Nilai UAS</th>
                                 <th style="text-align:center">Nilai Akhir</th>
-                                <th style="text-align:center">NA KRS</th>
                                 <th style="text-align:center">Grade</th>
-                                <th style="text-align:center">Ket</th>
                                 <th style="text-align:center">Status</th>
                             </tr>
                         </thead>
@@ -76,9 +74,7 @@
                                 <td style="text-align:center"><?= ($row->nilai_uts === null || $row->nilai_uts === '') ? '' : e($row->nilai_uts) ?></td>
                                 <td style="text-align:center"><?= ($row->nilai_uas === null || $row->nilai_uas === '') ? '' : e($row->nilai_uas) ?></td>
                                 <td style="text-align:center"><?= ($row->nilai_akhir === null || $row->nilai_akhir === '') ? '' : e($row->nilai_akhir) ?></td>
-                                <td style="text-align:center"><?= ($row->na_krs === null || $row->na_krs === '') ? '' : e($row->na_krs) ?></td>
                                 <td style="text-align:center"><?= ($row->status == 'K' || empty($row->grade)) ? '-' : e($row->grade) ?></td>
-                                <td style="text-align:center"><?= $row->tidak_berhak == 'A' ? 'TB' : '' ?></td>
                                 <td style="text-align:center">
                                     <?php if ($row->status == 'K') : ?>
                                         <span class="label label-danger">K</span>
@@ -134,8 +130,7 @@
                     [7, 'nilai_harian'],
                     [8, 'nilai_uts'],
                     [9, 'nilai_uas'],
-                    [10, 'nilai_akhir'],
-                    [13, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']
+                    [10, 'nilai_akhir']
                 ]
             },
             onSuccess: function (data, textStatus, jqXHR) {
@@ -143,7 +138,7 @@
                     if (data.action === 'edit' && lastKodeKrsDetail) {
                         $('#table-edit tbody tr').each(function () {
                             if ($(this).find('td:eq(1)').text() === lastKodeKrsDetail) {
-                                $(this).find('td:eq(12)').text(data.grade || '-');
+                                $(this).find('td:eq(11)').text(data.grade || '-');
                             }
                         });
                         swal("Berhasil!", "Pembaruan selesai", "success");

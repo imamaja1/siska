@@ -85,7 +85,11 @@ class Krs_mahasiswa extends CI_Controller {
             $nilai_uts = isset($input['nilai_uts']) ? $input['nilai_uts'] : null;
             $nilai_uas = isset($input['nilai_uas']) ? $input['nilai_uas'] : null;
             $nilai_akhir = isset($input['nilai_akhir']) ? $input['nilai_akhir'] : null;
-            $tidak_berhak = isset($input['tidak_berhak']) ? $input['tidak_berhak'] : 'N';
+            $tidak_berhak = isset($input['tidak_berhak']) ? $input['tidak_berhak'] : null;
+            if ($tidak_berhak === null) {
+                $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+                $tidak_berhak = $row ? $row->tidak_berhak : 'N';
+            }
 
             $this->nilaiservice->edit_khs_detail_full($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak);
 

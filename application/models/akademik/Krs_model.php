@@ -401,6 +401,19 @@ class Krs_model extends CI_Model
         return $this->db->where('kode_krs', $kode_krs)->delete($this->table);
     }
 
+    function get_all_krs_detail_by_nim($nim)
+    {
+        return $this->db->select('krs.kode_tahun_akademik, ta.tahun_akademik as nama_ta, krs.semester, krs.kode_krs, krs_detail.kode_krs_detail, krs_detail.status, matakuliah.kode_matakuliah, matakuliah.nama_matakuliah, matakuliah.sks_teori, matakuliah.sks_praktek, matakuliah.sks_praktikum, khs_detail.nilai_akhir')
+                ->from('krs')
+                ->join('krs_detail', 'krs_detail.kode_krs = krs.kode_krs')
+                ->join('matakuliah', 'matakuliah.id_matakuliah = krs_detail.id_matakuliah')
+                ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik = krs.kode_tahun_akademik', 'left')
+                ->join('khs_detail', 'khs_detail.kode_krs_detail = krs_detail.kode_krs_detail', 'left')
+                ->where('krs.nim', $nim)
+                ->order_by('krs.kode_tahun_akademik', 'DESC')
+                ->get()->result();
+    }
+
     function cek_konversi_matakuliah($nim)
     {
         $query = $this->db->select('*')

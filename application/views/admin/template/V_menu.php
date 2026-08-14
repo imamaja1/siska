@@ -114,6 +114,7 @@
                                 <li><a href="<?= site_url('admin/akademik/perubahan/semester_ini'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Ini</a></li>
                                 <li><a href="<?= site_url('admin/akademik/perubahan/semester_lalu'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Lalu</a></li>
                                 <li><a href="<?= site_url('admin/akademik/perubahan/nilai_kelas'); ?>"><i class="fa fa-circle-o"></i> Nilai Per Kelas</a></li>
+                                <li><a href="<?= site_url('admin/akademik/perubahan/krs_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> KRS Mahasiswa</a></li>
                                 <li><a href="<?= site_url('admin/akademik/perubahan/log_nilai'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas Nilai</a></li>
                             </ul>
                         </li>

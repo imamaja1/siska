@@ -30,7 +30,8 @@ class CekService extends MY_Service {
         $sql = "SELECT dun.kode_khs_detail, dun.na, dun.level,
                        khd.nilai_akhir, mah.nim, mah.nama_mahasiswa,
                        mak.kode_matakuliah, mak.nama_matakuliah, nk.nama_kelas,
-                        CASE WHEN dun.na != khd.nilai_akhir OR dun.na IS NULL OR khd.nilai_akhir IS NULL THEN 'Tidak Sinkron' ELSE 'Sinkron' END as status
+                        CASE WHEN dun.na != khd.nilai_akhir OR dun.na IS NULL OR khd.nilai_akhir IS NULL THEN 'Tidak Sinkron' ELSE 'Sinkron' END as status,
+                        CASE WHEN EXISTS (SELECT 1 FROM mbkm mb WHERE mb.nim = krs.nim AND mb.kode_ta = kelas.kode_tahun_akademik) THEN 1 ELSE 0 END as is_mbkm
                 FROM dummy_update_nilai dun
                 JOIN (
                     SELECT kode_khs_detail, MAX(level) as max_level

@@ -23,7 +23,7 @@
                     </thead>
                     <tbody>
                         <?php $no = 1; foreach ($data as $row) : ?>
-                        <tr class="<?= $row->status == 'Tidak Sinkron' ? 'danger' : '' ?>">
+                        <tr class="<?= $row->is_mbkm ? 'success' : ($row->status == 'Tidak Sinkron' ? 'danger' : '') ?>">
                             <td align="center"><?= $no++ ?></td>
                             <td><?= e($row->nim) ?></td>
                             <td><?= e($row->nama_mahasiswa) ?></td>
@@ -33,7 +33,9 @@
                             <td align="center"><?= e($row->na) ?></td>
                             <td align="center"><?= e($row->nilai_akhir) ?></td>
                             <td align="center">
-                                <?php if ($row->status == 'Tidak Sinkron') : ?>
+                                <?php if ($row->is_mbkm) : ?>
+                                    <span class="label label-success"><?= e($row->status) ?></span>
+                                <?php elseif ($row->status == 'Tidak Sinkron') : ?>
                                     <span class="label label-danger">Tidak Sinkron</span>
                                 <?php else : ?>
                                     <span class="label label-success">Sinkron</span>

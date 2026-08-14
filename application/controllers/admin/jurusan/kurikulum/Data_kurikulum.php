@@ -55,10 +55,8 @@ class Data_kurikulum extends CI_Controller {
         );
       
         $pilihan = $this->kurikulumservice->getKompetensiPilihan($kode_program_studi);
-        if (!empty($pilihan['mk_pilihan'])) {
-            $data['mk_pilihan'] = $pilihan['mk_pilihan'];
-            $data['nama_pilihan'] = $pilihan['nama_pilihan'];
-        }
+        $data['mk_pilihan'] = !empty($pilihan['mk_pilihan']) ? $pilihan['mk_pilihan'] : array();
+        $data['nama_pilihan'] = !empty($pilihan['nama_pilihan']) ? $pilihan['nama_pilihan'] : array();
 
         $this->load->view('admin/template/V_main', $data);
     }
@@ -75,10 +73,8 @@ class Data_kurikulum extends CI_Controller {
         );
 
         $pilihan = $this->kurikulumservice->getKompetensiPilihan($kode_program_studi);
-        if (!empty($pilihan['mk_pilihan'])) {
-            $data['mk_pilihan'] = $pilihan['mk_pilihan'];
-            $data['nama_pilihan'] = $pilihan['nama_pilihan'];
-        }
+        $data['mk_pilihan'] = !empty($pilihan['mk_pilihan']) ? $pilihan['mk_pilihan'] : array();
+        $data['nama_pilihan'] = !empty($pilihan['nama_pilihan']) ? $pilihan['nama_pilihan'] : array();
       
         $this->load->view('admin/jurusan/kurikulum/Data_kurikulum/Excel', $data);
     }

@@ -42,7 +42,7 @@
                                 <td id="kode-matakuliah-<?= e($d->kode_kurikulum) ?>"><?= e($d->kode_matakuliah) ?></td>
                                 <td>
                                   <?= e($d->nama_matakuliah) ?>
-                                  <?= ($nama_pilihan[$d->id_matakuliah] == true) ? ' - (Kompetensi : ' . e($nama_pilihan[$d->id_matakuliah]) . ')' : '' ?>
+                                  <?= (!empty($nama_pilihan[$d->id_matakuliah])) ? ' - (Kompetensi : ' . e($nama_pilihan[$d->id_matakuliah]) . ')' : '' ?>
                                   <?= ($d->jenis == 1) ? '- (Matakuliah Pilihan)' : '' ?>
                                 </td>
                                 <td style="text-align: center"><?= e($d->sks_teori) ?></td>

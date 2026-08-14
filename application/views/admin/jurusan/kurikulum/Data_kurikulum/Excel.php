@@ -62,7 +62,7 @@ header("Expires: 0");
                     <td style="text-align: center"><?= e($d->kode_matakuliah) ?></td>
                      <td>
                         <?= e($d->nama_matakuliah) ?>
-                        <?= ($nama_pilihan[$d->id_matakuliah] == true) ? ' - (Kompetensi : ' . $nama_pilihan[$d->id_matakuliah] . ')' : '' ?>
+                        <?= (!empty($nama_pilihan[$d->id_matakuliah])) ? ' - (Kompetensi : ' . $nama_pilihan[$d->id_matakuliah] . ')' : '' ?>
                         <?= ($d->jenis == 1) ? '- (Matakuliah Pilihan)' : '' ?>
                     </td>
                     <td style="text-align: center"><?= e($d->sks_teori) ?></td>

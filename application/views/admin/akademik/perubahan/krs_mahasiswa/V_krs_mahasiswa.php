@@ -93,25 +93,38 @@
 </div>
 
 <script type="text/javascript">
-    $('#table-edit').Tabledit({
-        url: "<?= site_url('admin/akademik/perubahan/Krs_mahasiswa/ubah_krs_nilai') ?>",
-        hideIdentifier: true,
-        restoreButton: false,
-        editButton: false,
-        columns: {
-            identifier: [1, 'kode_krs_detail'],
-            editable: []
-        },
-        onSuccess: function (data, textStatus, jqXHR) {
-            if (data && data.status === true && data.action === 'delete') {
-                $('#table-edit tbody tr.tabledit-deleted-row').remove();
-                swal("Berhasil!", "Penghapusan berhasil", "success");
-            } else {
-                swal("Gagal!", "Gagal menghapus data", "error");
+    $(document).ready(function () {
+        $('#table-edit').dataTable({
+            "ordering": false,
+            "info": false,
+            "searching": true,
+            "paging": false,
+            "columnDefs": [{
+                orderable: false,
+                targets: "no-sort"
+            }]
+        });
+
+        $('#table-edit').Tabledit({
+            url: "<?= site_url('admin/akademik/perubahan/Krs_mahasiswa/ubah_krs_nilai') ?>",
+            hideIdentifier: true,
+            restoreButton: false,
+            editButton: false,
+            columns: {
+                identifier: [1, 'kode_krs_detail'],
+                editable: []
+            },
+            onSuccess: function (data, textStatus, jqXHR) {
+                if (data && data.status === true && data.action === 'delete') {
+                    $('#table-edit tbody tr.tabledit-deleted-row').remove();
+                    swal("Berhasil!", "Penghapusan berhasil", "success");
+                } else {
+                    swal("Gagal!", "Gagal menghapus data", "error");
+                }
+            },
+            onFail: function (jqXHR, textStatus, errorThrown) {
+                swal("Gagal!", "Terjadi kesalahan saat menghapus", "error");
             }
-        },
-        onFail: function (jqXHR, textStatus, errorThrown) {
-            swal("Gagal!", "Terjadi kesalahan saat menghapus", "error");
-        }
+        });
     });
 </script>

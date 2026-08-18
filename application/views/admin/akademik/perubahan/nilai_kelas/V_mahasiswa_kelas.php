@@ -39,7 +39,7 @@
                 <th id="color"><center>Nilai Akhir</center></th>
                 <th id="color"><center>Grade</center></th>
                 <th id="color"><center>Ket</center></th>
-                <th id="color"><center>Action</center></th>
+                <th id="color"><center>Status</center></th>
             </tr>
             </thead>
             <tbody>

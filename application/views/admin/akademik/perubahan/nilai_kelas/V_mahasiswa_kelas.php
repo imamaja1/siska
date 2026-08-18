@@ -25,6 +25,7 @@
                 <td><strong>:</strong></td>
                 <td><?= e(isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '') ?><?= isset($tahun_akademik->semester) && $tahun_akademik->semester == 1 ? ' - Ganjil' : (isset($tahun_akademik->semester) && $tahun_akademik->semester == 0 ? ' - Genap' : '') ?></td>
             </tr>
+
         </table>
         <table class="table demo-table" id="table-edit">
             <thead>
@@ -38,6 +39,7 @@
                 <th id="color"><center>Nilai Akhir</center></th>
                 <th id="color"><center>Grade</center></th>
                 <th id="color"><center>Ket</center></th>
+                <th id="color"><center>Action</center></th>
             </tr>
             </thead>
             <tbody>

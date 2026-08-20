@@ -45,7 +45,7 @@ class Krs_model extends CI_Model
 
     function khs($kode_krs)
     {
-        $krs_detail = $this->db->query("SELECT *, krs.semester FROM khs_detail, krs, krs_detail, matakuliah, mahasiswa WHERE krs.kode_krs=krs_detail.kode_krs and krs_detail.kode_krs_detail=khs_detail.kode_krs_detail and krs_detail.id_matakuliah=matakuliah.id_matakuliah and krs.nim=mahasiswa.nim and krs_detail.kode_krs=?", array($kode_krs))->result();
+        $krs_detail = $this->db->query("SELECT krs.nim, krs.semester, krs.kode_krs, krs.kode_tahun_akademik, krs_detail.kode_krs_detail, krs_detail.id_matakuliah, krs_detail.status as detail_status, matakuliah.kode_matakuliah, matakuliah.nama_matakuliah, matakuliah.sks_teori, matakuliah.sks_praktek, matakuliah.sks_praktikum, mahasiswa.nama_mahasiswa, khs_detail.nilai_harian, khs_detail.nilai_uts, khs_detail.nilai_uas, khs_detail.nilai_akhir, khs_detail.tidak_berhak, khs_detail.kode_khs_detail FROM krs INNER JOIN krs_detail ON krs.kode_krs=krs_detail.kode_krs INNER JOIN matakuliah ON krs_detail.id_matakuliah=matakuliah.id_matakuliah INNER JOIN mahasiswa ON krs.nim=mahasiswa.nim LEFT JOIN khs_detail ON krs_detail.kode_krs_detail=khs_detail.kode_krs_detail WHERE krs_detail.kode_krs=?", array($kode_krs))->result();
 
         if (count($krs_detail) > 0) {
             return $krs_detail;

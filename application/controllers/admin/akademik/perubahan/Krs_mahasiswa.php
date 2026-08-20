@@ -81,10 +81,10 @@ class Krs_mahasiswa extends CI_Controller {
 
         if (isset($input['action']) && $input['action'] === 'edit') {
             $kode_krs_detail = isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : '';
-            $nilai_harian = isset($input['nilai_harian']) ? $input['nilai_harian'] : null;
-            $nilai_uts = isset($input['nilai_uts']) ? $input['nilai_uts'] : null;
-            $nilai_uas = isset($input['nilai_uas']) ? $input['nilai_uas'] : null;
-            $nilai_akhir = isset($input['nilai_akhir']) ? $input['nilai_akhir'] : null;
+            $nilai_harian = isset($input['edit_nilai_harian']) ? $input['edit_nilai_harian'] : null;
+            $nilai_uts = isset($input['edit_nilai_uts']) ? $input['edit_nilai_uts'] : null;
+            $nilai_uas = isset($input['edit_nilai_uas']) ? $input['edit_nilai_uas'] : null;
+            $nilai_akhir = isset($input['edit_nilai_akhir']) ? $input['edit_nilai_akhir'] : null;
             $tidak_berhak = isset($input['tidak_berhak']) ? $input['tidak_berhak'] : null;
             if ($tidak_berhak === null) {
                 $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();

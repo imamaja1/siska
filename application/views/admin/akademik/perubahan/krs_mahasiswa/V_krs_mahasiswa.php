@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary flat">
-            <div class="box-header">
+            <div class="box-header with-border">
                 <h4><i class="fa fa-user"></i> Identitas Mahasiswa</h4>
             </div>
             <div class="box-body">
@@ -36,13 +36,13 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary flat">
-            <div class="box-header">
+            <div class="box-header with-border">
                 <h4><i class="fa fa-table"></i> Matakuliah yang Diambil (Semua Tahun Akademik)</h4>
             </div>
             <div class="box-body">
-                <?php if (count($data) > 0) : ?>
+                <?php if (isset($data) && count($data) > 0) : ?>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="table-edit">
+                    <table class="table table-bordered table-striped table-krs-mhs" id="table-edit">
                         <thead>
                             <tr>
                                 <th style="text-align:center; width:40px;">No</th>
@@ -65,7 +65,7 @@
                             <tr>
                                 <td style="text-align:center"><?= $no++ ?></td>
                                 <td style="display:none"><?= e($row->kode_krs_detail) ?></td>
-                                <td><?= e($row->nama_ta) ?></td>
+                                <td><?= e($row->nama_ta) ?: '-' ?></td>
                                 <td style="text-align:center"><?= e($row->semester) ?></td>
                                 <td><?= e($row->kode_matakuliah) ?></td>
                                 <td><?= e($row->nama_matakuliah) ?></td>
@@ -102,6 +102,7 @@
     var lastKodeKrsDetail = '';
 
     $(document).ready(function () {
+        if ($('#table-edit').length && $('#table-edit').is('table')) {
         $('#table-edit').Tabledit({
             url: "<?= site_url('admin/akademik/perubahan/Krs_mahasiswa/ubah_krs_nilai') ?>",
             hideIdentifier: true,
@@ -116,10 +117,10 @@
             columns: {
                 identifier: [1, 'kode_krs_detail'],
                 editable: [
-                    [7, 'nilai_harian'],
-                    [8, 'nilai_uts'],
-                    [9, 'nilai_uas'],
-                    [10, 'nilai_akhir']
+                    [7, 'edit_nilai_harian'],
+                    [8, 'edit_nilai_uts'],
+                    [9, 'edit_nilai_uas'],
+                    [10, 'edit_nilai_akhir']
                 ]
             },
             onSuccess: function (data, textStatus, jqXHR) {
@@ -143,5 +144,6 @@
                 swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
             }
         });
+        }
     });
 </script>

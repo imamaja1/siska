@@ -42,6 +42,7 @@
     </div>
 </div>
 <script>
+    if ($('.nilai-kkp').length && $('.nilai-kkp').is('table')) {
     $('.nilai-kkp').Tabledit({
         url: "<?= site_url('admin/akademik/perubahan/Semester_ini/ubah_krs_nilai') ?>",
         hideIdentifier: true,
@@ -62,4 +63,5 @@
         }
 
     });
+    }
 </script>

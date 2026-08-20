@@ -56,6 +56,7 @@
 
 <?php endif; ?>
 <script type="text/javascript">
+    if ($('#table-edit').length && $('#table-edit').is('table')) {
     $('#table-edit').Tabledit({
         url: "<?= site_url('admin/akademik/kpat/nilai/ubah_nilai') ?>",
         hideIdentifier: true,
@@ -67,4 +68,5 @@
             editable: [[4, 'nilai_harian'], [5, 'nilai_uts'], [6, 'nilai_uas'], [7, 'nilai_akhir']],
         }
     });
+    }
 </script>

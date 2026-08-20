@@ -5,7 +5,7 @@
                 <div class="row">
                     <form action="<?= site_url('admin/kuisioner/kelas/filter') ?>" method="post">
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-                        <div class="col-xs-4">
+                        <div class="col-xs-12 col-sm-4">
                             <div class="form-group" style="margin: 0px">
                                 <select name="kode_tahun_akademik" onchange="change_tahun_akademik(this.value)"
                                         class="form-control select2">
@@ -20,7 +20,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-12 col-sm-4">
                             <div class="form-group" style="margin: 0px">
                                 <select name="kode_program_studi" onchange="makul(this.value)" class="form-control">
                                     <option value="" selected disabled>Pilih Program Studi</option>
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="col-xs-4">
+                    <div class="col-xs-12 col-sm-4" style="margin-top: 5px;">
                         <div class="pull-right">
                             <a href="<?= site_url('admin/kuisioner/kelas/aktivasi_nilai'); ?>" class="btn btn-sm btn-primary"><i class="fa fa-file-text"></i> Aktivasi Nilai</a>
                             <?php if ($setting->aktif_kuisioner == 'A'): ?>

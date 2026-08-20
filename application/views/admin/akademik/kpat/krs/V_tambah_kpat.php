@@ -4,9 +4,22 @@
     <span class="badge bg-teal pull-right">Nama mahasiswa : <?= e($mahasiswa->nama_mahasiswa) ?></span>
     </div>
 </div>
+<div class="box box-solid flat">
+    <div class="box-body">
+        <div class="form-inline">
+            <label for="ta-kpat"><strong>Tahun Akademik :</strong></label>
+            <select id="ta-kpat" class="form-control" onchange="prosesTa()">
+                <?php foreach ($tahun_akademik as $ta) : ?>
+                    <option value="<?= e($ta->kode_tahun_akademik) ?>" <?= $ta->kode_tahun_akademik == $kode_tahun_akademik ? 'selected' : '' ?>><?= e($ta->tahun_akademik) ?> - <?= $ta->semester == 0 ? 'Genap' : 'Ganjil' ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>
 <?php if (count($data) > 0) : ?>
 <form id="form-krs-kpat" method="POST" name="krs_form" action="<?= site_url('admin/akademik/kpat/krs/simpan_krs')  ?>">
 <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+<input type="hidden" name="kode_tahun_akademik" value="<?= e($kode_tahun_akademik) ?>">
 <div class="box box-primary flat">
 	<div class="box-body flat">
         <p style="text-align: center;"><strong>MATAKULIAH KPAT</strong></p>
@@ -77,6 +90,12 @@
 	function batal() {
 		$('.check-kpat').attr('checked',false);
 		$('#kotak-pesan').html('Matakuiah KPAT');
+	}
+
+	function prosesTa() {
+		var nim = <?= json_encode($mahasiswa->nim) ?>;
+		var ta = $('#ta-kpat').val();
+		window.location.href = "<?= site_url('admin/akademik/kpat/krs/tambah') ?>/" + nim + "/" + ta;
 	}
 
 	$(window).bind("load", function() {

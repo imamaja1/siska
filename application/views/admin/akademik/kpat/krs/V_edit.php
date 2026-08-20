@@ -6,11 +6,15 @@
         <?php endif; ?>
         <a href="#" onclick="history.back()" class="btn btn-success btn-sm flat"><i
                     class="fa fa-arrow-left"></i> Kembali</a>
+        <?php if  (isset($data['kode_krs'])) : ?>
+            <a href="#" class="btn btn-danger btn-sm flat" onclick="hapusKrs(<?= (int) $data['kode_krs'] ?>);"><i
+                        class="fa fa-trash"></i> Hapus KRS</a>
+        <?php endif; ?>
     </div>
 </div>
 
 <div class="box box-primary flat">
-    <div class="box-header">
+    <div class="box-header with-border">
 
     </div>
     <div class="box-body">
@@ -62,7 +66,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-            <table class="table table-bordered table-striped demo-table" id="table-edit">
+            <table class="table table-bordered table-striped demo-table table-krs-mhs" id="table-edit">
                 <thead>
                 <tr>
                     <th id="color" width="20" style="text-align: center;">No.</th>
@@ -90,11 +94,11 @@
                         <td style="display:none;"><?= e($row['kode_krs_detail']) ?></td>
                         <td style="text-align: center;"><?= e($row['kode_matakuliah']) ?></td>
                         <td><?= e($row['nama_matakuliah']) ?></td>
-                        <td style="text-align:center;"><?= e($row['nilai_harian']) ?></td>
-                        <td style="text-align:center;"><?= e($row['nilai_uts']) ?></td>
-                        <td style="text-align:center;"><?= e($row['nilai_uas']) ?></td>
-                        <td style="text-align: center;"><?= e($row['nilai_akhir']) ?></td>
-                        <td style="text-align: center;"><?= e($row['grade']) ?></td>
+                        <td style="text-align: center;"><?= !empty($row['nilai_harian']) ? e($row['nilai_harian']) : '' ?></td>
+                        <td style="text-align:center;"><?= !empty($row['nilai_uts']) ? e($row['nilai_uts']) : '' ?></td>
+                        <td style="text-align:center;"><?= !empty($row['nilai_uas']) ? e($row['nilai_uas']) : '' ?></td>
+                        <td style="text-align: center;"><?= !empty($row['nilai_akhir']) ? e($row['nilai_akhir']) : '' ?></td>
+                        <td style="text-align: center;"><?= !empty($row['grade']) ? e($row['grade']) : '-' ?></td>
                         <td style="text-align: center;"><?= e($row['tb'] == 'A' ? 'TB' : "") ?></td>
                     </tr>
                     <?php ?>
@@ -192,28 +196,63 @@
 
 
     <script type="text/javascript">
-        $('#table-edit').Tabledit({
-            url: "<?= site_url('admin/akademik/kpat/krs/ubah_krs_nilai') ?>",
-            hideIdentifier: true,
-            buttons: {
-                confirm: {
-                    class: 'btn btn-sm btn-danger',
-                    html: 'Confirm'
-                },
-                save: {
-                    class: 'btn btn-sm btn-success',
-                    html: 'Save'
-                }
-            },
-            columns: {
-                identifier: [1, 'kode_krs_detail'],
-                editable: [[4, 'edit_nilai_harian'], [5, 'edit_nilai_uts'], [6, 'edit_nilai_uas'], [7, 'edit_nilai_akhir'],[9, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']],
+        $(document).ready(function () {
+            if ($('#table-edit').length && $('#table-edit').is('table')) {
+                $('#table-edit').Tabledit({
+                    url: "<?= site_url('admin/akademik/kpat/krs/ubah_krs_nilai') ?>",
+                    hideIdentifier: true,
+                    deleteButton: true,
+                    restoreButton: false,
+                    buttons: {
+                        confirm: {
+                            class: 'btn btn-sm btn-danger',
+                            html: 'Confirm'
+                        },
+                        save: {
+                            class: 'btn btn-sm btn-success',
+                            html: 'Save'
+                        }
+                    },
+                    columns: {
+                        identifier: [1, 'kode_krs_detail'],
+                        editable: [[4, 'edit_nilai_harian'], [5, 'edit_nilai_uts'], [6, 'edit_nilai_uas'], [7, 'edit_nilai_akhir'],[9, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']],
+                    },
+                    onSuccess: function (data, textStatus, jqXHR) {
+                        if (data && data.status === true) {
+                            if (data.action === 'delete') {
+                                $('#table-edit tbody tr.tabledit-deleted-row').remove();
+                                swal("Berhasil!", "Matakuliah berhasil dihapus", "success");
+                            }
+                        } else {
+                            swal("Gagal!", "Gagal memperbarui data", "error");
+                        }
+                    },
+                    onFail: function (jqXHR, textStatus, errorThrown) {
+                        swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
+                    }
+                });
             }
-
         });
 
         function ref() {
             var url = window.location.href;
             window.location.href = url;
+        }
+
+        function hapusKrs(kodeKrs) {
+            swal({
+                title: "Yakin?",
+                text: "Seluruh KRS KPAT beserta matakuliah dan nilainya akan dihapus permanen!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Ya, Hapus!",
+                cancelButtonText: "Batal",
+                closeOnConfirm: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    window.location.href = "<?= site_url('admin/akademik/kpat/krs/hapus_krs/') ?>" + kodeKrs;
+                }
+            });
         }
     </script>

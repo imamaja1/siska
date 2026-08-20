@@ -131,6 +131,7 @@
 
 
     <script type="text/javascript">
+        if ($('#table-edit').length && $('#table-edit').is('table')) {
         $('#table-edit').Tabledit({
             url: "<?= site_url('admin/akademik/konversi/ubah_krs_nilai_konversi')  ?>",
             hideIdentifier: true,
@@ -150,6 +151,7 @@
             }
 
         });
+        }
 
         function ref() {
             var url = window.location.href;

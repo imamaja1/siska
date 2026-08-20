@@ -19,7 +19,7 @@
 </div>
 <?php if ($exis_kelas > 0) : ?>
     <div class="row">
-        <div class="col-md-3 col-sm-4 col-xs-4" style="padding: 0;">
+        <div class="col-md-3 col-sm-4 col-xs-12" style="padding: 0;">
             <?php foreach ($nama_kelas as $row) : ?>
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="info-box bg-aqua">
@@ -45,7 +45,7 @@
                 <a href="<?= site_url('admin/kuisioner/kelas/add_kelas/'.$last_id) ?>" class="btn btn-info btn-lg" style="border-radius: 50px" title="Tambah Kelas"><i class="fa fa-plus"></i></a>
             </div>
         </div>
-        <div class="col-md-9 col-sm-8 col-xs-8" id="data-mahasiswa">
+        <div class="col-md-9 col-sm-8 col-xs-12" id="data-mahasiswa">
         </div>
     </div>
 

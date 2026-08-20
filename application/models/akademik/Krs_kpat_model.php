@@ -60,10 +60,25 @@ class Krs_kpat_model extends CI_Model {
 		return $this->db->query("SELECT nim FROM krs WHERE nim like ? group by nim ORDER BY nim LIMIT 6", array($keyword . '%'))->result();
 	}
 
+	public function get_kode_krs_kpat($nim, $kode_tahun_akademik)
+	{
+		$query = $this->db->select('krs.kode_krs')
+			->from('krs')
+			->join('krs_detail as kd', 'kd.kode_krs=krs.kode_krs')
+			->where('krs.nim', $nim)
+			->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
+			->where('kd.status', 'K')
+			->group_by('krs.kode_krs')
+			->get()->row_object();
+
+		return $query ? $query->kode_krs : null;
+	}
+
 	public function get_krs_sebelumnya($nim, $kode_tahun_akademik)
 	{
 		$data_krs = $this->get_kode_krs1($nim, $kode_tahun_akademik);
 		$data_penilaian = sistem_penilaian($nim);
+		$khs = array();
 		$j=0;
 		foreach ($data_krs['data'] as $key => $value) {
 			$i=0;
@@ -173,6 +188,7 @@ class Krs_kpat_model extends CI_Model {
                 $data['data'][$i] = $tes;
             }
         }
+        $data['data'] = isset($data['data']) ? $data['data'] : array();
         $data['nim'] = $nim;
         $data['kode_tahun_akademik'] = $kode_tahun_akademik;
 //        echo "<pre>";

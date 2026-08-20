@@ -17,8 +17,7 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <div class="table-responsive">
-          	<table class="table demo-table" >
-            <!-- <table class="table demo-table" id="table-edit"> -->
+          	<table class="table demo-table" id="table-edit">
                 <thead>
                     <tr>	
                         <th id="th">NO.</th>
@@ -80,6 +79,7 @@ if (!empty($link)) {
 ?>
 
 <script type="text/javascript">
+    if ($('#table-edit').length && $('#table-edit').is('table')) {
     $('#table-edit').Tabledit({
         url: "<?= site_url('admin/akademik/nilai/get_all_mahasiswa_for_update_nilai_matakuliah_process') ?>",
         hideIdentifier: true,
@@ -95,6 +95,7 @@ if (!empty($link)) {
             editable: [[5, 'nilai_harian'], [6, 'nilai_uts'], [7, 'nilai_uas'], [8, 'nilai_akhir'], [9, 'tidak_berhak', '{"1": "Berhak", "2": "Tidak Berhak"}']],
         }
     });
+    }
 
     function ref() {
         var url = window.location.href;

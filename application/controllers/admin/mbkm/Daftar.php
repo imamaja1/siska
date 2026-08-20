@@ -7,7 +7,7 @@ class Daftar extends CI_Controller {
     function __construct() {
         parent::__construct();
         if (!$this->session->userdata('nama_login')) {
-            redirect(site_url('login_admin/login'));
+            redirect('login/admin');
         }
         $this->load->model(array(
             'akademik/krs_model',

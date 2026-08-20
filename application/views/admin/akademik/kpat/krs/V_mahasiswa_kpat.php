@@ -28,6 +28,7 @@
 							<a href="<?= site_url('admin/akademik/kpat/krs/edit/'.$row->kode_krs.'/'.$row->nim)  ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a>&nbsp;
 							<a href="<?= site_url('admin/akademik/kpat/krs/lihat_krs/'.$row->kode_krs)  ?>" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> Lihat</a>&nbsp;
 							<a href="<?= site_url('admin/akademik/kpat/krs/cetak/'.$row->kode_krs)  ?>" class="btn btn-danger btn-xs"><i class="fa fa-print"></i> Cetak</a>
+							<a href="#" class="btn btn-danger btn-xs" onclick="hapusKrs(<?= (int) $row->kode_krs ?>);"><i class="fa fa-trash"></i> Hapus</a>
                             </div>
 						</td>
 					</tr>
@@ -44,3 +45,22 @@
         <p>Data tidak ditemukan.</p>
     </div>
 <?php endif ?>
+
+<script type="text/javascript">
+    function hapusKrs(kodeKrs) {
+        swal({
+            title: "Yakin?",
+            text: "Seluruh KRS KPAT beserta matakuliah dan nilainya akan dihapus permanen!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dd4b39",
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false
+        }, function (isConfirm) {
+            if (isConfirm) {
+                window.location.href = "<?= site_url('admin/akademik/kpat/krs/hapus_krs/') ?>" + kodeKrs;
+            }
+        });
+    }
+</script>

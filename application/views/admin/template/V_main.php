@@ -25,7 +25,7 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="<?= base_url('assets/siska/css/demo_table.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/siska/admin.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/siska/admin.css?v=' . filemtime(FCPATH . 'assets/siska/admin.css')) ?>">
 
     <script src="<?= base_url('assets/plugins/jQuery/jQuery-2.2.0.min.js'); ?>"></script>
 <script src="<?= base_url('assets/plugins/chartjs/Chart.min.js'); ?>"></script>

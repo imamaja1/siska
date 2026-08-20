@@ -71,6 +71,7 @@
 
 <script type="text/javascript">
     var lastKodeKrsDetail = '';
+    if ($('#table-edit').length && $('#table-edit').is('table')) {
     $('#table-edit').Tabledit({
         url: "<?= site_url('admin/akademik/perubahan/Nilai_kelas/ubah_krs_nilai') ?>",
         hideIdentifier: true,
@@ -103,6 +104,7 @@
             swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
         }
     });
+    }
 </script>
 <?php else: ?>
     <div class="callout callout-info flat">

@@ -105,6 +105,17 @@ class KPATService extends MY_Service {
         $this->db->where('kode_krs_detail', $kode_krs_detail)->delete('krs_detail');
     }
 
+    public function deleteKrsKpat($kode_krs) {
+        $krs_details = $this->db->select('kode_krs_detail')->where('kode_krs', $kode_krs)->get('krs_detail')->result();
+        foreach ($krs_details as $kd) {
+            $this->deleteKhsDetail($kd->kode_krs_detail);
+            $this->deleteKrsDetail($kd->kode_krs_detail);
+        }
+        $this->db->where('kode_krs', $kode_krs)->delete('khs');
+        log_aktivitas_nilai('delete', 'kode_krs', $kode_krs, null, 'krs', null, null, $kode_krs);
+        $this->db->where('kode_krs', $kode_krs)->delete('krs');
+    }
+
     public function deleteKhsDetail($kode_krs_detail) {
         $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
         if ($row) {

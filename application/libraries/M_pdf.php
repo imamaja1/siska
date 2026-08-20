@@ -26,7 +26,7 @@ class M_pdf extends \Mpdf\Mpdf {
         }
 
         if (is_array($param)) {
-            $param['tempDir'] = sys_get_temp_dir() . '/siska_mpdf';
+            $param['tempDir'] = FCPATH . 'application/cache/mpdf';
             return $param;
         }
 
@@ -59,7 +59,7 @@ class M_pdf extends \Mpdf\Mpdf {
             $config['margin_footer'] = (int)$params[9];
         }
 
-        $config['tempDir'] = sys_get_temp_dir() . '/siska_mpdf';
+        $config['tempDir'] = FCPATH . 'application/cache/mpdf';
 
         return $config;
     }

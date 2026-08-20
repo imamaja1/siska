@@ -109,12 +109,25 @@ class Krs extends CI_Controller
         $this->load->view('admin/template/V_main', $data);
     }
 
-    public function tambah($nim)
+    public function tambah($nim, $kode_tahun_akademik = null)
     {
-        $kode_tahun_akademik = $this->m_tahun_akademik->get_aktif();
+        if ($kode_tahun_akademik === null) {
+            $sess_ta = $this->session->userdata('sess_kode_tahun_akademik');
+            $kode_tahun_akademik = $sess_ta ? $sess_ta : $this->m_tahun_akademik->get_aktif();
+        }
+
+        $kode_krs_existing = $this->Krs_kpat_model->get_kode_krs_kpat($nim, $kode_tahun_akademik);
+        if ($kode_krs_existing) {
+            $this->session->set_flashdata(
+                'info', '<script>swal("Info!", "KRS KPAT untuk Tahun Akademik tersebut sudah ada, silakan ubah.", "info");</script>');
+            redirect('admin/akademik/kpat/krs/edit/' . $kode_krs_existing . '/' . $nim);
+        }
+
         $data['content'] = 'admin/akademik/kpat/krs/V_tambah_kpat';
         $data['judul'] = "TAMBAH KRS KPAT";
         $data['sub_judul'] = "Tambah KPAT";
+        $data['tahun_akademik'] = $this->m_tahun_akademik->get();
+        $data['kode_tahun_akademik'] = $kode_tahun_akademik;
 
         $data['data'] = $this->Krs_kpat_model->get_krs_sebelumnya($nim, $kode_tahun_akademik);
         $data['mahasiswa'] = $this->Mahasiswa_model->get($nim);
@@ -127,15 +140,30 @@ class Krs extends CI_Controller
         $matakuliah_kpat = $this->input->post('kpat');
         $nim = $this->input->post('nim');
         $tahun_angkatan = substr($nim, 0, 2);
-        $tahun = $this->m_tahun_akademik->get_semester();
+
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        if (!$kode_tahun_akademik) {
+            $kode_tahun_akademik = $this->m_tahun_akademik->get_aktif();
+        }
+        $tahun = $this->m_tahun_akademik->get_all_byid($kode_tahun_akademik);
+        if (!$tahun) {
+            $this->session->set_flashdata(
+                    'info', '<script>swal("Gagal!", "Tahun Akademik tidak ditemukan.", "error");</script>');
+            redirect('admin/akademik/kpat/krs');
+        }
         $sem = $tahun->semester;
-        $tahun_akademik = $tahun->tahun_akademik;
-        $kode_tahun_akademik = $tahun->kode_tahun_akademik;
+        $tahun_akademik = $tahun->tahun;
 
         if ($sem == 0) {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 2;
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
+        }
+
+        if (empty($matakuliah_kpat)) {
+            $this->session->set_flashdata(
+                    'info', '<script>swal("Gagal!", "Pilih minimal satu matakuliah KPAT.", "error");</script>');
+            redirect('admin/akademik/kpat/krs/tambah/' . $nim . '/' . $kode_tahun_akademik);
         }
 //        Simpan Data KRS
         $data_krs = array(
@@ -239,13 +267,22 @@ class Krs extends CI_Controller
 //        $tahun_akademik = $this->m_tahun_akademik->get_aktif();
 //        $kode_krs = $this->Krs_model->get_kode_krs($nim, $tahun_akademik);
         $cek = $this->kpatservice->getKrsByKodeKrs($kode_krs);
+        if (!$cek) {
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Data KRS tidak ditemukan.", "error");</script>');
+            redirect('admin/akademik/kpat/krs');
+        }
         $data_penilaian = data_penilaian($nim, $cek->semester);
         $program_studi = get_kode_prodi($nim);
+        if (!$program_studi) {
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Program Studi tidak ditemukan.", "error");</script>');
+            redirect('admin/akademik/kpat/krs');
+        }
         $data_krs = $this->Krs_model->khs($kode_krs);
 
         $khs['sksn'] = 0;
         $khs['total_sks'] = 0;
         $khs['total_bobot'] = 0;
+        $khs['data_nilai'] = array();
         $i = 0;
         if ($data_krs) :
             foreach ($data_krs as $row) {
@@ -258,13 +295,15 @@ class Krs extends CI_Controller
                 $khs['data_nilai'][$i]['kode_krs_detail'] = $row->kode_krs_detail;
                 $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                 $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
-                $khs['data_nilai'][$i]['nilai_harian'] = $row->nilai_harian;
-                $khs['data_nilai'][$i]['nilai_uts'] = $row->nilai_uts;
-                $khs['data_nilai'][$i]['nilai_uas'] = $row->nilai_uas;
+                $khs['data_nilai'][$i]['nilai_harian'] = $row->nilai_harian !== null ? $row->nilai_harian : '';
+                $khs['data_nilai'][$i]['nilai_uts'] = $row->nilai_uts !== null ? $row->nilai_uts : '';
+                $khs['data_nilai'][$i]['nilai_uas'] = $row->nilai_uas !== null ? $row->nilai_uas : '';
                 $khs['data_nilai'][$i]['sks'] = $row->sks_teori + $row->sks_praktek + $row->sks_praktikum;
                 $khs['data_nilai'][$i]['tb'] = $row->tidak_berhak;
-                $nilai_akhir = $row->nilai_akhir * 1;
+                $nilai_akhir = ($row->nilai_akhir !== null ? $row->nilai_akhir : 0) * 1;
                 $khs['data_nilai'][$i]['nilai_akhir'] = $nilai_akhir;
+                $khs['data_nilai'][$i]['grade'] = '';
+                $khs['data_nilai'][$i]['sksn'] = 0;
                 foreach ($data_penilaian as $key) {
                     if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
                         $khs['data_nilai'][$i]['grade'] = $key['grade'];
@@ -348,16 +387,40 @@ class Krs extends CI_Controller
     public function ubah_krs_nilai() {
         $input = filter_input_array(INPUT_POST);
 
-        if ($input['action'] === 'edit') {
-            $this->kpatservice->updateKhsDetailRaw($input['kode_krs_detail'], $input['edit_nilai_harian'], $input['edit_nilai_uts'], $input['edit_nilai_uas'], $input['edit_nilai_akhir'], $input['tidak_berhak']);
-        } else if ($input['action'] === 'delete') {
-            $this->kpatservice->deleteKrsDetail($input['kode_krs_detail']);
-            $this->kpatservice->deleteKhsDetail($input['kode_krs_detail']);
-        } else if ($input['action'] === 'restore') {
-            $this->kpatservice->restoreKhsDetail($input['kode_khs_detail']);
+        if (isset($input['action']) && $input['action'] === 'edit') {
+            $this->kpatservice->updateKhsDetailRaw(
+                isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : null,
+                isset($input['edit_nilai_harian']) ? $input['edit_nilai_harian'] : null,
+                isset($input['edit_nilai_uts']) ? $input['edit_nilai_uts'] : null,
+                isset($input['edit_nilai_uas']) ? $input['edit_nilai_uas'] : null,
+                isset($input['edit_nilai_akhir']) ? $input['edit_nilai_akhir'] : null,
+                isset($input['tidak_berhak']) ? $input['tidak_berhak'] : null
+            );
+        } else if (isset($input['action']) && $input['action'] === 'delete') {
+            $kode_krs_detail = isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : null;
+            $this->kpatservice->deleteKrsDetail($kode_krs_detail);
+            $this->kpatservice->deleteKhsDetail($kode_krs_detail);
+            echo json_encode(array('status' => true, 'action' => 'delete'));
+            return;
+        } else if (isset($input['action']) && $input['action'] === 'restore') {
+            $this->kpatservice->restoreKhsDetail(isset($input['kode_khs_detail']) ? $input['kode_khs_detail'] : null);
         }
 
         echo json_encode($input);
+    }
+
+    public function hapus_krs($kode_krs)
+    {
+        $cek = $this->kpatservice->getKrsByKodeKrs($kode_krs);
+        if (!$cek) {
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Data KRS tidak ditemukan.", "error");</script>');
+            redirect('admin/akademik/kpat/krs');
+        }
+
+        $this->kpatservice->deleteKrsKpat($kode_krs);
+
+        $this->session->set_flashdata('info', '<script>swal("Success!", "KRS KPAT berhasil dihapus.", "success");</script>');
+        redirect('admin/akademik/kpat/krs/data_krs_kpat');
     }
 
 }

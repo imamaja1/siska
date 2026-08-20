@@ -18,10 +18,16 @@ class Profil extends CI_Controller {
 
     public function index() {
         $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($this->session->userdata('nim'));
+        $data['dosen_perwakilan'] = null;
         if (!empty($dosen_wali->kode_dosen_perwakilan))
         {
             $dosen_perwakilan = $this->m_dosen->get_dosen_by_kode($dosen_wali->kode_dosen_perwakilan);
-            $data['dosen_perwakilan'] = $dosen_perwakilan->nama_dosen."&nbsp;(<i class='fa fa-phone'></i>&nbsp;".$dosen_perwakilan->no_telp.")";
+            if ($dosen_perwakilan !== null) {
+                $data['dosen_perwakilan'] = array(
+                    'nama_dosen' => $dosen_perwakilan->nama_dosen,
+                    'no_telp' => isset($dosen_perwakilan->no_telp) ? $dosen_perwakilan->no_telp : '',
+                );
+            }
         }
         $data['conten'] = "mahasiswa/V_profil";
         $data['judul'] = 'Profil Mahasiswa';
@@ -33,7 +39,8 @@ class Profil extends CI_Controller {
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 
-    function ubah_data_mahasiswa($nim) {
+    function ubah_data_mahasiswa() {
+        $nim = $this->session->userdata('nim');
         $data['conten'] = "mahasiswa/V_mahasiswa_update";
         $data['judul'] = 'Ubah Profil Mahasiswa';
 
@@ -44,7 +51,12 @@ class Profil extends CI_Controller {
     }
 
     public function simpan_update() {
-        $nim = $this->input->post('nim');
+        $nim = $this->session->userdata('nim');
+        if ($nim !== $this->input->post('nim')) {
+            $this->session->set_flashdata(
+                'info', '<script>swal("Gagal!","NIM tidak valid.","error")</script>');
+            redirect('mahasiswa/profil');
+        }
         $this->form_validation->set_rules('nim', 'nim', 'required', array('required' => 'Field NIM Mahasiswa harus diisi'));
         $this->form_validation->set_rules('npm', 'npm', 'required', array('required' => 'Field NPM Mahasiswa harus diisi'));
         $this->form_validation->set_rules('no_pendaftaran', 'no_pendaftaran', 'required', array('required' => 'Field Nomor Pendaftaran Mahasiswa harus diisi'));
@@ -72,7 +84,7 @@ class Profil extends CI_Controller {
         $this->form_validation->set_rules('kota_orangtua', 'kota_orangtua', 'required', array('required' => 'Field Kota Orang Tua harus diisi'));
         $this->form_validation->set_rules('propinsi_orangtua', 'propinsi_orangtua', 'required', array('required' => 'Field Propinsi Orang Tua harus dipilih'));
         $this->form_validation->set_rules('nik', 'nik', 'required|min_length[16]|numeric|max_length[16]', array('numeric'=> 'Field NIK harus angka','required' => 'Field NIK harus dipilih','min_length'=> 'Field NIK haurs 16 digit','max_length'=> 'Field NIK haurs 16 digit' ));
-        $this->form_validation->set_rules('email', 'email', 'required', array('required' => 'Field Email Harus di isi'));
+        $this->form_validation->set_rules('email', 'email', 'required|valid_email', array('required' => 'Field Email Harus diisi', 'valid_email' => 'Format Email tidak valid'));
 
         if ($this->form_validation->run() == false) {
             $data['conten'] = "mahasiswa/V_mahasiswa_update";
@@ -119,6 +131,10 @@ class Profil extends CI_Controller {
                 $this->session->set_flashdata(
                         'info', '<script>swal("Sukses!","Ubah data mahasiswa berhasil.","success")</script>');
                 redirect('mahasiswa/profil');
+            } else {
+                $this->session->set_flashdata(
+                        'info', '<script>swal("Gagal!","Ubah data mahasiswa gagal. Periksa kembali isian Anda.","error")</script>');
+                redirect('mahasiswa/profil');
             }
         }
     }
@@ -128,14 +144,15 @@ class Profil extends CI_Controller {
         $result = $this->mahasiswaservice->uploadImage($nim, $nim, './assets/foto/');
 
         if ($result['status']) {
+            $this->session->set_userdata('foto', $result['foto']);
             $this->session->set_flashdata(
                 'info',
-                '<script>swal("Sukses!","Upload foto berhasil.","success")</script>'
+                '<script>swal({title:"Sukses!",text:"Upload foto berhasil.",type:"success"})</script>'
             );
         } else {
             $this->session->set_flashdata(
                 'info',
-                '<script>swal("Gagal!","' . $result['msg'] . '","error")</script>'
+                '<script>swal({title:"Gagal!",text:"' . addslashes($result['msg']) . '",type:"error"})</script>'
             );
         }
         redirect('mahasiswa/profil');

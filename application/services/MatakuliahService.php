@@ -41,12 +41,21 @@ class MatakuliahService extends MY_Service {
     }
 
     public function simpanMatakuliah($post_data) {
-        $data = $post_data;
-        $data['kode_program_studi'] = $post_data['kode_nama_jurusan'];
-        if (empty($post_data['kode_kompetensi'])) {
+        $data = array(
+            'kode_matakuliah' => $post_data['kode_matakuliah'],
+            'nama_matakuliah' => trim(str_replace('&nbsp;', ' ', $post_data['nama_matakuliah'])),
+            'sks_teori' => $post_data['sks_teori'],
+            'sks_praktek' => $post_data['sks_praktek'],
+            'sks_praktikum' => $post_data['sks_praktikum'],
+            'kode_program_studi' => $post_data['kode_nama_jurusan'],
+            'jenis' => $post_data['jenis'],
+            'block' => $post_data['block'],
+        );
+        if (!empty($post_data['kode_kompetensi'])) {
+            $data['kode_kompetensi'] = $post_data['kode_kompetensi'];
+        } else {
             $data['kode_kompetensi'] = null;
         }
-        unset($data['kode_nama_jurusan']);
         
         $simpan = $this->db->insert('matakuliah', $data);
         if ($simpan) {
@@ -64,7 +73,7 @@ class MatakuliahService extends MY_Service {
         $param = $post_data['param_edit'];
         $data_matakuliah = array(
             'kode_matakuliah' => $post_data['kode_matakuliah'],
-            'nama_matakuliah' => $post_data['nama_matakuliah'],
+            'nama_matakuliah' => trim(str_replace('&nbsp;', ' ', $post_data['nama_matakuliah'])),
             'sks_teori' => $post_data['sks_teori'],
             'sks_praktek' => $post_data['sks_praktek'],
             'sks_praktikum' => $post_data['sks_praktikum'],
@@ -118,6 +127,10 @@ class MatakuliahService extends MY_Service {
             return true;
         }
         return false;
+    }
+
+    public function getPrasyaratByKurikulum($kode_nama_kurikulum) {
+        return $this->m_matakuliah_prasyarat->get_byid_kurikulum($kode_nama_kurikulum);
     }
 
     public function ubahPrasyarat($post_data) {

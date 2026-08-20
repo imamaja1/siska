@@ -127,7 +127,7 @@
        $('#form-krs-kpat').submit(function () {
            var button = $('#loading');
            // Disable the submit button while evaluating if the form should be submitted
-           button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang di proses..</button>');
+           button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang diproses..</button>');
            var valid = true;
 
            // Do stuff (validations, etc) here and set
@@ -138,7 +138,7 @@
                e.preventDefault();
 
                // Reactivate the button if the form was not submitted
-               button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang di proses..</button>');
+               button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang diproses..</button>');
 
            }
        }) 

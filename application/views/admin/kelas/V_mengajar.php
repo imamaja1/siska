@@ -75,7 +75,7 @@
                     <label for="kode_dosen">Nama Dosen</label>
                         <input id="idf" value="1" type="hidden" />
                         <input id="kode-dosen" name="kode_dosen[]" type="hidden">
-                        <input required type="text" id="search-box" class="form-control" placeholder="Masukan Nama Dosen">
+                        <input required type="text" id="search-box" class="form-control" placeholder="Masukkan Nama Dosen">
                     <div id="suggesstion-box"></div>
                 </div>
                 <div id="dinamic-form">
@@ -135,7 +135,7 @@
         str = "<div class='form-group' id='srow" + idf + "'>" +
             "<div class='col-sm-10' style=\"padding-left: 0;\">" +
             "<input id='kode-dosen-"+idf+"' name='kode_dosen[]' type='hidden'>"+
-            "<input required type='text' onfocus='cari(" + idf + ");' id='search-box-" +idf+ "' class='form-control' placeholder='Masukan Nama Dosen' >" +
+            "<input required type='text' onfocus='cari(" + idf + ");' id='search-box-" +idf+ "' class='form-control' placeholder='Masukkan Nama Dosen' >" +
             "</div><a href='#' class='btn btn-danger flat' onclick='hapusElemen(\"#srow" + idf + "\"); return false;'><i class='fa fa-times'></i> Hapus</a>" +
             "<div id='suggesstion-box-" +idf+ "'></div></div>";
         $('#dinamic-form').append(str);

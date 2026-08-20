@@ -33,7 +33,7 @@ echo isset($flashmessage) ? $flashmessage : '';
 
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">Masukan Kata Kunci :</label>
+                <label class="control-label col-sm-3">Masukkan Kata Kunci :</label>
                 <div class="col-sm-4">
                     <input value="<?= set_value('kata_kunci') ?>" type="text" class="form-control" placeholder="Ketik Kata Kunci disini" name="kata_kunci" id="kata_kunci">
                     <small class="text-danger"><?= form_error('kata_kunci') ?></small>

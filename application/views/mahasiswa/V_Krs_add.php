@@ -132,7 +132,7 @@
                                 <?php if (in_array($pilih['id_matakuliah'], $krs_lalu)) : ?>
                                     <td align="center" width="100"></td>
                                     <td align="center" width="100">
-                                        <input type="checkbox" id="cek-<?= $pilih['id_matakuliah'] ?>" class="check-kpat" onclick="calculate('<?= $pilih['id_matakuliah'] ?>')" name="ulang[]" value="<?= $pilih['id_matakuliah'] ?>,<?= $d['sks_teori']+$d['sks_praktek']+$d['sks_praktikum'] ?>">
+                                        <input type="checkbox" id="cek-<?= $pilih['id_matakuliah'] ?>" class="check-kpat" onclick="calculate('<?= $pilih['id_matakuliah'] ?>')" name="ulang[]" value="<?= $pilih['id_matakuliah'] ?>,<?= $pilih['sks_teori']+$pilih['sks_praktek']+$pilih['sks_praktikum'] ?>">
                                     </td>
                                 <?php else : ?>
                                     <td align="center" width="100">
@@ -291,7 +291,7 @@
 
             var button = $('#loading');
             // Disable the submit button while evaluating if the form should be submitted
-            button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang di proses..</button>');
+            button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang diproses..</button>');
             var valid = true;
 
             // Do stuff (validations, etc) here and set
@@ -302,7 +302,7 @@
                 e.preventDefault();
 
                 // Reactivate the button if the form was not submitted
-                button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang di proses..</button>');
+                button.html('<button class="btn btn-default btn-sm flat" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang diproses..</button>');
 
             }
         }

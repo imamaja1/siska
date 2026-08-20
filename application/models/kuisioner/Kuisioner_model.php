@@ -14,8 +14,7 @@ class Kuisioner_model extends CI_Model
         ->where('kuisioner_id', null)
         ->where('krs.nim',$nim)
         // TODO::cek ini untuk quisioner
-        // matikan jika ingin membuat mahasiswa yg belum ngisi untuk ngisi
-        //->where('kelas.kode_tahun_akademik',$kode_tahun_akademik)
+        ->where('kelas.kode_tahun_akademik',$kode_tahun_akademik)
         ->get()->result();
 
         return $query;
@@ -29,6 +28,9 @@ class Kuisioner_model extends CI_Model
         ->join('kelas_mahasiswa as km','kelas.kelas_id=km.kelas_id')
         ->where('km.kelas_mahasiswa_id', $kelas_mahasiswa_id)
         ->get()->row_object();
+        if (!$matakuliah) {
+            return array();
+        }
         if ($matakuliah->sks_praktikum == 0)
         {
             $query = $this->db->select('*')
@@ -56,6 +58,7 @@ class Kuisioner_model extends CI_Model
             ->order_by('bag.id_bagian ASC')
             ->group_by('bag.id_bagian')
             ->get()->result_object();
+        $data = array();
         $i=0;
         foreach ($bagian as $row) {
             $data[$i]['nama_bagian'] = $row->nama_bagian;
@@ -145,8 +148,8 @@ class Kuisioner_model extends CI_Model
 
     function get_setting()
     {
-        $query = $this->db->get('setting_kuisioner')->row_object();
-        return $query->aktif_kuisioner;
+        $query = $this->db->where('setting_id', '1')->get('setting_kuisioner')->row_object();
+        return $query && isset($query->aktif_kuisioner) ? $query->aktif_kuisioner : '';
     }
 
     function update_setting($data)

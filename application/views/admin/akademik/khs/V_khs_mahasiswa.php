@@ -44,6 +44,6 @@
     <div class="callout callout-warning">
         <h4><i class="fa fa-warning"></i> Peringatan!</h4>
 
-        <p>Data tidak di temukan.</p>
+        <p>Data tidak ditemukan.</p>
     </div>
 <?php endif; ?>

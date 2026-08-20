@@ -161,7 +161,7 @@ if (!empty($link)) {
                             }else{
                                 $(contex).closest(".form-group").removeClass('has-success').addClass('has-error');
                                 $(contex).closest(".form-group").tooltip({
-                                    title : 'Nilai gagal di ubah',
+                                    title : 'Nilai gagal diubah',
                                     trigger: "manual"
                                 });
                                 $(contex).closest(".form-group").tooltip("show");
@@ -200,7 +200,7 @@ if (!empty($link)) {
                     }else{
                         $(contex).closest(".form-group").removeClass('has-success').addClass('has-error');
                         $(contex).closest(".form-group").tooltip({
-                            title : 'Nilai gagal di ubah',
+                            title : 'Nilai gagal diubah',
                             trigger: "manual"
                         });
                         $(contex).closest(".form-group").tooltip("show");
@@ -225,7 +225,7 @@ if (!empty($link)) {
                 }else{
                     $(contex).closest(".form-group").removeClass('has-success').addClass('has-error');
                     $(contex).closest(".form-group").tooltip({
-                        title : 'Tidak behak gagal di ubah',
+                        title : 'Tidak behak gagal diubah',
                         trigger: "manual"
                     });
                     $(contex).closest(".form-group").tooltip("show");

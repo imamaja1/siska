@@ -5,7 +5,7 @@ class Cetak_nilai_uas extends CI_Controller {
     public function __construct() {
         parent::__construct();
         if (!$this->session->userdata('nama_login')) {
-            redirect(site_url('login_admin/login'));
+            redirect('login/admin');
         }
         $this->load->service('NilaiService');
     }

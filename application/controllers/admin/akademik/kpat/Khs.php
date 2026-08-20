@@ -118,6 +118,9 @@ class Khs extends CI_Controller {
 
         $data['data'] = $khs;
         $data['prodi'] = $program_studi;
+        $tahun = $this->m_tahun_akademik->get_semester();
+        $data['semester'] = $khs['semester'];
+        $data['tahun_akademik'] = $tahun->tahun_akademik;
 
         $this->load->view('admin/template/V_main', $data);
     }
@@ -163,6 +166,8 @@ class Khs extends CI_Controller {
 
         $data['data'] = $khs;
         $data['semester'] = $this->get_semester($nim);
+        $tahun = $this->m_tahun_akademik->get_semester();
+        $data['tahun_akademik'] = $tahun->tahun_akademik;
         $data['prodi'] = $program_studi;
 
 

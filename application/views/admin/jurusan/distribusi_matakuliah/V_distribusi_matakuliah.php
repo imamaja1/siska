@@ -64,7 +64,7 @@
             <div class="callout callout-warning">
                 <h4><i class="fa fa-warning"></i> Warnign</h4>
 
-                <p>Tidak di temukan data distribusi matakuliah untuk tahun akademik tersebut</p>
+                <p>Tidak ditemukan data distribusi matakuliah untuk tahun akademik tersebut</p>
             </div>
         <?php endif; ?>
     </div>

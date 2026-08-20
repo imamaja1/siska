@@ -23,7 +23,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+    || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) === 'on');
+$protocol = $is_https ? 'https' : 'http';
 $config['base_url'] = $protocol . '://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/';
 
 /*
@@ -462,7 +465,6 @@ $config['csrf_exclude_uris'] = array(
     'admin/login_admin/logout',
     'mahasiswa/Login_mahasiswa',
     'dosen/Login_dosen',
-    'mahasiswa(.*)',
     'dosen/penilaian/nilai_revisi',
     'dosen/penilaian/revisi_dosen_selesai',
     'dosen/penilaian/revisi_new_penilaian',

@@ -35,6 +35,10 @@ class Tahun_akademik extends CI_Controller {
 
     public function simpan() {
         $res = $this->akademiksetupservice->simpanTahunAkademik($this->input->post());
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($res);
+            return;
+        }
         if ($res['status']) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');
         } else {
@@ -51,6 +55,10 @@ class Tahun_akademik extends CI_Controller {
 
     public function ubah($id) {
         $res = $this->akademiksetupservice->ubahTahunAkademik($id, $this->input->post());
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($res);
+            return;
+        }
         if ($res['status']) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');
         } else {
@@ -61,6 +69,10 @@ class Tahun_akademik extends CI_Controller {
 
     public function hapus($id) {
         $res = $this->akademiksetupservice->hapusTahunAkademik($id);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($res);
+            return;
+        }
         if ($res['status']) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');
         } else {
@@ -71,12 +83,21 @@ class Tahun_akademik extends CI_Controller {
 
     public function ubah_status($id, $status) {
         $res = $this->akademiksetupservice->ubahStatusTahunAkademik($id, $status);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($res);
+            return;
+        }
         if ($res['status']) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');
         } else {
             $this->session->set_flashdata('info', '<script>swal("Gagal!", "'.$res['msg'].'", "error");</script>');
         }
         redirect('admin/jurusan/tahun_akademik');
+    }
+
+    public function render_tabel() {
+        $data['data'] = $this->akademiksetupservice->getTahunAkademikLengkap();
+        $this->load->view('admin/jurusan/V_tabel_tahun_akademik', $data);
     }
 
 }

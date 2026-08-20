@@ -190,12 +190,12 @@ class Semester_lalu extends CI_Controller {
                 'kode_krs_detail' => $id,
             );
             if ($this->Krs_detail_model->simpan_khs($data_khs)) {
-                $this->session->set_flashdata('info', '<script>swal("Success", "Data berhasil di simpan", "success");</script>');
+                $this->session->set_flashdata('info', '<script>swal("Success", "Data berhasil disimpan", "success");</script>');
 
                 redirect('admin/akademik/perubahan/semester_lalu/perubahan/' . $nim);
             }
         } else {
-            $this->session->set_flashdata('info', '<script>swal("Gagal", "Data gagal di simpan", "error");</script>');
+            $this->session->set_flashdata('info', '<script>swal("Gagal", "Data gagal disimpan", "error");</script>');
 
             redirect('admin/akademik/perubahan/semester_lalu/perubahan/' . $nim);
         }

@@ -7,6 +7,7 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <?php if (count($data) > 0): ?>
+            <div class="table-responsive">
             <table class="table demo-table">
                 <thead>
                     <tr>
@@ -47,6 +48,7 @@
                 <?php } ?>
                 </tbody>
             </table>
+            </div>
         <?php else: ?>
             <p class="alert">Tidak ada data Ketua Jurusan.</p>
         <?php endif; ?>
@@ -140,7 +142,7 @@
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                $('#img').attr('src', e.target.result);
+                $('#upload_link-' + id).attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
             var action = "<?= site_url('admin/jurusan/program_studi/ketua_jurusan/upload_image') ?>/"+id;

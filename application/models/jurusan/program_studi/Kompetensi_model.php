@@ -13,13 +13,13 @@ class Kompetensi_model extends CI_Model {
         if ($kode_program_studi == null){
             return $this->db->get($this->table)->result();
         }else{
-          	return  $this->db->select('*')
+            return  $this->db->select('*')
                         ->from('kompetensi')
                         ->join('matakuliah_kompetensi','kompetensi.kode_kompetensi = matakuliah_kompetensi.kode_kompetensi')
                         ->join('kurikulum', 'matakuliah_kompetensi.id_matakuliah=kurikulum.id_matakuliah')
                         ->group_by('kompetensi.kode_kompetensi')
                         ->where('kode_program_studi',$kode_program_studi)
-                        //->where('kurikulum.kode_nama_kurikulum', $kode_nama_kurikulum)
+                        ->where('kurikulum.kode_nama_kurikulum', $kode_nama_kurikulum)
                         ->get()->result();
             //return $this->db->get_where($this->table, array('kode_program_studi'=>$kode_program_studi))->result();
         }

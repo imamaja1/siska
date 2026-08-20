@@ -149,7 +149,7 @@
                 $('.modal-backdrop').remove();
                 var obj = JSON.parse(res);
                 if (!obj.status) {
-                    swal('Gaga', 'Data gagal di tambah', 'error');
+                    swal('Gaga', 'Data gagal ditambah', 'error');
                 }
                 kelas(matakuliah_id);
             }

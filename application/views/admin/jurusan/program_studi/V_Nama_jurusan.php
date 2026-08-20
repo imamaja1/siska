@@ -5,7 +5,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="box box-primary flat">
             <div class="box-body">
                 <div class="table-responsive">

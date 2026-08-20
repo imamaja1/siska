@@ -53,27 +53,27 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <?php $j=1; foreach ($data as $key) : ?>
+                        <?php $total_sks = 0; $total_sksn = 0; $j=1; foreach ($data as $key) : ?>
                             <?php if (isset($key['data_nilai'])) :
                                 $sks=0; $sksn=0;  
                                 foreach ($key['data_nilai'] as $row) : ?>
                                 <tr>
                                     <td><center><?= $j++?>.</center></td>
-                                    <td><center><?= $key['semester']?>.</center></td>
                                     <td><center><?= e($row['kode_matakuliah']) ?></center></td>
+                                    <td><center><?= $key['semester']?></center></td>
                                     <td><?= e($row['nama_matakuliah']) ?></td>
                                     <td><center><?= e($row['sks']) ?></center></td>
                                     <td><center><?= e($row['grade']) ?></center></td>
                                     <td><center><?= e($row['sksn']) ?></center></td>
                                 </tr>
                                 <?php endforeach;
-                                $total_sks = $total_sks = $key['sks'];
-                                $total_sksn = $total_sksn = $key['sksn'];
+                                $total_sks += $key['sks'];
+                                $total_sksn += $key['sksn'];
                             endif; ?>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </dvi>
+            </div>
         </div>
         <!-- end.col-12 -->
         <div class="col-sm-12 col-md-12 col-lg-12">

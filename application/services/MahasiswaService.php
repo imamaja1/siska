@@ -192,24 +192,84 @@ class MahasiswaService extends MY_Service {
 
     public function uploadImage($nim, $file_name, $upload_path) {
         $config['upload_path'] = $upload_path;
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['allowed_types'] = 'jpg|png|jpeg';
         $config['file_name'] = $file_name;
         $config['overwrite'] = true;
-        $config['max_size'] = 10024;
+        $config['max_size'] = 2048;
         
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
         
         if (!$this->upload->do_upload('foto')) {
-            return array('status' => false, 'msg' => $this->upload->display_errors());
+            return array('status' => false, 'msg' => strip_tags($this->upload->display_errors()));
         } else {
             $image_data = $this->upload->data();
+            $this->cropTo3x4($image_data);
+            $mahasiswa = $this->mahasiswa_model->get($nim);
+            $old_foto = $mahasiswa && isset($mahasiswa->foto) ? $mahasiswa->foto : null;
             $data = array('foto' => $image_data['file_name']);
             if ($this->mahasiswa_model->update($nim, $data)) {
+                $placeholders = array('L.png', 'P.png', 'default.png');
+                if ($old_foto && !in_array($old_foto, $placeholders) && $old_foto !== $image_data['file_name']) {
+                    $old_path = FCPATH . 'assets/foto/' . $old_foto;
+                    if (file_exists($old_path)) {
+                        @unlink($old_path);
+                    }
+                }
                 return array('status' => true, 'msg' => 'Upload Success', 'foto' => $image_data['file_name']);
             }
             return array('status' => false, 'msg' => 'Upload failed at DB update');
         }
+    }
+
+    private function cropTo3x4($image_data) {
+        $target_w = 450;
+        $target_h = 600;
+        $src_w = $image_data['image_width'];
+        $src_h = $image_data['image_height'];
+        $path = $image_data['full_path'];
+        $target_ratio = $target_w / $target_h;
+        $src_ratio = $src_w / $src_h;
+
+        if (abs($src_ratio - $target_ratio) < 0.01) {
+            $resize_w = $target_w;
+            $resize_h = $target_h;
+        } elseif ($src_ratio > $target_ratio) {
+            $resize_w = (int)round($src_w * ($target_h / $src_h));
+            $resize_h = $target_h;
+        } else {
+            $resize_w = $target_w;
+            $resize_h = (int)round($src_h * ($target_w / $src_w));
+        }
+
+        $this->load->library('image_lib');
+        $resize_cfg = array(
+            'image_library' => 'gd2',
+            'source_image'  => $path,
+            'maintain_ratio' => TRUE,
+            'width'         => $resize_w,
+            'height'        => $resize_h,
+            'master_dim'    => $src_ratio > $target_ratio ? 'height' : 'width',
+        );
+        $this->image_lib->initialize($resize_cfg);
+        $this->image_lib->resize();
+        $this->image_lib->clear();
+
+        $crop_x = (int)max(0, round(($resize_w - $target_w) / 2));
+        $crop_y = 0;
+
+        $crop_cfg = array(
+            'image_library' => 'gd2',
+            'source_image'  => $path,
+            'maintain_ratio' => FALSE,
+            'width'         => $target_w,
+            'height'        => $target_h,
+            'x_axis'        => $crop_x,
+            'y_axis'        => $crop_y,
+        );
+        $this->image_lib->initialize($crop_cfg);
+        $this->image_lib->crop();
+        $this->image_lib->clear();
     }
 
     public function getMahasiswaByAngkatanJurusanPaginated($nama_angkatan, $kode_program_studi, $limit, $offset) {

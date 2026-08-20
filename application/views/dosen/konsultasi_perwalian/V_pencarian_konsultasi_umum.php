@@ -16,7 +16,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">NIM <label class="text-danger">*</label> :</label>
                 <div class="col-sm-4">
-                    <input value="<?= set_value('nim') ?>" type="text" class="form-control" placeholder="Masukan NIM Mahasiswa" name="nim" id="kata_kunci">
+                    <input value="<?= set_value('nim') ?>" type="text" class="form-control" placeholder="Masukkan NIM Mahasiswa" name="nim" id="kata_kunci">
                     <small class="text-danger"><?= form_error('nim') ?></small>
                 </div>
             </div>

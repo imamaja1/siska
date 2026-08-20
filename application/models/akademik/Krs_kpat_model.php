@@ -7,7 +7,7 @@ class Krs_kpat_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->model('jurusan/m_tahun_akademik');
 	}
 
 	public function filter($kode_tahun_akademik, $angkatan, $kode_program_studi)

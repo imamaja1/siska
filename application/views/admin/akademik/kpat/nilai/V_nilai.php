@@ -33,7 +33,7 @@
                             <tr>
                                 <td style="text-align: center;"><?= $i++ . "." ?></td>
                                 <td style="display:none;"><?= e($row->kode_khs_detail) ?></td>
-                                <td style="text-align: center;"><?= e($row->nim) ?></></td>
+                                <td style="text-align: center;"><?= e($row->nim) ?></td>
                                 <td><?= e($row->nama_mahasiswa) ?></td>
                                 <td style="text-align:center;"><?= e($row->nilai_harian) ?></td>
                                 <td style="text-align:center;"><?= e($row->nilai_uts) ?></td>

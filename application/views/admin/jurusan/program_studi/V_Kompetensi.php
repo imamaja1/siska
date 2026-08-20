@@ -8,6 +8,7 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <?php if (count($data) > 0): ?>
+            <div class="table-responsive">
             <table  class="table demo-table">
                 <thead>
                     <tr>
@@ -28,7 +29,7 @@
                             <td id="nama-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= e($row->nama_kompetensi) ?></td>
                             <td align="center" id="singkatan-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= e($row->singkatan_kompetensi) ?></td>
                             <td align="center"><?php $ns = []; foreach($kode_nama_jurusan as $n) $ns[$n->kode_program_studi ?? $n->kode_program_studi] = $n->nama_program_studi ?? $n->singkatan_program_studi; echo e($ns[$row->kode_program_studi] ?? '-'); ?></td>
-                    <p hidden id="kode-nama-jurusan-<?= e($row->kode_kompetensi) ?>"><?= e($row->kode_program_studi) ?></p>
+                    <td hidden id="kode-nama-jurusan-<?= e($row->kode_kompetensi) ?>"><?= e($row->kode_program_studi) ?></td>
                     <td align="center">
                         <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editKompetensi(<?= e($row->kode_kompetensi) ?>)"><i class="fa fa-edit"></i> Ubah</a>
                         <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/program_studi/kompetensi/hapus/' . $row->kode_kompetensi) ?>')"><i class="fa fa-trash"></i> Hapus</a>
@@ -37,6 +38,7 @@
                 <?php } ?>
                 </tbody>
             </table>
+            </div>
         <?php else: ?>
             <p class="alert">Tidak ada data Jenjang.</p>
         <?php endif; ?>
@@ -55,15 +57,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Kompetensi</label>
-                        <input type="text" name="nama_kompetensi" placeholder="Nama Kompetensi" class="form-control">
+                        <input type="text" name="nama_kompetensi" placeholder="Nama Kompetensi" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Singkatan Kompetensi</label>
-                        <input tpye="text" name="singkatan_kompetensi" placeholder="Singkatan Kompetensi" class="form-control">
+                        <input type="text" name="singkatan_kompetensi" placeholder="Singkatan Kompetensi" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Nama Program Studi</label>
-                        <select name="kode_nama_jurusan" class="form-control">
+                        <select name="kode_nama_jurusan" class="form-control" required>
                             <option value="" disabled selected >Pilih Program Studi</option>
                             <?php foreach ($kode_nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> </option>
@@ -93,15 +95,15 @@
                     <div class="form-group">
                         <label>Nama Kompetensi</label>
                         <input type="hidden" name="param" id="param">
-                        <input type="text" name="nama_kompetensi" placeholder="Nama Kompetensi" class="form-control" id="edit-nama-kompetensi">
+                        <input type="text" name="nama_kompetensi" placeholder="Nama Kompetensi" class="form-control" id="edit-nama-kompetensi" required>
                     </div>
                     <div class="form-group">
                         <label>Singkatan Kompetensi</label>
-                        <input type="text" name="singkatan_kompetensi" placeholder="Singkatan Kompetensi" class="form-control" id="edit-singkatan-kompetensi">
+                        <input type="text" name="singkatan_kompetensi" placeholder="Singkatan Kompetensi" class="form-control" id="edit-singkatan-kompetensi" required>
                     </div>
                     <div class="form-group">
                         <label>Nama Program Studi</label>
-                        <select name="kode_nama_jurusan" class="form-control" id="edit-kode-nama-jurusan">
+                        <select name="kode_nama_jurusan" class="form-control" id="edit-kode-nama-jurusan" required>
                             <option value="" selected disabled>Pilih Program Studi</option>
                             <?php foreach ($kode_nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></option>

@@ -15,7 +15,7 @@
                     <div class="callout callout-info">
                         <h4>Information!</h4>
 
-                        <p>Tidak di temukan error.</p>
+                        <p>Tidak ditemukan error.</p>
                     </div>
                 <?php endif; ?>
             </ul>

@@ -11,7 +11,6 @@ class validasikhusus_uas extends CI_Controller {
             'jurusan/universitas/Fakultas_model',
             'laporan/laporan_model',
             'akademik/Nilai_model',
-            'jurusan/m_tahun_akademik',
         ));
         $this->load->service('ValidasiService');
         $class = $this->router->fetch_class();

@@ -19,8 +19,9 @@
             <center><strong>PERUBAHAN KARTU RENCANA STUDI (KRS)/NILAI KAPT UNTUK SEMESTER INI</strong></center>
             </p>
             <br>
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <table class="table">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div class="table-responsive">
+                <table class="table table-bordered table-striped">
                     <tr>
                         <td><strong>Nama Mahasiswa</strong></td>
                         <td><strong>:</strong></td>
@@ -37,9 +38,11 @@
                         <td><?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil"; ?></td>
                     </tr>
                 </table>
+                </div>
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <table class="table">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div class="table-responsive">
+                <table class="table table-bordered table-striped">
                     <tr>
                         <td><strong>Program Studi</strong></td>
                         <td><strong>:</strong></td>
@@ -56,11 +59,14 @@
 <!--                        <td>--><?//= $data['kurikulum'] ?><!--</td>-->
 <!--                    </tr>-->
                 </table>
+                </div>
             </div>
-            <table class="table demo-table" id="table-edit">
+            <div class="table-responsive">
+            <table class="table table-bordered table-striped demo-table" id="table-edit">
                 <thead>
                 <tr>
                     <th id="color" width="20" style="text-align: center;">No.</th>
+                    <th id="color" style="display:none;">Kode KRS Detail</th>
                     <th id="color" style="text-align: center;">Kode</th>
                     <th id="color" style="text-align: center;">Matakuliah</th>
                     <th id="color" style="text-align: center;">Nilai Harian</th>
@@ -95,6 +101,7 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         <?php else: ?>
             <div class="callout callout-info flat">
                 <h4><i class="fa fa-info-circle"></i> Informasi</h4>

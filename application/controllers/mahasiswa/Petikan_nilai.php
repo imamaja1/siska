@@ -67,13 +67,15 @@ class Petikan_nilai extends CI_Controller
     public function petikan_nilai()
     {
         $nim = $this->session->userdata('nim');
+        $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
         $data['conten'] = "mahasiswa/V_Petikan_nilai";
         $data['judul'] = "Petikan Nilai";
-        $data['data'] = $this->Petikan_mahasiswa_model->petikan_nilai($nim);
+        $data['data'] = $this->Petikan_mahasiswa_model->petikan_nilai($nim, $kode_nama_kurikulum);
 
         $data['jenjang'] = $this->Jenjang_model->get_nama_bykode(substr($nim, 4, 1));
         $data['jurusan'] = $this->Kode_jurusan_model->get_nama_bykode(substr($nim, 2, 2));
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
+        $data['tahun_akademik'] = $this->m_tahun_akademik->get_semester();
         $data['prodi'] = $this->Nama_jurusan_model->get_prodi_by_nim($nim);
 
         $this->load->view('mahasiswa/template/V_main', $data);
@@ -85,7 +87,6 @@ class Petikan_nilai extends CI_Controller
         $nim = $this->session->userdata('nim');
         $status_kuisioner = $this->kuisioner_model->get_setting();
         $cek_pengisian = $this->kuisioner_model->get_matakuliah_kuisioner($nim, $kode_tahun_akademik);
-        $cek_pengisian = $this->kuisioner_model->get_matakuliah_kuisioner($nim);
         $axis = $this->kuisioner_model->layanan_axis($nim);
         if ($status_kuisioner == 'A' && !$this->mahasiswaservice->isMahasiswaBaru($nim)) {
             if (count($cek_pengisian) > 0 || !$axis){
@@ -124,8 +125,8 @@ class Petikan_nilai extends CI_Controller
         // echo json_encode($data['mahasiswa']);break;
         $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
         $data['prodi'] = get_kode_prodi($nim);
-		$data['semester'] = $this->mahasiswaservice->getLastSemesterKrs($nim);
-        $data['semester'] = $data['semester']->semester-1;
+        $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
+        $data['semester'] = ($sem && isset($sem->semester) && is_numeric($sem->semester)) ? $sem->semester - 1 : 0;
         $data['semester_jalan'] = substr(tahun_akademik()->tahun_akademik, -2) - substr($nim, 0,2);
         $data['data'] = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum,$data['semester']+1);
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
@@ -155,8 +156,8 @@ class Petikan_nilai extends CI_Controller
         // echo json_encode($data['mahasiswa']);break;
         $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
         $data['prodi'] = get_kode_prodi($nim);
-		$data['semester'] = $this->mahasiswaservice->getLastSemesterKrs($nim);
-        $data['semester'] = $data['semester']->semester;
+        $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
+        $data['semester'] = ($sem && isset($sem->semester) && is_numeric($sem->semester)) ? $sem->semester : 0;
         $data['semester_jalan'] = substr(tahun_akademik()->tahun_akademik, -2) - substr($nim, 0,2);
         $data['data'] = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum,$data['semester']+1);
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);

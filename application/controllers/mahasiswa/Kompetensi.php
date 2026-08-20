@@ -44,6 +44,9 @@ class Kompetensi extends CI_Controller
     {
         $nim = $this->session->userdata('nim');
         $mahasiswa = $this->Mahasiswa_model->get($nim);
+        if (!$mahasiswa) {
+            redirect('mahasiswa/Login_mahasiswa');
+        }
         $this->status_pendaftaran = $mahasiswa->status_pendaftaran;
         $kode_jurusan = substr($nim, 2, 2);
         $kompetensi_manajemen_semester4 = substr($nim, 2, 4);
@@ -61,7 +64,19 @@ class Kompetensi extends CI_Controller
                     $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 
                     $this->load->view('mahasiswa/template/V_main', $data);
+                } else {
+                    $this->session->set_flashdata('info', '<div class="callout callout-info">
+                        <h4><i class="fa fa-info-circle"></i> Informasi!</h4>
+                         <p>Anda sudah mengisi kompetensi.</p>
+                      </div>');
+                    redirect('home/Access_denied');
                 }
+            } else {
+                $this->session->set_flashdata('info', '<div class="callout callout-warning">
+                    <h4><i class="fa fa-warning-circle"></i> Informasi!</h4>
+                     <p>Mohon Maaf, Halaman kompetensi tidak tersedia untuk semester / status anda saat ini.</p>
+                  </div>');
+                redirect('home/Access_denied');
             }
         }elseif ($kompetensi_manajemen_semester4 == "0301" && substr($nim, 0, 2) < 24 || $kompetensi_manajemen_semester4 == "0501" && substr($nim, 0, 2) >= 24) {
             if (($this->semester_saat_ini() >= 4) && ($this->status_pendaftaran == 'B')) {
@@ -166,9 +181,10 @@ class Kompetensi extends CI_Controller
 
     public function simpan()
     {
-        $data = $this->input->post();
-        $data['nim'] = $this->session->userdata('nim');
-        unset($data['submit']);
+        $data = array(
+            'nim' => $this->session->userdata('nim'),
+            'kode_kompetensi' => $this->input->post('kode_kompetensi'),
+        );
 
         if ($this->Kompetensi_model->simpan_kompetensi_mahasiswa($data)) {
             $this->session->set_flashdata('info', '<script>swal("Success", "Data Berhasil di Simpan", "success");</script>');

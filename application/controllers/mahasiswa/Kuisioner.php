@@ -41,6 +41,13 @@ class Kuisioner extends CI_Controller
         $data['soal'] = $this->kuisioner_model->get_soal($kelas_mahasiswa_id);
         $data['matakuliah'] = $this->kuisioner_model->get_matakuliah($kelas_mahasiswa_id);
         $data['dosen'] = $this->kuisioner_model->get_dosen_mengajar($kelas_mahasiswa_id);
+        if (!$data['matakuliah']) {
+            $this->session->set_flashdata('info', '<div class="callout callout-danger">
+                <h4><i class="fa fa-ban"></i> Error!</h4>
+                <p>Data kelas tidak ditemukan.</p>
+              </div>');
+            redirect(site_url('mahasiswa/kuisioner'));
+        }
         $this->load->view('mahasiswa/V_isi_kuisioner', $data);
     }
 
@@ -51,17 +58,28 @@ class Kuisioner extends CI_Controller
         $kritik = $this->input->post('kritik');
         $saran = $this->input->post('saran');
 
-        foreach ($hasil as $key => $value)
-        {
-            $data_array = array(
-                'kelas_mahasiswa_id' => $kelas_mahasiswa_id,
-                'kritik' => $kritik,
-                'saran' => $saran,
-                'hasil' => $value,
-                'soal_kuisioner_id' => $key,
-            );
+        if (!empty($hasil) && is_array($hasil)) {
+            foreach ($hasil as $key => $value)
+            {
+                $data_array = array(
+                    'kelas_mahasiswa_id' => $kelas_mahasiswa_id,
+                    'kritik' => $kritik,
+                    'saran' => $saran,
+                    'hasil' => $value,
+                    'soal_kuisioner_id' => $key,
+                );
 
-            $this->kuisioner_model->simpan($data_array);
+                $this->kuisioner_model->simpan($data_array);
+            }
+            $this->session->set_flashdata('info', '<div class="callout callout-success">
+                <h4><i class="fa fa-check"></i> Sukses!</h4>
+                <p>Kuisioner berhasil disimpan. Terimakasih atas partisipasi Anda.</p>
+              </div>');
+        } else {
+            $this->session->set_flashdata('info', '<div class="callout callout-danger">
+                <h4><i class="fa fa-ban"></i> Gagal!</h4>
+                <p>Tidak ada jawaban kuisioner yang dikirim.</p>
+              </div>');
         }
 
         redirect(site_url('mahasiswa/kuisioner'));
@@ -74,17 +92,28 @@ class Kuisioner extends CI_Controller
         $nim = $this->session->userdata('nim');
         $masukan = $this->input->post('masukan');
 
-        foreach ($hasil as $key => $value)
-        {
-            $data_array = array(
-                'masukan' => $masukan,
-                'hasil' => $value,
-                'nim' => $nim,
-                'kode_tahun_akademik' => $kode_tahun_akademik,
-                'id_soal_pelayanan' => $key,
-            );
+        if (!empty($hasil) && is_array($hasil)) {
+            foreach ($hasil as $key => $value)
+            {
+                $data_array = array(
+                    'masukan' => $masukan,
+                    'hasil' => $value,
+                    'nim' => $nim,
+                    'kode_tahun_akademik' => $kode_tahun_akademik,
+                    'id_soal_pelayanan' => $key,
+                );
 
-            $this->kuisioner_model->simpan_layanan($data_array);
+                $this->kuisioner_model->simpan_layanan($data_array);
+            }
+            $this->session->set_flashdata('info', '<div class="callout callout-success">
+                <h4><i class="fa fa-check"></i> Sukses!</h4>
+                <p>Kuisioner layanan berhasil disimpan. Terimakasih atas partisipasi Anda.</p>
+              </div>');
+        } else {
+            $this->session->set_flashdata('info', '<div class="callout callout-danger">
+                <h4><i class="fa fa-ban"></i> Gagal!</h4>
+                <p>Tidak ada jawaban kuisioner yang dikirim.</p>
+              </div>');
         }
 
         redirect(site_url('mahasiswa/kuisioner'));

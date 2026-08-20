@@ -172,6 +172,7 @@ class Khs extends CI_Controller
         $get_semester = $this->mahasiswaservice->getSemesterByKodeKrs($kode_krs);
         if (!$get_semester) { redirect('home/access_denied'); }
       	$ta = $this->mahasiswaservice->getTahunAkademikById($get_semester->kode_tahun_akademik);
+        if (!$ta) { redirect('home/access_denied'); }
 //        $semester = $this->session->userdata('input_semester');
         $semester = $get_semester->semester;
 //        $kode_nama_kurikulum = kode_nama_kurikulum($nim);
@@ -189,8 +190,10 @@ class Khs extends CI_Controller
         $khs['sksn'] = 0;
         $khs['total_sks'] = 0;
         $khs['total_bobot'] = 0;
+        $khs['kaprodi'] = null;
+        $khs['maksimum_sks'] = 0;
       
-      	$khs['nim'] = $nim;
+       	$khs['nim'] = $nim;
         $khs['nama_mahasiswa'] = $this->mahasiswaservice->getNamaMahasiswa($nim);
         $khs['tahun_akademik'] = $ta->tahun_akademik;
         $khs['semester'] = $semester;
@@ -228,7 +231,7 @@ class Khs extends CI_Controller
         $data['data'] = $khs;
         $data['prodi'] = $program_studi;
         $khsssssss = $this->mahasiswaservice->getDosenByNik($nik);
-        $data['signature'] = $khsssssss->signature;
+        $data['signature'] = $khsssssss ? $khsssssss->signature : null;
         // $this->load->view('akademik/cetak_khs', $data);
         $namafile = $nim . "-KHS.pdf";
         $this->load->library('m_pdf');
@@ -342,8 +345,10 @@ class Khs extends CI_Controller
         $khs['sksn'] = 0;
         $khs['total_sks'] = 0;
         $khs['total_bobot'] = 0;
+        $khs['kaprodi'] = null;
+        $khs['maksimum_sks'] = 0;
       
-      	$khs['nim'] = $nim;
+       	$khs['nim'] = $nim;
         $khs['nama_mahasiswa'] = $this->mahasiswaservice->getNamaMahasiswa($nim);
         $khs['tahun_akademik'] = $ta->tahun_akademik;
         $khs['semester'] = $semester;

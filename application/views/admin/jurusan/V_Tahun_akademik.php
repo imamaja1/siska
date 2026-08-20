@@ -5,47 +5,8 @@
     </div>
 </div>
 <div class="box box-primary flat">
-    <div class="box-body">
-        <table class="table data-table">
-            <thead>
-                <tr>
-                    <th id="th">No</th>
-                    <th id="th">Tahun Akademik</th>
-                    <th id="th">Semester</th>
-                    <th id="th">Tanggal mulai</th>
-                    <th id="th">Tanggal Berakhir</th>
-                    <th id="th">Status</th>
-                    <th id="th">Tindakan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $i = 1;
-                foreach ($data as $d) {
-                    ?>
-                    <tr>
-                        <td align="center"><?= $i++ ?></td>
-                        <td align="center" id="tahun-akademik-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tahun_akademik) ?></td>
-                        <td align="center" ><?= $d->semester == 1 ? '<span class="label label-info">Ganjil</span>' : '<span class="label label-success">Genap</span>' ?></td>
-                        <td align="center" id="semester-<?= e($d->kode_tahun_akademik) ?>" style="display: none;"><?= e($d->semester) ?></td>
-                        <td align="center" id="tanggal-mulai-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tanggal_mulai) ?></td>
-                        <td align="center" id="tanggal-berakhir-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->tanggal_berakhir) ?></td>
-                        <td align="center" width="90">
-                            <?php if ($d->status == "N") { ?>
-                                <a href="#" id="aktifkan-<?= e($d->kode_tahun_akademik) ?>" onclick="aktif('<?= e($d->kode_tahun_akademik) ?>')" class="btn btn-xs btn-danger flat sak"><i class="fa fa-times-circle"></i> Nonaktif</a>&nbsp;
-                            <?php } else { ?>
-                                <a href="#" id="aktifkan-<?= e($d->kode_tahun_akademik) ?>" onclick="nonaktif('<?= e($d->kode_tahun_akademik) ?>')" class="btn btn-xs btn-success flat sak"><i class="fa fa-check-circle"></i> Aktif</a>&nbsp;
-                            <?php } ?>
-                        </td>
-                <p hidden id="status-<?= e($d->kode_tahun_akademik) ?>"><?= e($d->status) ?></p>
-                <td width="130" align="center">
-                    <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editTahunakademik('<?= e($d->kode_tahun_akademik) ?>')"><i class="fa fa-edit"></i> Edit</a>&nbsp;
-                    <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/tahun_akademik/hapus/' . $d->kode_tahun_akademik) ?>')"><i class="fa fa-trash"></i> Hapus</a>
-                </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
+    <div class="box-body table-responsive" id="tabel-container">
+        <?php $this->load->view('admin/jurusan/V_tabel_tahun_akademik', array('data' => $data)); ?>
     </div>
 </div>
 
@@ -57,7 +18,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel"><b>Tambah Tahun Akademik</b></h4>
             </div>
-<form class="form-horizontal" id="form" method="POST" action="<?= site_url('admin/jurusan/tahun_akademik/simpan') ?>">
+<form class="form-horizontal" id="form-tambah" method="POST" action="<?= site_url('admin/jurusan/tahun_akademik/simpan') ?>">
 	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="modal-body">
                     <div class="form-group">
@@ -119,11 +80,19 @@
         });
     });
 
-    function hapus(url)
-    {
+    function reloadTabel() {
+        $.ajax({
+            url: "<?= site_url('admin/jurusan/tahun_akademik/render_tabel') ?>",
+            success: function(res) {
+                $("#tabel-container").html(res);
+            }
+        });
+    }
+
+    function hapus(id) {
         swal({
             title: '',
-            text: "Anda yaikin menghapus data ini?",
+            text: "Anda yakin ingin menghapus data ini?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -131,7 +100,19 @@
             cancelButtonText: 'Tidak',
             confirmButtonText: 'Ya'
         }).then(function () {
-            window.location.href = url;
+            $.ajax({
+                url: "<?= site_url('admin/jurusan/tahun_akademik/hapus/') ?>" + id,
+                type: "GET",
+                dataType: "json",
+                success: function (res) {
+                    if (res.status) {
+                        swal('Success!', res.msg, 'success');
+                        reloadTabel();
+                    } else {
+                        swal('Gagal!', res.msg, 'error');
+                    }
+                }
+            });
         });
     }
 
@@ -142,6 +123,29 @@
             success : function (res) {
                 $("#content-edit").html(res);
                 $("#modal-edit").modal('show');
+                $(".datepicker").datepicker({
+                    format: "yyyy/mm/dd",
+                });
+                $("#form-edit").submit(function(e) {
+                    e.preventDefault();
+                    var formUrl = $(this).attr('action');
+                    var formData = $(this).serialize();
+                    $.ajax({
+                        url: formUrl,
+                        type: "POST",
+                        data: formData,
+                        dataType: "json",
+                        success: function(res) {
+                            if (res.status) {
+                                swal('Success!', res.msg, 'success');
+                                $("#modal-edit").modal('hide');
+                                reloadTabel();
+                            } else {
+                                swal('Gagal!', res.msg, 'error');
+                            }
+                        }
+                    });
+                });
             },
             error : function () {
                 console.log('gagal load data');
@@ -149,17 +153,58 @@
         });
     }
 
+    $(document).ready(function() {
+        $("#form-tambah").submit(function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                success: function(res) {
+                    if (res.status) {
+                        swal('Success!', res.msg, 'success');
+                        $("#tambah-tahun-akademik").modal('hide');
+                        $("#form-tambah")[0].reset();
+                        reloadTabel();
+                    } else {
+                        swal('Gagal!', res.msg, 'error');
+                    }
+                }
+            });
+        });
+    });
+
     function aktif(id) {
         $.ajax({
-            url: "<?= site_url('admin/jurusan/tahun_akademik/aktifkan/') ?>",
-            type: "POST",
-            data: "&id=" + id,
-            cache: false,
-            success: function () {
-                location.reload();
+            url: "<?= site_url('admin/jurusan/tahun_akademik/ubah_status/') ?>" + id + "/A",
+            type: "GET",
+            dataType: "json",
+            success: function (res) {
+                if (res.status) {
+                    swal('Success!', res.msg, 'success');
+                    reloadTabel();
+                } else {
+                    swal('Gagal!', res.msg, 'error');
+                }
             }
         });
     }
 
-
+    function nonaktif(id) {
+        $.ajax({
+            url: "<?= site_url('admin/jurusan/tahun_akademik/ubah_status/') ?>" + id + "/N",
+            type: "GET",
+            dataType: "json",
+            success: function (res) {
+                if (res.status) {
+                    swal('Success!', res.msg, 'success');
+                    reloadTabel();
+                } else {
+                    swal('Gagal!', res.msg, 'error');
+                }
+            }
+        });
+    }
 </script>

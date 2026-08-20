@@ -22,7 +22,7 @@ echo isset($flashmessage) ? $flashmessage : '';
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 
             <div class="form-group">
-                <label class="control-label col-sm-3">Masukan NIM <label class="text-danger">* &nbsp;</label>:</label>
+                <label class="control-label col-sm-3">Masukkan NIM <label class="text-danger">* &nbsp;</label>:</label>
                 <div class="col-sm-3">
                     <input value="<?= set_value('kata_kunci') ?>" type="text" class="form-control"
                            placeholder="Ketik NIM Mahasiswa" name="kata_kunci" id="kata_kunci">

@@ -9,7 +9,7 @@
     </div>
 </div>
 <div class="box box-solid flat" id="krs">
-    <div class="box-body">
+    <div class="box-body table-responsive">
         <table class="table demo-table">
             <thead>
                 <tr>

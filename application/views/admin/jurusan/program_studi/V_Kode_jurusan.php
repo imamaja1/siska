@@ -7,6 +7,7 @@
 
 <div class="box box-primary flat">
     <div class="box-body">
+        <div class="table-responsive">
         <table class="table demo-table">
             <thead>
                 <tr>
@@ -37,6 +38,7 @@
                 </tr>
             <?php } ?>
         </table>
+        </div>
     </div>
 </div>
 

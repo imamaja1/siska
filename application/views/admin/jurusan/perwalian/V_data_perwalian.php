@@ -10,7 +10,7 @@
 </div>
 <form id="form-data-perwalian" action="<?= site_url('admin/jurusan/perwalian/pindah_perwalian') ?>" method="post">
 <div class="box box-solid flat">
-    <div class="box-body">
+    <div class="box-body table-responsive">
         <table class="table demo-table">
             <thead>
                 <tr>
@@ -36,6 +36,7 @@
                             <?= e($this->m_dosen->get_nama($row->kode_dosen_perwakilan)) ?>&nbsp;
                             <a href="#" onclick="hapus_perwakilan('<?= e($row->kode_perwalian) ?>', this)"><span class="text-danger"><i class="fa fa-times"></i></span></a>
                         <?php endif; ?>
+                    </td>
                     <td style="text-align: center;">
                         <a href="#" class="text-info" onclick="ubah('<?= e($row->kode_perwalian) ?>')"><i class="fa fa-edit"></i> Edit</a>
                     </td>
@@ -117,7 +118,7 @@
                         if (obj.status === true){
                             $(contex).closest(".dosen-perwakilan").empty();
                         }else {
-                            swal("Gagal!","Data gagal di hapus","error");
+                            swal("Gagal!","Data gagal dihapus","error");
                         }
                     }
                 })

@@ -84,7 +84,7 @@ class NilaiService extends MY_Service {
                 }
                 $ta_data = $this->db->select('*, tahun_akademik as ta')->from('tahun_akademik')->where('kode_tahun_akademik', $fix_ta)->get()->row_object();
             } else if ($type === 'genap') {
-                if ($tahun_akademik_aktif->kode_tahun_akademik % 2 == 2) {
+                if ($tahun_akademik_aktif->kode_tahun_akademik % 2 == 0) {
                     $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik;
                 } else {
                     $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik - 1;
@@ -108,6 +108,7 @@ class NilaiService extends MY_Service {
             'tahun_akademik' => $ta_data,
             'prodi' => $prodi,
             'semester' => $semester_target,
+            'semester_jalan' => isset($semester_jalan) ? $semester_jalan : 0,
             'ttd' => $ttd
         );
     }

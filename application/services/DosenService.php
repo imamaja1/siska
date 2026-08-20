@@ -113,7 +113,7 @@ class DosenService extends MY_Service {
     }
 
     public function ubahDosen($post_data) {
-        $kode_dosen = $post_data['kode_dosen'];
+        $kode_dosen = $post_data['kode_dosen_biodata'];
 
         $this->form_validation->set_rules('nik', 'nik', 'required', array('required' => 'Field NIK harus diisi'));
         $this->form_validation->set_rules('nama_dosen', 'nama_dosen', 'required', array('required' => 'Field Nama Dosen harus diisi'));

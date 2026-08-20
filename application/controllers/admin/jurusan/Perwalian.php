@@ -17,7 +17,6 @@ class Perwalian extends CI_Controller {
 
         $this->load->service('PerwalianService');
 
-        $this->add_perwalian();
         $class = $this->router->fetch_class();
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
@@ -227,7 +226,7 @@ class Perwalian extends CI_Controller {
 
             redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
         } else {
-            $this->session->set_flashdata('info', '<script>swal("gagal", "Data gagal di ubah", "error");</script>'
+            $this->session->set_flashdata('info', '<script>swal("gagal", "Data gagal diubah", "error");</script>'
             );
 
             redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
@@ -260,7 +259,7 @@ class Perwalian extends CI_Controller {
 //
 //            redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
 //        } else {
-//            $this->session->set_flashdata('info', '<script>swal("gagal", "Data gagal di ubah", "error");</script>'
+//            $this->session->set_flashdata('info', '<script>swal("gagal", "Data gagal diubah", "error");</script>'
 //            );
         if ($jenis == 'filter'){
             redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
@@ -418,7 +417,7 @@ class Perwalian extends CI_Controller {
                 );
                 $this->Perwalian_model->simpan($data_perwalian);
             }
-            $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil di simpan","success");</script>');
+            $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil disimpan","success");</script>');
 
             redirect(site_url('admin/jurusan/perwalian'));
         } else {
@@ -452,7 +451,7 @@ class Perwalian extends CI_Controller {
                 {
                     $this->perwalianservice->pindahPerwalianDosen($val, $kode_dosen);
                 }
-                $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil di ubah","success");</script>');
+                $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil diubah","success");</script>');
 
                 redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
             }else {
@@ -461,7 +460,7 @@ class Perwalian extends CI_Controller {
                     $this->perwalianservice->pindahPerwalianPerwakilan($val, $kode_dosen);
                 }
 
-                $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil di ubah","success");</script>');
+                $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil diubah","success");</script>');
 
                 redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
             }

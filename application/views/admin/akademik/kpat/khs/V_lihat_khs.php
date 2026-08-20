@@ -92,10 +92,10 @@
 			<tr>
 				<td><strong>IP Semester ini</strong></td>
 				<td><strong>:</strong></td>
-				<td><?= number_format($sksn/$sks,2)  ?></td>
+				<td><?= $sks > 0 ? number_format($sksn/$sks,2) : '0.00' ?></td>
 			</tr>
 			<tr>
-				<td><strong>Maksismum SKS Semester Depan</strong></td>
+				<td><strong>Maksimum SKS Semester Depan</strong></td>
 				<td><strong>:</strong></td>
 				<td>-</td>
 			</tr>

@@ -21,3 +21,43 @@
 #th{
     text-align: center;
 }
+.box-foto-profil { text-align: center; overflow: hidden; }
+.box-foto-profil .foto-img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    margin: 0 auto;
+    border: #899bc1 solid 2px;
+    box-sizing: border-box;
+}
+.box-foto-profil .foto-status { margin-top: 8px; }
+.box-detail-mahasiswa { overflow-x: hidden; }
+.box-detail-mahasiswa .table-responsive { word-break: break-word; }
+.box-detail-orangtua .table-responsive { word-break: break-word; }
+.krs-table { min-width: 640px; }
+.khs-table { min-width: 640px; }
+.th-center { text-align: center; }
+.box-info-dosen .info-dosen-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.box-info-dosen .info-dosen-item:last-child { margin-bottom: 0; }
+.box-info-dosen .info-dosen-label {
+    min-width: 130px;
+    font-weight: 600;
+    color: #444;
+}
+.box-info-dosen .info-dosen-value {
+    font-size: 13px;
+    padding: 5px 10px;
+}
+@media (max-width: 767px) {
+    .box-info-dosen .col-md-5.col-sm-5.text-right { text-align: left; margin-top: 10px; }
+    .form-horizontal .field-gap-sm { margin-top: 10px; }
+}

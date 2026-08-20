@@ -9,33 +9,33 @@
         <form id="form-konversi" action="<?= site_url('admin/akademik/konversi/simpan_konversi') ?>" method="post">
         <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
         <div class="table-responsive">
-            <table class="table demo-table">
+            <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                    <th id="th">CEK</th>
-                    <th id="th">KODE MATAKULAIH</th>
-                    <th id="th">NAMA MATAKULIAH</th>
-                    <th id="th">NILAI AKHIR</th>
+                    <th style="text-align: center; width: 50px;">CEK</th>
+                    <th style="text-align: center; width: 120px;">KODE MATAKULIAH</th>
+                    <th style="text-align: center;">NAMA MATAKULIAH</th>
+                    <th style="text-align: center; width: 120px;">NILAI AKHIR</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($data_kurikulum as $row) : ?>
-                    <tr>
-                        <td colspan="4" align="center"><strong>SEMESTER <?= $row['semester']?></strong></td>
+                    <tr class="bg-gray">
+                        <td colspan="4" style="text-align: center;"><strong>SEMESTER <?= $row['semester']?></strong></td>
                     </tr>
-                    <?php $i=0; foreach ($row['data'] as $mk) : ?>
+                    <?php foreach ($row['data'] as $mk) : ?>
                     <tr>
-                        <td align="center" width="3%">
+                        <td style="text-align: center;">
                             <input type="checkbox" name="id_matakuliah[]" value="<?= $mk->id_matakuliah?>" id="<?= $mk->id_matakuliah ?>" onclick="mati('<?= $mk->id_matakuliah ?>')">
                         </td>
-                        <td align="center"><?= e($mk->kode_matakuliah) ?></td>
+                        <td style="text-align: center;"><?= e($mk->kode_matakuliah) ?></td>
                         <td><?= e($mk->nama_matakuliah) ?></td>
-                        <td align="center">
-                            <input required disabled id="mk-<?= $mk->id_matakuliah ?>" type="number" max="100" name="nilai_akhir[]" class="form-control">
+                        <td style="text-align: center;">
+                            <input required disabled id="mk-<?= $mk->id_matakuliah ?>" type="number" max="100" min="0" name="nilai_akhir[]" class="form-control input-sm">
                             <input name="nim" type="hidden" value="<?= e($data_mahasiswa->nim) ?>">
                         </td>
                     </tr>
-                    <?php $i++; endforeach; ?>
+                    <?php endforeach; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>

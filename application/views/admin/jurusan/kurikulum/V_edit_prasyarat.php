@@ -50,12 +50,18 @@
                 url : url,
                 data : data,
                 type : 'post',
+                dataType: 'json',
                 success : function (res) {
-                    ambil();
-                    $("#edit-prasyarat").modal("toggle");
+                    if (res.status) {
+                        ambil();
+                        $("#edit-prasyarat").modal('hide');
+                        swal('Success!', res.msg, 'success');
+                    } else {
+                        swal('Gagal!', res.msg, 'error');
+                    }
                 },
                 error : function () {
-                    console.log('gagal simpan');
+                    swal('Gagal!', 'Terjadi kesalahan', 'error');
                 }
             })
         })

@@ -99,7 +99,7 @@ class m_dosen extends CI_Model {
 
         $query = $this->db->select('*')
                         ->from('dosen as d')
-                        ->join('program_studi as ps', 'ps,kode_program_studi=d.homebase')
+                        ->join('program_studi as ps', 'ps.kode_program_studi=d.homebase')
                         ->order_by('kode_dosen ASC')
                         ->get()->result();
 

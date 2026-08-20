@@ -71,7 +71,12 @@ class UniversitasService extends MY_Service {
     }
 
     public function simpanFakultas($post_data) {
-        if ($this->fakultas_model->add($post_data)) {
+        $data = array(
+            'kode_fakultas' => $post_data['kode_fakultas'],
+            'nama_fakultas' => $post_data['nama_fakultas'],
+            'dekan' => $post_data['dekan']
+        );
+        if ($this->fakultas_model->add($data)) {
             return array('status' => true, 'msg' => 'Data berhasil disimpan');
         } else {
             return array('status' => false, 'msg' => 'Data gagal disimpan');
@@ -79,7 +84,11 @@ class UniversitasService extends MY_Service {
     }
 
     public function ubahFakultas($id, $post_data) {
-        if ($this->fakultas_model->update($id, $post_data)) {
+        $data = array(
+            'nama_fakultas' => $post_data['nama_fakultas'],
+            'dekan' => $post_data['dekan']
+        );
+        if ($this->fakultas_model->update($id, $data)) {
             return array('status' => true, 'msg' => 'Data berhasil disimpan');
         } else {
             return array('status' => false, 'msg' => 'Data gagal disimpan');

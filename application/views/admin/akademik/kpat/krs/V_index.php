@@ -61,7 +61,7 @@
 
         <div class="col-sm-4">
             <div class="input-group input-group">
-                <input type="text" id="search-box" name="nim" placeholder="Masukan NIM" class="form-control">
+                <input type="text" id="search-box" name="nim" placeholder="Masukkan NIM" class="form-control">
                 <span class="input-group-btn">
                       <button type="button" class="btn btn-info btn-flat" onclick="kirim()"><i class="fa fa-search"></i></button>
                     </span>

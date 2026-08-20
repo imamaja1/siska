@@ -1,9 +1,17 @@
 <?= $this->session->flashdata('info') ?>
-<div class="box box-solid flat">
+<div class="box box-solid flat box-info-dosen">
     <div class="box-body">
-        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= e($dosen_wali) ?></span>&nbsp;
-        <?php if (isset($dosen_perwakilan)) : ?>
-            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= e($dosen_perwakilan) ?></span>
+        <div class="info-dosen-item">
+            <span class="info-dosen-label">Dosen Wali</span>
+            <span class="badge bg-navy info-dosen-value"><?= e($dosen_wali) ?></span>
+        </div>
+        <?php if (!empty($dosen_perwakilan)) : ?>
+            <div class="info-dosen-item">
+                <span class="info-dosen-label">Dosen Perwakilan</span>
+                <span class="badge bg-orange info-dosen-value">
+                    <i class="fa fa-phone"></i>&nbsp;<?= e($dosen_perwakilan['nama_dosen']) ?>&nbsp;(<?= e($dosen_perwakilan['no_telp']) ?>)
+                </span>
+            </div>
         <?php endif; ?>
     </div>
 </div>
@@ -146,9 +154,9 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                     <strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL" ?></strong></p>
             </div>
         </div>
-        <table class="table" width="100%">
-            <tr>
-                <td width="50">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="table-responsive">
                     <table class="table">
                         <tr>
                             <th>Nama Mahasiswa</th>
@@ -167,8 +175,10 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                             <td> : <?= e($dosen_wali) ?></td>
                         </tr>
                     </table>
-                </td>
-                <td width="50">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="table-responsive">
                     <table class="table">
                         <tr>
                             <th>Alamat Sekarang</th>
@@ -189,13 +199,14 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
                             <td> : <?= e($data_mahasiswa->telepon_orangtua) ?></td>
                         </tr>
                     </table>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
         <div align="center">Tanda <b>&radic;</b> di kolom <b>B</b> atau <b>U</b> menandakan matakuliah yang dipilih.
         </div>
         <br>
-        <table class="table demo-table">
+        <div class="table-responsive">
+        <table class="table demo-table krs-table">
             <thead>
             <tr>
                 <th class="th-color" width="20" rowspan="2" style="padding-bottom: 25px;">
@@ -288,52 +299,44 @@ if (empty($data_mahasiswa->foto) || $data_mahasiswa->foto == 'P.png' || $data_ma
             </tr>
             </tbody>
         </table>
+        </div>
     </div>
-    <table class="table" width="100%">
-        <tr>
-            <td width="50%">
-                <table class="table" width="100%">
-                    <tr>
-                        <td width="40%">IP Semester Lalu</td>
-                        <td width="3%">:</td>
-                        <td width="20%"><?= $semester != "1" ? number_format($beban_sks['ip_semester_lalu'], 2) : "-" ?></td>
-                    </tr>
-                    <?php if (substr($nim, 4, 1) != 3) : ?>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
                         <tr>
-                            <td width="40%">Beban SKS Semester Sekarang</td>
-                            <td width="3%">:</td>
-                            <td width="20%"><?= $semester == 1 ? $total_sks : $beban_sks['beban_sks'] ?>
+                            <th width="55%">IP Semester Lalu</th>
+                            <td><?= $semester != "1" ? number_format($beban_sks['ip_semester_lalu'], 2) : "-" ?></td>
                         </tr>
-                    <?php endif; ?>
+                        <?php if (substr($nim, 4, 1) != 3) : ?>
+                            <tr>
+                                <th>Beban SKS Semester Sekarang</th>
+                                <td><?= $semester == 1 ? $total_sks : $beban_sks['beban_sks'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
                 </table>
-            </td>
-            <td width="50%">
-                <table class="table" width="100%">
-                    <tr>
-                        <td width="40%">Jumlah kredit yang diambil</td>
-                        <td width="3%">:</td>
-                        <td width="20%"><?= $total_sks ?></td>
-                    </tr>
-                    <tr>
-                        <td width="40%">Jumlah kredit yang dibatalkan</td>
-                        <td width="3%">:</td>
-                        <!--<td width="20%"><?= $semester !== 1 ? $beban_sks['beban_sks'] - $total_sks : "-" ?></td> -->
-                        <td width="20%">-</td>
-                    </tr>
-                    <tr>
-                        <td width="40%">Jumlah kredit yang ditambah</td>
-                        <td width="3%">:</td>
-                        <td width="20%" style="border-bottom: 1px solid black;">-</td>
-                    </tr>
-                    <tr>
-                        <td width="40%">Jumlah kredit terakhir</td>
-                        <td width="3%">:</td>
-                        <td width="20%"><?= $total_sks ?></td>
-                    </tr>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <th width="55%">Jumlah kredit yang diambil</th>
+                            <td><?= $total_sks ?></td>
+                        </tr>
+                        <tr>
+                            <th>Jumlah kredit terakhir</th>
+                            <td><?= $total_sks ?></td>
+                        </tr>
+                    </tbody>
                 </table>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
     <div class="box box-solid flat">
         <div class="box-body">
             <hr>

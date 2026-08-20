@@ -3,24 +3,24 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <div class="table-responsive">
-            <table class="table demo-table">
+            <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                    <th id="th">NO.</th>
-                    <th id="th">NIM</th>
-                    <th id="th">NAMA</th>
-                  	<th id="th">JURUSAN</th>
-                    <th id="th">Aksi</th>
+                    <th style="text-align: center; width: 50px;">NO.</th>
+                    <th style="text-align: center; width: 120px;">NIM</th>
+                    <th style="text-align: center;">NAMA</th>
+                    <th style="text-align: center; width: 150px;">JURUSAN</th>
+                    <th style="text-align: center; width: 120px;">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php $i=1; foreach ($data as $row) : ?>
                     <tr>
-                        <td align="center" width="3%"><?= $i++ ?>.</td>
-                        <td align="center"><?= e($row->nim) ?></td>
-                        <td ><?= e($row->nama_mahasiswa) ?> <?= $row->kode_krs !== null ? '<span class="badge bg-aqua">Konverted</span>' : ''?> </td>
-                      	<td align="center"><?= e($row->nama_program_studi) ?></td>
-                        <td align="center">
+                        <td style="text-align: center;"><?= $i++ ?>.</td>
+                        <td style="text-align: center;"><?= e($row->nim) ?></td>
+                        <td><?= e($row->nama_mahasiswa) ?> <?= $row->kode_krs !== null ? '<span class="badge bg-aqua">Konverted</span>' : ''?> </td>
+                        <td style="text-align: center;"><?= e($row->nama_program_studi) ?></td>
+                        <td style="text-align: center;">
                             <?php if ($row->kode_krs==null) : ?>
                             <a href="<?= site_url('admin/akademik/konversi/konversi/'.$row->nim) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-gear"></i> Konversi</a>
                             <?php else: ?>

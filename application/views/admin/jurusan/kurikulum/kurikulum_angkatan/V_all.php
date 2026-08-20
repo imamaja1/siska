@@ -2,7 +2,7 @@
     <div class="box box-solid flat">
         <div class="box-body">
             <div class="table-responsive">
-                <table class="table demo-table">
+                <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th style="width: 3%">NO.</th>

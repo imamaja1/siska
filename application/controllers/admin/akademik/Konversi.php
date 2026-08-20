@@ -14,7 +14,6 @@ class Konversi extends CI_Controller{
             'jurusan/program_studi/Jenjang_model',
             'jurusan/program_studi/Kode_jurusan_model',
             'jurusan/program_studi/Ketua_jurusan_model',
-            'akademik/Mahasiswa_model',
             'akademik/Krs_model',
             'akademik/Khs_model',
             'akademik/Krs_detail_model',
@@ -87,14 +86,14 @@ class Konversi extends CI_Controller{
     public function simpan_tambah_konversi() {
         $kode_krs = $this->input->post('kode_krs');
         $id_matakuliah = $this->input->post('id_matakuliah');
-        $nilai_akhir = $this->input->post('nilai_ahir');
+        $nilai_akhir = $this->input->post('nilai_akhir');
         $nim = $this->input->post('nim');
 
         if ($this->perkuliahanservice->simpan_tambah_konversi($kode_krs, $id_matakuliah, $nilai_akhir)) {
-            $this->session->set_flashdata('info', '<script>swal("Success", "Data berhasil di simpan", "success");</script>');
+            $this->session->set_flashdata('info', '<script>swal("Success", "Data berhasil disimpan", "success");</script>');
             redirect('admin/akademik/konversi/edit/' . $nim);
         } else {
-            $this->session->set_flashdata('info', '<script>swal("Gagal", "Data gagal di simpan", "error");</script>');
+            $this->session->set_flashdata('info', '<script>swal("Gagal", "Data gagal disimpan", "error");</script>');
             redirect('admin/akademik/konversi/edit/' . $nim);
         }
     }

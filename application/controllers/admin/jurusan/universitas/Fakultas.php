@@ -27,6 +27,7 @@ class Fakultas extends CI_Controller {
             'title_h1' => '<i class="fa fa-map"></i> <li>Jurusan</li>',
             'title_h2' => '<li>Fakultas</li>',
             'fakultas' => $fakultas,
+            'dosen' => $this->universitasservice->getDosen(),
         );
 
         return $this->load->view('admin/template/V_main', $data);

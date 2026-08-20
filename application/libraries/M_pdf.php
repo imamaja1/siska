@@ -26,6 +26,7 @@ class M_pdf extends \Mpdf\Mpdf {
         }
 
         if (is_array($param)) {
+            $param['tempDir'] = sys_get_temp_dir() . '/siska_mpdf';
             return $param;
         }
 
@@ -57,6 +58,8 @@ class M_pdf extends \Mpdf\Mpdf {
         if (isset($params[9]) && $params[9] !== '') {
             $config['margin_footer'] = (int)$params[9];
         }
+
+        $config['tempDir'] = sys_get_temp_dir() . '/siska_mpdf';
 
         return $config;
     }

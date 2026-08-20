@@ -222,7 +222,6 @@ class PerkuliahanService extends MY_Service {
         $kode_krs = $this->Krs_model->get_krs_konversi($nim, $tahun_akademik);
 
         $program_studi = get_kode_prodi($nim);
-        $data_penilaian = sistem_penilaian($nim);
         $data_krs = $this->Krs_model->khs($kode_krs);
 
         $khs = [];
@@ -247,6 +246,8 @@ class PerkuliahanService extends MY_Service {
             $khs['data_nilai'][$i]['tb'] = $row->tidak_berhak;
             $nilai_akhir = $row->nilai_akhir* 1;
             $khs['data_nilai'][$i]['nilai_akhir'] = $nilai_akhir;
+            $khs['data_nilai'][$i]['grade'] = '-';
+            $data_penilaian = data_penilaian($nim, $row->semester);
             foreach ($data_penilaian as $key) {
                 if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
                     $khs['data_nilai'][$i]['grade'] = $key['grade'];

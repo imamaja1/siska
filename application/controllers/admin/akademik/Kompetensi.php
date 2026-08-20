@@ -59,7 +59,7 @@ class Kompetensi extends CI_Controller
         if ($jml > 0) {
             $no = 1;
             $table = '<div class="box box-primary flat" >';
-            $table .= '<div clas="box-body">';
+            $table .= '<div class="box-body">';
             $table .= '<table class="table demo-table">';
             $table .= '<thead>';
             $table .= '<tr>';
@@ -107,7 +107,7 @@ class Kompetensi extends CI_Controller
         $this->perkuliahanservice->ubah_kompetensi_mahasiswa($data, $kode_kompetensi_mahasiswa);
         $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Kompetensi Telah Berhasil dirubah.</b> !</div>');
 
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(site_url('admin/akademik/kompetensi'));
 
     }
 

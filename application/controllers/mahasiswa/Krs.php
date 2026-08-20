@@ -179,7 +179,12 @@ class Krs extends CI_Controller
         
         if (!empty($dosen_wali->kode_dosen_perwakilan)) {
             $dosen_perwakilan = $this->m_dosen->get_dosen_by_kode($dosen_wali->kode_dosen_perwakilan);
-            $data['dosen_perwakilan'] = $dosen_perwakilan->nama_dosen . "&nbsp;(<i class='fa fa-phone'></i>&nbsp;" . $dosen_perwakilan->no_telp . ")";
+            $data['dosen_perwakilan'] = ($dosen_perwakilan !== null)
+                ? array(
+                    'nama_dosen' => $dosen_perwakilan->nama_dosen,
+                    'no_telp' => isset($dosen_perwakilan->no_telp) ? $dosen_perwakilan->no_telp : '',
+                )
+                : null;
         }
         $data['judul'] = "KRS | Semester " . $this->semester;
         $data['prodi'] = $this->Nama_jurusan_model->get_all_byid($this->session->userdata('kode_program_studi'));
@@ -228,6 +233,8 @@ class Krs extends CI_Controller
                         $data_kompetensi = $this->Kompetensi_model->get_kompetensi_mahasiswa($nim)->row_object();
                         $this->data_matakuliah = $this->coba_krs_pilihan($data_kompetensi->kode_kompetensi);
                     }
+                } else {
+                    $this->data_matakuliah = $this->m_data_kurikulum->get_krs_matakuliah_wajib($kode_nama_kurikulum, $semester, $this->semester, $this->status_pendaftaran);
                 }
             }elseif ($kompetensi_manajemen_semester4 == "0301" && substr($nim, 0, 2) < 24 || $kompetensi_manajemen_semester4 == "0501" && substr($nim, 0, 2) >= 24) {
                 if (($this->semester_saat_ini() >= 4) && ($this->status_pendaftaran == 'B')) {
@@ -474,6 +481,7 @@ class Krs extends CI_Controller
                 }
                 $kode_krs = $this->Krs_model->get_kode_krs($this->session->userdata('nim'), $kode_tahun_akademik);
                 $krs = $this->Krs_detail_model->get_data_krs($kode_krs);
+                $data_krs = array();
                 foreach ($krs as $row) {
                     $data_krs[] = $row->id_matakuliah;
                 }
@@ -764,7 +772,7 @@ class Krs extends CI_Controller
 //            $data_penilaian = sistem_penilaian($nim);
 //        }
         if ($this->semester !== 1) {
-            if ($this->semester >= 2 && $this->status_pendaftaran !== 'B') {
+            if ($this->semester >= 2 && $this->status_pendaftaran !== 'B' && !empty($khs_lama)) {
                 $tahun_akademik =$khs_lama['kode_tahun_akademik'];
                 // $status_p = $this->select('*')->from('status_perkuliahan')->get()->row();
                 // if ($status_p->status_perkuliahan == 'c') {
@@ -1145,13 +1153,13 @@ class Krs extends CI_Controller
         if (is_array($data_baru)) {
             foreach ($data_baru as $kode_mk) {
                 $mak = explode(",", $kode_mk);
-                if (isset($mak[1])) $total_sks_server += (int)$mak[1];
+                if (isset($mak[2])) $total_sks_server += (int)$mak[2];
             }
         }
         if (is_array($data_ulang)) {
             foreach ($data_ulang as $kode_mk) {
                 $mak = explode(",", $kode_mk);
-                if (isset($mak[1])) $total_sks_server += (int)$mak[1];
+                if (isset($mak[2])) $total_sks_server += (int)$mak[2];
             }
         }
 
@@ -1411,10 +1419,18 @@ class Krs extends CI_Controller
         $kode_jenjang = substr($nim, 4, 1);
         $data['kode_jenjang'] = $kode_jenjang;
         $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
+        $prodi = get_kode_prodi($nim);
+        if (!$mahasiswa || !$prodi) {
+            $this->session->set_flashdata('info', '<div class="callout callout-danger">
+                <h4><i class="fa fa-ban"></i> Error!</h4>
+                <p>Data mahasiswa atau program studi tidak ditemukan.</p>
+              </div>');
+            redirect('mahasiswa/krs');
+        }
 
             $data['beban_sks'] = $this->maksimum_sks_lalu($tahun_akademik, $semester);
-            $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi(get_kode_prodi($nim)->kode_program_studi);
-            $data['jurusan'] = get_kode_prodi($nim);
+            $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi($prodi->kode_program_studi);
+            $data['jurusan'] = $prodi;
             $data['semester'] = $semester;
             $data['krs_mahasiswa'] = $this->Krs_model->get_krs_mahasiswa_by_nim($nim, $semester);
             $data['krs_matakuliah'] = $this->Krs_model->get_krs_matakuliah_by_nim_semester($nim, $semester);
@@ -1741,8 +1757,12 @@ class Krs extends CI_Controller
         $krs_gg = $this->Krs_model->get_krs($nim, $tahun_akademik_x);
         $data['data'] = $this->Krs_detail_model->get_data_krs($kode_krs);
         // $semester = $krs->semester;
-        if ($tahun_akademik_x <= $tahun_akademik || $krs_gg->semester == $semester) {
-          	die();
+        if (!$krs_gg || $tahun_akademik_x <= $tahun_akademik || (isset($krs_gg->semester) && $krs_gg->semester == $semester)) {
+            $this->session->set_flashdata('info', '<div class="callout callout-warning">
+                <h4><i class="fa fa-warning"></i> Informasi!</h4>
+                <p>KRS yang diminta tidak dapat dicetak.</p>
+              </div>');
+            redirect('mahasiswa/krs');
         }
         $kode_jurusan = substr($nim, 2, 2);
         $kode_jenjang = substr($nim, 4, 1);

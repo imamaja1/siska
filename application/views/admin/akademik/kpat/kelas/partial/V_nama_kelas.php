@@ -137,7 +137,7 @@
                 var obj = JSON.parse(res);
               	console.log(obj);
                 if (!obj.status) {
-                    swal('Gagal', 'Data gagal di tambah', 'error');
+                    swal('Gagal', 'Data gagal ditambah', 'error');
                 }
               	
                 kelas(matakuliah_id);

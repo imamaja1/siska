@@ -48,7 +48,7 @@
                     <label for="inputEmail3" class=" control-label">Cari Nama Dosen</label>
                     <div class="form-group">
                         <input type="hidden" name="kode_dosen_cari" id="kode-dosen-cari">
-                        <input type="text" required autocomplete="off" placeholder="Masukan Nama Dosen" name="kode_dosen" id="search-box-dosen" class="form-control">
+                        <input type="text" required autocomplete="off" placeholder="Masukkan Nama Dosen" name="kode_dosen" id="search-box-dosen" class="form-control">
                         <div id="suggesstion-box-dosen"></div>
                     </div>
                     <div class="form-group">

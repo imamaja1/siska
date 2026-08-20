@@ -15,7 +15,7 @@ echo isset($table) ? $table : '';
         <form class="form-horizontal" method="post" action="<?= site_url('admin/akademik/kompetensi/search'); ?>">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <div class="form-group">
-                <label class="control-label col-sm-3">Masukan Kata Kunci :</label>
+                <label class="control-label col-sm-3">Masukkan Kata Kunci :</label>
                 <div class="col-sm-4">
                     <input value="<?= set_value('kata_kunci') ?>" type="text" class="form-control"
                            placeholder="Ketik Kata Kunci disini" name="kata_kunci" id="kata_kunci">

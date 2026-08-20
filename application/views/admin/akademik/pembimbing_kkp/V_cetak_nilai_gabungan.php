@@ -62,16 +62,16 @@ header("Expires: 0");
         <tr>
             <td align="center" style="border: 0.1pt solid black;">1.</td>
             <td align="left" style="border: 0.1pt solid black;">Kinerja Kerja Praktek </td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->kinerja ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->kinerja ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">60%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_kinerja = $data->kinerja * 0.6; echo number_format($h_kinerja,2)?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_kinerja = ($data->kinerja ?: 0) * 0.6; echo number_format($h_kinerja,2)?></td>
         </tr>
         <tr>
             <td align="center" style="border: 0.1pt solid black;">2.</td>
             <td align="left" style="border: 0.1pt solid black;">Pelaporan</td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->laporan ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->laporan ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">40%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_laporan = $data->laporan* 0.4; echo number_format($h_laporan,2)?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_laporan = ($data->laporan ?: 0) * 0.4; echo number_format($h_laporan,2)?></td>
         </tr>
         <tr>
             <td align="center" colspan="2" style="border: 0.1pt solid black;"></td>

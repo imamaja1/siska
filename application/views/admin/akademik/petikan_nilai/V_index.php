@@ -35,7 +35,8 @@
                 </form>
                 <br>
                 <hr>
-                <form id="form-cari" action="<?= site_url('admin/akademik/petikan_nilai/cari') ?>">
+                <form id="form-cari" method="POST" action="<?= site_url('admin/akademik/petikan_nilai/cari') ?>">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group" style="margin: 0px">
                         <label for="inputEmail3" class=" control-label">NIM/Nama</label>
 
@@ -57,46 +58,116 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-view" style="display: none;">
+    <div class="modal-dialog" style="max-width: 80%; width: 100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Petikan Nilai</h4>
+            </div>
+            <div class="modal-body" id="landing-modal">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
  <script>
      $(document).ready(function () {
-         $("#form-filter").submit(function (e) {
-             e.preventDefault();
-             if (!$(this).validate())
-             {
-                 swal("Required",'Form tidak boleh kosong','error');
-             }else{
-                 var url = $(this).attr('action');
-                 var data = $(this).serialize();
-                 $.ajax({
-                     url : url,
-                     data : data,
-                     type : 'post',
-                     success : function (res) {
-                         $("#landing").html(res);
-                     },
-                 })
-             }
-         })
+          $("#form-filter").submit(function (e) {
+              e.preventDefault();
+              var url = $(this).attr('action');
+              var data = $(this).serialize();
+              $.ajax({
+                  url : url,
+                  data : data,
+                  type : 'post',
+                  success : function (res) {
+                      $("#landing").html(res);
+                  },
+                  error : function (xhr, status, error) {
+                      console.log('AJAX Error:', error);
+                      console.log('Response:', xhr.responseText);
+                      $("#landing").html('<div class="callout callout-danger"><h4><i class="fa fa-warning"></i> Error!</h4><p>Gagal memuat data. Silakan coba lagi.</p></div>');
+                  }
+              })
+          })
 
-         $("#form-cari").submit(function (e) {
-             e.preventDefault();
-             if (!$(this).validate())
-             {
-                 swal("Required",'Form tidak boleh kosong','error');
-             }else{
-                 var url = $(this).attr('action');
-                 var data = $(this).serialize();
-                 $.ajax({
-                     url : url,
-                     data : data,
-                     type : 'post',
-                     success : function (res) {
-                         $("#landing").html(res);
-                     },
-                 })
-             }
-         })
+          $("#form-cari").submit(function (e) {
+              e.preventDefault();
+              var url = $(this).attr('action');
+              var data = $(this).serialize();
+              $.ajax({
+                  url : url,
+                  data : data,
+                  type : 'post',
+                  success : function (res) {
+                      $("#landing").html(res);
+                  },
+                  error : function (xhr, status, error) {
+                      console.log('AJAX Error:', error);
+                      console.log('Response:', xhr.responseText);
+                      $("#landing").html('<div class="callout callout-danger"><h4><i class="fa fa-warning"></i> Error!</h4><p>Gagal memuat data. Silakan coba lagi.</p></div>');
+                  }
+              })
+          })
      })
 
+    $(document).on('click', '#halaman a', function(e){
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $.ajax({
+            url : url,
+            success : function (res) {
+                $('#landing').html(res);
+            },
+            error : function () {
+                console.log('gagal load');
+            }
+        })
+    })
+
+    function view(id) {
+        var url = "<?= site_url('admin/akademik/Petikan_nilai/detail') ?>/"+id;
+        $.ajax({
+            url : url,
+            success : function (res) {
+                $('#landing-modal').html(res);
+                $("#modal-view").modal('show');
+            },
+            error : function () {
+                console.log('gagal load');
+            }
+        })
+    }
+    function view_ganjil(id) {
+        var url = "<?= site_url('admin/akademik/Petikan_nilai/detail_ganjil') ?>/"+id;
+        $.ajax({
+            url : url,
+            success : function (res) {
+                $('#landing-modal').html(res);
+                $("#modal-view").modal('show');
+            },
+            error : function () {
+                console.log('gagal load');
+            }
+        })
+    }
+    function view_genap(id) {
+        var url = "<?= site_url('admin/akademik/Petikan_nilai/detail_genap') ?>/"+id;
+        $.ajax({
+            url : url,
+            success : function (res) {
+                $('#landing-modal').html(res);
+                $("#modal-view").modal('show');
+            },
+            error : function () {
+                console.log('gagal load');
+            }
+        })
+    }
  </script>

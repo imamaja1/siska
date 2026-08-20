@@ -17,8 +17,8 @@
             <!--            </div>-->
         </div>
     </div>
-    <div class="box-body">
-        <table class="table demo-table">
+    <div class="box-body table-responsive">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th id="th">No</th>
@@ -57,9 +57,8 @@
                                 onclick="hapus('<?= site_url('admin/jurusan/kurikulum/matakuliah/hapus/' . $d->id_matakuliah) ?>')"><i
                                     class="fa fa-trash"></i></a>
                         </td>
+                        <td style="display: none;" id="kode-kompetensi-<?= e($d->id_matakuliah) ?>"><?= e($d->kode_kompetensi) ?></td>
                     </tr>
-                    <div style="display: none;" id="kode-kompetensi-<?= e($d->id_matakuliah) ?>"><?= e($d->kode_kompetensi) ?>
-                    </div>
                 <?php } ?>
 
             </tbody>

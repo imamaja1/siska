@@ -69,7 +69,7 @@
         $("#form-add").submit(function (e) {
             e.preventDefault();
             var url = $(this).attr('action');
-            if (!$(this)[0].checkValidity()) { swal('Warning','Semua form required harus di isi','error');
+            if (!$(this)[0].checkValidity()) { swal('Warning','Semua form required harus diisi','error');
             }else{
                 $.ajax({
                     url : url, data : $(this).serialize(), type : 'post',
@@ -93,14 +93,14 @@
     function update(contex, e) {
         e.preventDefault();
         var url = $(contex).attr('action');
-        if (!$(contex)[0].checkValidity()) { swal('Warning','Semua form required harus di isi','error');
+        if (!$(contex)[0].checkValidity()) { swal('Warning','Semua form required harus diisi','error');
         }else{
             $.ajax({
                 url : url, data : $(contex).serialize(), type : 'post',
                 success : function (res) {
                     var obj = JSON.parse(res);
                     if (obj.status) { all(); $('#modal-edit').modal('hide'); swal('Success', obj.msg, 'success');
-                    }else{ all(); $('#modal-edit').modal('hide'); swal('Success', obj.msg, 'success'); }
+                    }else{ all(); $('#modal-edit').modal('hide'); swal('Gagal', obj.msg, 'error'); }
                 }
             })
         }

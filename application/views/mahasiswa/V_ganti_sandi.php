@@ -2,6 +2,14 @@
 <div class="box box-success flat">
     <div class="box-body"><br>
         <form class="form-horizontal" method="POST" action="<?= site_url('mahasiswa/ganti_sandi/ganti_sandi_proses'); ?>">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Sandi Lama <small class="text-danger">*</small> :</label>
+                <div class="col-sm-4">
+                    <input type="password" class="form-control" name="sandi_lama" value="<?= set_value('sandi_lama') ?>">
+                    <small class="text-danger"><?= form_error('sandi_lama'); ?></small>
+                </div>
+            </div>
             <div class="form-group">
                 <label class="control-label col-sm-2">Sandi Baru <small class="text-danger">*</small> :</label>
                 <div class="col-sm-4">

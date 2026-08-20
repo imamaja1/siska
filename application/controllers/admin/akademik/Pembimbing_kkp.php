@@ -11,7 +11,6 @@ class Pembimbing_kkp extends CI_Controller
 
         $this->load->service('PembimbingKkpService');
 
-        $class = $this->router->fetch_class();
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
         }
@@ -60,8 +59,16 @@ class Pembimbing_kkp extends CI_Controller
 
     public function add()
     {
-        $data = $this->input->post();
-        $data['kode_tahun_akademik'] = tahun_akademik()->kode_tahun_akademik;
+        $data = array(
+            'nim' => $this->input->post('nim'),
+            'kode_dosen' => $this->input->post('kode_dosen'),
+            'lokasi_kkp' => $this->input->post('lokasi_kkp'),
+            'bidang_kkp' => $this->input->post('bidang_kkp'),
+            'tgl_pelaksanaan' => $this->input->post('tgl_pelaksanaan'),
+            'batas_pelaksanaan' => $this->input->post('batas_pelaksanaan'),
+            'batas_laporan' => $this->input->post('batas_laporan'),
+            'kode_tahun_akademik' => tahun_akademik()->kode_tahun_akademik,
+        );
         $simpan = $this->pembimbingkkpservice->simpanPembimbing($data);
         if ($simpan)
         {
@@ -69,14 +76,14 @@ class Pembimbing_kkp extends CI_Controller
                 '<div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h4><i class="icon fa fa-check"></i> Success!</h4>
-                Data berhasil di simpan.
+                Data berhasil disimpan.
               </div>');
         }else{
             $this->session->set_flashdata('info',
                 '<div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h4><i class="icon fa fa-check"></i> Gagal!</h4>
-                Data gagal di simpan.
+                Data gagal disimpan.
               </div>');
         }
 
@@ -109,8 +116,13 @@ class Pembimbing_kkp extends CI_Controller
 
     public function update($id,$kode_dosen)
     {
-        $data = $this->input->post();
-//        $kode_dosen = $this->uri->segment(5);
+        $data = array(
+            'lokasi_kkp' => $this->input->post('lokasi_kkp'),
+            'bidang_kkp' => $this->input->post('bidang_kkp'),
+            'tgl_pelaksanaan' => $this->input->post('tgl_pelaksanaan'),
+            'batas_pelaksanaan' => $this->input->post('batas_pelaksanaan'),
+            'batas_laporan' => $this->input->post('batas_laporan'),
+        );
         $ubah = $this->pembimbingkkpservice->updatePembimbing($id, $data);
         if ($ubah)
         {
@@ -141,14 +153,14 @@ class Pembimbing_kkp extends CI_Controller
                 '<div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h4><i class="icon fa fa-check"></i> Success!</h4>
-                Data berhasil di hapus.
+                Data berhasil dihapus.
               </div>');
         }else{
             $this->session->set_flashdata('info',
                 '<div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h4><i class="icon fa fa-check"></i> Gagal!</h4>
-                Data gagal di hapus.
+                Data gagal dihapus.
               </div>');
         }
 

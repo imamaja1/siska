@@ -140,7 +140,7 @@
                     <td><?= number_format($ipk,2)  ?></td>
                 </tr>
                 <tr>
-                    <td><strong>Maksismum SKS Semester Depan</strong></td>
+                    <td><strong>Maksimum SKS Semester Depan</strong></td>
                     <td><strong>:</strong></td>
                     <td><?= e($jumlah_maksimum_sks) ?></td>
                 </tr>

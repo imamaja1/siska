@@ -62,7 +62,7 @@
                     if (obj.status === true){
                         $("#dosen-perwakilan").empty();
                     }else {
-                        swal("Gagal!","Data gagal di hapus","error");
+                        swal("Gagal!","Data gagal dihapus","error");
                     }
                 }
             })
@@ -93,7 +93,7 @@
                 var obj = JSON.parse(res);
                 $("#dosen-wali").html(obj.nama_dosen)
                 html = obj.nama_dosen_perwakilan
-                html += "&nbsp;<a href='#' onclick='hapus_perwakilan("+obj.kode_perwalian+", this)'>"
+                html += "&nbsp;<a href='#' onclick='hapus_perwakilan(\""+obj.kode_perwalian+"\", this)'>"
                 html += "<span class='text-danger'>"
                 html += "<i class='fa fa-times'></i>"
                 html += "</span>"

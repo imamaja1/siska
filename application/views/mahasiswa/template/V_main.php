@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/sweetalert/dist/sweetalert2.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/animate.css/animate.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/siska/css/demo_table.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/siska/mahasiswa.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/siska/mahasiswa.css?v=' . filemtime(FCPATH . 'assets/siska/mahasiswa.css')) ?>">
 
     <script src="<?= base_url('assets/plugins/jQuery/jQuery-2.2.0.min.js'); ?>"></script>
     <script src="<?= base_url('assets/plugins/chartjs/Chart.min.js'); ?>"></script>
@@ -67,8 +67,10 @@
                                 } else {
                                     $image = $foto_mhs;
                                 }
+                                $foto_path = FCPATH . 'assets/foto/' . $image;
+                                $foto_url = base_url('assets/foto/' . $image) . (file_exists($foto_path) ? '?v=' . filemtime($foto_path) : '');
                                 ?>
-                                <span><img src="<?= base_url('assets/foto/' . $image); ?>" class="user-image"
+                                <span><img src="<?= $foto_url ?>" class="user-image"
                                            alt="User Image">&nbsp;<?= e(substr($this->session->userdata('nama_mahasiswa'), 0, 10)) ?>... <i
                                                 class="fa fa-angle-down"></i></span>
                             </a>

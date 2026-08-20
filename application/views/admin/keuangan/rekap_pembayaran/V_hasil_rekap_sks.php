@@ -69,7 +69,7 @@
             </table>
         </div>
         <?php else: ?>
-        <p style="text-align: center; font-size: 20pt; font-weight: bold"><i> Tidak ada data di temukan</i></p>
+        <p style="text-align: center; font-size: 20pt; font-weight: bold"><i> Tidak ada data ditemukan</i></p>
         <?php endif; ?>
     </div>
 </div>

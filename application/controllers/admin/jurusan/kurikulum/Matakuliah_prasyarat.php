@@ -37,8 +37,18 @@ class Matakuliah_prasyarat extends CI_Controller {
     }
 
     public function tambah_prasyarat() {
-        $status = $this->matakuliahservice->simpanPrasyarat($this->input->post());
-
+        $post = $this->input->post();
+        $data = array(
+            'nama_kurikulum' => isset($post['nama_kurikulum']) ? $post['nama_kurikulum'] : '',
+            'id_matakuliah_ambil' => $post['id_matakuliah_ambil'],
+            'id_matakuliah_syarat' => $post['id_matakuliah_syarat'],
+            'jenis_prasyarat' => $post['jenis_prasyarat'],
+        );
+        $status = $this->matakuliahservice->simpanPrasyarat($data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => $status, 'msg' => $status ? 'Data berhasil disimpan' : 'Data gagal disimpan'));
+            return;
+        }
         if ($status) {
             $this->session->set_flashdata('info', '<script>swal("Success!","Data berhasil disimpan","success")</script>');
         } else {
@@ -48,8 +58,18 @@ class Matakuliah_prasyarat extends CI_Controller {
     }
 
     public function ubah() {
-        $status = $this->matakuliahservice->ubahPrasyarat($this->input->post());
-
+        $post = $this->input->post();
+        $data = array(
+            'id' => $post['id'],
+            'id_matakuliah_ambil' => $post['id_matakuliah_ambil'],
+            'id_matakuliah_syarat' => $post['id_matakuliah_syarat'],
+            'jenis_prasyarat' => $post['jenis_prasyarat'],
+        );
+        $status = $this->matakuliahservice->ubahPrasyarat($data);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => $status, 'msg' => $status ? 'Data berhasil diubah' : 'Data gagal diubah'));
+            return;
+        }
         if ($status) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil diubah", "success")</script>');
         } else {
@@ -64,12 +84,24 @@ class Matakuliah_prasyarat extends CI_Controller {
     }
 
     public function hapus($id) {
-        if ($this->matakuliahservice->hapusPrasyarat($id)) {
+        $result = $this->matakuliahservice->hapusPrasyarat($id);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => $result, 'msg' => $result ? 'Data berhasil dihapus' : 'Data gagal dihapus'));
+            return;
+        }
+        if ($result) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil dihapus!", "success")</script>');
         } else {
             $this->session->set_flashdata('info', '<script>swal("Gagal!", "Data gagal dihapus!", "error")</script>');
         }
         redirect(site_url('admin/jurusan/kurikulum/matakuliah_prasyarat'));
+    }
+
+    public function filter() {
+        $kode_nama_kurikulum = $this->input->post('kode_nama_kurikulum');
+        $data['hasil'] = $this->matakuliahservice->getPrasyaratByKurikulum($kode_nama_kurikulum);
+        $data['kode_nama_kurikulum'] = $kode_nama_kurikulum;
+        $this->load->view('admin/jurusan/kurikulum/V_filter_prasyarat', $data);
     }
 
     public function get_matakuliah() {

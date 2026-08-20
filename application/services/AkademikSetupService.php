@@ -59,10 +59,20 @@ class AkademikSetupService extends MY_Service {
     }
 
     public function ubahStatusTahunAkademik($id, $status) {
-        if ($this->m_tahun_akademik->ubah(array('status' => $status), $id)) {
-            return array('status' => true, 'msg' => 'Data berhasil diubah');
+        $this->db->trans_start();
+        
+        if ($status == 'A') {
+            $this->db->set('status', 'N')->update('tahun_akademik', array('status' => 'N'));
+        }
+        
+        $this->m_tahun_akademik->ubah(array('status' => $status), $id);
+        
+        $this->db->trans_complete();
+        
+        if ($this->db->trans_status()) {
+            return array('status' => true, 'msg' => 'Status berhasil diubah');
         } else {
-            return array('status' => false, 'msg' => 'Data gagal diubah');
+            return array('status' => false, 'msg' => 'Status gagal diubah');
         }
     }
 

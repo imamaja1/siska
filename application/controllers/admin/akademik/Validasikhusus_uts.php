@@ -11,7 +11,6 @@ class validasikhusus_uts extends CI_Controller {
             'jurusan/universitas/Fakultas_model',
             'laporan/laporan_model',
             'akademik/Nilai_model',
-            'jurusan/m_tahun_akademik',
         ));
         $this->load->service('ValidasiService');
         $class = $this->router->fetch_class();
@@ -82,7 +81,6 @@ class validasikhusus_uts extends CI_Controller {
         }else{
             $this->validasiservice->update_kelas($id, array('cek_uts' => 1));
         }
-        echo $id;
     }
     public function mhs($id){
         $data['kelas'] = $this->validasiservice->get_mahasiswa_by_kelas_id($id);

@@ -14,7 +14,7 @@ class Perwalian_model extends CI_Model
     function get()
     {
         return $this->db->select('m.nama_mahasiswa, m.nim, kode_perwalian, d.nama_dosen')
-            ->from('perwalian as p, dosen as d, mahasiswa as m')
+            ->from('perwalian as p')
             ->join('dosen as d', 'p.kode_dosen=d.kode_dosen')
             ->join('mahasiswa as m', 'p.nim=m.nim')
             ->get()->result();

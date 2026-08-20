@@ -55,9 +55,9 @@
                             ?></td>
                         <td id="alamat-email-<?= e($d->kode_dosen) ?>"><?= e($d->alamat_email) ?></td>
                         <td align="center" width="220">
-                            <a href="#" onclick="gantipassword('<?= site_url('admin/jurusan/dosen/generate_sandi/' . $d->kode_dosen) ?>')" class="btn btn-xs btn-primary flat"><i class="fa fa-refresh"></i> Reset Sandi</a>
+                            <a href="#" onclick="gantipassword('<?= e($d->kode_dosen) ?>')" class="btn btn-xs btn-primary flat"><i class="fa fa-refresh"></i> Reset Sandi</a>
                             <a href="<?= site_url('admin/jurusan/dosen/edit/' . $d->kode_dosen); ?>" class="btn btn-xs btn-info flat"><i class="fa fa-edit"></i> Ubah</a>
-                            <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/dosen/hapus') . '/' . $d->kode_dosen ?>')"><i class="fa fa-trash"></i> Hapus</a>
+                            <a href="#" class="btn btn-xs btn-danger flat" onclick="hapus('<?= e($d->kode_dosen) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                         </td>
 
                     </tr>
@@ -69,7 +69,7 @@
 </div>
 
 <script type="text/javascript">
-    function hapus(url) {
+    function hapus(kode_dosen) {
         swal({
             title: '',
             text: "Anda yakin ingin menghapus data ini?",
@@ -80,11 +80,24 @@
             cancelButtonText: 'Tidak',
             confirmButtonText: 'Ya'
         }).then(function () {
-            window.location.href = url;
+            $.ajax({
+                url: "<?= site_url('admin/jurusan/dosen/hapus') ?>/" + kode_dosen,
+                type: 'GET',
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status) {
+                        swal('Success!', res.msg, 'success').then(function() {
+                            location.reload();
+                        });
+                    } else {
+                        swal('Gagal!', res.msg, 'error');
+                    }
+                }
+            });
         });
     }
 
-    function gantipassword(url) {
+    function gantipassword(kode_dosen) {
         swal({
             title: "",
             text: "Anda yakin ingin mereset password dosen ini?",
@@ -93,10 +106,25 @@
             confirmButtonColor: '#3085d6',
             cancelButtonColor: 'red',
             cancelButtonText: 'Tidak',
-            confirmButtonText: 'Ya',
-            closeOnConfirm: false
+            confirmButtonText: 'Ya'
         }).then(function () {
-            window.location.href = url;
-        })
+            $.ajax({
+                url: "<?= site_url('admin/jurusan/dosen/generate_sandi') ?>/" + kode_dosen,
+                type: 'GET',
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status) {
+                        swal({
+                            title: 'Sukses!',
+                            text: 'Password baru: ' + res.password_string,
+                            type: 'success',
+                            html: true
+                        });
+                    } else {
+                        swal('Gagal!', res.msg, 'error');
+                    }
+                }
+            });
+        });
     }
 </script>

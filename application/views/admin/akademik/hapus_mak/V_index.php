@@ -4,7 +4,7 @@
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
         <div class="col-sm-4">
             <div class="input-group input-group">
-                <input type="text" class="form-control" name="nim" id="search-box" placeholder="Masukan NIM">
+                <input type="text" class="form-control" name="nim" id="search-box" placeholder="Masukkan NIM">
                 <span class="input-group-btn">
                       <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i></button>
                     </span>

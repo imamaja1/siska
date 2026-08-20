@@ -31,7 +31,7 @@ class Login_mahasiswa extends CI_Controller
     public function cek_login()
     {
 
-        $this->form_validation->set_rules('nim', 'nim', 'required|numeric|exact_length[10]', array('required' => 'Field NIM harus diisi', 'numeric' => 'Field NIM harus berisi bilangan positif', 'exact_length' => 'Field NIM harus tepat sebanyak 10 karakter'));
+        $this->form_validation->set_rules('nim', 'nim', 'required|numeric|min_length[10]', array('required' => 'Field NIM harus diisi', 'numeric' => 'Field NIM harus berisi bilangan positif', 'min_length' => 'Field NIM minimal sebanyak 10 karakter'));
         $this->form_validation->set_rules('sandi', 'sandi', 'required', array('required' => 'Field Sandi harus diisi'));
 
         if ($this->form_validation->run() == false) {

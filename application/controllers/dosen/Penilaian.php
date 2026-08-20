@@ -888,9 +888,9 @@ class Penilaian extends CI_Controller {
         }
         $save = $this->dosenakademikservice->storePersentasiNilai($data_store);
         if ($save) {
-            $this->session->set_flashdata('info', 'swal("Success!","Data berhasil di simpan","success")');
+            $this->session->set_flashdata('info', 'swal("Success!","Data berhasil disimpan","success")');
         } else {
-            $this->session->set_flashdata('info', 'swal("Gagal!","Data gagal di simpan","error")');
+            $this->session->set_flashdata('info', 'swal("Gagal!","Data gagal disimpan","error")');
         }
         return redirect($_SERVER['HTTP_REFERER']);
     }
@@ -904,9 +904,9 @@ class Penilaian extends CI_Controller {
         }
         $save = $this->dosenakademikservice->updatePersentasiNilai($data_store['kelas_id'], $data_store);
         if ($save) {
-            $this->session->set_flashdata('info', 'swal("Success!","Data berhasil di ubah","success")');
+            $this->session->set_flashdata('info', 'swal("Success!","Data berhasil diubah","success")');
         } else {
-            $this->session->set_flashdata('info', 'swal("Gagal!","Data gagal di ubah","error")');
+            $this->session->set_flashdata('info', 'swal("Gagal!","Data gagal diubah","error")');
         }
         return redirect($_SERVER['HTTP_REFERER']);
     }

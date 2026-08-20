@@ -55,7 +55,7 @@
                 <form id="form-cari-nim" action="<?= site_url('admin/jurusan/perwalian/edit_dosen_wali') ?>" method="post">
 	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
-                        <input type="text" autocomplete="off" placeholder="Masukan NIM" name="nim" id="search-box" class="form-control">
+                        <input type="text" autocomplete="off" placeholder="Masukkan NIM" name="nim" id="search-box" class="form-control">
                         <div id="suggesstion-box"></div>
                     </div>
                     <div class="form-group">
@@ -68,7 +68,7 @@
                 <form id="form-cari-dosen" action="#" method="post">
                     <div class="form-group">
                         <input type="hidden" name="kode_dosen_cari" id="kode-dosen-cari">
-                        <input type="text" required autocomplete="off" placeholder="Masukan Nama Dosen" name="kode_dosen" id="search-box-dosen" class="form-control">
+                        <input type="text" required autocomplete="off" placeholder="Masukkan Nama Dosen" name="kode_dosen" id="search-box-dosen" class="form-control">
                         <div id="suggesstion-box-dosen"></div>
                     </div>
                     <div class="form-group">

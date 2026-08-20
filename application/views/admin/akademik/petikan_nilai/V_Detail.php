@@ -66,8 +66,8 @@
                             <td><center><?= e($row['sksn']) ?></center></td>
                         </tr>
                     <?php endforeach;
-                        $total_sks = $total_sks = $key['sks'];
-                        $total_sksn = $total_sksn = $key['sksn'];
+                        $total_sks += $key['sks'];
+                        $total_sksn += $key['sksn'];
                     endif;
                     ?>
                     </tbody>

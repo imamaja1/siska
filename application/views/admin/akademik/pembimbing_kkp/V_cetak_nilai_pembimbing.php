@@ -73,37 +73,37 @@ header("Expires: 0");
         <tr>
             <td align="center" style="border: 0.1pt solid black;">1.</td>
             <td align="left" style="border: 0.1pt solid black;">BAB I Pendahuluan </td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_1 ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_1 ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">15%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_b1 = $data->bab_1 * 0.15; echo number_format($h_b1,2) ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_b1 = ($data->bab_1 ?: 0) * 0.15; echo number_format($h_b1,2) ?></td>
         </tr>
         <tr>
             <td align="center" style="border: 0.1pt solid black;">2.</td>
             <td align="left" style="border: 0.1pt solid black;">BAB II Profil Lokasi KKP</td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_2 ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_2 ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">15%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_b2 = $data->bab_2 * 0.15; echo number_format($h_b2,2) ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_b2 = ($data->bab_2 ?: 0) * 0.15; echo number_format($h_b2,2) ?></td>
         </tr>
         <tr>
             <td align="center" style="border: 0.1pt solid black;">3.</td>
             <td align="left" style="border: 0.1pt solid black;">BAB III Deskripsi Tugas</td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_3 ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_3 ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">25%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_b3 = $data->bab_3 * 0.25; echo number_format($h_b3,2) ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_b3 = ($data->bab_3 ?: 0) * 0.25; echo number_format($h_b3,2) ?></td>
         </tr>
         <tr>
             <td align="center" style="border: 0.1pt solid black;">4.</td>
             <td align="left" style="border: 0.1pt solid black;">BAB IV Paparan Tugas  </td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_4 ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_4 ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">30%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_b4 = $data->bab_4 * 0.3; echo number_format($h_b4,2) ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_b4 = ($data->bab_4 ?: 0) * 0.3; echo number_format($h_b4,2) ?></td>
         </tr>
         <tr>
             <td align="center" style="border: 0.1pt solid black;">5.</td>
             <td align="left" style="border: 0.1pt solid black;">BAB V Penutup (Kesimpulan dan Saran)</td>
-            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_5 ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= $data->bab_5 ?: 0 ?></td>
             <td align="center" style="border: 0.1pt solid black;">15%</td>
-            <td align="center" style="border: 0.1pt solid black;"><?php $h_b5 = $data->bab_5 * 0.15; echo number_format($h_b5,2) ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?php $h_b5 = ($data->bab_5 ?: 0) * 0.15; echo number_format($h_b5,2) ?></td>
         </tr>
         <tr>
             <td align="center" colspan="2" style="border: 0.1pt solid black;"></td>

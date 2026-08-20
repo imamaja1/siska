@@ -158,7 +158,7 @@
         <div class="col-xs-4">
             <div class="input-group ">
                 <input maxlength="11" type="text" autocomplete="off" id="search-box" name="nim"
-                       placeholder="Masukan NIM" class="form-control"/>
+                       placeholder="Masukkan NIM" class="form-control"/>
                 <span class="input-group-btn">
                   <button class="btn btn-primary flat" onclick="cek()"><i class="fa fa-search"></i></button>
                 </span>

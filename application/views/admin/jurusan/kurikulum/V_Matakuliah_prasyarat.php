@@ -68,7 +68,6 @@
 <script type="text/javascript">
     var kode_nama_kurikulum_super = '';
     $(function () {
-        $('.dataTables-example').dataTable();
         $(".select-modal").select2({
             dropdownParent: $("#myModal")
         });
@@ -154,12 +153,18 @@
             url : url,
             data : data +"&nama_kurikulum=" + kode_nama_kurikulum_super,
             type : 'post',
-            success : function () {
-                ambil();
-                $("#myModal").modal('toggle');
+            dataType: 'json',
+            success : function (res) {
+                if (res.status) {
+                    ambil();
+                    $("#myModal").modal('hide');
+                    swal('Success!', res.msg, 'success');
+                } else {
+                    swal('Gagal!', res.msg, 'error');
+                }
             },
-            error : function (res) {
-                alert('data gagal disimpan');
+            error : function () {
+                swal('Gagal!', 'Terjadi kesalahan', 'error');
                 ambil();
             }
         })

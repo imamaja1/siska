@@ -178,7 +178,7 @@
 </div>
 
 <script type="text/javascript">
-    $(function () { $('.dataTables-example').dataTable(); });
+
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -187,7 +187,7 @@
             e.preventDefault();
             var url = $(this).attr('action');
             var data = $(this).serialize();
-            if (!$(this)[0].checkValidity()) { console.log('form harus di isi semua');
+            if (!$(this)[0].checkValidity()) { console.log('form harus diisi semua');
             } else {
                 $.ajax({
                     url: url, data: data, type: "post",
@@ -203,7 +203,7 @@
             e.preventDefault();
             var url = $(this).attr('action');
             var data = $(this).serialize();
-            if (!$(this)[0].checkValidity()) { console.log('form harus di isi semua');
+            if (!$(this)[0].checkValidity()) { console.log('form harus diisi semua');
             } else {
                 $.ajax({
                     url: url, data: data, type: "post",

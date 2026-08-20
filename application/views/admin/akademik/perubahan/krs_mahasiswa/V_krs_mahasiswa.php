@@ -42,22 +42,22 @@
             <div class="box-body">
                 <?php if (count($data) > 0) : ?>
                 <div class="table-responsive">
-                    <table class="table demo-table" id="table-edit">
+                    <table class="table table-bordered table-striped" id="table-edit">
                         <thead>
                             <tr>
-                                <th style="text-align:center">No</th>
-                                <th style="display:none">ID</th>
-                                <th>Tahun Akademik</th>
-                                <th style="text-align:center">Semester</th>
-                                <th>Kode MK</th>
+                                <th style="text-align:center; width:40px;">No</th>
+                                <th style="display:none;">ID</th>
+                                <th style="text-align:center; width:120px;">Tahun Akademik</th>
+                                <th style="text-align:center; width:70px;">Semester</th>
+                                <th style="text-align:center; width:100px;">Kode MK</th>
                                 <th>Nama Matakuliah</th>
-                                <th style="text-align:center">SKS</th>
-                                <th style="text-align:center">Nilai Harian</th>
-                                <th style="text-align:center">Nilai UTS</th>
-                                <th style="text-align:center">Nilai UAS</th>
-                                <th style="text-align:center">Nilai Akhir</th>
-                                <th style="text-align:center">Grade</th>
-                                <th style="text-align:center">Status</th>
+                                <th style="text-align:center; width:50px;">SKS</th>
+                                <th style="text-align:center; width:80px;">Nilai Harian</th>
+                                <th style="text-align:center; width:80px;">Nilai UTS</th>
+                                <th style="text-align:center; width:80px;">Nilai UAS</th>
+                                <th style="text-align:center; width:80px;">Nilai Akhir</th>
+                                <th style="text-align:center; width:60px;">Grade</th>
+                                <th style="text-align:center; width:60px;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,7 +74,7 @@
                                 <td style="text-align:center"><?= ($row->nilai_uts === null || $row->nilai_uts === '') ? '' : e($row->nilai_uts) ?></td>
                                 <td style="text-align:center"><?= ($row->nilai_uas === null || $row->nilai_uas === '') ? '' : e($row->nilai_uas) ?></td>
                                 <td style="text-align:center"><?= ($row->nilai_akhir === null || $row->nilai_akhir === '') ? '' : e($row->nilai_akhir) ?></td>
-                                <td style="text-align:center"><?= ($row->status == 'K' || empty($row->grade)) ? '-' : e($row->grade) ?></td>
+                                <td style="text-align:center"><?= empty($row->grade) ? '-' : e($row->grade) ?></td>
                                 <td style="text-align:center">
                                     <?php if ($row->status == 'K') : ?>
                                         <span class="label label-danger">K</span>
@@ -102,17 +102,6 @@
     var lastKodeKrsDetail = '';
 
     $(document).ready(function () {
-        $('#table-edit').dataTable({
-            "ordering": false,
-            "info": false,
-            "searching": true,
-            "paging": false,
-            "columnDefs": [{
-                orderable: false,
-                targets: "no-sort"
-            }]
-        });
-
         $('#table-edit').Tabledit({
             url: "<?= site_url('admin/akademik/perubahan/Krs_mahasiswa/ubah_krs_nilai') ?>",
             hideIdentifier: true,

@@ -3,7 +3,7 @@
 	<div class="box-body" style="padding-top:10px;">
 		<div class="col-sm-4">
 			<div class="input-group input-group">
-                <input type="text" class="form-control" name="nim" id="search-box" placeholder="Masukan NIM">
+                <input type="text" class="form-control" name="nim" id="search-box" placeholder="Masukkan NIM">
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-info btn-flat" onclick="kirim()"><i class="fa fa-search"></i></button>
                     </span>
@@ -16,18 +16,9 @@
 <script type="text/javascript">
 	function kirim () {
         var nim = $('#search-box').val();
-
-        $.ajax({
-            url : "<?= site_url('admin/akademik/perubahan/krs_mahasiswa/tampil')  ?>/"+nim,
-            type : "GET",
-            data : "nim="+nim,
-            success : function () {
-                window.location.href = "<?= site_url('admin/akademik/perubahan/krs_mahasiswa/tampil')  ?>/"+nim;
-            },
-            error : function () {
-                console.log = "gagal";
-            }
-        });
+        if (nim) {
+            window.location.href = "<?= site_url('admin/akademik/perubahan/krs_mahasiswa/tampil')  ?>/"+nim;
+        }
     }
 </script>
 

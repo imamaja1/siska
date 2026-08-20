@@ -158,13 +158,13 @@
                             foreach ($data[$i]['data_nilai'] as $row) :
                                 ?>
                                 <tr 
-                                    style="<?php if ($row['semester'] == $semester_jalan && $row['semester'] <= $semester ) {
-                                      if($row['nama_matakuliah'] == 'Skripsi' && $row['nilai_akhir'] > 0){}else{echo "background-color:orange;"; }
+                                    style="<?php if (isset($row['semester']) && isset($semester_jalan) && $row['semester'] == $semester_jalan && isset($semester) && $row['semester'] <= $semester ) {
+                                      if($row['nama_matakuliah'] == 'Skripsi' && isset($row['nilai_akhir']) && $row['nilai_akhir'] > 0){}else{echo "background-color:orange;"; }
                                     }
-                                    if ($row['mk_pilihan']) {
+                                    if (isset($row['mk_pilihan']) && $row['mk_pilihan']) {
                                         echo "font-style: italic;";
                                     } 
-									if($row['semester'] == $semester_jalan){
+									if(isset($row['semester']) && isset($semester_jalan) && $row['semester'] == $semester_jalan){
                                       	echo "background-color:orange;";
                                     }
                                     ?> ">
@@ -241,14 +241,14 @@
                                 $j = 1;
                                 foreach ($data[$k]['data_nilai'] as $row) :
                                     ?>
-                                    <tr style="<?php if ($row['semester'] == $semester_jalan && $row['semester'] <= $semester) {
-                                         if($row['nama_matakuliah'] == 'Skripsi' && $row['nilai_akhir'] > 0){
+                                    <tr style="<?php if (isset($row['semester']) && isset($semester_jalan) && $row['semester'] == $semester_jalan && isset($semester) && $row['semester'] <= $semester) {
+                                         if($row['nama_matakuliah'] == 'Skripsi' && isset($row['nilai_akhir']) && $row['nilai_akhir'] > 0){
 
                                       }else{
                                           echo "background-color:orange;"; 
                                       }
                                     }
-                                    if ($row['mk_pilihan']) {
+                                    if (isset($row['mk_pilihan']) && $row['mk_pilihan']) {
                                         echo "font-style: italic;";
                                     } 
                                     ?> ">

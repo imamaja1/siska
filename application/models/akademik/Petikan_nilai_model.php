@@ -91,7 +91,7 @@ class Petikan_nilai_model extends CI_Model {
                                 ->where('m.kode_matakuliah', $row->kode_matakuliah)
                                 ->where('k.nim', $nim)
                                 ->get()->row_object();
-                if (isset($row->kompetensi)) {
+                if (isset($row->kode_kompetensi) && $row->kode_kompetensi) {
                     $data[$n]['data_nilai'][$i]['mk_pilihan'] = true;
                 }
                 $sks = $row->sks_teori + $row->sks_praktek + $row->sks_praktikum;
@@ -244,7 +244,7 @@ class Petikan_nilai_model extends CI_Model {
         $t_sks = 0;
         $t_sksn = 0;
         for ($j = 1; $j <= 8; $j++) {
-            $data_kurikulum = $this->db->select('mak.kode_matakuliah, mak.nama_matakuliah, mak.sks_teori, mak.sks_praktek, mak.sks_praktikum, mak.param1, mk.id_matakuliah as kompetensi')
+            $data_kurikulum = $this->db->select('mak.kode_matakuliah, mak.nama_matakuliah, mak.sks_teori, mak.sks_praktek, mak.sks_praktikum, mak.param1, mk.id_matakuliah as kompetensi, mk.kode_kompetensi')
                             ->from('kurikulum as kur')
                             ->join('matakuliah as mak', 'kur.id_matakuliah=mak.id_matakuliah')
                             ->join('matakuliah_kompetensi as mk', 'mk.id_matakuliah=mak.id_matakuliah','left')
@@ -268,7 +268,7 @@ class Petikan_nilai_model extends CI_Model {
                                 ->where('k.nim', $nim)
                                 ->where('k.semester < ', $mhs_semester)
                                 ->get()->row_object();
-                if ($row->kode_kompetensi) {
+                if (isset($row->kode_kompetensi) && $row->kode_kompetensi) {
                     $data[$n]['data_nilai'][$i]['mk_pilihan'] = true;
                 }
                 $sks = $row->sks_teori + $row->sks_praktek + $row->sks_praktikum;
@@ -280,6 +280,7 @@ class Petikan_nilai_model extends CI_Model {
                     $data[$n]['data_nilai'][$i]['sks_praktek'] = $row->sks_praktek;
                     $data[$n]['data_nilai'][$i]['sks_praktikum'] = $row->sks_praktikum;
                     $data[$n]['data_nilai'][$i]['jumlah_data'] = 0;
+                    $data[$n]['data_nilai'][$i]['semester'] = $j;
                     $data[$n]['data_nilai'][$i]['grade'] = '-';
                     $data[$n]['data_nilai'][$i]['sksn'] = 0;
                     $data[$n]['data_nilai'][$i]['sks'] = 0;

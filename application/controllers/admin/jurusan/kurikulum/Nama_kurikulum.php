@@ -36,48 +36,50 @@ class Nama_kurikulum extends CI_Controller {
     }
 
     public function simpan() {
-        if ($this->kurikulumservice->simpanNamaKurikulum($this->input->post())) {
-            $this->session->set_flashdata(
-                'info',
-                '<script>swal("Success!", "Data berhasil disimpan", "success");</script>'
-            );
+        $result = $this->kurikulumservice->simpanNamaKurikulum($this->input->post());
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => $result, 'msg' => $result ? 'Data berhasil disimpan' : 'Data gagal disimpan'));
+            return;
+        }
+        if ($result) {
+            $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil disimpan", "success");</script>');
         } else {
-            $this->session->set_flashdata(
-                'info',
-                '<script>swal("Gagal!", "Data gagal disimpan", "error");</script>'
-            );
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Data gagal disimpan", "error");</script>');
         }
         redirect(site_url('admin/jurusan/kurikulum/nama_kurikulum'));
     }
 
     public function hapus($kode_nama_kurikulum) {
-        if ($this->kurikulumservice->hapusNamaKurikulum($kode_nama_kurikulum)) {
-            $this->session->set_flashdata(
-                'info',
-                '<script>swal("Success!", "Data berhasil dihapus", "success");</script>'
-            );
+        $result = $this->kurikulumservice->hapusNamaKurikulum($kode_nama_kurikulum);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => $result, 'msg' => $result ? 'Data berhasil dihapus' : 'Data gagal dihapus'));
+            return;
+        }
+        if ($result) {
+            $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil dihapus", "success");</script>');
         } else {
-            $this->session->set_flashdata(
-                'info',
-                '<script>swal("Gagal!", "Data gagal dihapus", "error");</script>'
-            );
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Data gagal dihapus", "error");</script>');
         }
         redirect(site_url('admin/jurusan/kurikulum/nama_kurikulum'));
     }
 
     public function ubah() {
-        if ($this->kurikulumservice->ubahNamaKurikulum($this->input->post())) {
-            $this->session->set_flashdata(
-                'info',
-                '<script>swal("Success!", "Data berhasil diubah", "success");</script>'
-            );
+        $result = $this->kurikulumservice->ubahNamaKurikulum($this->input->post());
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('status' => $result, 'msg' => $result ? 'Data berhasil diubah' : 'Data gagal diubah'));
+            return;
+        }
+        if ($result) {
+            $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil diubah", "success");</script>');
         } else {
-            $this->session->set_flashdata(
-                'info',
-                '<script>swal("Gagal!", "Data gagal diubah", "error");</script>'
-            );
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Data gagal diubah", "error");</script>');
         }
         redirect(site_url('admin/jurusan/kurikulum/nama_kurikulum'));
+    }
+
+    public function render_tabel() {
+        $data['data'] = $this->kurikulumservice->getNamaKurikulumLengkap();
+        $this->load->view('admin/jurusan/kurikulum/V_tabel_nama_kurikulum', $data);
     }
 
 }

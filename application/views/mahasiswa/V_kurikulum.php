@@ -38,7 +38,11 @@
                                 <?php $i = 1;
                                 foreach ($row['data'] as $d) {
                                     ?>
-                                     <tr  <?= in_array($d->id_matakuliah, $mk_pilihan) ? "style='font-style: italic'" : 'style="font-weight: bold"' ?> <?=($d->jenis == '1')? 'style="font-style: italic"':'';?>>
+                                     <?php
+                                        $style_tr = in_array($d->id_matakuliah, $mk_pilihan) ? "font-style: italic" : "font-weight: bold";
+                                        if ($d->jenis == '1') { $style_tr = "font-style: italic"; }
+                                     ?>
+                                     <tr style="<?= $style_tr ?>">
                                         <td><center><?= $i++ ?>.</center></td>
                                 		<td id="kode-matakuliah-<?= $d->kode_kurikulum ?>">
                                 			<center><?= e($d->kode_matakuliah) ?></center>

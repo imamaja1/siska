@@ -30,7 +30,7 @@ class Petikan_nilai extends CI_Controller {
     }
 
     public function index() {
-        $data['content'] = 'admin/akademik/petikan_nilai/V_Petikan_nilai';
+        $data['content'] = 'admin/akademik/petikan_nilai/V_index';
         $data['judul'] = 'Akademik';
         $data['sub_judul'] = 'Petikan Nilai';
         $data['judul_sub_judul'] ='';
@@ -43,39 +43,78 @@ class Petikan_nilai extends CI_Controller {
     public function filter() {
         $angkatan = $this->input->post('angkatan');
         $kode_program_studi = $this->input->post('prodi');
-        $status_krs = $this->input->post('status_krs');
         
         $data_session = array(
             'input_angkatan' => $angkatan,
             'input_kode_program_studi' => $kode_program_studi,
-            'status_krs' => $status_krs,
         );
 
         $this->session->set_userdata($data_session);
-        redirect(site_url('admin/akademik/Petikan_nilai/data_mahasiswa_petikan_nilai'));
+        
+        if ($this->input->is_ajax_request()) {
+            try {
+                $data['content'] = 'admin/akademik/petikan_nilai/V_Petikan_nilai';
+                $data['judul'] = 'Akademik';
+                $data['sub_judul'] = 'Petikan Nilai';
+                
+                $angkatan = $this->session->userdata('input_angkatan');
+                $kode_porgram_studi = $this->session->userdata('input_kode_program_studi');
+                
+                $uri_segment = 5;
+                $offset = 0;
+                
+                $data['data'] = $this->Petikan_nilai_model->filter($angkatan, $kode_porgram_studi, $this->limit, $offset);
+                $data_count = count($this->Petikan_nilai_model->count_data_filter($angkatan, $kode_porgram_studi));
+
+                if ($data_count > 0) {
+                    $config['base_url'] = site_url('admin/akademik/petikan_nilai/data_mahasiswa_petikan_nilai');
+                    $config['total_rows'] = $data_count;
+                    $config['per_page'] = $this->limit;
+                    $config['uri_segment'] = $uri_segment;
+                    $config['full_tag_open'] = '<div id="halaman" class="btn-group">';
+                    $config['full_tag_close'] = '</div>';
+                    $config['cur_tag_open'] = '<a href="#!" class="btn btn-sm flat btn-primary disabled">';
+                    $config['cur_tag_close'] = '</a>';
+                    $config['attributes'] = array('class' => 'btn flat btn-sm btn-default');
+
+                    $this->pagination->initialize($config);
+                    $data['halaman'] = $this->pagination->create_links();
+                    $data['jumlah_data'] = $data_count;
+                } else {
+                    $data['data'] = array();
+                    $data['halaman'] = '';
+                    $data['jumlah_data'] = 0;
+                }
+                $this->load->view('admin/akademik/petikan_nilai/V_Petikan_nilai', $data);
+            } catch (Exception $e) {
+                log_message('error', 'Error in filter(): ' . $e->getMessage());
+                show_error('Terjadi kesalahan saat memproses data', 500);
+            }
+        } else {
+            redirect(site_url('admin/akademik/Petikan_nilai/data_mahasiswa_petikan_nilai'));
+        }
     }
 
     public function data_mahasiswa_petikan_nilai() {
-        $data['content'] = 'admin/akademik/petikan_nilai/V_petikan_mahasiswa';
+        $data['content'] = 'admin/akademik/petikan_nilai/V_Petikan_nilai';
         $data['judul'] = 'Akademik';
         $data['sub_judul'] = 'Petikan Nilai';
         
         $angkatan = $this->session->userdata('input_angkatan');
         $kode_porgram_studi = $this->session->userdata('input_kode_program_studi');
-        $status_krs = $this->session->userdata('status_krs');
         
         $uri_segment = 5;
         $offset = $this->uri->segment($uri_segment) ? $this->uri->segment($uri_segment) : 0;
         
-        $data['data'] = $this->Petikan_nilai_model->filter($angkatan, $kode_porgram_studi, $status_krs, $this->limit, $offset);
-        $data_count = count($this->Petikan_nilai_model->count_data_filter($angkatan, $kode_porgram_studi, $status_krs));
+        $data['data'] = $this->Petikan_nilai_model->filter($angkatan, $kode_porgram_studi, $this->limit, $offset);
+        $data_count = count($this->Petikan_nilai_model->count_data_filter($angkatan, $kode_porgram_studi));
 
         if ($data_count > 0) {
             $config['base_url'] = site_url('admin/akademik/petikan_nilai/data_mahasiswa_petikan_nilai');
             $config['total_rows'] = $data_count;
             $config['per_page'] = $this->limit;
             $config['uri_segment'] = $uri_segment;
-            $config['full_tag_open'] = '<div class="btn-group">';
+            $config['full_tag_open'] = '<div id="halaman" class="btn-group">';
             $config['full_tag_close'] = '</div>';
             $config['cur_tag_open'] = '<a href="#!" class="btn btn-sm flat btn-primary disabled">';
             $config['cur_tag_close'] = '</a>';
@@ -87,14 +126,41 @@ class Petikan_nilai extends CI_Controller {
         } else {
             $this->session->set_flashdata('keterangan', 'Tidak ditemukan satupun data mahasiswa untuk Angkatan dan Jurusan !');
         }
-        $this->load->view('admin/template/V_main', $data);
+        
+        if ($this->input->is_ajax_request()) {
+            $this->load->view('admin/akademik/petikan_nilai/V_Petikan_nilai', $data);
+        } else {
+            $this->load->view('admin/template/V_main', $data);
+        }
     }
 
     public function cari() {
-        $data['content'] = 'admin/akademik/petikan_nilai/V_Cari';
-        $data['judul'] = 'Akademik';
-        $data['sub_judul'] = 'Petikan Nilai';
-        $this->load->view('admin/template/V_main', $data);
+        $keyword = $this->input->post('keyword');
+        
+        if ($this->input->is_ajax_request()) {
+            try {
+                $data['data'] = $this->Petikan_nilai_model->cari($keyword, $this->limit, 0);
+                $data_count = count($this->Petikan_nilai_model->count_cari($keyword));
+                
+                if ($data_count > 0) {
+                    $data['halaman'] = '';
+                    $data['jumlah_data'] = $data_count;
+                } else {
+                    $data['data'] = array();
+                    $data['halaman'] = '';
+                    $data['jumlah_data'] = 0;
+                }
+                $this->load->view('admin/akademik/petikan_nilai/V_Petikan_nilai', $data);
+            } catch (Exception $e) {
+                log_message('error', 'Error in cari(): ' . $e->getMessage());
+                show_error('Terjadi kesalahan saat memproses data', 500);
+            }
+        } else {
+            $data['content'] = 'admin/akademik/petikan_nilai/V_Petikan_nilai';
+            $data['judul'] = 'Akademik';
+            $data['sub_judul'] = 'Petikan Nilai';
+            $this->load->view('admin/template/V_main', $data);
+        }
     }
 
     public function data_cari() {

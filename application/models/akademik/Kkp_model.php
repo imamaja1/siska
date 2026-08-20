@@ -48,7 +48,7 @@ class Kkp_model extends CI_Model {
             ->join('krs_detail as kd','krs.kode_krs=kd.kode_krs')
             ->join('khs_detail as khd','kd.kode_krs_detail=khd.kode_krs_detail')
             ->join('matakuliah as mak','kd.id_matakuliah=mak.id_matakuliah')
-            ->where('mah.program_studi_kode)',$kode_program_studi)
+            ->where('mah.program_studi_kode',$kode_program_studi)
             ->where('substr(krs.nim,1,2)',$angkatan)
             ->where_in('mak.kode_matakuliah',$kode_matakuliah)
             ->where('krs.semester',$semester)

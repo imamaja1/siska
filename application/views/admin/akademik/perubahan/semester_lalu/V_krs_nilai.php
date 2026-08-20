@@ -14,82 +14,89 @@
 	<div class="box-body">
 	<p><center><strong>PERUBAHAN KARTU RENCANA STUDI (KRS)/NILAI UNTUK SEMESTER LALU</strong></center></p>
 	<br>
-	<div class="col-sm-6 col-md-6 col-lg-6">
-		<table class="table">
-			<tr>
-				<td><strong>Nama Mahasiswa</strong></td>
-				<td><strong>:</strong></td>
-<td><?= e($data['nama_mahasiswa'])  ?></td>
-            </tr>
-            <tr>
-                <td><strong>NIM</strong></td>
-                <td><strong>:</strong></td>
-                <td><?= e($data['nim'])  ?></td>
-			</tr>
-			<tr>
-				<td><strong>Semester</strong></td>
-				<td><strong>:</strong></td>
-				<td><?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil" ; ?></td>
-			</tr>
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped">
+					<tr>
+						<td><strong>Nama Mahasiswa</strong></td>
+						<td><strong>:</strong></td>
+						<td><?= e($data['nama_mahasiswa'])  ?></td>
+					</tr>
+					<tr>
+						<td><strong>NIM</strong></td>
+						<td><strong>:</strong></td>
+						<td><?= e($data['nim'])  ?></td>
+					</tr>
+					<tr>
+						<td><strong>Semester</strong></td>
+						<td><strong>:</strong></td>
+						<td><?= $data['semester'] % 2 == (0) ? "Genap" : "Ganjil" ; ?></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped">
+					<tr>
+						<td><strong>Program Studi</strong></td>
+						<td><strong>:</strong></td>
+						<td><?= e($data['prodi']->nama_program_studi)  ?></td>
+					</tr>
+					<tr>
+						<td><strong>Fakultas</strong></td>
+						<td><strong>:</strong></td>
+						<td><?= e($data['prodi']->nama_fakultas)  ?></td>
+					</tr>
+					<tr>
+						<td><strong>Kurikulum</strong></td>
+						<td><strong>:</strong></td>
+						<td><?= e($data['kurikulum'])?></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped" id="table-edit">
+			<thead>
+				<tr>
+					<th style="text-align: center; width: 40px;">No.</th>
+					<th style="display:none;">Kode KRS Detail</th>
+					<th style="text-align: center; width: 100px;">Kode MK</th>
+					<th>Matakuliah</th>
+					<th style="text-align: center; width: 80px;">Nilai Harian</th>
+					<th style="text-align: center; width: 80px;">Nilai UTS</th>
+					<th style="text-align: center; width: 80px;">Nilai UAS</th>
+					<th style="text-align: center; width: 80px;">Nilai Akhir</th>
+					<th style="text-align: center; width: 60px;">Grade</th>
+					<th style="text-align: center; width: 60px;">Ket</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
+				<tr>
+					<td style="text-align: center;"><?= $i++."." ?></td>
+					<td style="display:none;"><?= e($row['kode_krs_detail']) ?></td>
+					<td style="text-align: center;"><?= e($row['kode_matakuliah']) ?></td>
+					<td><?= e($row['nama_matakuliah']) ?></td>
+					<td style="text-align:center;"><?= e($row['nilai_harian']) ?></td>
+					<td style="text-align:center;"><?= e($row['nilai_uts']) ?></td>
+					<td style="text-align:center;"><?= e($row['nilai_uas']) ?></td>
+					<td style="text-align: center;"><?= e($row['nilai_akhir']) ?></td>
+					<td style="text-align: center;"><?= e($row['grade']) ?></td>
+					<td style="text-align: center;"><?= $row['tb'] == 'A' ? 'TB' : '' ?></td>
+				</tr>
+				<?php 
+					$sksn = $sksn + $row['sksn']; 
+					$sks = $sks + $row['sks']; 
+				?>
+			<?php endforeach; ?>
+			</tbody>
 		</table>
 	</div>
-	<div class="col-sm-6 col-md-6 col-lg-6">
-		<table class="table">
-			<tr>
-				<td><strong>Program Studi</strong></td>
-				<td><strong>:</strong></td>
-<td><?= e($data['prodi']->nama_program_studi)  ?></td>
-            </tr>
-            <tr>
-                <td><strong>Fakultas</strong></td>
-                <td><strong>:</strong></td>
-                <td><?= e($data['prodi']->nama_fakultas)  ?></td>
-			</tr>
-			<tr>
-				<td><strong>Kurikulum</strong></td>
-				<td><strong>:</strong></td>
-				<td><?= e($data['kurikulum'])?></td>
-			</tr>
-		</table>
-	</div>
-	<table class="table demo-table" id="table-edit">
-		<thead>
-			<tr>
-				<th id="color" width="20"><center>No.</center></th>
-				<th id="color"><center>Kode</center></th>
-				<th id="color"><center>Matakuliah</center></th>
-				<th id="color"><center>Nilai Harian</center></th>
-				<th id="color"><center>Nilai UTS</center></th>
-				<th id="color"><center>Nilai UAS</center></th>
-				<th id="color"><center>Nilai Akhir</center></th>
-				<th id="color"><center>Grade</center></th>
-				<th id="color"><center>Ket</center></th>
-				<th id="color"><center>Aksi</center></th>
-			</tr>
-		</thead>
-		<tbody>
-		<?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
-			<tr>
-				<td><?= $i++."." ?></td>
-				<td style="display:none;"><?= e($row['kode_krs_detail']) ?></td>
-				<td><?= e($row['kode_matakuliah']) ?></td>
-				<td><?= e($row['nama_matakuliah']) ?></td>
-				<td style="text-align:center;"><?= e($row['nilai_harian']) ?></td>
-				<td style="text-align:center;"><?= e($row['nilai_uts']) ?></td>
-				<td style="text-align:center;"><?= e($row['nilai_uas']) ?></td>
-				<td><?= e($row['nilai_akhir']) ?></td>
-				<td><?= e($row['grade']) ?></td>
-				<td><?= $row['tb'] == 'A' ? 'TB' : '' ?></td>
-			</tr>
-			<?php 
-				$sksn = $sksn + $row['sksn']; 
-				$sks = $sks + $row['sks']; 
-
-			?>
-		<?php endforeach; ?>
-		</tbody>
-	</table>
-      <p>Total SKS : <?= $data['total_sks']; ?></p>
+    <p>Total SKS : <?= $data['total_sks']; ?></p>
 </div>
     <!--    modal tambah matakuliah-->
     <div class="modal fade" id="tambah-matakuliah" style="display: none;">
@@ -144,7 +151,7 @@
     <div class="callout callout-info flat">
         <h4>Info!</h4>
 
-        <p>Data KRS dan Nilai semseter lalu tidak di temukan untuk nim mahasiswa bersangkutan.</p>
+        <p>Data KRS dan Nilai semester lalu tidak ditemukan untuk nim mahasiswa bersangkutan.</p>
     </div>
 <?php endif; ?>
 

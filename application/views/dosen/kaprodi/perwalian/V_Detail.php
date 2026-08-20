@@ -83,7 +83,7 @@
                 view(super_nim);
             },
             error : function (){
-                alert('data gagal di ubah.')
+                alert('data gagal diubah.')
             }
         })
     })

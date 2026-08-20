@@ -134,30 +134,9 @@ class Kkp extends CI_Controller {
             'jumlah_data' => $data_count,
             'data' => $nilai_kkp,
         );
-//        $nilai_kkp = $this->Kkp_model->get_all_nilai_kkp_by_kode_angkatan_and_jurusan_matakuliah_semester($this->session->userdata('kode_angkatan_and_jurusan'), $kode_matakuliah, $this->session->userdata('semester'), $this->limit, $offset);
-//        if ($data_count > 0) {
-//            $i = 0 + $offset;
-//
-//            $table = '<table border="0" cellspacing="0" cellpadding="0" class="krs table demo-table">';
-//            $table .= '<tr class="caption">';
-//            $table .= '<th>NO.</th>';
-//            $table .= '<th>NIM</th>';
-//            $table .= '<th>NAMA MAHASISWA</th>';
-//            $table .= '<th>AKSI</th>';
-//            $table .= '</tr>';
-//            foreach ($nilai_kkp as $row) {
-//                $table .= '<tr class="dark">';
-//                $table .= '<td><div align="center">' . ++$i . '.</div></td>';
-//                $table .= '<td><div align="center">' . $row->nim . '</div></td>';
-//                $table .= '<td>' . $row->nama_mahasiswa . '</td>';
-//                $table .= '<td><div align="center">' . anchor('admin/nilai_kkp/update/' . $row->kode_krs, 'update', array('class' => 'update')) . '</div></td>';
-//                $table .= '</tr>';
-//            }
-//            $table .= '</table>';
-//            $data['table'] = $table;
-//        } else {
+        if ($data_count <= 0) {
             $data['message'] = "Tidak ditemukan satupun Data nilai KKP mahasiswa untuk Angkatan " . $this->session->userdata('angkatan') . " dan Jurusan " . $this->session->userdata('singkatan_program_studi') . " serta Semester " . $this->session->userdata('semester') . "!";
-//        }
+        }
         $this->load->view('admin/template/V_main', $data);
     }
 
@@ -224,8 +203,8 @@ class Kkp extends CI_Controller {
         $input = filter_input_array(INPUT_POST);
         if ($input['action'] == 'edit') {
             $this->Kkp_model->update_nilai_akhir($input['kode_krs_detail'], $input['edit_nilai_akhir']);
-//            $mysqli->query("UPDATE users SET username='" . $input['username'] . "', email='" . $input['email'] . "', avatar='" . $input['avatar'] . "' WHERE id='" . $input['id'] . "'");
         }
+        echo json_encode(array('status' => true));
     }
 
 }

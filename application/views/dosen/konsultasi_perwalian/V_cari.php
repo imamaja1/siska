@@ -169,7 +169,7 @@
 
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">Masukan Kata Kunci <label class="text-danger">*</label> :</label>
+                <label class="control-label col-sm-3">Masukkan Kata Kunci <label class="text-danger">*</label> :</label>
                 <div class="col-sm-4">
                     <input value="<?= set_value('kata_kunci') ?>" type="text" class="form-control"
                            placeholder="Ketik Kata Kunci disini" name="kata_kunci" id="kata_kunci">

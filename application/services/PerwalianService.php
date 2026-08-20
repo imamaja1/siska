@@ -28,7 +28,7 @@ class PerwalianService extends MY_Service {
     public function searchDosen($keyword) {
         return $this->db->select('kode_dosen, nama_dosen')
             ->from('dosen')
-            ->where("nama_dosen LIKE '%$keyword%'")
+            ->like('nama_dosen', $keyword, 'both')
             ->get()->result();
     }
 

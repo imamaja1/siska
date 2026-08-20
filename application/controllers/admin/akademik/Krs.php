@@ -348,7 +348,7 @@ class Krs extends CI_Controller {
                 );
 
                 if ($data_count > 0) {
-                    $table = '<div class="box box-primary flat"><div clas="box-body"><table class="table demo-table"><thead><tr><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
+                    $table = '<div class="box box-primary flat"><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
                     foreach ($data_mahasiswa as $row) {
                         $table .= '<tr><td align="center">' . $row->nim . '</td><td align="center">' . $row->nama_mahasiswa . '</td><td align="center">';
                         $table .= '<a href="' . site_url('admin/akademik/krs/cetak/' . $row->nim) . '" class="btn btn-info btn-xs flat"><i class="fa fa-download"></i> Download</a>&nbsp;';
@@ -408,7 +408,7 @@ class Krs extends CI_Controller {
 
         if ($data_count > 0) {
             $no = 1 + $offset;
-            $table = '<div class="box box-primary flat"><div clas="box-body"><table class="table demo-table"><thead><tr><th id="th">NO.</th><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
+            $table = '<div class="box box-primary flat"><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NO.</th><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
             foreach ($data_mahasiswa as $row) {
                 $table .= '<tr><td align="center">' . $no++ . '.</td><td align="center">' . $row->nim . '</td><td>' . $row->nama_mahasiswa . '</td><td align="center">';
                 $table .= '<a href="' . site_url('admin/akademik/krs/cetak/' . $row->nim) . '" class="btn btn-info btn-xs flat"><i class="fa fa-download"></i> Download</a>&nbsp;';

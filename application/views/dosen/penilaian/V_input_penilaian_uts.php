@@ -163,7 +163,7 @@
         swal({
             title: '',
             html: "Menekan tombol <strong>Kirim Nilai</strong> berarti data nilai mahasiswa sudah selesai di inputkan dan siap untuk di validasi oleh <strong>Kaprodi dan Dekan</strong>." +
-                    "Nilai yang sudah selesai di input tidak bisa di ubah kembali. Tekan <strong>YA</strong> untuk melanjutkan dan <strong>Tidak</strong> untuk membatalkan.",
+                    "Nilai yang sudah selesai di input tidak bisa diubah kembali. Tekan <strong>YA</strong> untuk melanjutkan dan <strong>Tidak</strong> untuk membatalkan.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

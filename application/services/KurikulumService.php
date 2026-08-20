@@ -40,6 +40,10 @@ class KurikulumService extends MY_Service {
         return $this->m_nama_kurikulum->ubah($data_nama_kurikulum, $param);
     }
 
+    public function getKodeNamaKurikulumFromKurikulum($kode_kurikulum) {
+        return $this->db->where('kode_kurikulum', $kode_kurikulum)->get('kurikulum')->row_object()->kode_nama_kurikulum;
+    }
+
     public function hapusNamaKurikulum($kode_nama_kurikulum) {
         return $this->m_nama_kurikulum->hapus($kode_nama_kurikulum);
     }
@@ -55,6 +59,7 @@ class KurikulumService extends MY_Service {
     }
 
     public function simpanKurikulumAngkatan($post_data) {
+        unset($post_data['csrf_siska'], $post_data['submit']);
         if ($this->m_kurikulum_angkatan->add($post_data)) {
             return array('status' => true, 'msg' => "Data berhasil di simpan");
         } else {
@@ -63,6 +68,7 @@ class KurikulumService extends MY_Service {
     }
 
     public function ubahKurikulumAngkatan($id, $post_data) {
+        unset($post_data['csrf_siska'], $post_data['submit']);
         if ($this->m_kurikulum_angkatan->update($id, $post_data)) {
             return array('status' => true, 'msg' => "Data berhasil di update");
         } else {
@@ -134,7 +140,8 @@ class KurikulumService extends MY_Service {
     public function simpanDataKurikulum($post_data) {
         $data_kurikulum = array(
             'kode_nama_kurikulum' => $post_data['kode_nama_kurikulum'],
-            'kode_matakuliah' => $post_data['kode_matakuliah'],
+            'id_matakuliah' => $post_data['id_matakuliah'],
+            'semester' => $post_data['semester'],
         );
         return $this->m_data_kurikulum->simpan($data_kurikulum);
     }
@@ -143,7 +150,7 @@ class KurikulumService extends MY_Service {
         $param = $post_data['param'];
         $data_kurikulum = array(
             'kode_nama_kurikulum' => $post_data['kode_nama_kurikulum'],
-            'kode_matakuliah' => $post_data['kode_matakuliah'],
+            'id_matakuliah' => $post_data['id_matakuliah'],
         );
         return $this->m_data_kurikulum->ubah($data_kurikulum, $param);
     }

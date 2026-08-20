@@ -152,7 +152,7 @@
 			</tr>
             <?php if (substr($data['nim'],4,1) !=3) : ?>
 			<tr style="border: 0px;">
-				<td style="border: 0px;"><strong>Maksismum SKS Semester Depan</strong></td>
+				<td style="border: 0px;"><strong>Maksimum SKS Semester Depan</strong></td>
 				<td style="border: 0px;"><strong>:</strong></td>
 				<td style="border: 0px;"><?= e($data['maksimum_sks']) ?></td>
 			</tr>

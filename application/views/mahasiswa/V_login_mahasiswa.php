@@ -32,7 +32,7 @@
         <p class="login-box-msg" style="font-size: 18px"> <br>Sistem Informasi Akademik <b>(SISKA)</b></p>
         <form action="<?= site_url('mahasiswa/login_mahasiswa/cek_login'); ?>" method="post">
             <div class="form-group has-feedback">
-                <input maxlength="10" autocomplete="off" value="<?= set_value('nim') ?>" type="text" class="form-control" placeholder="NIM" name="nim">
+                <input maxlength="15" autocomplete="off" value="<?= set_value('nim') ?>" type="text" class="form-control" placeholder="NIM" name="nim">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 <small class="text-danger"><?= form_error('nim') ?></small>
             </div>

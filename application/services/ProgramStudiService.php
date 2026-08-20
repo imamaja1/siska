@@ -44,9 +44,10 @@ class ProgramStudiService extends MY_Service {
             'kode_fakultas' => $post_data['kode_fakultas'],
             'kode_prodi_univ' => $post_data['kode_prodi_univ'],
             'id_jenjang' => $post_data['jenjang'],
-            'kompetensi' => $post_data['kompetensi']
+            'kompetensi' => $post_data['kompetensi'],
+            'kode_pengguna' => $this->session->userdata('id')
         );
-        
+
         if ($this->nama_jurusan_model->add($data)) {
             return true;
         }
@@ -94,7 +95,8 @@ class ProgramStudiService extends MY_Service {
             $data = array(
                 'kode_jurusan' => $kode_jurusan,
                 'nama_jurusan' => $post_data['nama_jurusan'],
-                'kode_institusi' => $post_data['nama_institusi']
+                'kode_institusi' => $post_data['nama_institusi'],
+                'kode_pengguna' => $this->session->userdata('id')
             );
             
             if ($this->kode_jurusan_model->add($data)) {
@@ -171,7 +173,8 @@ class ProgramStudiService extends MY_Service {
             $data = array(
                 'kode_jenjang' => $kode_jenjang,
                 'nama_jenjang' => $post_data['nama_jenjang'],
-                'kode_institusi' => $post_data['nama_institusi']
+                'kode_institusi' => $post_data['nama_institusi'],
+                'id_user' => $this->session->userdata('id')
             );
             
             if ($this->jenjang_model->add($data)) {
@@ -212,7 +215,12 @@ class ProgramStudiService extends MY_Service {
     public function simpanKetuaJurusan($post_data) {
         $kode_dosen = $post_data['kode_dosen'];
         
-        $config['upload_path'] = './assets/signature_kaprodi/';
+        $upload_path = FCPATH . 'assets/signature_kaprodi/';
+        if (!is_dir($upload_path)) {
+            mkdir($upload_path, 0755, true);
+        }
+
+        $config['upload_path'] = $upload_path;
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['max_size'] = 1024;
         $config['file_name'] = $kode_dosen;
@@ -335,7 +343,11 @@ class ProgramStudiService extends MY_Service {
     }
 
     public function simpanMatakuliahKonsentrasi($post_data) {
-        return $this->db->insert('matakuliah_kompetensi', $post_data);
+        $data = array(
+            'id_matakuliah' => $post_data['id_matakuliah'],
+            'kode_kompetensi' => $post_data['kode_kompetensi']
+        );
+        return $this->db->insert('matakuliah_kompetensi', $data);
     }
 
     public function hapusMatakuliahKonsentrasi($id) {

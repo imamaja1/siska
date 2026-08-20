@@ -184,7 +184,7 @@ class nilai extends CI_Controller {
                 $table .= '<td align="center">' . ++$i . '</td>';
                 $table .= '<td align="center">' . $row->nim . '</td>';
                 $table .= '<td>' . $row->nama_mahasiswa . '</td>';
-                $table .= '<td align="center">' . $row->nilai_harian . '</div></td>';
+                $table .= '<td align="center">' . $row->nilai_harian . '</td>';
                 $table .= '<td align="center">' . $row->nilai_uts . '</td>';
                 $table .= '<td align="center">' . $row->nilai_uas . '</td>';
                 $table .= '<td align="center">' . $nilai_akhir = $row->nilai_akhir . '</td>';

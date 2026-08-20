@@ -2,7 +2,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="myModalLabel"><b>Tambah Tahun Akademik</b></h4>
 </div>
-<form class="form-horizontal" id="form" method="POST" action="<?= site_url('admin/jurusan/tahun_akademik/ubah/'.$id) ?>">
+<form class="form-horizontal" id="form-edit" method="POST" action="<?= site_url('admin/jurusan/tahun_akademik/ubah/'.$id) ?>">
 	<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
     <div class="modal-body">
         <div class="form-group">

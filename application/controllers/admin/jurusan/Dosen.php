@@ -73,7 +73,8 @@ class Dosen extends CI_Controller {
         $res = $this->dosenservice->simpanDosen($this->input->post());
         
         if ($res['status'] == false) {
-            $this->tambah(); // Kembali ke form jika validasi gagal
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Validasi gagal. Periksa kembali data Anda.", "error");</script>');
+            $this->tambah();
         } else {
             $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil disimpan", "success");</script>');
             redirect('admin/jurusan/dosen');
@@ -99,6 +100,7 @@ class Dosen extends CI_Controller {
         $res = $this->dosenservice->ubahDosen($this->input->post());
         
         if ($res['status'] == false) {
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Validasi gagal. Periksa kembali data Anda.", "error");</script>');
             $kode_dosen = $this->input->post('kode_dosen_biodata');
             $this->edit($kode_dosen);
         } else {
@@ -111,6 +113,7 @@ class Dosen extends CI_Controller {
         $res = $this->dosenservice->ubahPassword($this->input->post());
         
         if ($res['status'] == false) {
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "Validasi gagal. Periksa kembali data Anda.", "error");</script>');
             $kode_dosen = $this->input->post('kode_dosen_password');
             $data = array(
                 'content' => 'admin/jurusan/dosen/V_ubah_dosen',
@@ -132,6 +135,19 @@ class Dosen extends CI_Controller {
     public function generate_sandi($kode_dosen) {
         $res = $this->dosenservice->generateSandi($kode_dosen);
         
+        if ($this->input->is_ajax_request()) {
+            if ($res['status']) {
+                echo json_encode(array(
+                    'status' => true,
+                    'password_string' => $res['password_string'],
+                    'nama_dosen' => $this->dosenservice->searchByKodeDosen($kode_dosen)[0]->nama_dosen
+                ));
+            } else {
+                echo json_encode(array('status' => false, 'msg' => 'Gagal generate sandi'));
+            }
+            return;
+        }
+        
         if ($res['status']) {
             $data = array(
                 'content' => "admin/jurusan/dosen/V_sandi",
@@ -149,6 +165,11 @@ class Dosen extends CI_Controller {
 
     public function hapus($id) {
         $res = $this->dosenservice->hapusDosen($id);
+        
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($res);
+            return;
+        }
         
         if ($res['status']) {
             $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');

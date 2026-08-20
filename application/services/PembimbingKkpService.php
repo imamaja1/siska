@@ -69,7 +69,10 @@ class PembimbingKkpService extends MY_Service {
             ->join('mahasiswa as mah','mah.nim=pk.nim')
             ->join('dosen as dos','dos.kode_dosen=pk.kode_dosen')
             ->where('mah.status','A')
-            ->where('mah.nim like "%' . $keyword . '%" or mah.nama_mahasiswa like "%' . $keyword . '%"')
+            ->group_start()
+                ->like('mah.nim', $keyword, 'both')
+                ->or_like('mah.nama_mahasiswa', $keyword, 'both')
+            ->group_end()
             ->group_by('dos.kode_dosen')
             ->get()->result();
     }

@@ -62,7 +62,7 @@
                       <div class="col-sm-4" style="padding-left: 0%">
                           <div>
                               <input autocomplete="off" required type="text" name="nim" id="search-box"
-                                     placeholder="Masukan NIM atau Nama"
+                                     placeholder="Masukkan NIM atau Nama"
                                      class="form-control">
                               <input type="hidden" name="kode_krs_detail" id="kode-krs-detail">
                           </div>
@@ -149,7 +149,7 @@
                       <div class="col-sm-4" style="padding-left: 0%">
                           <div>
                               <input autocomplete="off" required type="text" name="nim" id="search-box"
-                                     placeholder="Masukan NIM atau Nama"
+                                     placeholder="Masukkan NIM atau Nama"
                                      class="form-control">
                               <input type="hidden" name="kode_krs_detail" id="kode-krs-detail">
                           </div>
@@ -227,7 +227,7 @@
                 success: function (res) {
                     var obj = JSON.parse(res);
                     if (!obj.status) {
-                        swal("Error", 'Data gagal di hapus', 'error');
+                        swal("Error", 'Data gagal dihapus', 'error');
                     }
                     lihat(super_kelas_id);
                 }
@@ -327,7 +327,7 @@
                 type: 'post',
                 data: data,
                 success: function () {
-                    swal('Success!', 'Dosen Pengampu berhasil di simpan', 'success');
+                    swal('Success!', 'Dosen Pengampu berhasil disimpan', 'success');
                     load_pegampu();
                 }
             })

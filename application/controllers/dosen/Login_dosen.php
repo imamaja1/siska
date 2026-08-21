@@ -19,7 +19,7 @@ class Login_dosen extends CI_Controller {
             $this->load->view('dosen/V_login_dosen');
         } else {
             $alamat_email = $this->input->post('email');
-            $sandi_pengguna = md5($this->input->post('sandi'));
+            $sandi_pengguna = $this->input->post('sandi');
 
             $cek_login = $this->login_model->login_dosen($alamat_email, $sandi_pengguna);
 

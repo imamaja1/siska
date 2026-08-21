@@ -115,10 +115,62 @@
                 success: function(res) {
                     if (res.status) {
                         swal({
-                            title: 'Sukses!',
-                            text: 'Password baru: ' + res.password_string,
+                            title: '<i class="fa fa-check-circle" style="color:#27ae60;font-size:28px;vertical-align:middle;margin-right:8px;"></i> Password Berhasil Diubah',
+                            html:
+                                '<style>' +
+                                    '.siska-modal-card{background:#fff;border:1px solid #e9ecef;border-radius:8px;padding:12px 14px;margin-bottom:8px}' +
+                                    '.siska-modal-card:last-child{margin-bottom:0}' +
+                                    '.siska-modal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#95a5a6;margin-bottom:3px}' +
+                                    '.siska-modal-val{font-size:14px;font-weight:600;color:#2c3e50;word-break:break-all}' +
+                                    '.siska-modal-val-email{color:#2980b9}' +
+                                    '.siska-modal-pw-box{display:flex;align-items:center;gap:10px;background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:10px 12px;margin-top:4px}' +
+                                    '.siska-modal-pw-text{flex:1;font-family:monospace;font-size:18px;font-weight:700;letter-spacing:1.5px;color:#c0392b;word-break:break-all}' +
+                                    '.siska-modal-copy-btn{flex-shrink:0;width:36px;height:36px;border-radius:50%;border:1px solid #dee2e6;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6c757d;font-size:14px;transition:all .15s}' +
+                                    '.siska-modal-copy-btn:hover{background:#e9ecef;color:#2c3e50}' +
+                                    '.siska-modal-icon{font-size:15px;color:#7f8c8d;margin-right:8px;vertical-align:middle;width:18px;text-align:center;display:inline-block}' +
+                                    '@media(max-width:500px){' +
+                                        '.siska-modal-pw-box{flex-direction:column;align-items:stretch}' +
+                                        '.siska-modal-copy-btn{align-self:flex-end;width:auto;border-radius:4px;padding:6px 12px;font-size:12px}' +
+                                        '.siska-modal-pw-text{font-size:16px}' +
+                                    '}' +
+                                '</style>' +
+                                '<div style="text-align:left;padding:4px 0;">' +
+                                    '<div class="siska-modal-card">' +
+                                        '<div class="siska-modal-label"><i class="fa fa-user siska-modal-icon"></i>Nama Dosen</div>' +
+                                        '<div class="siska-modal-val">' + res.nama_dosen + '</div>' +
+                                    '</div>' +
+                                    '<div class="siska-modal-card">' +
+                                        '<div class="siska-modal-label"><i class="fa fa-envelope siska-modal-icon"></i>Email</div>' +
+                                        '<div class="siska-modal-val siska-modal-val-email">' + res.alamat_email + '</div>' +
+                                    '</div>' +
+                                    '<div class="siska-modal-card">' +
+                                        '<div class="siska-modal-label"><i class="fa fa-key siska-modal-icon"></i>Password Baru</div>' +
+                                        '<div class="siska-modal-pw-box">' +
+                                            '<span class="siska-modal-pw-text" id="siska-pw-text">' + res.password_string + '</span>' +
+                                            '<button type="button" class="siska-modal-copy-btn" id="siska-copy-btn"><i class="fa fa-clipboard"></i></button>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>',
                             type: 'success',
-                            html: true
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#3085d6',
+                            didOpen: function(modal) {
+                                var copyBtn = modal.querySelector('#siska-copy-btn');
+                                var pwText = modal.querySelector('#siska-pw-text');
+                                if (copyBtn && pwText) {
+                                    copyBtn.addEventListener('click', function() {
+                                        var self = this;
+                                        navigator.clipboard.writeText(pwText.innerText).then(function() {
+                                            self.innerHTML = '<i class="fa fa-check"></i>';
+                                            self.style.color = '#27ae60';
+                                            setTimeout(function() {
+                                                self.innerHTML = '<i class="fa fa-clipboard"></i>';
+                                                self.style.color = '#6c757d';
+                                            }, 2000);
+                                        });
+                                    });
+                                }
+                            }
                         });
                     } else {
                         swal('Gagal!', res.msg, 'error');

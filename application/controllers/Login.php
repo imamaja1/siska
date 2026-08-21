@@ -42,7 +42,7 @@ class Login extends CI_Controller
                     }
                     $prodi = $this->authservice->getProgramStudiByKode($mah->program_studi_kode);
 
-                        $cek = $this->login_model->login_mahasiswa($nim, $pass);
+                        $cek = $this->login_model->login_mahasiswa($nim, $sandi_pengguna);
                         if ($cek) {
                             $data_user = array(
                                     'nim' => $cek->nim,
@@ -82,6 +82,7 @@ class Login extends CI_Controller
                         }
 
                             $this->session->set_userdata($data_user);
+                            $this->session->sess_regenerate(TRUE);
                             redirect(site_url('home'));
                         } else {
                             $this->session->set_flashdata('pesan', 'Maaf, NIM dan atau Sandi anda salah');
@@ -92,7 +93,7 @@ class Login extends CI_Controller
                     $alamat_email = $this->input->post('username');
                     $sandi_pengguna = $this->input->post('password');
 
-                    $cek_login = $this->login_model->login_dosen($alamat_email, md5($sandi_pengguna));
+                    $cek_login = $this->login_model->login_dosen($alamat_email, $sandi_pengguna);
                     if ($cek_login->num_rows() == 1) {
                         $row = $cek_login->row_object();
                         $data = array(
@@ -125,6 +126,7 @@ class Login extends CI_Controller
                         }
 
                         $this->session->set_userdata($data);
+                        $this->session->sess_regenerate(TRUE);
                         redirect('home/dosen');
                     } else {
                         $this->session->set_flashdata('pesan', 'Maaf, Alamat Email dan atau Sandi anda salah');

@@ -73,6 +73,7 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <small class="text-red"><?php echo form_error('password'); ?></small>
                 </div>
+                <a href="<?= site_url('lupa_password') ?>" class="text-right">Lupa Password ?</a><br>
                 <div class="form-group has-feedback <?= (form_error('status')) ? 'has-error' : ''; ?>">
                     <select required name="status" class="form-control">
                         <option value="">Login Sebagai..</option>
@@ -90,7 +91,6 @@
                 <a href="#" class="btn btn-danger btn-block" onclick="$('#modal-cek-validasi').modal('toggle');">Cek Validasi Pembayaran!</a>
                 <?= form_close(); ?>
                 <hr/>
-                
               <a href="https://docs.google.com/spreadsheets/d/135gTYTqgpcPJoHQAWMO2O4dzm6lzlUoh8Tpte97ceRk/edit?usp=sharing" target="_blank" class="text-right">Nomor Induk Mahasiswa (NIM) Angkatan 2025</a><br>
               <a href="https://www.youtube.com/watch?v=HgRVzuzvFf4" target="_blank" class="text-right">Cara Mengurus KRS MABA</a><br>
               <a href="<?= base_url('assets/Jadwal Ujian Tengah Semester Ganjil 24.25.pdf'); ?>" target="_blank" class="text-right">Jadwal UTS 2024/2025</a><br>

@@ -214,6 +214,13 @@
                         <i class="fa fa-lock"></i> <span>RBAC</span>
                     </a>
                 </li>
+
+                <!-- Pengaturan -->
+                <li class="<?= ($judul == 'Pengaturan') ? 'active' : ''; ?>">
+                    <a href="<?= site_url('admin/pengaturan/pengaturan'); ?>">
+                        <i class="fa fa-cog"></i> <span>Pengaturan</span>
+                    </a>
+                </li>
             <?php endif; ?>
 
             <?php if ($this->session->userdata('is_impersonating')): ?>

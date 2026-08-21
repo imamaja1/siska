@@ -6,15 +6,34 @@ class Login_model extends CI_Model
 
     function login_mahasiswa($nim, $sandi)
     {
-        $this->db->where('nim', $nim);
-        $this->db->where('sandi', $sandi);
-        $this->db->where('status', 'A');
-        return $this->db->get('mahasiswa')->row_object();
+        $row = $this->db->where('nim', $nim)->where('status', 'A')->get('mahasiswa')->row_object();
+        if (!$row) {
+            return false;
+        }
+        if (!$this->verify_password($sandi, $row->sandi)) {
+            return false;
+        }
+        return $row;
     }
 
     function login_dosen($email, $sandi)
     {
-        return $this->db->select('*')->where(array('alamat_email' => $email, 'sandi_pengguna' => $sandi))->get('dosen');
+        $row = $this->db->select('*')->where('alamat_email', $email)->get('dosen')->row_object();
+        if ($row && $this->verify_password($sandi, $row->sandi_pengguna)) {
+            return $this->db->select('*')->where('alamat_email', $email)->get('dosen');
+        }
+        return $this->db->select('*')->where('alamat_email', $email)->where('1', '0')->get('dosen');
+    }
+
+    private function verify_password($plain, $stored)
+    {
+        if ($stored === null || $stored === '') {
+            return false;
+        }
+        if (password_get_info($stored)['algo']) {
+            return password_verify($plain, $stored);
+        }
+        return hash_equals($stored, md5($plain));
     }
 
     function login_admin($nama_login, $sandi)

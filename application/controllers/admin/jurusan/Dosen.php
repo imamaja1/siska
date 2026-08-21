@@ -127,8 +127,18 @@ class Dosen extends CI_Controller {
             );
             $this->load->view('admin/template/V_main', $data);
         } else {
-            $this->session->set_flashdata('info', '<script>swal("Success!", "Data berhasil disimpan", "success");</script>');
-            redirect('admin/jurusan/dosen');
+            $kode_dosen = $this->input->post('kode_dosen_password');
+            $this->session->set_flashdata('info_reset_berhasil', '<script>swal("Sukses!","Password Berhasil di ganti","success")</script>');
+            $data = array(
+                'content' => 'admin/jurusan/dosen/V_sandi',
+                'judul' => 'Jurusan',
+                'sub_judul' => 'Ubah Password Dosen',
+                'title_h1' => '<i class="fa fa-map"></i> <li>Jurusan</li>',
+                'title_h2' => '<li>Ubah Password Dosen</li>',
+                'kirim_string' => $this->input->post('password'),
+                'data_dosen' => $this->dosenservice->searchByKodeDosen($kode_dosen)
+            );
+            $this->load->view('admin/template/V_main', $data);
         }
     }
 
@@ -137,10 +147,12 @@ class Dosen extends CI_Controller {
         
         if ($this->input->is_ajax_request()) {
             if ($res['status']) {
+                $dosen = $this->dosenservice->searchByKodeDosen($kode_dosen)[0];
                 echo json_encode(array(
                     'status' => true,
                     'password_string' => $res['password_string'],
-                    'nama_dosen' => $this->dosenservice->searchByKodeDosen($kode_dosen)[0]->nama_dosen
+                    'nama_dosen' => $dosen->nama_dosen,
+                    'alamat_email' => $dosen->alamat_email
                 ));
             } else {
                 echo json_encode(array('status' => false, 'msg' => 'Gagal generate sandi'));

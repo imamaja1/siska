@@ -46,11 +46,9 @@ class Login_mahasiswa extends CI_Controller
 //                $this->session->set_flashdata('pesan', 'Maaf, Untuk sementara mahasiswa dengan Prodi S1 Ilkom belum bisa mengakses SISKA, kareana masih ada penyesuaian kurikulum');
 //                redirect(site_url('login'));
 //            }else{
-                $pass = md5($input);
-
                 $jurusan = substr($nim, 2, 2);
                 $jenjang = substr($nim, 4, 1);
-                $cek = $this->Login_model->login_mahasiswa($nim, $pass);
+                $cek = $this->Login_model->login_mahasiswa($nim, $input);
 
                 if (count($cek) > 0) {
 //                    $kode_program_studi = $this->Nama_jurusan_model->get_id($jurusan, $jenjang);

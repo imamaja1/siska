@@ -18,37 +18,43 @@ class Lupa_password_model extends CI_Model
         }
     }
 
-    public function getUserInfoByEmail($email, $tabel)
+    public function getUserInfoByEmail($email)
     {
-        switch ($tabel) {
-            case 'dosen':
-                $q = $this->db->get_where($tabel, array('alamat_email' => $email), 1);
-                break;
-            default :
-                $q = $this->db->get_where($tabel, array('email' => $email, 'status' => 'A'), 1);
-                break;
-        }
+        $q = $this->db->get_where('mahasiswa', array('email' => $email, 'status' => 'A'), 1);
         if ($this->db->affected_rows() > 0) {
             $row = $q->row();
-            return $row;
+            return array('status' => 'mahasiswa', 'user' => $row);
         }
+
+        $q = $this->db->get_where('dosen', array('alamat_email' => $email), 1);
+        if ($this->db->affected_rows() > 0) {
+            $row = $q->row();
+            return array('status' => 'dosen', 'user' => $row);
+        }
+
         return false;
     }
 
     public function insertToken($user_email, $status)
     {
-        $token = substr(sha1(rand()), 0, 30);
-        $date = date('Y-m-d');
+        $token = bin2hex(random_bytes(32));
 
         $data = array(
             'token' => $token,
             'email' => $user_email,
             'status' => $status,
-            'created' => $date
+            'created' => date('Y-m-d H:i:s')
         );
         $query = $this->db->insert_string('tokens', $data);
         $this->db->query($query);
         return $token . $user_email;
+    }
+
+    public function countRecentTokens($user_email, $since)
+    {
+        return $this->db->where('email', $user_email)
+            ->where('created >=', $since)
+            ->count_all_results('tokens');
     }
 
     public function isTokenActive($uid)
@@ -63,8 +69,8 @@ class Lupa_password_model extends CI_Model
 
     public function isTokenValid($token)
     {
-        $tkn = substr($token, 0, 30);
-        $email = substr($token, 30);
+        $tkn = substr($token, 0, 64);
+        $email = substr($token, 64);
 
         $q = $this->db->get_where('tokens', array(
             'tokens.token' => $tkn,
@@ -76,19 +82,21 @@ class Lupa_password_model extends CI_Model
 
             $created = $row->created;
             $createdTS = strtotime($created);
-            $today = date('Y-m-d');
-            $todayTS = strtotime($today);
+            $expireTS = strtotime('+30 minutes', $createdTS);
 
-            if ($createdTS != $todayTS) {
+            if (time() > $expireTS) {
+                $this->removeToken($token);
                 return false;
             }
 
-            $user_info = $this->getUserInfoByEmail($row->email, $row->status);
-//            $data = array();
+            $user_info = $this->getUserInfoByEmail($row->email);
+            if (!$user_info) {
+                return false;
+            }
             if ($row->status == 'dosen') {
-                $data = $user_info->nama_dosen;
+                $data = $user_info['user']->nama_dosen;
             } else {
-                $data = $user_info->nama_mahasiswa;
+                $data = $user_info['user']->nama_mahasiswa;
             }
             return $data;
         } else {
@@ -98,8 +106,8 @@ class Lupa_password_model extends CI_Model
 
     public function updatePassword($post, $token)
     {
-        $tkn = substr($token, 0, 30);
-        $email = substr($token, 30);
+        $tkn = substr($token, 0, 64);
+        $email = substr($token, 64);
 
         $q = $this->db->get_where('tokens', array('token' => $tkn, 'email' => $email), 1);
 
@@ -107,11 +115,12 @@ class Lupa_password_model extends CI_Model
             $row = $q->row();
             $status = $row->status;
             $email = $row->email;
+            $hashed = password_hash($post, PASSWORD_BCRYPT);
             if ($status == 'dosen') {
-                $this->db->update($status, array('sandi_pengguna' => $post), array('alamat_email' => $email));
+                $this->db->update($status, array('sandi_pengguna' => $hashed), array('alamat_email' => $email));
                 return true;
             } else if ($status == 'mahasiswa') {
-                $this->db->update($status, array('sandi' => $post), array('email' => $email));
+                $this->db->update($status, array('sandi' => $hashed), array('email' => $email));
                 return true;
             }
             return false;
@@ -121,8 +130,8 @@ class Lupa_password_model extends CI_Model
 
     public function removeToken($token)
     {
-        $tkn = substr($token, 0, 30);
-        $email = substr($token, 30);
+        $tkn = substr($token, 0, 64);
+        $email = substr($token, 64);
 
         $q = $this->db->delete('tokens', array(
             'tokens.token' => $tkn,

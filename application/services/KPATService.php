@@ -73,6 +73,16 @@ class KPATService extends MY_Service {
 
     public function updateKhsDetailRaw($kode_krs_detail, $nilai_harian, $nilai_uts, $nilai_uas, $nilai_akhir, $tidak_berhak) {
         $row = $this->db->where('kode_krs_detail', $kode_krs_detail)->get('khs_detail')->row();
+        if (!$row) {
+            // Baris khs_detail belum ada (yatim): buat dulu agar UPDATE tidak mengenai 0 baris
+            $this->db->insert('khs_detail', array('kode_krs_detail' => $kode_krs_detail));
+            $row = (object) array(
+                'nilai_harian' => null,
+                'nilai_uts' => null,
+                'nilai_uas' => null,
+                'nilai_akhir' => null,
+            );
+        }
         $this->db->set('nilai_harian', $nilai_harian)
             ->set('nilai_uts', $nilai_uts)
             ->set('nilai_uas', $nilai_uas)

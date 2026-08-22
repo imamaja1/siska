@@ -63,10 +63,12 @@
 </div>
 
 <script>
-    $('.data-table').DataTable({
-        columnDefs: [
-            {targets: 'no-sort', orderable: false}
-        ],
-        order: [[4, 'desc'], [5, 'asc']],
+    $(document).ready(function () {
+        $('.data-table').DataTable({
+            columnDefs: [
+                {targets: 'no-sort', orderable: false}
+            ],
+            order: [[4, 'desc'], [5, 'asc']],
+        });
     });
 </script>

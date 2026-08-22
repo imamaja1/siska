@@ -75,10 +75,12 @@
             },
         })
     }
-  $('.data-table').DataTable({
-        "overflowX": true,
-        columnDefs: [
-            {targets: 'no-sort', orderable: false}
-        ]
-    });
+  $(document).ready(function () {
+      $('.data-table').DataTable({
+            "overflowX": true,
+            columnDefs: [
+                {targets: 'no-sort', orderable: false}
+            ]
+        });
+  });
 </script>

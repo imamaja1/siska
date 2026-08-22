@@ -186,7 +186,7 @@ if (!function_exists('nilai_validasi')) {
         return '<span class="label label-default">Telat</span>';
     }
 
-    function nilai_validasi_dosen_uas($status, $kelas_id = null, $time)
+    function nilai_validasi_dosen_uas($status, $kelas_id = null, $time = null)
     {
         if ($status == 'T') return '<span class="label label-success">Sudah</span>';
         $CI = get_instance();
@@ -207,7 +207,7 @@ if (!function_exists('nilai_validasi')) {
         }
     }
 
-    function nilai_validasi_prodi_uas($status, $kelas_id = null, $time)
+    function nilai_validasi_prodi_uas($status, $kelas_id = null, $time = null)
     {
         if ($status == 'T') return '<span class="label label-success">Sudah</span>';
         $CI = get_instance();
@@ -226,7 +226,7 @@ if (!function_exists('nilai_validasi')) {
         }
     }
 
-    function nilai_validasi_dekan_uas($status, $kelas_id = null, $time)
+    function nilai_validasi_dekan_uas($status, $kelas_id = null, $time = null)
     {
         if ($status == 'T') return '<span class="label label-success">Sudah</span>';
         $CI = get_instance();

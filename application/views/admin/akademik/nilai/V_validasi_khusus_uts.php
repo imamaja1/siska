@@ -155,9 +155,11 @@
 </div>
 <script src="<?= base_url('assets/sweetalert/dist/sweetalert2.min.js') ?>"></script>
 <script>
-    $('.data-table').DataTable({
-        columnDefs: [{targets: 'no-sort', orderable: false}],
-        order: [[4, 'desc'], [5, 'desc'], [6, 'asc']]
+    $(document).ready(function () {
+        $('.data-table').DataTable({
+            columnDefs: [{targets: 'no-sort', orderable: false}],
+            order: [[4, 'desc'], [5, 'desc'], [6, 'asc']]
+        });
     });
     function cek(id){
          $.ajax({

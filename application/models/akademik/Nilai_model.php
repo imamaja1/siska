@@ -76,7 +76,7 @@ class Nilai_model extends CI_Model {
 //    }
   
   // baru 18/4/2022
-  function get_nilai_per_matakuliah_for_update($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $kelas_id = 0, $limit, $offset)
+  function get_nilai_per_matakuliah_for_update($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $kelas_id = 0, $limit = 500, $offset = 0)
     {
         if ($kelas_id == 0) {
 //            digunakan jika kelas tidak dibagi atau menampilkan semua data

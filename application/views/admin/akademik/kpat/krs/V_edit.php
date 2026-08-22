@@ -222,6 +222,8 @@
                             if (data.action === 'delete') {
                                 $('#table-edit tbody tr.tabledit-deleted-row').remove();
                                 swal("Berhasil!", "Matakuliah berhasil dihapus", "success");
+                            } else {
+                                swal("Berhasil!", "Nilai berhasil diperbarui", "success");
                             }
                         } else {
                             swal("Gagal!", "Gagal memperbarui data", "error");
@@ -247,12 +249,28 @@
                 showCancelButton: true,
                 confirmButtonColor: "#dd4b39",
                 confirmButtonText: "Ya, Hapus!",
-                cancelButtonText: "Batal",
-                closeOnConfirm: false
-            }, function (isConfirm) {
-                if (isConfirm) {
-                    window.location.href = "<?= site_url('admin/akademik/kpat/krs/hapus_krs/') ?>" + kodeKrs;
-                }
-            });
+                cancelButtonText: "Batal"
+            }).then(function (result) {
+                var ok = result === true || !!(result && result.value);
+                if (!ok) { return; }
+                $.ajax({
+                    url: "<?= site_url('admin/akademik/kpat/krs/hapus_krs_ajax/') ?>" + kodeKrs,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.status) {
+                            swal("Berhasil!", data.message, "success");
+                            setTimeout(function () {
+                                window.location.href = "<?= site_url('admin/akademik/kpat/krs/data_krs_kpat') ?>";
+                            }, 1500);
+                        } else {
+                            swal("Gagal!", data.message, "error");
+                        }
+                    },
+                    error: function () {
+                        swal("Gagal!", "Terjadi kesalahan saat menghapus KRS", "error");
+                    }
+                });
+            }).catch(swal.noop);
         }
     </script>

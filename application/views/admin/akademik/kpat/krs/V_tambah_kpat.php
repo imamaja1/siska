@@ -55,7 +55,7 @@
                         <td style="text-align: center;"><?= e($row['sks_praktek'] == (0) ? "" : $row['sks_praktek']) ?></td>
                         <td style="text-align: center;"><?= e($row['sks_praktikum'] == (0) ? "" : $row['sks_praktikum']) ?></center></td>
                         <td style="text-align: center;"><?= e(number_format($row['nilai_akhir'],2))  ?></td>
-                        <td style="text-align: center;"><?= e($row['grade'])  ?></td>
+                        <td style="text-align: center;"><?= !empty($row['grade']) ? e($row['grade']) : '-' ?></td>
 						<td style="text-align: center;">
 							<input name="kpat[]" class="check-kpat" type="checkbox" value="<?= e($row['id_matakuliah'])  ?>,<?= e($row['kode_matakuliah'])  ?>" onclick="calculate()" ></input>
                             <input name="nim" type="hidden" value="<?= e($mahasiswa->nim) ?>"></input>

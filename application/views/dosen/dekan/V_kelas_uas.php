@@ -59,8 +59,10 @@
     </div>
 </div>
 <script>
-    $('.data-table').DataTable({
-        columnDefs: [{targets: 'sort', orderable: true}],
-        order: [[4, 'desc'], [5, 'desc'], [6, 'asc']]
+    $(document).ready(function () {
+        $('.data-table').DataTable({
+            columnDefs: [{targets: 'sort', orderable: true}],
+            order: [[4, 'desc'], [5, 'desc'], [6, 'asc']]
+        });
     });
 </script>

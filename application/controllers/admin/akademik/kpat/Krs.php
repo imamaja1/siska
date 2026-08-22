@@ -49,6 +49,7 @@ class Krs extends CI_Controller
         $data['tahun_angkatan'] = $this->m_tahun_akademik->tahun_angkatan();
         $data['nama_jurusan'] = $this->Nama_jurusan_model->get();
         $data['nim_mahasiswa'] = $this->Mahasiswa_model->get_nim();
+        $data['tahun_akademik_aktif'] = $this->m_tahun_akademik->get_aktif();
 
         $this->load->view('admin/template/V_main', $data);
     }
@@ -133,6 +134,30 @@ class Krs extends CI_Controller
         $data['mahasiswa'] = $this->Mahasiswa_model->get($nim);
 
         $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function cek_krs($nim, $kode_tahun_akademik = null)
+    {
+        if (!$kode_tahun_akademik) {
+            $sess_ta = $this->session->userdata('sess_kode_tahun_akademik');
+            $kode_tahun_akademik = $sess_ta ? $sess_ta : $this->m_tahun_akademik->get_aktif();
+        }
+
+        $mhs = $this->Mahasiswa_model->get($nim);
+        if (!$mhs) {
+            echo json_encode(array('status' => false, 'message' => 'Mahasiswa tidak ditemukan.'));
+            return;
+        }
+
+        $kode_krs_existing = $this->Krs_kpat_model->get_kode_krs_kpat($nim, $kode_tahun_akademik);
+
+        echo json_encode(array(
+            'status' => true,
+            'ada' => $kode_krs_existing ? true : false,
+            'url' => $kode_krs_existing
+                ? site_url('admin/akademik/kpat/krs/edit/' . $kode_krs_existing . '/' . $nim)
+                : site_url('admin/akademik/kpat/krs/tambah/' . $nim . '/' . $kode_tahun_akademik),
+        ));
     }
 
     public function simpan_krs()
@@ -396,6 +421,8 @@ class Krs extends CI_Controller
                 isset($input['edit_nilai_akhir']) ? $input['edit_nilai_akhir'] : null,
                 isset($input['tidak_berhak']) ? $input['tidak_berhak'] : null
             );
+            echo json_encode(array('status' => true, 'action' => 'edit'));
+            return;
         } else if (isset($input['action']) && $input['action'] === 'delete') {
             $kode_krs_detail = isset($input['kode_krs_detail']) ? $input['kode_krs_detail'] : null;
             $this->kpatservice->deleteKrsDetail($kode_krs_detail);
@@ -421,6 +448,18 @@ class Krs extends CI_Controller
 
         $this->session->set_flashdata('info', '<script>swal("Success!", "KRS KPAT berhasil dihapus.", "success");</script>');
         redirect('admin/akademik/kpat/krs/data_krs_kpat');
+    }
+
+    public function hapus_krs_ajax($kode_krs)
+    {
+        $cek = $this->kpatservice->getKrsByKodeKrs($kode_krs);
+        if (!$cek) {
+            echo json_encode(array('status' => false, 'message' => 'Data KRS tidak ditemukan.'));
+            return;
+        }
+
+        $this->kpatservice->deleteKrsKpat($kode_krs);
+        echo json_encode(array('status' => true, 'message' => 'KRS KPAT beserta seluruh matakuliah dan nilainya berhasil dihapus.'));
     }
 
 }

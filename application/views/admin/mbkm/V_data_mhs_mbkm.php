@@ -30,6 +30,8 @@
         </div>
     </div>
     <script>
-        $('.data-table').DataTable();
+        $(document).ready(function () {
+            $('.data-table').DataTable();
+        });
     </script>
 </div>

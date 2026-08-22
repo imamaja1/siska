@@ -92,8 +92,10 @@
 </div>
 
 <script type="text/javascript">
-    $('#hasil-log table.data-table').DataTable({
-        order: [[0, 'desc']],
-        pageLength: 25
+    $(document).ready(function () {
+        $('#hasil-log table.data-table').DataTable({
+            order: [[0, 'desc']],
+            pageLength: 25
+        });
     });
 </script>

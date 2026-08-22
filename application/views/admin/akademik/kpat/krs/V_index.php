@@ -60,6 +60,15 @@
         <a href="<?= site_url('admin/akademik/kpat/krs') ?>" class="pull-right text-danger"><i class="fa fa-times-circle-o"></i></a>
 
         <div class="col-sm-4">
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label>Tahun Akademik</label>
+                <select id="tahun-akademik-nim" class="form-control">
+                    <option value="" selected disabled>Pilih</option>
+                    <?php foreach ($tahun_akademik as $row) { ?>
+                        <option value="<?= e($row->kode_tahun_akademik) ?>" <?= (isset($tahun_akademik_aktif) && $tahun_akademik_aktif == $row->kode_tahun_akademik) ? 'selected' : '' ?>><?= e($row->tahun_akademik) ?><?= $row->semester == 0 ? ' - Genap' : ' - Ganjil' ?></option>
+                    <?php } ?>
+                </select>
+            </div>
             <div class="input-group input-group">
                 <input type="text" id="search-box" name="nim" placeholder="Masukkan NIM" class="form-control">
                 <span class="input-group-btn">
@@ -74,35 +83,40 @@
 
 <script type="text/javascript">
     function tambah1() {
-        // body...
         $('#filter').hide();
-        $('#find-box').hide();
         $('#filter-nim').show();
-        ;
     }
 
     function kirim () {
-        var nim = $('#search-box').val();
+        var nim = $.trim($('#search-box').val());
+        var ta = $('#tahun-akademik-nim').val();
+
+        if (!nim) { swal("Info!", "Masukkan NIM terlebih dahulu", "info"); return; }
+        if (!ta) { swal("Info!", "Pilih Tahun Akademik terlebih dahulu", "info"); return; }
 
         $.ajax({
-            url : "<?= site_url('admin/akademik/kpat/krs/tambah')  ?>/"+nim,
+            url : "<?= site_url('admin/akademik/kpat/krs/cek_krs') ?>/"+nim+"/"+ta,
             type : "GET",
-            data : "nim="+nim,
-            success : function () {
-                console.log = "terkirim";
-                window.location.href = "<?= site_url('admin/akademik/kpat/krs/tambah')  ?>/"+nim;
+            dataType : "json",
+            success : function (res) {
+                if (!res.status) {
+                    swal("Gagal!", res.message || "Mahasiswa tidak ditemukan", "error");
+                    return;
+                }
+                window.location.href = res.url;
             },
             error : function () {
-                console.log = "gagal";
+                swal("Gagal!", "Terjadi kesalahan saat memeriksa data", "error");
             }
-
-
         });
     }
 
 </script>
 <script type="text/javascript">
     $(document).ready(function(){
+        $("#search-box").on('keypress', function(e){
+            if (e.which === 13) { kirim(); }
+        });
         $("#search-box").keyup(function(){
             $.ajax({
                 type: "POST",

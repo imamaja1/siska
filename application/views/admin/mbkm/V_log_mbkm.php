@@ -64,9 +64,11 @@
                 </tbody>
             </table>
             <script>
-                $('#tabel-log-mbkm').DataTable({
-                    order: [[0, 'desc']],
-                    pageLength: 25
+                $(document).ready(function () {
+                    $('#tabel-log-mbkm').DataTable({
+                        order: [[0, 'desc']],
+                        pageLength: 25
+                    });
                 });
             </script>
         <?php else : ?>

@@ -63,7 +63,9 @@
 </div>
 
 <script>
-    $('.data-table').DataTable({
-        ordering : false,
+    $(document).ready(function () {
+        $('.data-table').DataTable({
+            ordering : false,
+        });
     });
 </script>

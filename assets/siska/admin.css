@@ -65,3 +65,16 @@
 .table-krs-mhs td {
     vertical-align: middle;
 }
+
+/* Konsistensi .table-responsive di desktop (fix tabel hidden di >=768px) */
+.table-responsive {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .table-responsive > .table > thead > tr > th,
+    .table-responsive > .table > tbody > tr > td,
+    .table-responsive > .table > tfoot > tr > td {
+        white-space: nowrap;
+    }
+}

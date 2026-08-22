@@ -70,41 +70,71 @@
 </div>
 
 <script type="text/javascript">
-    var lastKodeKrsDetail = '';
-    if ($('#table-edit').length && $('#table-edit').is('table')) {
-    $('#table-edit').Tabledit({
-        url: "<?= site_url('admin/akademik/perubahan/Nilai_kelas/ubah_krs_nilai') ?>",
-        hideIdentifier: true,
-        onAjax: function (action, serialize) {
-            if (action === 'edit') {
-                var match = serialize.match(/(?:^|&)kode_krs_detail=([^&]*)/);
-                lastKodeKrsDetail = match ? decodeURIComponent(match[1]) : '';
-            }
-            return true;
-        },
-        columns: {
-            identifier: [1, 'kode_krs_detail'],
-            editable: [[4, 'nilai_harian'], [5, 'nilai_uts'], [6, 'nilai_uas'], [7, 'nilai_akhir'], [9, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']],
-        },
-        onSuccess: function (data, textStatus, jqXHR) {
-            if (data && data.status === true) {
-                if (lastKodeKrsDetail) {
-                    $('#table-edit tbody tr').each(function () {
-                        if ($(this).find('td:eq(1)').text() === lastKodeKrsDetail) {
-                            $(this).find('td:eq(8)').text(data.grade || '-');
-                        }
-                    });
+    $(document).ready(function () {
+        var lastKodeKrsDetail = '';
+        if ($('#table-edit').length && $('#table-edit').is('table')) {
+        $('#table-edit').DataTable({
+            ordering: false,
+            pageLength: 25,
+            searching: true,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua Data"]],
+            columnDefs: [
+                { targets: [1], searchable: false }
+            ],
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                infoEmpty: "Tidak ada data",
+                infoFiltered: "(disaring dari _MAX_ total data)",
+                zeroRecords: "Tidak ada data yang cocok",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Berikutnya",
+                    previous: "Sebelumnya"
                 }
-                swal("Berhasil!", "Pembaruan selesai", "success");
-            } else {
-                swal("Gagal!", "Gagal memperbarui nilai", "error");
             }
-        },
-        onFail: function (jqXHR, textStatus, errorThrown) {
-            swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
+        });
+
+        $('#table-edit').Tabledit({
+            url: "<?= site_url('admin/akademik/perubahan/Nilai_kelas/ubah_krs_nilai') ?>",
+            hideIdentifier: true,
+            restoreButton: false,
+            onAjax: function (action, serialize) {
+                if (action === 'edit') {
+                    var match = serialize.match(/(?:^|&)kode_krs_detail=([^&]*)/);
+                    lastKodeKrsDetail = match ? decodeURIComponent(match[1]) : '';
+                }
+                return true;
+            },
+            columns: {
+                identifier: [1, 'kode_krs_detail'],
+                editable: [[4, 'edit_nilai_harian'], [5, 'edit_nilai_uts'], [6, 'edit_nilai_uas'], [7, 'edit_nilai_akhir'], [9, 'tidak_berhak', '{"N": "Berhak", "A": "TB"}']],
+            },
+            onSuccess: function (data, textStatus, jqXHR) {
+                if (data && data.status === true) {
+                    if (data.action === 'delete') {
+                        $('#table-edit tbody tr.tabledit-deleted-row').remove();
+                        swal("Berhasil!", "Penghapusan berhasil", "success");
+                    } else if (data.action === 'edit' && lastKodeKrsDetail) {
+                        $('#table-edit tbody tr').each(function () {
+                            if ($(this).find('td:eq(1)').text() === lastKodeKrsDetail) {
+                                $(this).find('td:eq(8)').text(data.grade || '-');
+                            }
+                        });
+                        swal("Berhasil!", "Pembaruan selesai", "success");
+                    }
+                } else {
+                    swal("Gagal!", "Gagal memperbarui nilai", "error");
+                }
+            },
+            onFail: function (jqXHR, textStatus, errorThrown) {
+                swal("Gagal!", "Terjadi kesalahan saat menyimpan", "error");
+            }
+        });
         }
     });
-    }
 </script>
 <?php else: ?>
     <div class="callout callout-info flat">

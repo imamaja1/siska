@@ -56,7 +56,9 @@
             </table>
         </div>
         <script>
-            $('.data-table').DataTable();
+            $(document).ready(function () {
+                $('.data-table').DataTable();
+            });
             function hapus(id) {
                 if (confirm('Anda yakin ingin menghapus data ini?')) {
                     $.get('<?= site_url('admin/mbkm/daftar/hapus_mhs_mbkm') ?>/' + id, function(res) {

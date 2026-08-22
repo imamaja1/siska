@@ -105,10 +105,12 @@ class Krs_kpat_model extends CI_Model {
                     $nilai_akhir = $row->nilai_akhir;
                 }
 				$khs[$j]['data_nilai'][$i]['nilai_akhir'] = $nilai_akhir;
+				$khs[$j]['data_nilai'][$i]['grade'] = '';
+				$khs[$j]['data_nilai'][$i]['sksn'] = 0;
 					foreach ($data_penilaian as $key) {
 						if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-							$khs[$j]['data_nilai'][$i]['grade'] = $key['grade']; 
-							$khs[$j]['data_nilai'][$i]['sksn'] = $key['bobot_nilai']*($row->sks_teori+$row->sks_praktek+$row->sks_praktikum); 
+							$khs[$j]['data_nilai'][$i]['grade'] = $key['grade'];
+							$khs[$j]['data_nilai'][$i]['sksn'] = $key['bobot_nilai']*($row->sks_teori+$row->sks_praktek+$row->sks_praktikum);
 						}
 					}
 				$i++;

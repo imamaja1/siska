@@ -30,9 +30,10 @@ class HelperService extends MY_Service
 
         if ($angkatan < 19) {
             return ($old_kompetensi == '5');
-        } else {
+        } elseif ($angkatan < 24) {
             return ($new_kompetensi == '1');
         }
+        return false;
     }
 
     public function kodeNamaKurikulum($nim)

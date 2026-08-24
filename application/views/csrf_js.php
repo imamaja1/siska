@@ -4,6 +4,10 @@ var csrfHash = '<?= $this->security->get_csrf_hash() ?>';
 
 $(document).ready(function() {
     $(document).on('submit', 'form', function() {
+        var method = ($(this).attr('method') || 'get').toLowerCase();
+        if (method === 'get' || method === 'head') {
+            return;
+        }
         if (!$(this).find('input[name="' + csrfName + '"]').length) {
             $('<input>').attr({type: 'hidden', name: csrfName, value: csrfHash}).appendTo($(this));
         }

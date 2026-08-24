@@ -25,65 +25,58 @@ class Impersonasi_mahasiswa extends CI_Controller
 
     public function index()
     {
-        $keyword = $this->input->get('q');
+        $keyword = trim($this->input->get('q'));
         $prodi_filter = $this->input->get('prodi');
         $angkatan_filter = $this->input->get('angkatan');
-        $uri_segment = 4;
-        $offset = $this->uri->segment($uri_segment) ?: 0;
+        $offset = (int) $this->input->get('hal') ?: 0;
 
         $data['list_prodi'] = $this->nama_jurusan_model->get();
         $data['list_angkatan'] = $this->db->query("select distinct(substr(nim,1,2)) as angkatan from mahasiswa order by angkatan desc")->result();
         $data['prodi_filter'] = $prodi_filter;
         $data['angkatan_filter'] = $angkatan_filter;
 
-        if ($keyword) {
-            $data['mahasiswa'] = $this->Mahasiswa_model->search_by_nama($keyword, 50, 0);
-        } else {
-            $this->db->select('count(*) as total', false);
-            $this->db->from('mahasiswa as mah');
-            $this->db->join('program_studi as ps', 'mah.program_studi_kode = ps.kode_program_studi', 'left');
+        $apply_filter = function ($db) use ($prodi_filter, $angkatan_filter, $keyword) {
+            $db->from('mahasiswa as mah');
+            $db->join('program_studi as ps', 'mah.program_studi_kode = ps.kode_program_studi', 'left');
             if ($prodi_filter) {
-                $this->db->where('mah.program_studi_kode', $prodi_filter);
+                $db->where('mah.program_studi_kode', $prodi_filter);
             }
             if ($angkatan_filter) {
-                $this->db->where('substr(mah.nim,1,2)', $angkatan_filter);
+                $db->where('substr(mah.nim,1,2)', $angkatan_filter);
             }
-            $total = $this->db->get()->row()->total;
+            if ($keyword !== '') {
+                $db->group_start()
+                   ->like('mah.nim', $keyword)
+                   ->or_like('mah.nama_mahasiswa', $keyword)
+                   ->group_end();
+            }
+        };
 
-            $this->db->select('mah.nim, mah.nama_mahasiswa, ps.nama_program_studi');
-            $this->db->from('mahasiswa as mah');
-            $this->db->join('program_studi as ps', 'mah.program_studi_kode = ps.kode_program_studi', 'left');
-            $this->db->order_by('mah.nim', 'desc');
-            if ($prodi_filter) {
-                $this->db->where('mah.program_studi_kode', $prodi_filter);
-            }
-            if ($angkatan_filter) {
-                $this->db->where('substr(mah.nim,1,2)', $angkatan_filter);
-            }
+        $this->db->select('count(*) as total', false);
+        $apply_filter($this->db);
+        $total = $this->db->get()->row()->total;
 
-            $url_params = http_build_query(array_filter(['prodi' => $prodi_filter, 'angkatan' => $angkatan_filter]));
-            $base_url = site_url('admin/impersonasi_mahasiswa/index');
-            if ($url_params) {
-                $base_url .= '?' . $url_params;
-            }
+        $this->db->select('mah.nim, mah.nama_mahasiswa, ps.nama_program_studi');
+        $apply_filter($this->db);
+        $this->db->order_by('mah.nim', 'desc');
 
-            if ($total > $this->limit) {
-                $this->load->library('pagination');
-                $this->pagination->initialize([
-                    'base_url'       => $base_url,
-                    'total_rows'     => $total,
-                    'per_page'       => $this->limit,
-                    'uri_segment'    => $uri_segment,
-                    'full_tag_open'  => '<div class="btn-group">',
-                    'full_tag_close' => '</div>',
-                    'cur_tag_open'   => '<a href="#!" class="btn btn-xs btn-flat btn-default disabled">',
-                    'cur_tag_close'  => '</a>',
-                    'attributes'     => ['class' => 'btn btn-flat btn-xs btn-default'],
-                ]);
-            }
-            $data['pagination'] = $this->pagination->create_links();
-            $data['mahasiswa'] = $this->db->limit($this->limit, $offset)->get()->result();
+        if ($total > $this->limit) {
+            $this->load->library('pagination');
+            $this->pagination->initialize([
+                'base_url'             => site_url('admin/impersonasi_mahasiswa/index'),
+                'total_rows'           => $total,
+                'per_page'             => $this->limit,
+                'page_query_string'    => TRUE,
+                'query_string_segment' => 'hal',
+                'full_tag_open'        => '<div class="btn-group">',
+                'full_tag_close'       => '</div>',
+                'cur_tag_open'         => '<a href="#!" class="btn btn-xs btn-flat btn-default disabled">',
+                'cur_tag_close'        => '</a>',
+                'attributes'           => ['class' => 'btn btn-flat btn-xs btn-default'],
+            ]);
         }
+        $data['pagination'] = ($total > $this->limit) ? $this->pagination->create_links() : '';
+        $data['mahasiswa'] = $this->db->limit($this->limit, $offset)->get()->result();
 
         $this->load->view('admin/template/V_main', [
             'content'   => 'admin/impersonasi/V_mahasiswa',

@@ -21,7 +21,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <input type="text" name="q" class="form-control" placeholder="Cari nama..." value="<?= e($this->input->get('q')) ?>">
+                <input type="text" name="q" class="form-control" placeholder="Cari NIM / nama..." value="<?= e($this->input->get('q')) ?>">
             </div>
             <button type="submit" class="btn btn-primary flat"><i class="fa fa-search"></i> Cari</button>
             <a href="<?= site_url('admin/impersonasi_mahasiswa') ?>" class="btn btn-default flat"><i class="fa fa-refresh"></i> Reset</a>
@@ -46,7 +46,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $i = 1 + ($this->uri->segment(4) ?: 0); foreach ($mahasiswa as $row): ?>
+                <?php $i = 1 + ((int) $this->input->get('hal') ?: 0); foreach ($mahasiswa as $row): ?>
                 <tr>
                     <td><?= $i++ ?></td>
                     <td><?= e($row->nim) ?></td>

@@ -15,16 +15,18 @@
             <tr>
                 <th id="color" style="text-align: center;">NIM</th>
                 <th id="color" style="text-align: center;">NAMA MAHASISWA</th>
+                <th id="color" style="text-align: center;">EMAIL</th>
                 <th id="color" style="text-align: center;">SANDI BARU</th>
             </tr>
             </thead>
-            <?php foreach ($data_mahasiswa as $data) { ?>
+            <?php if (isset($data_mahasiswa) && $data_mahasiswa) : ?>
                 <tr>
-                    <td align="center"><?= e($data->nim); ?></td>
-                    <td align="center"><?= e($data->nama_mahasiswa); ?></td>
+                    <td align="center"><?= e($data_mahasiswa->nim); ?></td>
+                    <td align="center"><?= e($data_mahasiswa->nama_mahasiswa); ?></td>
+                    <td align="center"><?= e($data_mahasiswa->email); ?></td>
                     <td align="center" style='font-size: 17px;'><b><?= e($kirim_string); ?></b></td>
                 </tr>
-            <?php } ?>
+            <?php endif; ?>
         </table>
     </div>
 

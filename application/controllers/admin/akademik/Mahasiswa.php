@@ -367,6 +367,9 @@ class Mahasiswa extends CI_Controller {
             );
             $this->session->set_flashdata('info_reset_berhasil', '<script>swal("Sukses!","Password Berhasil di ganti","success")</script>');
             $this->load->view('admin/template/V_main', $data);
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible flat">Data mahasiswa dengan NIM <b>' . e($nim) . '</b> tidak ditemukan!</div>');
+            redirect('admin/akademik/mahasiswa/reset_sandi');
         }
     }
 

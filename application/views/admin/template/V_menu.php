@@ -1,226 +1,369 @@
-<?php $role = (int) $this->session->userdata('id_role'); ?>
+<?php
+$role = (int) $this->session->userdata('id_role');
+$rbac = rbac_list($this->session->userdata('id_role'));
+$acc = array_column($rbac, 'nama');
+
+function has_access($acc, $controllers) {
+    if (!is_array($controllers)) $controllers = [$controllers];
+    return count(array_intersect($acc, $controllers)) > 0;
+}
+?>
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
             <li class="header">MENU PILIHAN</li>
 
             <!-- Dashboard -->
+            <?php if (has_access($acc, 'Home')): ?>
             <li class="<?= ($judul == 'Home') ? 'active' : ''; ?>">
                 <a href="<?= site_url('home/admin'); ?>">
                     <i class="glyphicon glyphicon-home"></i> <span>Dashboard</span>
                 </a>
             </li>
-
-            <?php if ($role == 3): ?>
-                <!-- KRS (BPM) -->
-                <li>
-                    <a href="<?= site_url('admin/akademik/krs'); ?>">
-                        <i class="fa fa-file-text-o"></i> <span>KRS</span>
-                    </a>
-                </li>
             <?php endif; ?>
 
-            <?php if ($role == 1 || $role == 2): ?>
-                <!-- Jurusan -->
-                <li class="<?= ($judul == 'Jurusan') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-map-o"></i>
-                        <span>Jurusan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/jurusan/institusi'); ?>"><i class="fa fa-circle-o"></i> Institusi</a></li>
-                        <li><a href="<?= site_url('admin/jurusan/universitas/fakultas'); ?>"><i class="fa fa-circle-o"></i> Fakultas</a></li>
-                        <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Program Studi') ? 'active' : ''; ?>">
-                            <a href="#"><i class="fa fa-circle-o"></i> Program Studi
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?= site_url('admin/jurusan/program_studi/jenjang'); ?>"><i class="fa fa-circle-o"></i> Jenjang</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/program_studi/kode_jurusan'); ?>"><i class="fa fa-circle-o"></i> Kode Jurusan</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/program_studi/nama_jurusan'); ?>"><i class="fa fa-circle-o"></i> Nama Jurusan</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/program_studi/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/program_studi/ketua_jurusan'); ?>"><i class="fa fa-circle-o"></i> Ketua Jurusan</a></li>
-                            </ul>
-                        </li>
-                        <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Kurikulum') ? 'active' : ''; ?>">
-                            <a href="#"><i class="fa fa-circle-o"></i> Kurikulum
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?= site_url('admin/jurusan/kurikulum/matakuliah'); ?>"><i class="fa fa-circle-o"></i> Matakuliah</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/kurikulum/nama_kurikulum'); ?>"><i class="fa fa-circle-o"></i> Nama Kurikulum</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/kurikulum/data_kurikulum'); ?>"><i class="fa fa-circle-o"></i> Data Kurikulum</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/kurikulum/kurikulum_angkatan'); ?>"><i class="fa fa-circle-o"></i> Kurikulum Angkatan</a></li>
-                                <li><a href="<?= site_url('admin/jurusan/kurikulum/matakuliah_prasyarat'); ?>"><i class="fa fa-circle-o"></i> Matakuliah Prasyarat</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="<?= site_url('admin/jurusan/dosen') ?>"><i class="fa fa-circle-o"></i> Dosen</a></li>
-                        <li><a href="<?= site_url('admin/jurusan/perwalian') ?>"><i class="fa fa-circle-o"></i> Perwalian</a></li>
-                        <li><a href="<?= site_url('admin/jurusan/konsultasi_perwalian') ?>"><i class="fa fa-circle-o"></i> Konsultasi Perwalian</a></li>
-                        <li><a href="<?= site_url('admin/jurusan/tahun_akademik') ?>"><i class="fa fa-circle-o"></i> Tahun Akademik</a></li>
-                        <li><a href="<?= site_url('admin/jurusan/distribusi_matakuliah'); ?>"><i class="fa fa-circle-o"></i> Distribusi Matakuliah</a></li>
-                        <li><a href="<?= site_url('admin/akademik/pembimbing_kkp'); ?>"><i class="fa fa-circle-o"></i> Pembimbing KKP</a></li>
-                    </ul>
-                </li>
+            <!-- KRS (BPM) -->
+            <?php if (has_access($acc, 'Krs')): ?>
+            <li>
+                <a href="<?= site_url('admin/akademik/krs'); ?>">
+                    <i class="fa fa-file-text-o"></i> <span>KRS</span>
+                </a>
+            </li>
             <?php endif; ?>
 
-            <?php if ($role == 1 || $role == 4): ?>
-                <!-- Keuangan -->
-                <li class="<?= ($judul == 'Keuangan') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-money"></i>
-                        <span>Keuangan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/keuangan/status_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Status Perkuliahan</a></li>
-                        <li><a href="<?= site_url('admin/keuangan/mahasiswa_aktif'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa Aktif</a></li>
-                        <li><a href="<?= site_url('admin/keuangan/block'); ?>"><i class="fa fa-circle-o"></i> Block Mahasiswa</a></li>
-                        <li><a href="<?= site_url('admin/keuangan/pembayaran'); ?>"><i class="fa fa-circle-o"></i> Pembayaran</a></li>
-                        <?php if ($role == 4): ?>
-                            <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
-                            <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
-                            <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </li>
+            <!-- Jurusan -->
+            <?php if (has_access($acc, ['Institusi', 'Fakultas', 'Jenjang', 'Kode_jurusan', 'Nama_jurusan', 'Kompetensi', 'Ketua_jurusan', 'Matakuliah', 'Nama_kurikulum', 'Data_kurikulum', 'Kurikulum_angkatan', 'Matakuliah_prasyarat', 'Dosen', 'Perwalian', 'Konsultasi_perwalian', 'Tahun_akademik', 'Distribusi_matakuliah', 'Pembimbing_kkp'])): ?>
+            <li class="<?= ($judul == 'Jurusan') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-map-o"></i>
+                    <span>Jurusan</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Institusi')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/institusi'); ?>"><i class="fa fa-circle-o"></i> Institusi</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Fakultas')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/universitas/fakultas'); ?>"><i class="fa fa-circle-o"></i> Fakultas</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Jenjang', 'Kode_jurusan', 'Nama_jurusan', 'Kompetensi', 'Ketua_jurusan'])): ?>
+                    <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Program Studi') ? 'active' : ''; ?>">
+                        <a href="#"><i class="fa fa-circle-o"></i> Program Studi
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <?php if (has_access($acc, 'Jenjang')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/program_studi/jenjang'); ?>"><i class="fa fa-circle-o"></i> Jenjang</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Kode_jurusan')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/program_studi/kode_jurusan'); ?>"><i class="fa fa-circle-o"></i> Kode Jurusan</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Nama_jurusan')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/program_studi/nama_jurusan'); ?>"><i class="fa fa-circle-o"></i> Nama Jurusan</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Kompetensi')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/program_studi/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Ketua_jurusan')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/program_studi/ketua_jurusan'); ?>"><i class="fa fa-circle-o"></i> Ketua Jurusan</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Matakuliah', 'Nama_kurikulum', 'Data_kurikulum', 'Kurikulum_angkatan', 'Matakuliah_prasyarat'])): ?>
+                    <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Kurikulum') ? 'active' : ''; ?>">
+                        <a href="#"><i class="fa fa-circle-o"></i> Kurikulum
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <?php if (has_access($acc, 'Matakuliah')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/kurikulum/matakuliah'); ?>"><i class="fa fa-circle-o"></i> Matakuliah</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Nama_kurikulum')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/kurikulum/nama_kurikulum'); ?>"><i class="fa fa-circle-o"></i> Nama Kurikulum</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Data_kurikulum')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/kurikulum/data_kurikulum'); ?>"><i class="fa fa-circle-o"></i> Data Kurikulum</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Kurikulum_angkatan')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/kurikulum/kurikulum_angkatan'); ?>"><i class="fa fa-circle-o"></i> Kurikulum Angkatan</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Matakuliah_prasyarat')): ?>
+                            <li><a href="<?= site_url('admin/jurusan/kurikulum/matakuliah_prasyarat'); ?>"><i class="fa fa-circle-o"></i> Matakuliah Prasyarat</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Dosen')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/dosen') ?>"><i class="fa fa-circle-o"></i> Dosen</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Perwalian')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/perwalian') ?>"><i class="fa fa-circle-o"></i> Perwalian</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Konsultasi_perwalian')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/konsultasi_perwalian') ?>"><i class="fa fa-circle-o"></i> Konsultasi Perwalian</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Tahun_akademik')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/tahun_akademik') ?>"><i class="fa fa-circle-o"></i> Tahun Akademik</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Distribusi_matakuliah')): ?>
+                    <li><a href="<?= site_url('admin/jurusan/distribusi_matakuliah'); ?>"><i class="fa fa-circle-o"></i> Distribusi Matakuliah</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Pembimbing_kkp')): ?>
+                    <li><a href="<?= site_url('admin/akademik/pembimbing_kkp'); ?>"><i class="fa fa-circle-o"></i> Pembimbing KKP</a></li>
+                    <?php endif; ?>
+                </ul>
+            </li>
             <?php endif; ?>
 
-            <?php if ($role == 1 || $role == 2): ?>
-                <!-- Akademik -->
-                <li class="<?= ($judul == 'Akademik') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-sticky-note"></i>
-                        <span>Akademik</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
-                        <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
-                        <li><a href="<?= site_url('admin/akademik/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
-                        <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
-                        <li><a href="<?= site_url('admin/akademik/kkp'); ?>"><i class="fa fa-circle-o"></i> KKP</a></li>
-                        <li><a href="<?= site_url('admin/akademik/petikan_nilai'); ?>"><i class="fa fa-circle-o"></i> Petikan Nilai</a></li>
-                        <li><a href="<?= site_url('admin/akademik/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi Matakuliah</a></li>
-                        <li><a href="<?= site_url('admin/akademik/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi Mahasiswa</a></li>
-                        <li><a href="<?= site_url('admin/akademik/pembayaran_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Pembayaran Mahasiswa</a></li>
-                        <li><a href="<?= site_url('admin/akademik/status_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Status Perkuliahan</a></li>
-                        <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Perubahan') ? 'active' : ''; ?>">
-                            <a href="#"><i class="fa fa-circle-o"></i> Perubahan
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?= site_url('admin/akademik/perubahan/semester_ini'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Ini</a></li>
-                                <li><a href="<?= site_url('admin/akademik/perubahan/semester_lalu'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Lalu</a></li>
-                                <li><a href="<?= site_url('admin/akademik/perubahan/nilai_kelas'); ?>"><i class="fa fa-circle-o"></i> Nilai Per Kelas</a></li>
-                                <li><a href="<?= site_url('admin/akademik/perubahan/krs_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> KRS Mahasiswa</a></li>
-                                <li><a href="<?= site_url('admin/akademik/perubahan/log_nilai'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas Nilai</a></li>
-                            </ul>
-                        </li>
-                        <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'KPAT') ? 'active' : ''; ?>">
-                            <a href="#"><i class="fa fa-circle-o"></i> KPAT
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="<?= site_url('admin/akademik/kpat/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
-                                <li><a href="<?= site_url('admin/akademik/kpat/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
-                                <li><a href="<?= site_url('admin/akademik/kpat/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
-                                <li><a href="<?= site_url('admin/akademik/kpat/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- MBKM -->
-                <li class="<?= ($judul == 'mbkm') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-globe"></i>
-                        <span>MBKM</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/mbkm/daftar'); ?>"><i class="fa fa-circle-o"></i> Daftar Mahasiswa</a></li>
-                        <li><a href="<?= site_url('admin/mbkm/daftar/log'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas MBKM</a></li>
-                    </ul>
-                </li>
-
-                <!-- Kuisioner -->
-                <li class="<?= ($judul == 'Kuisioner') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-pie-chart"></i>
-                        <span>Kuisioner</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/kuisioner/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
-                        <li><a href="<?= site_url('admin/kuisioner/mengajar'); ?>"><i class="fa fa-circle-o"></i> Mengajar</a></li>
-                        <li><a href="<?= site_url('admin/kuisioner/kuisioner'); ?>"><i class="fa fa-circle-o"></i> Kuisioner PBM</a></li>
-                        <li><a href="<?= site_url('admin/kuisioner/kuisioner/kuisioner_layanan'); ?>"><i class="fa fa-circle-o"></i> Kuisioner Pelayanan</a></li>
-                        <li><a href="<?= site_url('admin/kuisioner/kuisioner/download_pmb'); ?>"><i class="fa fa-circle-o"></i> Download PBM</a></li>
-                    </ul>
-                </li>
-
-                <!-- Audit Nilai -->
-                <li class="<?= ($judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="fa fa-check-square-o"></i>
-                        <span>Audit Nilai</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/audit'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
-                    </ul>
-                </li>
-
-                <!-- Laporan -->
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-print"></i>
-                        <span>Laporan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/laporan/rekap_ipk'); ?>"><i class="fa fa-circle-o"></i> IPK Per Prodi Per Angkatan</a></li>
-                        <li><a href="<?= site_url('admin/laporan/aktif_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa Aktif Perkuliahan</a></li>
-                    </ul>
-                </li>
+            <!-- Keuangan -->
+            <?php if (has_access($acc, ['Status_perkuliahan', 'Mahasiswa_aktif', 'Block', 'Pembayaran', 'Mahasiswa', 'Krs', 'Khs'])): ?>
+            <li class="<?= ($judul == 'Keuangan') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-money"></i>
+                    <span>Keuangan</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Status_perkuliahan')): ?>
+                    <li><a href="<?= site_url('admin/keuangan/status_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Status Perkuliahan</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Mahasiswa_aktif')): ?>
+                    <li><a href="<?= site_url('admin/keuangan/mahasiswa_aktif'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa Aktif</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Block')): ?>
+                    <li><a href="<?= site_url('admin/keuangan/block'); ?>"><i class="fa fa-circle-o"></i> Block Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Pembayaran')): ?>
+                    <li><a href="<?= site_url('admin/keuangan/pembayaran'); ?>"><i class="fa fa-circle-o"></i> Pembayaran</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Mahasiswa')): ?>
+                    <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Krs')): ?>
+                    <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Khs')): ?>
+                    <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
+                    <?php endif; ?>
+                </ul>
+            </li>
             <?php endif; ?>
 
-            <?php if ($role == 1): ?>
-                <!-- User -->
-                <li class="<?= ($judul == 'User') ? 'active' : ''; ?>">
-                    <a href="<?= site_url('user'); ?>">
-                        <i class="glyphicon glyphicon-user"></i> <span>User</span>
-                    </a>
-                </li>
+            <!-- Akademik -->
+            <?php if (has_access($acc, ['Mahasiswa', 'Krs', 'Nilai', 'Khs', 'Kkp', 'Petikan_nilai', 'Konversi', 'Kompetensi', 'Pembayaran_mahasiswa', 'Status_perkuliahan', 'Semester_ini', 'Semester_lalu', 'Nilai_kelas', 'Krs_mahasiswa', 'Log_nilai', 'Kelas'])): ?>
+            <li class="<?= ($judul == 'Akademik') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-sticky-note"></i>
+                    <span>Akademik</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Mahasiswa')): ?>
+                    <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Krs')): ?>
+                    <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Nilai')): ?>
+                    <li><a href="<?= site_url('admin/akademik/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Khs')): ?>
+                    <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Kkp')): ?>
+                    <li><a href="<?= site_url('admin/akademik/kkp'); ?>"><i class="fa fa-circle-o"></i> KKP</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Petikan_nilai')): ?>
+                    <li><a href="<?= site_url('admin/akademik/petikan_nilai'); ?>"><i class="fa fa-circle-o"></i> Petikan Nilai</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Konversi')): ?>
+                    <li><a href="<?= site_url('admin/akademik/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi Matakuliah</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Kompetensi')): ?>
+                    <li><a href="<?= site_url('admin/akademik/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Pembayaran_mahasiswa')): ?>
+                    <li><a href="<?= site_url('admin/akademik/pembayaran_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Pembayaran Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Status_perkuliahan')): ?>
+                    <li><a href="<?= site_url('admin/akademik/status_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Status Perkuliahan</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Semester_ini', 'Semester_lalu', 'Nilai_kelas', 'Krs_mahasiswa', 'Log_nilai'])): ?>
+                    <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Perubahan') ? 'active' : ''; ?>">
+                        <a href="#"><i class="fa fa-circle-o"></i> Perubahan
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <?php if (has_access($acc, 'Semester_ini')): ?>
+                            <li><a href="<?= site_url('admin/akademik/perubahan/semester_ini'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Ini</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Semester_lalu')): ?>
+                            <li><a href="<?= site_url('admin/akademik/perubahan/semester_lalu'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Lalu</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Nilai_kelas')): ?>
+                            <li><a href="<?= site_url('admin/akademik/perubahan/nilai_kelas'); ?>"><i class="fa fa-circle-o"></i> Nilai Per Kelas</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Krs_mahasiswa')): ?>
+                            <li><a href="<?= site_url('admin/akademik/perubahan/krs_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> KRS Mahasiswa</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Log_nilai')): ?>
+                            <li><a href="<?= site_url('admin/akademik/perubahan/log_nilai'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas Nilai</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Kelas', 'Krs', 'Nilai', 'Khs'])): ?>
+                    <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'KPAT') ? 'active' : ''; ?>">
+                        <a href="#"><i class="fa fa-circle-o"></i> KPAT
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <?php if (has_access($acc, 'Kelas')): ?>
+                            <li><a href="<?= site_url('admin/akademik/kpat/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Krs')): ?>
+                            <li><a href="<?= site_url('admin/akademik/kpat/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Nilai')): ?>
+                            <li><a href="<?= site_url('admin/akademik/kpat/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Khs')): ?>
+                            <li><a href="<?= site_url('admin/akademik/kpat/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+            </li>
+            <?php endif; ?>
 
-                <!-- Pengguna -->
-                <li class="<?= ($judul == 'Impersonasi' || $judul == 'Pengguna') ? 'active' : ''; ?> treeview">
-                    <a href="#">
-                        <i class="glyphicon glyphicon-user"></i> <span>Pengguna</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="<?= site_url('admin/pengguna/pengguna'); ?>"><i class="fa fa-circle-o"></i> Pengguna</a></li>
-                        <li><a href="<?= site_url('admin/impersonasi_dosen'); ?>"><i class="fa fa-circle-o"></i> Dosen</a></li>
-                        <li><a href="<?= site_url('admin/impersonasi_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
-                    </ul>
-                </li>
+            <!-- MBKM -->
+            <?php if (has_access($acc, ['Daftar', 'Mahasiswa'])): ?>
+            <li class="<?= ($judul == 'mbkm') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-globe"></i>
+                    <span>MBKM</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Daftar')): ?>
+                    <li><a href="<?= site_url('admin/mbkm/daftar'); ?>"><i class="fa fa-circle-o"></i> Daftar Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Daftar')): ?>
+                    <li><a href="<?= site_url('admin/mbkm/daftar/log'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas MBKM</a></li>
+                    <?php endif; ?>
+                </ul>
+            </li>
+            <?php endif; ?>
 
-                <!-- RBAC -->
-                <li>
-                    <a href="<?= site_url('admin/rbac'); ?>">
-                        <i class="fa fa-lock"></i> <span>RBAC</span>
-                    </a>
-                </li>
+            <!-- Kuisioner -->
+            <?php if (has_access($acc, ['Kelas', 'Mengajar', 'Kuisioner'])): ?>
+            <li class="<?= ($judul == 'Kuisioner') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-pie-chart"></i>
+                    <span>Kuisioner</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Kelas')): ?>
+                    <li><a href="<?= site_url('admin/kuisioner/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Mengajar')): ?>
+                    <li><a href="<?= site_url('admin/kuisioner/mengajar'); ?>"><i class="fa fa-circle-o"></i> Mengajar</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Kuisioner')): ?>
+                    <li><a href="<?= site_url('admin/kuisioner/kuisioner'); ?>"><i class="fa fa-circle-o"></i> Kuisioner PBM</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Kuisioner')): ?>
+                    <li><a href="<?= site_url('admin/kuisioner/kuisioner/kuisioner_layanan'); ?>"><i class="fa fa-circle-o"></i> Kuisioner Pelayanan</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Kuisioner')): ?>
+                    <li><a href="<?= site_url('admin/kuisioner/kuisioner/download_pmb'); ?>"><i class="fa fa-circle-o"></i> Download PBM</a></li>
+                    <?php endif; ?>
+                </ul>
+            </li>
+            <?php endif; ?>
 
-                <!-- Pengaturan -->
-                <li class="<?= ($judul == 'Pengaturan') ? 'active' : ''; ?>">
-                    <a href="<?= site_url('admin/pengaturan/pengaturan'); ?>">
-                        <i class="fa fa-cog"></i> <span>Pengaturan</span>
-                    </a>
-                </li>
+            <!-- Audit Nilai -->
+            <?php if (has_access($acc, 'Audit')): ?>
+            <li class="<?= ($judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-check-square-o"></i>
+                    <span>Audit Nilai</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?= site_url('admin/audit'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
+                </ul>
+            </li>
+            <?php endif; ?>
+
+            <!-- Laporan -->
+            <?php if (has_access($acc, ['Rekap_ipk', 'Aktif_perkuliahan'])): ?>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-print"></i>
+                    <span>Laporan</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Rekap_ipk')): ?>
+                    <li><a href="<?= site_url('admin/laporan/rekap_ipk'); ?>"><i class="fa fa-circle-o"></i> IPK Per Prodi Per Angkatan</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Aktif_perkuliahan')): ?>
+                    <li><a href="<?= site_url('admin/laporan/aktif_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa Aktif Perkuliahan</a></li>
+                    <?php endif; ?>
+                </ul>
+            </li>
+            <?php endif; ?>
+
+            <!-- User -->
+            <?php if (has_access($acc, 'User')): ?>
+            <li class="<?= ($judul == 'User') ? 'active' : ''; ?>">
+                <a href="<?= site_url('user'); ?>">
+                    <i class="glyphicon glyphicon-user"></i> <span>User</span>
+                </a>
+            </li>
+            <?php endif; ?>
+
+            <!-- Pengguna -->
+            <?php if (has_access($acc, ['Pengguna', 'Impersonasi_dosen', 'Impersonasi_mahasiswa'])): ?>
+            <li class="<?= ($judul == 'Impersonasi' || $judul == 'Pengguna') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="glyphicon glyphicon-user"></i> <span>Pengguna</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Pengguna')): ?>
+                    <li><a href="<?= site_url('admin/pengguna/pengguna'); ?>"><i class="fa fa-circle-o"></i> Pengguna</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Impersonasi_dosen')): ?>
+                    <li><a href="<?= site_url('admin/impersonasi_dosen'); ?>"><i class="fa fa-circle-o"></i> Dosen</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Impersonasi_mahasiswa')): ?>
+                    <li><a href="<?= site_url('admin/impersonasi_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                    <?php endif; ?>
+                </ul>
+            </li>
+            <?php endif; ?>
+
+            <!-- RBAC -->
+            <?php if (has_access($acc, 'Rbac')): ?>
+            <li>
+                <a href="<?= site_url('admin/rbac'); ?>">
+                    <i class="fa fa-lock"></i> <span>RBAC</span>
+                </a>
+            </li>
+            <?php endif; ?>
+
+            <!-- Pengaturan -->
+            <?php if (has_access($acc, 'Pengaturan')): ?>
+            <li class="<?= ($judul == 'Pengaturan') ? 'active' : ''; ?>">
+                <a href="<?= site_url('admin/pengaturan/pengaturan'); ?>">
+                    <i class="fa fa-cog"></i> <span>Pengaturan</span>
+                </a>
+            </li>
             <?php endif; ?>
 
             <?php if ($this->session->userdata('is_impersonating')): ?>
@@ -235,11 +378,9 @@
             <li><a href="<?= site_url('maintance'); ?>"><i class="fa fa-book text-yellow"></i> <span>Panduan</span></a></li>
             <li><a href="<?= site_url('maintance'); ?>"><i class="fa fa-envelope text-red"></i> <span>Laporkan Masalah</span></a></li>
 
-            <?php if ($role == 2 || $role == 3 || $role == 4): ?>
-                <li class="header">AKUN</li>
-                <li><a href="<?= site_url('admin/pengguna/ganti_sandi'); ?>"><i class="fa fa-key"></i> <span>Ganti Sandi</span></a></li>
-                <li><a href="#" onclick="konfirmasiKeluar('<?= site_url('admin/login_admin/logout') ?>')"><i class="fa fa-sign-out"></i> <span>Logout</span></a></li>
-            <?php endif; ?>
+            <li class="header">AKUN</li>
+            <li><a href="<?= site_url('admin/pengguna/ganti_sandi'); ?>"><i class="fa fa-key"></i> <span>Ganti Sandi</span></a></li>
+            <li><a href="#" onclick="konfirmasiKeluar('<?= site_url('admin/login_admin/logout') ?>')"><i class="fa fa-sign-out"></i> <span>Logout</span></a></li>
 
         </ul>
     </section>

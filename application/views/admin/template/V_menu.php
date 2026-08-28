@@ -22,15 +22,6 @@ function has_access($acc, $controllers) {
             </li>
             <?php endif; ?>
 
-            <!-- KRS (BPM) -->
-            <?php if (has_access($acc, 'Krs')): ?>
-            <li>
-                <a href="<?= site_url('admin/akademik/krs'); ?>">
-                    <i class="fa fa-file-text-o"></i> <span>KRS</span>
-                </a>
-            </li>
-            <?php endif; ?>
-
             <!-- Jurusan -->
             <?php if (has_access($acc, ['Institusi', 'Fakultas', 'Jenjang', 'Kode_jurusan', 'Nama_jurusan', 'Kompetensi', 'Ketua_jurusan', 'Matakuliah', 'Nama_kurikulum', 'Data_kurikulum', 'Kurikulum_angkatan', 'Matakuliah_prasyarat', 'Dosen', 'Perwalian', 'Konsultasi_perwalian', 'Tahun_akademik', 'Distribusi_matakuliah', 'Pembimbing_kkp'])): ?>
             <li class="<?= ($judul == 'Jurusan') ? 'active' : ''; ?> treeview">

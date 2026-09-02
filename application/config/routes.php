@@ -66,3 +66,20 @@ $route['user/edit/(:num)'] = "user/edit/$1";
 $route['user/ubah_data'] = "user/ubah_data";
 $route['user/ubah_password'] = "user/ubah_password";
 $route['user/hapus/(:num)'] = "user/hapus/$1";
+
+// API Tokens Management
+$route['admin/pengaturan/api_tokens'] = 'admin/pengaturan/Api_tokens/index';
+$route['admin/pengaturan/api_tokens/tambah'] = 'admin/pengaturan/Api_tokens/tambah';
+$route['admin/pengaturan/api_tokens/simpan'] = 'admin/pengaturan/Api_tokens/simpan';
+$route['admin/pengaturan/api_tokens/edit/(:num)'] = 'admin/pengaturan/Api_tokens/edit/$1';
+$route['admin/pengaturan/api_tokens/update'] = 'admin/pengaturan/Api_tokens/update';
+$route['admin/pengaturan/api_tokens/hapus/(:num)'] = 'admin/pengaturan/Api_tokens/hapus/$1';
+$route['admin/pengaturan/api_tokens/toggle/(:num)'] = 'admin/pengaturan/Api_tokens/toggle_status/$1';
+$route['admin/pengaturan/api_tokens/generate_token'] = 'admin/pengaturan/Api_tokens/generate_token';
+$route['admin/pengaturan/api_tokens/sinkronisasi/(:num)'] = 'admin/pengaturan/Api_tokens/sinkronisasi/$1';
+$route['admin/pengaturan/api_tokens/sync_process/(:num)'] = 'admin/pengaturan/Api_tokens/sync_process/$1';
+$route['admin/pengaturan/api_tokens/sync_start/(:num)'] = 'admin/pengaturan/Api_tokens/sync_start/$1';
+$route['admin/pengaturan/api_tokens/sync_page/(:num)/(:num)'] = 'admin/pengaturan/Api_tokens/sync_page/$1/$2';
+$route['admin/pengaturan/api_tokens/sync_finish/(:num)'] = 'admin/pengaturan/Api_tokens/sync_finish/$1';
+$route['admin/pengaturan/api_tokens/get_log_detail/(:num)'] = 'admin/pengaturan/Api_tokens/get_log_detail/$1';
+$route['admin/pengaturan/api_tokens/get_logs/(:num)'] = 'admin/pengaturan/Api_tokens/get_logs/$1';

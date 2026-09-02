@@ -307,11 +307,21 @@ function has_access($acc, $controllers) {
             <?php endif; ?>
 
             <!-- Pengaturan -->
-            <?php if (has_access($acc, 'Pengaturan')): ?>
-            <li class="<?= ($judul == 'Pengaturan') ? 'active' : ''; ?>">
-                <a href="<?= site_url('admin/pengaturan/pengaturan'); ?>">
-                    <i class="fa fa-cog"></i> <span>Pengaturan</span>
+            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens'])): ?>
+            <li class="<?= ($judul == 'Pengaturan') ? 'active' : ''; ?> treeview">
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span>Pengaturan</span>
+                    <i class="fa fa-angle-left pull-right"></i>
                 </a>
+                <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Pengaturan')): ?>
+                    <li><a href="<?= site_url('admin/pengaturan/pengaturan'); ?>"><i class="fa fa-circle-o"></i> SMTP Email</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Api_tokens')): ?>
+                    <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>
+                    <?php endif; ?>
+                </ul>
             </li>
             <?php endif; ?>
 

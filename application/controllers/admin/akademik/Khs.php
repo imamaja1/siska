@@ -109,9 +109,9 @@ class Khs extends CI_Controller {
         $data['signature'] = $dosen ? $dosen->signature : '';
 
         $namafile = $nim . "-KHS.pdf";
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 38, 'margin_bottom' => 20, 'margin_header' => 5, 'margin_footer' => 5]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 38, 'margin_bottom' => 20, 'margin_header' => 5, 'margin_footer' => 5]);
+        $mpdf = $this->pdf;
         $html = $this->load->view('admin/akademik/khs/Cetak', $data, true);
         $header = $this->load->view('admin/akademik/khs/Header_khs', $data, TRUE);
         $mpdf->SetHTMLHeader($header);

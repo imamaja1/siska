@@ -201,9 +201,9 @@ class Krs extends CI_Controller {
         $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
         $nama_mahasiswa = $mahasiswa ? $mahasiswa->nama_mahasiswa : 'Unknown';
 
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 42, 'margin_bottom' => 20, 'margin_header' => 3, 'margin_footer' => 3]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 42, 'margin_bottom' => 20, 'margin_header' => 3, 'margin_footer' => 3]);
+        $mpdf = $this->pdf;
         $mpdf->SetHeader($header);
         $mpdf->WriteHTML($content);
         $mpdf->defaultheaderline = true;
@@ -229,9 +229,9 @@ class Krs extends CI_Controller {
         $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
         $nama_mahasiswa = $mahasiswa ? $mahasiswa->nama_mahasiswa : 'Unknown';
 
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 42, 'margin_bottom' => 20, 'margin_header' => 3, 'margin_footer' => 3]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 42, 'margin_bottom' => 20, 'margin_header' => 3, 'margin_footer' => 3]);
+        $mpdf = $this->pdf;
         $mpdf->SetHeader($header);
         $mpdf->WriteHTML($content);
         $mpdf->defaultheaderline = true;

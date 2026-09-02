@@ -141,9 +141,9 @@ class Petikan_nilai extends CI_Controller
         $header = $this->load->view('admin/akademik/petikan_nilai/header_petikan_nilai',$data, true);
         $namafile = $nim . "-Petikan_nilai.pdf";
 
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
+        $mpdf = $this->pdf;
         $mpdf->SetHTMLHeader($header);
         $mpdf->WriteHTML($content);
         $mpdf->Output($namafile, "D");
@@ -172,9 +172,9 @@ class Petikan_nilai extends CI_Controller
         $header = $this->load->view('admin/akademik/petikan_nilai/header_petikan_nilai',$data, true);
         $namafile = $nim . "-Petikan_nilai.pdf";
 
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
+        $mpdf = $this->pdf;
         $mpdf->SetHTMLHeader($header);
         $mpdf->WriteHTML($content);
         $mpdf->Output($namafile, "D");

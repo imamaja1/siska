@@ -19,14 +19,32 @@ class M_pdf extends \Mpdf\Mpdf {
         parent::__construct($config);
     }
 
+    private function resolveTempDir()
+    {
+        $candidates = [
+            FCPATH . 'application/cache/mpdf',
+            sys_get_temp_dir() . '/mpdf',
+            sys_get_temp_dir(),
+        ];
+        foreach ($candidates as $dir) {
+            if (!is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+            if (is_dir($dir) && is_writable($dir)) {
+                return $dir;
+            }
+        }
+        return sys_get_temp_dir();
+    }
+
     private function buildConfig($param)
     {
         if ($param === null) {
-            return [];
+            return ['tempDir' => $this->resolveTempDir()];
         }
 
         if (is_array($param)) {
-            $param['tempDir'] = FCPATH . 'application/cache/mpdf';
+            $param['tempDir'] = $this->resolveTempDir();
             return $param;
         }
 
@@ -59,7 +77,7 @@ class M_pdf extends \Mpdf\Mpdf {
             $config['margin_footer'] = (int)$params[9];
         }
 
-        $config['tempDir'] = FCPATH . 'application/cache/mpdf';
+        $config['tempDir'] = $this->resolveTempDir();
 
         return $config;
     }

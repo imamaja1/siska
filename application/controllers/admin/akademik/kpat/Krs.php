@@ -277,9 +277,9 @@ class Krs extends CI_Controller
 //        $data['jenjang'] = $this->Jenjang_model->get_nama($prodi->id_jenjang);
 
         $namafile = $krs['data_mahasiswa']->nim . "-" . $krs['data_mahasiswa']->nama_mahasiswa . "-KHS.pdf";
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 40, 'margin_bottom' => 15, 'margin_header' => 3, 'margin_footer' => 3]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 40, 'margin_bottom' => 15, 'margin_header' => 3, 'margin_footer' => 3]);
+        $mpdf = $this->pdf;
         $content = $this->load->view('admin/akademik/kpat/krs/Cetak_krs', $data, true);
         $header = $this->load->view('admin/akademik/kpat/krs/Header_krs', '', true);
         $mpdf->SetHTMLHeader($header);

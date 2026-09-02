@@ -172,9 +172,9 @@ class Khs extends CI_Controller {
 
 
         $namafile = $nim . "-KHS_KPAT.pdf";
-        $this->load->library('m_pdf');
-        $this->m_pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 45, 'margin_bottom' => 20, 'margin_header' => 10, 'margin_footer' => 10]);
-        $mpdf = $this->m_pdf;
+        $this->load->library('pdf');
+        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 45, 'margin_bottom' => 20, 'margin_header' => 10, 'margin_footer' => 10]);
+        $mpdf = $this->pdf;
         $content = $this->load->view('admin/akademik/kpat/khs/Cetak_khs', $data, true);
         $header = $this->load->view('admin/akademik/kpat/khs/Header_khs', $data, true);
         $mpdf->SetHTMLHeader($header);

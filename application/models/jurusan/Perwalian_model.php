@@ -42,6 +42,18 @@ class Perwalian_model extends CI_Model
         return $query;
     }
 
+    public function get_dosen_aktif_by_homebase($homebase)
+    {
+        $query = $this->db->select('*')
+            ->from('dosen')
+            ->where('status_dosen', 'T')
+            ->where('aktif', 'A')
+            ->where('homebase', $homebase)
+            ->order_by('kode_dosen', 'ASC')
+            ->get()->result();
+        return $query;
+    }
+
     public function get_mahasiswa_by_homebase($homebase, $ta, $limit, $offset)
     {
         $query = $this->db->select('nim')

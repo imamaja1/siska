@@ -15,14 +15,15 @@ class Kurikulum extends CI_Controller {
     }
 
     public function index() {
-//        $nim = $this->session->userdata('nim');
-//        echo $nim;
-//        die();
         $kurikulum = $this->m_nama_kurikulum->get_byid($this->session->userdata('kode_nama_kurikulum'));
         $data['conten'] = "mahasiswa/V_kurikulum";
-        $data['judul'] = "Kurikulum " . $kurikulum->nama_kurikulum . " | " . $kurikulum->singkatan_program_studi . " | " . $kurikulum->angkatan;
-        $data['data'] = $this->m_data_kurikulum->get_data_kurikulum($this->session->userdata('kode_nama_kurikulum'));
-      
+        if ($kurikulum) {
+            $data['judul'] = "Kurikulum " . $kurikulum->nama_kurikulum . " | " . $kurikulum->singkatan_program_studi . " | " . $kurikulum->angkatan;
+        } else {
+            $data['judul'] = "Kurikulum";
+        }
+        $data['data'] = $this->m_data_kurikulum->get_data_kurikulum($this->session->userdata('kode_nama_kurikulum')) ?? [];
+
        $kode_prodi = $this->session->userdata('kode_program_studi');
 
         // cek program studi punya kompetensi atau tidak

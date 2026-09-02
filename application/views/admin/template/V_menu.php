@@ -320,6 +320,7 @@ function has_access($acc, $controllers) {
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Api_tokens')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>
+                    <li><a href="<?= site_url('admin/pengaturan/distribusi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Distribusi Perwalian</a></li>
                     <?php endif; ?>
                 </ul>
             </li>

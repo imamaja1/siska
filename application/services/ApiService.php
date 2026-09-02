@@ -200,7 +200,7 @@ class ApiService extends MY_Service {
 
     private function mapPMBToSISKA($mhs)
     {
-        return [
+        $data = [
             'nim'                   => $mhs['nim'] ?? '',
             'nik'                   => $mhs['nik'] ?? '',
             'npm'                   => $mhs['npm'] ?? '',
@@ -231,10 +231,18 @@ class ApiService extends MY_Service {
             'propinsi_orangtua'     => $mhs['propinsi_orangtua'] ?? '',
             'telepon_orangtua'      => $mhs['telepon_orangtua'] ?? '',
             'foto'                  => $mhs['foto'] ?? '',
-            'sandi'                 => $mhs['sandi'] ?? '',
+            'sandi'                 => '',
             'status'                => $mhs['status'] ?? 'A',
             'status_pendaftaran'    => $mhs['status_pendaftaran'] ?? 'B',
         ];
+
+        // Sandi = md5 tanggal lahir format dmY (format lama CI)
+        // contoh: tanggal_lahir 2007-08-27 => password 27082007 => md5('27082007')
+        if (!empty($mhs['tanggal_lahir'])) {
+            $data['sandi'] = md5(date('dmY', strtotime($mhs['tanggal_lahir'])));
+        }
+
+        return $data;
     }
 
     // ─── Per-Page Sync Methods ───────────────────────────────────────

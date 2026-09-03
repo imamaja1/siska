@@ -110,7 +110,7 @@ class Validasi_khusus extends CI_Controller {
 
         $data['nama_dosen'] = $this->validasiservice->get_nama_dosen_by_kelas($id);
 
-        $data['pecentase'] = $this->validasiservice->get_persentasi_nilai_dosen_by_kelas($id);
+        $data['persentase'] = $this->validasiservice->get_persentasi_nilai_dosen_by_kelas($id);
 
         $namafile = $data['query1']->mtkm . " - " . $data['query1']->nama_matakuliah . " - Kelas " . $data['query1']->nama_kelas . ".pdf";
         $data['dosen'] = 'true';

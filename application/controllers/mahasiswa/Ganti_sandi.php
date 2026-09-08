@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class ganti_sandi extends CI_Controller {
+class Ganti_sandi extends CI_Controller {
 
     function __construct() {
         parent::__construct();
@@ -38,9 +38,18 @@ class ganti_sandi extends CI_Controller {
         if ($this->form_validation->run() == TRUE) {
             $nim = $this->session->userdata('nim');
             $mahasiswa = $this->mahasiswaservice->getMahasiswaByNim($nim);
-            $sandi_lama = md5($this->input->post('sandi_lama'));
+            $sandi_lama_input = $this->input->post('sandi_lama');
 
-            if (!$mahasiswa || !isset($mahasiswa->sandi) || $mahasiswa->sandi !== $sandi_lama) {
+            $sandi_valid = false;
+            if ($mahasiswa && !empty($mahasiswa->sandi)) {
+                if (password_get_info($mahasiswa->sandi)['algo']) {
+                    $sandi_valid = password_verify($sandi_lama_input, $mahasiswa->sandi);
+                } else {
+                    $sandi_valid = hash_equals($mahasiswa->sandi, md5($sandi_lama_input));
+                }
+            }
+
+            if (!$sandi_valid) {
                 $this->session->set_flashdata(
                     'pesan', '<script>swal("Gagal!","Sandi Lama tidak sesuai","error")</script>'
                 );

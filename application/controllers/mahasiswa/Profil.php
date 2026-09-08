@@ -73,7 +73,7 @@ class Profil extends CI_Controller {
         $this->form_validation->set_rules('golongan_darah', 'golongan_darah', 'required', array('required' => 'Field Golongan Darah harus dipilih'));
         $this->form_validation->set_rules('kewarganegaraan', 'kewarganegaraan', 'required', array('required' => 'Field Kewarganegaraan harus dipilih'));
 
-        $this->form_validation->set_rules('nama_ayah', 'nama_ayah', 'required', array('required' => 'Field Nama Ayah Kelamin harus diisi'));
+        $this->form_validation->set_rules('nama_ayah', 'nama_ayah', 'required', array('required' => 'Field Nama Ayah harus diisi'));
         $this->form_validation->set_rules('pekerjaan_ayah', 'pekerjaan_ayah', 'required', array('required' => 'Field Pekerjaan Ayah harus dipilih'));
         $this->form_validation->set_rules('nama_ibu', 'nama_ibu', 'required', array('required' => 'Field Nama Ibu harus diisi'));
         $this->form_validation->set_rules('agama_ayah', 'agama_ayah', 'required', array('required' => 'Field Agama Ayah harus dipilih'));
@@ -83,7 +83,7 @@ class Profil extends CI_Controller {
         $this->form_validation->set_rules('alamat_orangtua', 'alamat_orangtua', 'required', array('required' => 'Field Alamat Orang Tua harus diisi'));
         $this->form_validation->set_rules('kota_orangtua', 'kota_orangtua', 'required', array('required' => 'Field Kota Orang Tua harus diisi'));
         $this->form_validation->set_rules('propinsi_orangtua', 'propinsi_orangtua', 'required', array('required' => 'Field Propinsi Orang Tua harus dipilih'));
-        $this->form_validation->set_rules('nik', 'nik', 'required|min_length[16]|numeric|max_length[16]', array('numeric'=> 'Field NIK harus angka','required' => 'Field NIK harus dipilih','min_length'=> 'Field NIK haurs 16 digit','max_length'=> 'Field NIK haurs 16 digit' ));
+        $this->form_validation->set_rules('nik', 'nik', 'required|min_length[16]|numeric|max_length[16]', array('numeric'=> 'Field NIK harus angka','required' => 'Field NIK harus diisi','min_length'=> 'Field NIK harus 16 digit','max_length'=> 'Field NIK harus 16 digit' ));
         $this->form_validation->set_rules('email', 'email', 'required|valid_email', array('required' => 'Field Email Harus diisi', 'valid_email' => 'Format Email tidak valid'));
 
         if ($this->form_validation->run() == false) {

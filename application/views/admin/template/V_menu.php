@@ -3,7 +3,8 @@ $role = (int) $this->session->userdata('id_role');
 $rbac = rbac_list($this->session->userdata('id_role'));
 $acc = array_column($rbac, 'nama');
 
-function has_access($acc, $controllers) {
+function has_access($acc, $controllers, $role = 0) {
+    if ($role === 1 || (int) get_instance()->session->userdata('id_role') === 1) return true;
     if (!is_array($controllers)) $controllers = [$controllers];
     return count(array_intersect($acc, $controllers)) > 0;
 }

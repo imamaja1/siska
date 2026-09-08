@@ -27,8 +27,6 @@
         }</style>
 </head>
 
-<body>
-
 <body class="hold-transition ">
 <div class="row">
     <div class="col-xs-12 col-md-8 col-lg-4">
@@ -51,7 +49,7 @@
                 ?>
                 <?= form_open('login'); ?>
                 <div class="form-group has-feedback <?= (form_error('username')) ? 'has-error' : ''; ?>">
-                    <input type="text" pattern=".{6,}" required title="Minimum 6 Characters" id="username" required
+                    <input type="text" pattern=".{6,}" title="Minimum 6 Characters" id="username" required
                            name="username" autocomplete="off" value="<?= set_value('username') ?>" class="form-control"
                            placeholder="Isi dengan nim atau email anda">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -77,12 +75,8 @@
                 <div class="form-group has-feedback <?= (form_error('status')) ? 'has-error' : ''; ?>">
                     <select required name="status" class="form-control">
                         <option value="">Login Sebagai..</option>
-                        <?php if (set_value('status') != '') { ?>
-                            <option value="<?= set_value('status'); ?>"
-                                    selected><?= ucfirst(set_value('status')) ?></option>
-                        <?php } ?>
-                        <option value="mahasiswa">Mahasiswa</option>
-                        <option value="dosen">Dosen</option>
+                        <option value="mahasiswa" <?= (set_value('status') == 'mahasiswa') ? 'selected' : '' ?>>Mahasiswa</option>
+                        <option value="dosen" <?= (set_value('status') == 'dosen') ? 'selected' : '' ?>>Dosen</option>
                     </select>
                     <small class="text-red"><?php echo form_error('status'); ?></small>
                 </div>
@@ -112,7 +106,7 @@
                 <form id="form-cek-pembayaran" action="<?= site_url('CekPembayaran/search') ?>" method="post">
                     <div class="form-group">
                         <div class="input-group input-group-lg">
-                            <input type="number" pattern="[0-9]+" name="nim" required class="form-control" placeholder="Masukan NIM" minlength="10" maxlength="10">
+                            <input type="text" inputmode="numeric" pattern="[0-9]{10}" name="nim" required class="form-control" placeholder="Masukan NIM" minlength="10" maxlength="10" title="NIM harus terdiri dari 10 angka">
                             <span class="input-group-btn">
                       <button type="submit" class="btn btn-danger btn-flat">Cari</button>
                     </span>

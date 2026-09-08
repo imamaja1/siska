@@ -94,9 +94,6 @@ class Krs extends CI_Controller
             $data['data'] = $this->Krs_detail_model->get_data_krs($kode_krs);
             
         } else {
-          	if(false){
-             	redirect('home/Access_krs_denied'); 
-            }
             if (($this->semester == 1 || $this->semester == 2) && $this->status_pendaftaran !== 'B' && available_kompetensi($nim)) {
                 //                tambahan
                 $cek_krs_biasa = $this->mahasiswaservice->getCekKrsBiasa($nim, $tahun_akademik);
@@ -476,9 +473,6 @@ class Krs extends CI_Controller
 
                 redirect('mahasiswa/krs');
             } else {
-              	if(false){
-                 	redirect('home/Access_krs_denied'); 
-                }
                 $kode_krs = $this->Krs_model->get_kode_krs($this->session->userdata('nim'), $kode_tahun_akademik);
                 $krs = $this->Krs_detail_model->get_data_krs($kode_krs);
                 $data_krs = array();

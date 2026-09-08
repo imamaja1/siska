@@ -50,10 +50,10 @@
                         if ($ta == $tahun_akademik->kode_tahun_akademik) {
                         ?>
                    			<?php if(empty($aktif_dosen) && empty($bayar_sks)):?>
-                                    <a href="krs/edit_krs" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Ubah</a>
+                                    <a href="<?= site_url('mahasiswa/krs/edit_krs') ?>" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Ubah</a>
                             <?php else:?>
                   				<?php if( empty($aktif_dosen) && substr($data_mahasiswa->nim, 0, 2) > 24 ):?>
-                                    <a href="krs/edit_krs" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Ubah</a>
+                                    <a href="<?= site_url('mahasiswa/krs/edit_krs') ?>" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Ubah</a>
                   				<?php else: ?>
                   					<a href="#" class="btn btn-info btn-xs"><i class="fa fa-edit"></i> Tidak Dapat Diubah</a>
                                 <?php endif; ?>

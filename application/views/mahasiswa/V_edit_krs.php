@@ -1,7 +1,7 @@
 <?= $this->session->flashdata('info') ? $this->session->flashdata('info') : '' ?>
 <div class="box box-primary flat">
     <div class="box-body table-responsive">
-        <p style="text-align: center"><strong>KARTU RECANA STUDI (KRS) JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?> (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
+        <p style="text-align: center"><strong>KARTU RENCANA STUDI (KRS) JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?> (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
         <p style="text-align: center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL" ?></strong></p>
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/simpan_ubah') ?>" method="post" name="krs_form">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">

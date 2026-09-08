@@ -193,9 +193,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">Email Kampus :</label>
+                <label class="control-label col-sm-3">Email Kampus <span class="text-danger">*</span> :</label>
                 <div class="col-sm-4">
-                    <input type="email" class="form-control" value="<?= set_value('email', $data_mahasiswa->email) ?>" name="email">
+                    <input type="email" class="form-control" value="<?= set_value('email', $data_mahasiswa->email) ?>" name="email" required>
+                    <small class="text-danger"><?= form_error('email'); ?></small>
                 </div>
             </div>
             <h4 class="page-header" style="margin-top:10px;"><i class="fa fa-users"></i> II. Data Orang Tua</h4>

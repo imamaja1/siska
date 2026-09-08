@@ -215,6 +215,10 @@ class HelperService extends MY_Service
 
     public function rbacCek($con, $id)
     {
+        $id_role = (int) $this->session->userdata('id_role');
+        if ($id_role === 1) {
+            return true;
+        }
         $this->load->model('rbac_model');
         $data = $this->rbac_model->get_rbac($con, $id);
         return count($data) > 0;

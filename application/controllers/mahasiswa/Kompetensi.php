@@ -219,8 +219,22 @@ class Kompetensi extends CI_Controller
         return $semester;
     }
 
+    public function cek_transfer_kompetensi()
+    {
+        $nim = $this->session->userdata('nim');
+        $max_sem_konversi = $this->Kompetensi_model->get_max_semester_konversi($nim);
+        $semester_saat_ini = $this->semester_saat_ini();
+        $total_semester = $max_sem_konversi + $semester_saat_ini;
+
+        return ($total_semester > 4);
+    }
+
     public function cek_makul_transfer()
     {
+        if ($this->cek_transfer_kompetensi()) {
+            return true;
+        }
+
         $nim = $this->session->userdata('nim');
         $kode_nama_kurikulium = $this->session->userdata('kode_nama_kurikulum');
 
@@ -238,7 +252,8 @@ class Kompetensi extends CI_Controller
     public function matakuliah_konsentrasi($kode_kompetensi)
     {
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
-        $matakuliah = $this->mahasiswaservice->getMatakuliahKonsentrasi($kode_nama_kurikulum, $kode_kompetensi);
+        $service = isset($this->MahasiswaService) ? $this->MahasiswaService : $this->mahasiswaservice;
+        $matakuliah = $service->getMatakuliahKonsentrasi($kode_nama_kurikulum, $kode_kompetensi);
         $data = array(
             'data' => $matakuliah
         );

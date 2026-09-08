@@ -33,14 +33,14 @@ class Petikan_nilai extends CI_Controller
             $this->session->set_flashdata('info', '<div class="callout callout-danger">
             <h4><i class="fa fa-ban"></i> Perhatian!</h4>
 
-            <p><span style="font-size: 12pt"> Anda tidak bisa mengakses halaman ini, Silahkan hubungi bagian <b>Keuangan</b> terkait dengan pembayaran yang mungking belum anda bayar. Adapun kemungkinan pembayaran yang belum anda lunasi sebagai berikut</span></p>
+            <p><span style="font-size: 12pt"> Anda tidak bisa mengakses halaman ini, Silahkan hubungi bagian <b>Keuangan</b> terkait dengan pembayaran yang mungkin belum anda bayar. Adapun kemungkinan pembayaran yang belum anda lunasi sebagai berikut</span></p>
             <ul>
                 <li>Pembayaran DPP</li>
-                <li>Dispensaisi Pembayaran SPP</li>
-                <li>Dispensaisi Pembayaran SKS</li>
+                <li>Dispensasi Pembayaran SPP</li>
+                <li>Dispensasi Pembayaran SKS</li>
                 <li>DLL.</li>
             </ul>
-            <p style="font-size: 12pt">Untuk info lebih jelasnya silahkan hubungi baigian <b>Keuangan</b>. Terimakasih.</p>
+            <p style="font-size: 12pt">Untuk info lebih jelasnya silahkan hubungi bagian <b>Keuangan</b>. Terimakasih.</p>
           </div>');
 
             redirect('home/Access_denied');
@@ -103,14 +103,14 @@ class Petikan_nilai extends CI_Controller
                 $this->session->set_flashdata('info', '<div class="callout callout-danger">
                 <h4><i class="fa fa-ban"></i> Perhatian!</h4>
 
-                <p><span style="font-size: 12pt"> Anda tidak bisa mengakses halaman ini, Silahkan hubungi bagian <b>Keuangan</b> terkait dengan pembayaran yang mungking belum anda bayar. Adapun kemungkinan pembayaran yang belum anda lunasi sebagai berikut</span></p>
+                <p><span style="font-size: 12pt"> Anda tidak bisa mengakses halaman ini, Silahkan hubungi bagian <b>Keuangan</b> terkait dengan pembayaran yang mungkin belum anda bayar. Adapun kemungkinan pembayaran yang belum anda lunasi sebagai berikut</span></p>
                 <ul>
                     <li>Pembayaran DPP</li>
-                    <li>Dispensaisi Pembayaran SPP</li>
-                    <li>Dispensaisi Pembayaran SKS</li>
+                    <li>Dispensasi Pembayaran SPP</li>
+                    <li>Dispensasi Pembayaran SKS</li>
                     <li>DLL.</li>
                 </ul>
-                <p style="font-size: 12pt">Untuk info lebih jelasnya silahkan hubungi baigian <b>Keuangan</b>. Terimakasih.</p>
+                <p style="font-size: 12pt">Untuk info lebih jelasnya silahkan hubungi bagian <b>Keuangan</b>. Terimakasih.</p>
               </div>');
 
                 redirect('home/Access_denied');

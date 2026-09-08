@@ -74,4 +74,20 @@ class Kompetensi_model extends CI_Model {
         return $this->db->insert('kompetensi_mahasiswa', $data);
     }
 
+    public function get_max_semester_konversi($nim)
+    {
+        $query = $this->db->select('MAX(CAST(SUBSTR(mak.kode_matakuliah, 6, 1) AS UNSIGNED)) as max_sem')
+            ->from('krs')
+            ->join('krs_detail as kd', 'kd.kode_krs=krs.kode_krs')
+            ->join('matakuliah as mak', 'mak.id_matakuliah=kd.id_matakuliah')
+            ->where('krs.nim', $nim)
+            ->group_start()
+                ->where('kd.status', 'K')
+                ->or_where('krs.semester', 'K')
+            ->group_end()
+            ->get()->row_object();
+
+        return (!empty($query) && !empty($query->max_sem)) ? (int)$query->max_sem : 0;
+    }
+
 }

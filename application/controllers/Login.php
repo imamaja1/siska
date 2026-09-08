@@ -30,17 +30,14 @@ class Login extends CI_Controller
                 $this->load->view('auth/v_login');
             } else {
                 $nim = $this->input->post('username');
-                $pass = md5($this->input->post('password'));
-              	$sandi_pengguna = $this->input->post('password');
+                $sandi_pengguna = $this->input->post('password');
                 if ($this->input->post('status') == 'mahasiswa') {
-                  	$angkatan = substr($nim, 0, 2);
 
                     $mah = $this->authservice->getMahasiswaByNim($nim);
                     if (!$mah) {
                         $this->session->set_flashdata('pesan', 'NIM yang anda masukkan belum terdaftar pada aplikasi SISKA. Silahkan cek NIM anda dengan benar.');
                         redirect(site_url('login'));
                     }
-                    $prodi = $this->authservice->getProgramStudiByKode($mah->program_studi_kode);
 
                         $cek = $this->login_model->login_mahasiswa($nim, $sandi_pengguna);
                         if ($cek) {
@@ -58,7 +55,7 @@ class Login extends CI_Controller
                             if (!$cek_exist) {
                                 $username = $nim;
                                 $password = $this->input->post('password');
-                                $email = $cek->email;
+                                $email = !empty($cek->email) ? $cek->email : $nim . '@student.local';
                                 $additional_data = array(
                                     'first_name' => $nim,
                                   	'key_ref' => $nim,
@@ -94,7 +91,7 @@ class Login extends CI_Controller
                     $sandi_pengguna = $this->input->post('password');
 
                     $cek_login = $this->login_model->login_dosen($alamat_email, $sandi_pengguna);
-                    if ($cek_login->num_rows() == 1) {
+                    if ($cek_login && $cek_login->num_rows() == 1) {
                         $row = $cek_login->row_object();
                         $data = array(
                                 'kode_dosen' => $row->kode_dosen,

@@ -50,7 +50,7 @@ class Login_mahasiswa extends CI_Controller
                 $jenjang = substr($nim, 4, 1);
                 $cek = $this->Login_model->login_mahasiswa($nim, $input);
 
-                if (count($cek) > 0) {
+                if (!empty($cek)) {
 //                    $kode_program_studi = $this->Nama_jurusan_model->get_id($jurusan, $jenjang);
                     $kode_program_studi = get_kode_prodi($nim)->kode_program_studi;
 //                    $nama_kurikulum = $this->m_data_kurikulum->get_nama_kurikulum($nim);

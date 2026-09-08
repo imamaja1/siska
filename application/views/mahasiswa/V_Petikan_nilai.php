@@ -5,17 +5,19 @@
         <P align="center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL"; ?> TA. <?= e($tahun_akademik->ta) ?></strong></P>
         <P align="center"><strong>Angkatan  20<?= e(substr($mahasiswa->nim, 0, 2)) ?> </strong></P>
         <br>
-        <div class="col-sm-6 col-md-6 col-lg-6">
-            <table class="table">
-                <tr><td><strong>NAMA</strong></td><td><strong>:</strong></td><td><?= e($mahasiswa->nama_mahasiswa) ?></td></tr>
-                <tr><td><strong>NIM</strong></td><td><strong>:</strong></td><td><?= e($mahasiswa->nim) ?></td></tr>
-            </table>
-        </div>
-        <div class="col-sm-6 col-md-6 col-lg-6">
-            <table class="table">
-                <tr><td><strong>JURUSAN</strong></td><td><strong>:</strong></td><td><?= e($prodi->nama_program_studi) ?></td></tr>
-                <tr><td><strong>FAKULTAS</strong></td><td><strong>:</strong></td><td><?= e($prodi->nama_fakultas) ?></td></tr>
-            </table>
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <table class="table">
+                    <tr><td><strong>NAMA</strong></td><td><strong>:</strong></td><td><?= e($mahasiswa->nama_mahasiswa) ?></td></tr>
+                    <tr><td><strong>NIM</strong></td><td><strong>:</strong></td><td><?= e($mahasiswa->nim) ?></td></tr>
+                </table>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <table class="table">
+                    <tr><td><strong>JURUSAN</strong></td><td><strong>:</strong></td><td><?= e($prodi->nama_program_studi) ?></td></tr>
+                    <tr><td><strong>FAKULTAS</strong></td><td><strong>:</strong></td><td><?= e($prodi->nama_fakultas) ?></td></tr>
+                </table>
+            </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12">
             <?php

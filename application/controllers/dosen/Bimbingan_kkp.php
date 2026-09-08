@@ -52,7 +52,7 @@ class Bimbingan_kkp extends CI_Controller
         if ($simpan)
         {
             $this->session->set_flashdata('info',
-                '<script>swal("Behasil", "Data berhasil disimpan","success");</script>');
+                '<script>swal("Berhasil", "Data berhasil disimpan","success");</script>');
         }else{
             $this->session->set_flashdata('info',
                 '<script>swal("Gagal", "Data gagal disimpan","error");</script>');
@@ -78,7 +78,7 @@ class Bimbingan_kkp extends CI_Controller
         if ($update)
         {
             $this->session->set_flashdata('info',
-                '<script>swal("Behasil", "Data berhasil diupdate","success");</script>');
+                '<script>swal("Berhasil", "Data berhasil diupdate","success");</script>');
         }else{
             $this->session->set_flashdata('info',
                 '<script>swal("Gagal", "Data gagal diupdate","error");</script>');

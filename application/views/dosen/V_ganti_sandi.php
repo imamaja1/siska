@@ -1,4 +1,4 @@
-<?= e($this->session->flashdata('pesan')) ?>
+<?= $this->session->flashdata('pesan') ?>
 <div class="box box-success flat">
     <div class="box-body"><br>
         <form class="form-horizontal" method="POST" action="<?= site_url('dosen/ganti_sandi/ganti_sandi_proses'); ?>">

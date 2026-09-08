@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -17,7 +17,7 @@
         <div class="login-box">
             <div class="login-logo"><br></div>
             <div style="background-color: #3c8dbc; height: 50px; padding: 10px; color: #fff; text-align: center;">
-                <b style="font-size: 20px;"><img width="30px;" heigt="30px;" src="<?= base_url('assets/gambar/dosen.png'); ?>">&nbsp;&nbsp;LOGIN DOSEN</b>
+                <b style="font-size: 20px;"><img width="30px" height="30px" src="<?= base_url('assets/gambar/dosen.png'); ?>">&nbsp;&nbsp;LOGIN DOSEN</b>
             </div>
             <div class="login-box-body " style="padding-top: 0px;">
                 <p class="login-box-msg" style="font-size: 18px"> <br>Sistem Informasi Akademik <b>(SISKA)</b></p>

@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class ganti_sandi extends CI_Controller {
+class Ganti_sandi extends CI_Controller {
 
     function __construct() {
         parent::__construct();

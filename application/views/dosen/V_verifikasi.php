@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -79,7 +79,7 @@
                                 <br>
                                 <table>
                                     <tr>
-                                        <td><b>Info Pendantangan</b> <br>
+                                        <td><b>Info Penandatanganan</b> <br>
                                             <ol>
                                                 <li>Dekan <?= e($query1->nama_fakultas) ?> : <?= e($query3->dosen_fakultas) ?></li>
                                                 <li>Ketua Program Studi <?= e($query1->nama_program_studi) ?> : <?= e($query4->dosen_program_studi) ?></li>

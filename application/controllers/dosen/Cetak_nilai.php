@@ -2,12 +2,12 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class cetak_nilai extends CI_Controller {
+class Cetak_nilai extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        if (!$this->session->userdata('nama_login')) {
-            redirect(site_url('login_admin/login'));
+        if (!$this->session->userdata('alamat_email') && !$this->session->userdata('nama_login')) {
+            redirect(site_url('login/dosen'));
         }
         $this->load->library('qrcode/ciqrcode');
         $this->load->service('DosenAkademikService');

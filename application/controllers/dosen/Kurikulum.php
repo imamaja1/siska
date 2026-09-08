@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class kurikulum extends CI_Controller {
+class Kurikulum extends CI_Controller {
 
     function __construct() {
         parent::__construct();

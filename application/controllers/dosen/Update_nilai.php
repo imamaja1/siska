@@ -126,11 +126,7 @@ class Update_nilai extends CI_Controller {
     }
     public function exis($kode_khs_detail) {
         $cek = $this->dosenakademikservice->exisDummyUpdateNilai($kode_khs_detail);
-        if (count($cek) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return !empty($cek);
     }
     public function addOrUpdate($kode_khs_detail, array $data_add, array $data_update) {
         return $this->dosenakademikservice->addOrUpdateDummyUpdateNilai($kode_khs_detail, $data_add, $data_update);

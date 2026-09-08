@@ -1,4 +1,4 @@
-﻿<div class="box box-solid">
+<div class="box box-solid">
     <div class="box-header with-border">
         <form method="post" action="<?= site_url('dosen/validasikhusus/cari'); ?>">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
@@ -37,7 +37,7 @@
                         <th rowspan="2">Dosen</th>
                       
                         <th rowspan="2">Nilai</th>
-                        <th rowspan="2">Tanggal Ngirim Nilai</th>
+                        <th rowspan="2">Tanggal Kirim Nilai</th>
                         <th colspan="2">Validasi</th>
 
                     </tr>

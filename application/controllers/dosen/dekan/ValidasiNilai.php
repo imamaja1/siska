@@ -1,6 +1,6 @@
 <?php
 
-class validasinilai extends CI_Controller {
+class ValidasiNilai extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array(
@@ -296,6 +296,7 @@ class validasinilai extends CI_Controller {
         $kode_prodi = array_column($dekan, 'kode_program_studi');
 
         $kelas = $this->dekanservice->get_kelas_revisi_dekan_choose($kode_prodi, $kode_tahun_akademik);
+        $new_kelas = [];
 
         foreach ($kelas as $key => $value) {
             $num = $this->dekanservice->get_dummy_update_kelas_status($value->kelas_id, '1');

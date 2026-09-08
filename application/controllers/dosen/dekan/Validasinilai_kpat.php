@@ -1,6 +1,6 @@
 <?php
 
-class validasinilai_kpat extends CI_Controller {
+class Validasinilai_kpat extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array(

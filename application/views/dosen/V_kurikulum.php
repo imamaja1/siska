@@ -1,8 +1,8 @@
-﻿<div class="box box-solid flat">
+<div class="box box-solid flat">
     <div class="box-body"><br>
         <?= form_open($form_action, 'name="kurikulum_form" class="form-horizontal"') ?>
             <div class="form-group">
-                <label class="control-label col-sm-3">Jurusan <label class="text-danger">*</label> :</label>
+                <label class="control-label col-sm-3">Kurikulum <label class="text-danger">*</label> :</label>
                 <div class="col-sm-3">
                     <?php
                     $js = 'class="form-control select2" onChange="this.form.submit();"';

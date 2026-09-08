@@ -1,6 +1,6 @@
 <?php
 
-class validasikhusus extends CI_Controller {
+class Validasikhusus extends CI_Controller {
 
     public function __construct() {
         parent::__construct();

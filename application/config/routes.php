@@ -86,3 +86,6 @@ $route['admin/pengaturan/api_tokens/get_logs/(:num)'] = 'admin/pengaturan/Api_to
 $route['admin/pengaturan/distribusi_perwalian'] = 'admin/pengaturan/Distribusi_perwalian/index';
 $route['admin/pengaturan/distribusi_perwalian/proses'] = 'admin/pengaturan/Distribusi_perwalian/proses';
 $route['admin/pengaturan/distribusi_perwalian/preview'] = 'admin/pengaturan/Distribusi_perwalian/preview';
+$route['admin/pengaturan/distribusi_perwalian/preview_hapus'] = 'admin/pengaturan/Distribusi_perwalian/preview_hapus';
+$route['admin/pengaturan/distribusi_perwalian/view_data'] = 'admin/pengaturan/Distribusi_perwalian/view_data';
+$route['admin/pengaturan/distribusi_perwalian/hapus'] = 'admin/pengaturan/Distribusi_perwalian/hapus';

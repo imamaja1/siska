@@ -16,7 +16,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Dashboard -->
             <?php if (has_access($acc, 'Home')): ?>
-            <li class="<?= ($judul == 'Home') ? 'active' : ''; ?>">
+            <li class="<?= (isset($judul) && $judul == 'Home') ? 'active' : ''; ?>">
                 <a href="<?= site_url('home/admin'); ?>">
                     <i class="glyphicon glyphicon-home"></i> <span>Dashboard</span>
                 </a>
@@ -25,7 +25,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Jurusan -->
             <?php if (has_access($acc, ['Institusi', 'Fakultas', 'Jenjang', 'Kode_jurusan', 'Nama_jurusan', 'Kompetensi', 'Ketua_jurusan', 'Matakuliah', 'Nama_kurikulum', 'Data_kurikulum', 'Kurikulum_angkatan', 'Matakuliah_prasyarat', 'Dosen', 'Perwalian', 'Konsultasi_perwalian', 'Tahun_akademik', 'Distribusi_matakuliah', 'Pembimbing_kkp'])): ?>
-            <li class="<?= ($judul == 'Jurusan') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'Jurusan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-map-o"></i>
                     <span>Jurusan</span>
@@ -110,7 +110,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Keuangan -->
             <?php if (has_access($acc, ['Status_perkuliahan', 'Mahasiswa_aktif', 'Block', 'Pembayaran', 'Mahasiswa', 'Krs', 'Khs'])): ?>
-            <li class="<?= ($judul == 'Keuangan') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'Keuangan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-money"></i>
                     <span>Keuangan</span>
@@ -144,7 +144,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Akademik -->
             <?php if (has_access($acc, ['Mahasiswa', 'Krs', 'Nilai', 'Khs', 'Kkp', 'Petikan_nilai', 'Konversi', 'Kompetensi', 'Pembayaran_mahasiswa', 'Status_perkuliahan', 'Semester_ini', 'Semester_lalu', 'Nilai_kelas', 'Krs_mahasiswa', 'Log_nilai', 'Kelas'])): ?>
-            <li class="<?= ($judul == 'Akademik') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'Akademik') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-sticky-note"></i>
                     <span>Akademik</span>
@@ -190,7 +190,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- MBKM -->
             <?php if (has_access($acc, ['Daftar', 'Mahasiswa'])): ?>
-            <li class="<?= ($judul == 'mbkm') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'mbkm') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-globe"></i>
                     <span>MBKM</span>
@@ -209,7 +209,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Kuisioner -->
             <?php if (has_access($acc, ['Kelas', 'Mengajar', 'Kuisioner'])): ?>
-            <li class="<?= ($judul == 'Kuisioner') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'Kuisioner') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
                     <span>Kuisioner</span>
@@ -237,7 +237,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Audit Nilai -->
             <?php if (has_access($acc, 'Audit')): ?>
-            <li class="<?= ($judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-check-square-o"></i>
                     <span>Audit Nilai</span>
@@ -270,7 +270,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- User -->
             <?php if (has_access($acc, 'User')): ?>
-            <li class="<?= ($judul == 'User') ? 'active' : ''; ?>">
+            <li class="<?= (isset($judul) && $judul == 'User') ? 'active' : ''; ?>">
                 <a href="<?= site_url('user'); ?>">
                     <i class="glyphicon glyphicon-user"></i> <span>User</span>
                 </a>
@@ -279,7 +279,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Pengguna -->
             <?php if (has_access($acc, ['Pengguna', 'Impersonasi_dosen', 'Impersonasi_mahasiswa'])): ?>
-            <li class="<?= ($judul == 'Impersonasi' || $judul == 'Pengguna') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && ($judul == 'Impersonasi' || $judul == 'Pengguna')) ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="glyphicon glyphicon-user"></i> <span>Pengguna</span>
                     <i class="fa fa-angle-left pull-right"></i>
@@ -309,7 +309,7 @@ function has_access($acc, $controllers, $role = 0) {
 
             <!-- Pengaturan -->
             <?php if (has_access($acc, ['Pengaturan', 'Api_tokens'])): ?>
-            <li class="<?= ($judul == 'Pengaturan') ? 'active' : ''; ?> treeview">
+            <li class="<?= (isset($judul) && $judul == 'Pengaturan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-cog"></i>
                     <span>Pengaturan</span>

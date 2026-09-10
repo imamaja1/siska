@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <?php if (isset($judul) || isset($sub_judul)): ?>
+    <?php $judul = isset($judul) ? $judul : ''; $sub_judul = isset($sub_judul) ? $sub_judul : ''; ?>
+    <?php if ($judul !== '' || $sub_judul !== ''): ?>
         <title>SISKA UBG | <?= e($judul) ?> - <?= e($sub_judul) ?></title>
     <?php else: ?>
         <title>SISKA UBG</title>

@@ -266,6 +266,72 @@ class Perwalian_model extends CI_Model
         return $this->db->where('kode_perwalian', $id)->delete($this->tabel);
     }
 
+    public function get_angkatan_list()
+    {
+        return $this->db->distinct()->select('mid(nim,1,2) as angkatan')
+            ->from('mahasiswa')
+            ->order_by('angkatan', 'DESC')
+            ->get()->result_object();
+    }
+
+    public function get_nim_perwalian($kode_program_studi, $angkatan)
+    {
+        return $this->db->select('p.nim')
+            ->from($this->tabel . ' as p')
+            ->join('mahasiswa as m', 'm.nim=p.nim')
+            ->where('m.program_studi_kode', $kode_program_studi)
+            ->where('mid(p.nim,1,2)', $angkatan)
+            ->get()->result_array();
+    }
+
+    public function get_data_perwalian($kode_program_studi, $angkatan)
+    {
+        return $this->db->select('p.kode_perwalian, p.nim, m.nama_mahasiswa, d.nama_dosen, p.kode_tahun_akademik, ta.tahun_akademik, ta.semester')
+            ->from($this->tabel . ' as p')
+            ->join('mahasiswa as m', 'm.nim=p.nim')
+            ->join('dosen as d', 'd.kode_dosen=p.kode_dosen')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik=p.kode_tahun_akademik', 'left')
+            ->where('m.program_studi_kode', $kode_program_studi)
+            ->where('mid(p.nim,1,2)', $angkatan)
+            ->order_by('p.nim', 'ASC')
+            ->get()->result();
+    }
+
+    public function hapus_perwalian($kode_program_studi, $angkatan)
+    {
+        $nims = array_column($this->get_nim_perwalian($kode_program_studi, $angkatan), 'nim');
+
+        if (empty($nims)) {
+            return array(
+                'status' => true,
+                'hapus_perwalian' => 0,
+                'hapus_konsultasi' => 0,
+            );
+        }
+
+        $this->db->trans_start();
+
+        $this->db->where_in('nim', $nims)
+            ->delete('konsultasi_perwalian');
+        $hapus_konsultasi = $this->db->affected_rows();
+
+        $this->db->where_in('nim', $nims)
+            ->delete($this->tabel);
+        $hapus_perwalian = $this->db->affected_rows();
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return array('status' => false);
+        }
+
+        return array(
+            'status' => true,
+            'hapus_perwalian' => $hapus_perwalian,
+            'hapus_konsultasi' => $hapus_konsultasi,
+        );
+    }
+
     function autocomplate($keyword)
     {
         return $this->db->select('*')

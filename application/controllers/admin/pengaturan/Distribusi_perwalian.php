@@ -31,6 +31,7 @@ class Distribusi_perwalian extends CI_Controller {
             'sub_judul' => 'Distribusi Perwalian',
             'program_studi' => $this->Nama_jurusan_model->get(),
             'tahun_akademik' => $this->M_tahun_akademik->get_semester(),
+            'angkatan_list' => $this->Perwalian_model->get_angkatan_list(),
         );
 
         $this->load->view('admin/template/V_main', $data);
@@ -140,5 +141,88 @@ class Distribusi_perwalian extends CI_Controller {
             'jumlah_mahasiswa' => $jumlah_mhs,
             'html' => $html,
         ));
+    }
+
+    public function view_data()
+    {
+        $kode_program_studi = (int) $this->input->post('kode_program_studi');
+        $angkatan = $this->input->post('angkatan');
+
+        if (empty($kode_program_studi) || !preg_match('/^\d{2}$/', $angkatan)) {
+            echo json_encode(array('status' => false, 'message' => 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.'));
+            return;
+        }
+
+        $rows = $this->Perwalian_model->get_data_perwalian($kode_program_studi, $angkatan);
+
+        $html = '<div class="table-responsive" style="max-height: 350px; overflow: auto;">';
+        $html .= '<table class="table table-bordered table-striped">';
+        $html .= '<thead><tr><th>No.</th><th>NIM</th><th>Nama Mahasiswa</th><th>Dosen Wali</th><th>Tahun Akademik</th></tr></thead><tbody>';
+
+        if (!empty($rows)) {
+            $i = 1;
+            foreach ($rows as $r) {
+                $ta = $r->tahun_akademik ? $r->tahun_akademik . ' - ' . ($r->semester == '1' ? 'Ganjil' : 'Genap') : '-';
+                $html .= '<tr><td>' . $i++ . '</td><td>' . e($r->nim) . '</td><td>' . e($r->nama_mahasiswa) . '</td><td>' . e($r->nama_dosen) . '</td><td>' . e($ta) . '</td></tr>';
+            }
+        } else {
+            $html .= '<tr><td colspan="5" class="text-center">Tidak ada data perwalian.</td></tr>';
+        }
+
+        $html .= '</tbody></table></div>';
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah' => count($rows),
+            'html' => $html,
+        ));
+    }
+
+    public function preview_hapus()
+    {
+        $kode_program_studi = (int) $this->input->post('kode_program_studi');
+        $angkatan = $this->input->post('angkatan');
+
+        if (empty($kode_program_studi) || !preg_match('/^\d{2}$/', $angkatan)) {
+            echo json_encode(array('status' => false, 'message' => 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.'));
+            return;
+        }
+
+        $nims = $this->Perwalian_model->get_nim_perwalian($kode_program_studi, $angkatan);
+        $jumlah_perwalian = count($nims);
+
+        $jumlah_konsultasi = 0;
+        if ($jumlah_perwalian > 0) {
+            $nim_list = array_column($nims, 'nim');
+            $jumlah_konsultasi = $this->db->where_in('nim', $nim_list)
+                ->count_all_results('konsultasi_perwalian');
+        }
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah_perwalian' => $jumlah_perwalian,
+            'jumlah_konsultasi' => $jumlah_konsultasi,
+        ));
+    }
+
+    public function hapus()
+    {
+        $kode_program_studi = (int) $this->input->post('kode_program_studi');
+        $angkatan = $this->input->post('angkatan');
+
+        if (empty($kode_program_studi) || !preg_match('/^\d{2}$/', $angkatan)) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.</h6></div>');
+            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+        }
+
+        $res = $this->Perwalian_model->hapus_perwalian($kode_program_studi, $angkatan);
+
+        if ($res['status']) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>Perwalian dihapus: ' . $res['hapus_perwalian'] . ' data perwalian dan ' . $res['hapus_konsultasi'] . ' data konsultasi.</h6></div>');
+        } else {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Gagal menghapus perwalian.</h6></div>');
+        }
+
+        redirect(site_url('admin/pengaturan/distribusi_perwalian'));
     }
 }

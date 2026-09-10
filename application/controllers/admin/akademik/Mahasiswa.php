@@ -198,7 +198,17 @@ class Mahasiswa extends CI_Controller {
             );
         } else {
             $this->session->set_flashdata('keterangan', 'Tidak ditemukan satupun data mahasiswa untuk Angkatan dan Jurusan !');
-            $data = array('content' => 'admin/akademik/mahasiswa/V_mahasiswa_search');
+            $data = array(
+                'content' => 'admin/akademik/mahasiswa/V_mahasiswa_search',
+                'judul' => 'Akademik',
+                'sub_judul' => 'Data Mahasiswa',
+                'title_h1' => '<li>Data Mahasiswa</li>',
+                'title_h2' => '<li>Angkatan 20' . $nama_angkatan . '</li>',
+                'title_h3' => '<li>Jurusan ' . $res['program_studi'] . '</li>',
+                'halaman' => '',
+                'jumlah_data' => 0,
+                'data_mahasiswa' => array(),
+            );
         }
 
         $this->load->view('admin/template/V_main', $data);

@@ -2,7 +2,7 @@
     <section class="sidebar">
         <ul class="sidebar-menu">
             <li class="header" style="color: white;">MENU DOSEN</li>
-            <li class="<?php echo ($judul == 'Home') ? 'active' : ''; ?> treeview">
+            <li class="<?php echo (isset($judul) && $judul == 'Home') ? 'active' : ''; ?> treeview">
                 <a href="<?php echo site_url('home/dosen'); ?>">
                     <i class="glyphicon glyphicon-home"></i> <span>Dashboard</span>
                 </a>

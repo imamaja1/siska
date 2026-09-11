@@ -121,4 +121,23 @@ class Api_token_model extends CI_Model {
             ->get('mahasiswa')
             ->row();
     }
+
+    public function cek_prodi_exists($kode)
+    {
+        return $this->db->where('kode_program_studi', (int) $kode)
+            ->count_all_results('program_studi') > 0;
+    }
+
+    public function insert_program_studi($data)
+    {
+        $data['tanggal_terbuat'] = date('Y-m-d H:i:s');
+        return $this->db->insert('program_studi', $data);
+    }
+
+    public function get_fakultas_by_nama($nama)
+    {
+        return $this->db->where('LOWER(TRIM(nama_fakultas))', strtolower(trim($nama)))
+            ->get('fakultas')
+            ->row();
+    }
 }

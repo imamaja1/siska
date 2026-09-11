@@ -58,7 +58,13 @@
                         <a href="<?= site_url('admin/pengaturan/api_tokens/edit/' . $token->id) ?>" class="btn btn-xs btn-info flat" title="Edit">
                             <i class="fa fa-pencil"></i>
                         </a>
-                        <button type="button" class="btn btn-xs btn-warning flat btn-sync" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Sinkronisasi dari PMB">
+                        <button type="button" class="btn btn-xs btn-primary flat btn-check" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Cek Perbedaan Data PMB vs SISKA">
+                            <i class="fa fa-search"></i> Cek
+                        </button>
+                        <button type="button" class="btn btn-xs btn-success flat btn-import" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Import: tambah mahasiswa baru saja (tanpa update)">
+                            <i class="fa fa-plus"></i> Import
+                        </button>
+                        <button type="button" class="btn btn-xs btn-warning flat btn-sync" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Sync: update semua sekaligus tambah data">
                             <i class="fa fa-refresh"></i> Sync
                         </button>
                         <a href="<?= site_url('admin/pengaturan/api_tokens/hapus/' . $token->id) ?>" class="btn btn-xs btn-danger flat" onclick="return confirm('Hapus token ini?')" title="Hapus">
@@ -189,6 +195,41 @@
     </div>
 </div>
 
+<!-- Modal Hasil Cek Data -->
+<div class="modal fade" id="modalCek" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-aqua">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-search"></i> Hasil Cek Perbedaan Data</h4>
+            </div>
+            <div class="modal-body">
+                <p id="cek-summary" class="text-center text-bold" style="margin-bottom: 10px;">Memuat...</p>
+                <hr style="margin: 10px 0;">
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-bordered table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th width="40">No</th>
+                                <th width="130">NIM</th>
+                                <th>Nama PMB</th>
+                                <th>Nama SISKA</th>
+                                <th width="80">Status</th>
+                                <th width="90">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cek-detail-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default flat" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 #modalSync .modal-content {
     border-top: 3px solid #00c0ef;
@@ -223,6 +264,131 @@
 </style>
 
 <script>
+// ─── Cek Perbedaan Data ────────────────────────────────────────────
+// Alur: pengambilan data dari PMB dulu, baru dibandingkan dengan SISKA (diproses di server)
+var CHECK_URLS = {
+    cek:   '<?= site_url("admin/pengaturan/api_tokens/cek_data/") ?>',
+    update:'<?= site_url("admin/pengaturan/api_tokens/update_satu/") ?>',
+    tambah_prodi: '<?= site_url("admin/pengaturan/api_tokens/tambah_prodi/") ?>'
+};
+
+// State ringkasan hasil cek (diupdate di tempat, tanpa fetch ulang)
+var cekCounts = { berbeda: 0, baru: 0, sama: 0, skip: 0, prodi: 0 };
+// Data PMB hasil cek per NIM (dipakai untuk update 1 mahasiswa tanpa fetch ulang)
+var cekDataById = {};
+
+function renderCekSummary() {
+    $('#cek-summary').html(
+        cekCounts.berbeda + ' data berbeda &nbsp;|&nbsp; ' +
+        cekCounts.baru + ' data baru &nbsp;|&nbsp; ' +
+        cekCounts.sama + ' data sama &nbsp;|&nbsp; ' +
+        cekCounts.skip + ' dilewati &nbsp;|&nbsp; ' +
+        cekCounts.prodi + ' program studi baru'
+    );
+}
+
+function adjustCekCounts(berbedaDelta, prodiDelta) {
+    cekCounts.berbeda = Math.max(0, cekCounts.berbeda + (berbedaDelta || 0));
+    cekCounts.prodi = Math.max(0, cekCounts.prodi + (prodiDelta || 0));
+    renderCekSummary();
+}
+
+function cekEmptyState() {
+    if ($('#cek-detail-body tr').length === 0) {
+        $('#cek-detail-body').html('<tr><td colspan="6" class="text-center">Semua data sudah sesuai.</td></tr>');
+    }
+}
+
+function runCheck(id, nama) {
+    $('#modalCek').modal('show');
+    $('#cek-summary').html('<i class="fa fa-spinner fa-spin"></i> Mengambil data dari ' + (nama || 'PMB') + ' lalu membandingkan dengan SISKA, mohon tunggu...');
+    $('#cek-detail-body').html('<tr><td colspan="6" class="text-center"><i class="fa fa-spinner fa-spin"></i> Memuat data...</td></tr>');
+
+    $.ajax({
+        url: CHECK_URLS.cek + id,
+        type: 'GET',
+        dataType: 'json',
+        timeout: 120000,
+        success: function(res) {
+            if (!res.status) {
+                $('#cek-summary').html('<span class="text-red">Gagal: ' + (res.message || 'Terjadi kesalahan') + '</span>');
+                $('#cek-detail-body').html('<tr><td colspan="6" class="text-center">Tidak ada data.</td></tr>');
+                return;
+            }
+
+            var prodiBaruCount = (res.prodi_baru || []).length;
+            cekCounts.berbeda = res.berbeda.length;
+            cekCounts.baru = res.baru.length;
+            cekCounts.sama = res.sama;
+            cekCounts.skip = res.skip;
+            cekCounts.prodi = prodiBaruCount;
+            renderCekSummary();
+
+            var html = '';
+            cekDataById = {};
+            if (res.berbeda.length > 0) {
+                for (var i = 0; i < res.berbeda.length; i++) {
+                    var d = res.berbeda[i];
+                    cekDataById[d.nim] = d.data || null;
+                    html += '<tr>';
+                    html += '<td>' + (i + 1) + '</td>';
+                    html += '<td><code>' + d.nim + '</code></td>';
+                    html += '<td>' + (d.nama_pmb || '-') + '</td>';
+                    html += '<td>' + (d.nama_lokal || '-') + '</td>';
+                    html += '<td class="text-center"><span class="label label-danger">Berbeda</span></td>';
+                    html += '<td class="text-center">';
+                    html += '<button type="button" class="btn btn-xs btn-warning flat btn-update-satu" data-id="' + id + '" data-nim="' + d.nim + '" data-nama="' + (d.nama_pmb || '') + '">';
+                    html += '<i class="fa fa-pencil"></i> Update</button>';
+                    html += '</td></tr>';
+                }
+            } else {
+                html = '<tr><td colspan="6" class="text-center">Tidak ada perbedaan data (NIM & nama sudah sesuai).</td></tr>';
+            }
+
+            if (res.baru.length > 0) {
+                html += '<tr><td colspan="6" class="text-left"><strong>Mahasiswa baru (belum ada di SISKA):</strong></td></tr>';
+                var no = 1;
+                for (var j = 0; j < res.baru.length; j++) {
+                    var b = res.baru[j];
+                    html += '<tr>';
+                    html += '<td>' + no + '</td>';
+                    html += '<td><code>' + b.nim + '</code></td>';
+                    html += '<td>' + (b.nama || '-') + '</td>';
+                    html += '<td colspan="3" class="text-center"><span class="label label-primary">Baru</span> <small>gunakan tombol Import</small></td>';
+                    html += '</tr>';
+                    no++;
+                }
+            }
+
+            var prodiBaru = res.prodi_baru || [];
+            if (prodiBaru.length > 0) {
+                html += '<tr><td colspan="6" class="text-left"><strong>Program Studi baru (belum ada di SISKA):</strong></td></tr>';
+                var pno = 1;
+                for (var k = 0; k < prodiBaru.length; k++) {
+                    var p = prodiBaru[k];
+                    html += '<tr>';
+                    html += '<td>' + pno + '</td>';
+                    html += '<td><code>' + p.kode + '</code></td>';
+                    html += '<td>' + (p.nama_prodi || '-') + '</td>';
+                    html += '<td>' + (p.jenjang || '-') + '</td>';
+                    html += '<td class="text-center"><span class="label label-warning">Prodi Baru</span></td>';
+                    html += '<td class="text-center">';
+                    html += '<button type="button" class="btn btn-xs btn-success flat btn-tambah-prodi" data-id="' + id + '" data-kode="' + p.kode + '" data-nama="' + (p.nama_prodi || '') + '">';
+                    html += '<i class="fa fa-plus"></i> Tambah</button>';
+                    html += '</td></tr>';
+                    pno++;
+                }
+            }
+
+            $('#cek-detail-body').html(html);
+        },
+        error: function() {
+            $('#cek-summary').html('<span class="text-red">Terjadi kesalahan koneksi.</span>');
+            $('#cek-detail-body').html('<tr><td colspan="6" class="text-center">Gagal memuat data.</td></tr>');
+        }
+    });
+}
+
 $(document).ready(function() {
     // Toggle show/hide token
     $('.btn-toggle-token').on('click', function() {
@@ -264,14 +430,48 @@ $(document).ready(function() {
         var id = $(this).data('id');
         var nama = $(this).data('nama');
         swal({
-            title: 'Sinkronisasi',
-            text: 'Ambil data dari ' + nama + '?',
+            title: 'Sync Data',
+            text: 'Update semua mahasiswa sekaligus tambah data dari ' + nama + '?',
             icon: 'info',
             buttons: true,
             dangerMode: false,
         }).then(function(ok) {
             if (ok) {
-                startSync(id);
+                startSync(id, 'sync');
+            }
+        });
+    });
+
+    // Import: hanya tambah mahasiswa baru, tanpa update
+    $('.btn-import').on('click', function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        swal({
+            title: 'Import Mahasiswa',
+            text: 'Tambahkan mahasiswa baru dari ' + nama + '? (data yang sudah ada tidak akan diupdate)',
+            icon: 'info',
+            buttons: true,
+            dangerMode: false,
+        }).then(function(ok) {
+            if (ok) {
+                startSync(id, 'insert');
+            }
+        });
+    });
+
+    // Cek Perbedaan Data
+    $('.btn-check').on('click', function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        swal({
+            title: 'Cek Perbedaan Data',
+            text: 'Bandingkan data mahasiswa PMB dengan SISKA (' + nama + ')?',
+            icon: 'info',
+            buttons: true,
+            dangerMode: false,
+        }).then(function(ok) {
+            if (ok) {
+                runCheck(id, nama);
             }
         });
     });
@@ -336,14 +536,20 @@ var SYNC_URLS = {
     finish: '<?= site_url("admin/pengaturan/api_tokens/sync_finish/") ?>'
 };
 
-function startSync(id) {
+function startSync(id, mode) {
+    mode = mode || 'sync';
     $('#modalSync').modal('show');
     updateProgress(0, 'Menghubungi server...', '');
     $('#sync-detail').html('');
 
+    var titleText = (mode === 'insert')
+        ? '<i class="fa fa-plus fa-spin"></i> Import Mahasiswa dari PMB'
+        : '<i class="fa fa-refresh fa-spin"></i> Sinkronisasi dari PMB';
+    $('#modalSync .modal-title').html(titleText);
+
     // Step 1: Ambil page 1 + total_pages
     $.ajax({
-        url: SYNC_URLS.start + id,
+        url: SYNC_URLS.start + id + '/' + mode,
         type: 'POST',
         dataType: 'json',
         timeout: 60000,
@@ -374,7 +580,7 @@ function startSync(id) {
                 updateProgress(((current - 1) / totalPages) * 100, 'Memproses halaman ' + current + '/' + totalPages + '...', '');
 
                 $.ajax({
-                    url: SYNC_URLS.page + id + '/' + current,
+                    url: SYNC_URLS.page + id + '/' + current + '/' + mode,
                     type: 'POST',
                     dataType: 'json',
                     timeout: 60000,
@@ -470,4 +676,93 @@ function updateProgress(pct, text, colorClass) {
 
     $('#sync-status').text(text).removeClass('text-green text-red').addClass(colorClass);
 }
+
+// Update satu mahasiswa (langsung dari data hasil cek, tanpa fetch ulang PMB)
+$(document).on('click', '.btn-update-satu', function() {
+    var id = $(this).data('id');
+    var nim = $(this).data('nim');
+    var nama = $(this).data('nama');
+    var $row = $(this).closest('tr');
+
+    swal({
+        title: 'Update Data Mahasiswa',
+        text: 'Update data ' + nim + ' (' + nama + ') sesuai data PMB?',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: false,
+    }).then(function(ok) {
+        if (!ok) {
+            return;
+        }
+
+        var pmbData = cekDataById[nim] || null;
+        if (!pmbData) {
+            swal('Gagal', 'Data tidak tersedia. Jalankan Cek kembali.', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: CHECK_URLS.update + id + '/' + nim,
+            type: 'POST',
+            data: { data: JSON.stringify(pmbData) },
+            dataType: 'json',
+            timeout: 60000,
+            success: function(res) {
+                if (res.status) {
+                    // Update di tempat: hapus baris ini tanpa fetch/reload ulang
+                    $row.remove();
+                    delete cekDataById[nim];
+                    adjustCekCounts(-1, 0);
+                    cekEmptyState();
+                    swal('Berhasil', res.message, 'success');
+                } else {
+                    swal('Gagal', res.message, 'error');
+                }
+            },
+            error: function() {
+                swal('Gagal', 'Terjadi kesalahan koneksi.', 'error');
+            }
+        });
+    });
+});
+// Tambah program studi baru (dari hasil cek)
+$(document).on('click', '.btn-tambah-prodi', function() {
+    var id = $(this).data('id');
+    var kode = $(this).data('kode');
+    var nama = $(this).data('nama');
+    var $row = $(this).closest('tr');
+
+    swal({
+        title: 'Tambah Program Studi',
+        text: 'Tambahkan program studi ' + kode + ' (' + nama + ') ke SISKA?',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: false,
+    }).then(function(ok) {
+        if (!ok) {
+            return;
+        }
+
+        $.ajax({
+            url: CHECK_URLS.tambah_prodi + id + '/' + kode,
+            type: 'GET',
+            dataType: 'json',
+            timeout: 120000,
+            success: function(res) {
+                if (res.status) {
+                    // Update di tempat: hapus baris ini tanpa fetch/reload ulang
+                    $row.remove();
+                    adjustCekCounts(0, -1);
+                    cekEmptyState();
+                    swal('Berhasil', res.message, 'success');
+                } else {
+                    swal('Gagal', res.message, 'error');
+                }
+            },
+            error: function() {
+                swal('Gagal', 'Terjadi kesalahan koneksi.', 'error');
+            }
+        });
+    });
+});
 </script>

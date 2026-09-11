@@ -89,3 +89,5 @@ $route['admin/pengaturan/distribusi_perwalian/preview'] = 'admin/pengaturan/Dist
 $route['admin/pengaturan/distribusi_perwalian/preview_hapus'] = 'admin/pengaturan/Distribusi_perwalian/preview_hapus';
 $route['admin/pengaturan/distribusi_perwalian/view_data'] = 'admin/pengaturan/Distribusi_perwalian/view_data';
 $route['admin/pengaturan/distribusi_perwalian/hapus'] = 'admin/pengaturan/Distribusi_perwalian/hapus';
+$route['admin/pengaturan/distribusi_perwalian/manual_data'] = 'admin/pengaturan/Distribusi_perwalian/manual_data';
+$route['admin/pengaturan/distribusi_perwalian/manual_proses'] = 'admin/pengaturan/Distribusi_perwalian/manual_proses';

@@ -172,15 +172,15 @@ class Api_tokens extends CI_Controller {
         echo json_encode($result);
     }
 
-    public function sync_start($id)
+    public function sync_start($id, $mode = 'sync')
     {
-        $result = $this->apiservice->syncStart($id);
+        $result = $this->apiservice->syncStart($id, $mode);
         echo json_encode($result);
     }
 
-    public function sync_page($id, $page)
+    public function sync_page($id, $page, $mode = 'sync')
     {
-        $result = $this->apiservice->syncPage($id, $page);
+        $result = $this->apiservice->syncPage($id, $page, $mode);
         echo json_encode($result);
     }
 
@@ -198,6 +198,28 @@ class Api_tokens extends CI_Controller {
         }
 
         $result = $this->apiservice->syncFinish($id, $total_pages, $total_insert, $total_update, $total_skip, $detail_data);
+        echo json_encode($result);
+    }
+
+    public function cek_data($id)
+    {
+        $result = $this->apiservice->checkDiffFromPMB($id);
+        echo json_encode($result);
+    }
+
+    public function update_satu($id, $nim)
+    {
+        $data = $this->input->post('data');
+        if (is_string($data) && $data !== '') {
+            $data = json_decode($data, true);
+        }
+        $result = $this->apiservice->updateOneFromData($id, $nim, is_array($data) ? $data : []);
+        echo json_encode($result);
+    }
+
+    public function tambah_prodi($id, $kode)
+    {
+        $result = $this->apiservice->tambahProdiFromPMB($id, $kode);
         echo json_encode($result);
     }
 

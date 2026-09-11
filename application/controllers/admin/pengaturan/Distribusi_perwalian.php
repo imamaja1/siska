@@ -55,11 +55,11 @@ class Distribusi_perwalian extends CI_Controller {
         $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
         $angkatan = $tahun_akademik->tahun_akademik; // 2 digit, misal '25'
 
-        // Dosen aktif per prodi
+        // Dosen dengan status login aktif per prodi
         $dosen = $this->Perwalian_model->get_dosen_aktif_by_homebase($kode_program_studi);
 
         if (empty($dosen)) {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Tidak ada dosen aktif pada program studi tersebut.</h6></div>');
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Tidak ada dosen dengan status login aktif pada program studi tersebut.</h6></div>');
             redirect(site_url('admin/pengaturan/distribusi_perwalian'));
         }
 
@@ -203,6 +203,129 @@ class Distribusi_perwalian extends CI_Controller {
             'jumlah_perwalian' => $jumlah_perwalian,
             'jumlah_konsultasi' => $jumlah_konsultasi,
         ));
+    }
+
+    public function manual_data()
+    {
+        $kode_program_studi = (int) $this->input->post('kode_program_studi');
+        $angkatan = $this->input->post('angkatan');
+
+        if (empty($kode_program_studi) || !preg_match('/^\d{2}$/', $angkatan)) {
+            echo json_encode(array('status' => false, 'message' => 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.'));
+            return;
+        }
+
+        $dosen = $this->Perwalian_model->get_dosen_by_homebase($kode_program_studi);
+        $belum = $this->Perwalian_model->get_mahasiswa_belum_ada_dosen_wali($angkatan, $kode_program_studi);
+        $sudah = $this->Perwalian_model->get_mahasiswa_sudah_ada_dosen_wali($angkatan, $kode_program_studi);
+
+        $dosen_options = '<option value="" selected disabled>Pilih Dosen Wali</option>';
+        if (!empty($dosen)) {
+            foreach ($dosen as $d) {
+                $dosen_options .= '<option value="' . e($d->kode_dosen) . '">' . e($d->nama_dosen) . '</option>';
+            }
+        }
+
+        $html_belum = '<div class="table-responsive" style="max-height: 350px; overflow: auto;">';
+        $html_belum .= '<table class="table table-bordered table-striped">';
+        $html_belum .= '<thead><tr><th class="text-center">No.</th><th>NIM</th><th>Nama Mahasiswa</th><th class="text-center"><input type="checkbox" id="check-all-belum"></th></tr></thead><tbody>';
+        if ($belum && count($belum) > 0) {
+            $i = 1;
+            foreach ($belum as $r) {
+                $html_belum .= '<tr><td class="text-center">' . $i++ . '</td><td>' . e($r->nim) . '</td><td>' . e($r->nama_mahasiswa) . '</td><td class="text-center"><input type="checkbox" class="check-belum" name="nim_belum[]" value="' . e($r->nim) . '"></td></tr>';
+            }
+        } else {
+            $html_belum .= '<tr><td colspan="4" class="text-center">Tidak ada mahasiswa yang belum memiliki dosen wali.</td></tr>';
+        }
+        $html_belum .= '</tbody></table></div>';
+
+        $html_sudah = '<div class="table-responsive" style="max-height: 350px; overflow: auto;">';
+        $html_sudah .= '<table class="table table-bordered table-striped">';
+        $html_sudah .= '<thead><tr><th class="text-center">No.</th><th>NIM</th><th>Nama Mahasiswa</th><th>Dosen Wali Sekarang</th><th class="text-center"><input type="checkbox" id="check-all-sudah"></th></tr></thead><tbody>';
+        if ($sudah && count($sudah) > 0) {
+            $i = 1;
+            foreach ($sudah as $r) {
+                $html_sudah .= '<tr><td class="text-center">' . $i++ . '</td><td>' . e($r->nim) . '</td><td>' . e($r->nama_mahasiswa) . '</td><td>' . e($r->nama_dosen) . '</td><td class="text-center"><input type="checkbox" class="check-sudah" name="nim_sudah[]" value="' . e($r->nim) . '"></td></tr>';
+            }
+        } else {
+            $html_sudah .= '<tr><td colspan="5" class="text-center">Tidak ada mahasiswa yang memiliki dosen wali.</td></tr>';
+        }
+        $html_sudah .= '</tbody></table></div>';
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah_dosen' => count($dosen),
+            'jumlah_belum' => $belum ? count($belum) : 0,
+            'jumlah_sudah' => $sudah ? count($sudah) : 0,
+            'dosen_options' => $dosen_options,
+            'table_belum' => $html_belum,
+            'table_sudah' => $html_sudah,
+        ));
+    }
+
+    public function manual_proses()
+    {
+        $kode_program_studi = (int) $this->input->post('kode_program_studi');
+        $angkatan = $this->input->post('angkatan');
+        $tipe = $this->input->post('tipe');
+        $kode_dosen = (int) $this->input->post('kode_dosen');
+        $nims = $this->input->post('nim_belum') ?: $this->input->post('nim_sudah');
+
+        if (empty($kode_program_studi) || !preg_match('/^\d{2}$/', $angkatan)) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.</h6></div>');
+            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+        }
+
+        if (!in_array($tipe, array('belum', 'sudah'), true) || empty($kode_dosen)) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Pilih dosen wali tujuan terlebih dahulu.</h6></div>');
+            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+        }
+
+        if (empty($nims) || !is_array($nims)) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Tidak ada mahasiswa yang dicentang.</h6></div>');
+            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+        }
+
+        $tahun_akademik = $this->M_tahun_akademik->get_semester();
+        if (!$tahun_akademik) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Tahun akademik aktif tidak ditemukan.</h6></div>');
+            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+        }
+        $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+
+        $sukses = 0;
+        $dilewati = 0;
+
+        if ($tipe === 'belum') {
+            foreach ($nims as $nim) {
+                if ($this->Perwalian_model->cek_perwalian_exists($nim)) {
+                    $dilewati++;
+                    continue;
+                }
+                if ($this->Perwalian_model->simpan(array(
+                    'nim' => $nim,
+                    'kode_dosen' => $kode_dosen,
+                    'kode_tahun_akademik' => $kode_tahun_akademik,
+                ))) {
+                    $sukses++;
+                }
+            }
+            $pesan = $sukses . ' mahasiswa berhasil diberikan dosen wali.';
+        } else {
+            foreach ($nims as $nim) {
+                if ($this->Perwalian_model->ubah_dosen_wali($nim, $kode_dosen)) {
+                    $sukses++;
+                }
+            }
+            $pesan = $sukses . ' mahasiswa berhasil dipindahkan ke dosen wali baru.';
+        }
+
+        if ($dilewati > 0) {
+            $pesan .= ' ' . $dilewati . ' mahasiswa dilewati karena sudah memiliki dosen wali.';
+        }
+
+        $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>' . $pesan . '</h6></div>');
+        redirect(site_url('admin/pengaturan/distribusi_perwalian'));
     }
 
     public function hapus()

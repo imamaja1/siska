@@ -47,7 +47,7 @@ class Perwalian_model extends CI_Model
         $query = $this->db->select('*')
             ->from('dosen')
             ->where('status_dosen', 'T')
-            ->where('aktif', 'A')
+            ->where('status_login', 'A')
             ->where('homebase', $homebase)
             ->order_by('kode_dosen', 'ASC')
             ->get()->result();
@@ -407,6 +407,28 @@ class Perwalian_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    public function get_mahasiswa_sudah_ada_dosen_wali($tahun_angkatan, $homebase)
+    {
+        return $this->db->select('p.nim, m.nama_mahasiswa, p.kode_dosen, d.nama_dosen')
+            ->from('perwalian as p')
+            ->join('mahasiswa as m', 'm.nim=p.nim')
+            ->join('dosen as d', 'd.kode_dosen=p.kode_dosen', 'left')
+            ->where('m.program_studi_kode', $homebase)
+            ->where('mid(p.nim,1,2)', $tahun_angkatan)
+            ->order_by('p.nim', 'ASC')
+            ->get()->result_object();
+    }
+
+    public function cek_perwalian_exists($nim)
+    {
+        return (bool) $this->db->where('nim', $nim)->count_all_results($this->tabel);
+    }
+
+    public function ubah_dosen_wali($nim, $kode_dosen)
+    {
+        return $this->db->where('nim', $nim)->update($this->tabel, array('kode_dosen' => $kode_dosen));
     }
 
     function cek_status_cetak($nim, $kode_tahun_akademik)

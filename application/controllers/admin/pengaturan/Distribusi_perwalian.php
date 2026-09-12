@@ -272,24 +272,24 @@ class Distribusi_perwalian extends CI_Controller {
         $nims = $this->input->post('nim_belum') ?: $this->input->post('nim_sudah');
 
         if (empty($kode_program_studi) || !preg_match('/^\d{2}$/', $angkatan)) {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.</h6></div>');
-            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+            echo json_encode(array('status' => false, 'message' => 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.'));
+            return;
         }
 
         if (!in_array($tipe, array('belum', 'sudah'), true) || empty($kode_dosen)) {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Pilih dosen wali tujuan terlebih dahulu.</h6></div>');
-            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+            echo json_encode(array('status' => false, 'message' => 'Pilih dosen wali tujuan terlebih dahulu.'));
+            return;
         }
 
         if (empty($nims) || !is_array($nims)) {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Tidak ada mahasiswa yang dicentang.</h6></div>');
-            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+            echo json_encode(array('status' => false, 'message' => 'Tidak ada mahasiswa yang dicentang.'));
+            return;
         }
 
         $tahun_akademik = $this->M_tahun_akademik->get_semester();
         if (!$tahun_akademik) {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Tahun akademik aktif tidak ditemukan.</h6></div>');
-            redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+            echo json_encode(array('status' => false, 'message' => 'Tahun akademik aktif tidak ditemukan.'));
+            return;
         }
         $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
 
@@ -324,8 +324,10 @@ class Distribusi_perwalian extends CI_Controller {
             $pesan .= ' ' . $dilewati . ' mahasiswa dilewati karena sudah memiliki dosen wali.';
         }
 
-        $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>' . $pesan . '</h6></div>');
-        redirect(site_url('admin/pengaturan/distribusi_perwalian'));
+        echo json_encode(array(
+            'status' => $sukses > 0,
+            'message' => $pesan,
+        ));
     }
 
     public function hapus()

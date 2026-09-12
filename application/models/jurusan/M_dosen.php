@@ -106,6 +106,18 @@ class m_dosen extends CI_Model {
         return $query;
     }
 
+    function get_dosen_by_homebase($homebase) {
+
+        $query = $this->db->select('*')
+                        ->from('dosen as d')
+                        ->join('program_studi as ps', 'ps.kode_program_studi=d.homebase')
+                        ->where('d.homebase', $homebase)
+                        ->order_by('kode_dosen ASC')
+                        ->get()->result();
+
+        return $query;
+    }
+
     function autocomplate($keyword)
     {
         return $this->db->like('nama_dosen', $keyword)->order_by('nama_dosen')->limit(6)->get('dosen')->result();

@@ -190,15 +190,155 @@
     </div>
 </div>
 
+<style>
+.siska-toast {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 99999;
+    max-width: 360px;
+    min-width: 280px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    border-left: 5px solid #3c8dbc;
+    cursor: pointer;
+}
+.siska-toast.alert-success { border-left-color: #00a65a; }
+.siska-toast.alert-danger { border-left-color: #dd4b39; }
+.siska-toast h6 { margin-bottom: 4px; }
+.siska-toast p { margin: 0; color: #666; }
+</style>
+
 <script>
 var csrf_name = '<?= $this->security->get_csrf_token_name() ?>';
 var csrf_hash = '<?= $this->security->get_csrf_hash() ?>';
+
+function toastTampil(tipe, judul, pesan) {
+    var isSukses = tipe === 'success';
+    var $toast = $('<div class="alert animated fadeInUp siska-toast"></div>')
+        .addClass(isSukses ? 'alert-success' : 'alert-danger');
+    $('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>')
+        .appendTo($toast);
+    var $h6 = $('<h6></h6>');
+    $('<i class="fa"></i>')
+        .addClass(isSukses ? 'fa-check-circle text-green' : 'fa-times-circle text-red')
+        .appendTo($h6);
+    $('<strong></strong>').text(' ' + judul).appendTo($h6);
+    $h6.appendTo($toast);
+    $('<p></p>').text(pesan).appendTo($toast);
+    $('body').append($toast);
+    $toast.on('click', function() { $toast.fadeOut(300, function() { $(this).remove(); }); });
+    setTimeout(function() {
+        $toast.fadeOut(300, function() { $(this).remove(); });
+    }, 3000);
+}
+
+function toastSukses(pesan) {
+    toastTampil('success', 'Sukses', pesan);
+}
+
+function toastGagal(pesan) {
+    toastTampil('error', 'Gagal', pesan);
+}
+
+function konfirmasi(pesan, onYa) {
+    var $modal = $('<div class="modal fade" tabindex="-1" role="dialog">' +
+        '<div class="modal-dialog"><div class="modal-content">' +
+        '<div class="modal-header">' +
+        '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+        '<h4 class="modal-title"><i class="fa fa-question-circle text-yellow"></i> Konfirmasi</h4>' +
+        '</div>' +
+        '<div class="modal-body"></div>' +
+        '<div class="modal-footer">' +
+        '<button type="button" class="btn btn-default flat" data-dismiss="modal"><i class="fa fa-times"></i> Tidak</button>' +
+        '<button type="button" class="btn btn-primary flat" id="btn-konfirmasi-ya"><i class="fa fa-check"></i> Ya</button>' +
+        '</div>' +
+        '</div></div></div>');
+    $modal.find('.modal-body').text(pesan);
+    $modal.on('hidden.bs.modal', function() { $modal.remove(); });
+    $modal.find('#btn-konfirmasi-ya').on('click', function() {
+        $modal.modal('hide');
+        onYa();
+    });
+    $modal.appendTo('body').modal('show');
+}
+
+function muatDataManual() {
+    var kode = $('#manual_kode_program_studi').val();
+    var angkatan = $('#manual_angkatan').val();
+    if (!kode || !angkatan) {
+        toastGagal('Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.');
+        return;
+    }
+    var data = { kode_program_studi: kode, angkatan: angkatan };
+    data[csrf_name] = csrf_hash;
+    $.ajax({
+        url: '<?= site_url("admin/pengaturan/distribusi_perwalian/manual_data") ?>',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        success: function(res) {
+            if (res.status) {
+                $('#manual_prodi_belum').val(kode);
+                $('#manual_angkatan_belum').val(angkatan);
+                $('#manual_prodi_sudah').val(kode);
+                $('#manual_angkatan_sudah').val(angkatan);
+
+                if ($('#dosen_belum').hasClass('select2-hidden-accessible')) {
+                    $('#dosen_belum').select2('destroy');
+                }
+                if ($('#dosen_sudah').hasClass('select2-hidden-accessible')) {
+                    $('#dosen_sudah').select2('destroy');
+                }
+                $('#dosen_belum').html(res.dosen_options).select2({ width: '100%' });
+                $('#dosen_sudah').html(res.dosen_options).select2({ width: '100%' });
+
+                $('#table-belum').html(res.table_belum);
+                $('#table-sudah').html(res.table_sudah);
+                $('#badge-belum').text(res.jumlah_belum);
+                $('#badge-sudah').text(res.jumlah_sudah);
+                $('#hasil-manual').show();
+            } else {
+                toastGagal(res.message || 'Terjadi kesalahan.');
+            }
+        },
+        error: function() {
+            toastGagal('Terjadi kesalahan koneksi.');
+        }
+    });
+}
+
+function simpanManual(form, tipe) {
+    var btn = tipe === 'belum' ? '#btn-simpan-belum' : '#btn-simpan-sudah';
+    var label = tipe === 'belum' ? 'Simpan Pemberian Wali' : 'Simpan Pemindahan Wali';
+    $.ajax({
+        url: $(form).attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        data: $(form).serialize(),
+        beforeSend: function() {
+            $(btn).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
+        },
+        success: function(res) {
+            $(btn).prop('disabled', false).html('<i class="fa fa-save"></i> ' + label);
+            if (res.status) {
+                toastSukses(res.message);
+                muatDataManual();
+            } else {
+                toastGagal(res.message || 'Terjadi kesalahan.');
+            }
+        },
+        error: function() {
+            $(btn).prop('disabled', false).html('<i class="fa fa-save"></i> ' + label);
+            toastGagal('Terjadi kesalahan koneksi.');
+        }
+    });
+}
 
 $(document).ready(function() {
     $('#btn-preview').on('click', function() {
         var kode = $('#kode_program_studi').val();
         if (!kode) {
-            swal('Gagal', 'Silakan pilih program studi terlebih dahulu.', 'error');
+            toastGagal('Silakan pilih program studi terlebih dahulu.');
             return;
         }
         var data = { kode_program_studi: kode };
@@ -214,11 +354,11 @@ $(document).ready(function() {
                     $('#info-preview').text('Jumlah dosen status login aktif: ' + res.jumlah_dosen + ' | Jumlah mahasiswa belum ber-wali: ' + res.jumlah_mahasiswa);
                     $('#table-preview').html(res.html);
                 } else {
-                    swal('Gagal', 'Terjadi kesalahan.', 'error');
+                    toastGagal('Terjadi kesalahan.');
                 }
             },
             error: function() {
-                swal('Gagal', 'Terjadi kesalahan koneksi.', 'error');
+                toastGagal('Terjadi kesalahan koneksi.');
             }
         });
     });
@@ -227,17 +367,21 @@ $(document).ready(function() {
         var kode = $('#kode_program_studi').val();
         if (!kode) {
             e.preventDefault();
-            swal('Gagal', 'Silakan pilih program studi terlebih dahulu.', 'error');
+            toastGagal('Silakan pilih program studi terlebih dahulu.');
             return;
         }
-        return confirm('Yakin ingin melakukan distribusi perwalian? Data perwalian baru akan ditambahkan untuk mahasiswa yang belum memiliki dosen wali.');
+        e.preventDefault();
+        var form = this;
+        konfirmasi('Yakin ingin melakukan distribusi perwalian? Data perwalian baru akan ditambahkan untuk mahasiswa yang belum memiliki dosen wali.', function() {
+            form.submit();
+        });
     });
 
     $('#btn-view-data').on('click', function() {
         var kode = $('#hapus_kode_program_studi').val();
         var angkatan = $('#hapus_angkatan').val();
         if (!kode || !angkatan) {
-            swal('Gagal', 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.', 'error');
+            toastGagal('Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.');
             return;
         }
         var data = { kode_program_studi: kode, angkatan: angkatan };
@@ -253,11 +397,11 @@ $(document).ready(function() {
                     $('#info-view-data').text('Jumlah data perwalian: ' + res.jumlah);
                     $('#table-view-data').html(res.html);
                 } else {
-                    swal('Gagal', res.message || 'Terjadi kesalahan.', 'error');
+                    toastGagal(res.message || 'Terjadi kesalahan.');
                 }
             },
             error: function() {
-                swal('Gagal', 'Terjadi kesalahan koneksi.', 'error');
+                toastGagal('Terjadi kesalahan koneksi.');
             }
         });
     });
@@ -266,7 +410,7 @@ $(document).ready(function() {
         var kode = $('#hapus_kode_program_studi').val();
         var angkatan = $('#hapus_angkatan').val();
         if (!kode || !angkatan) {
-            swal('Gagal', 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.', 'error');
+            toastGagal('Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.');
             return;
         }
         var data = { kode_program_studi: kode, angkatan: angkatan };
@@ -281,11 +425,11 @@ $(document).ready(function() {
                     $('#hasil-preview-hapus').show();
                     $('#info-preview-hapus').text('Data yang akan dihapus: ' + res.jumlah_perwalian + ' data perwalian dan ' + res.jumlah_konsultasi + ' data konsultasi.');
                 } else {
-                    swal('Gagal', res.message || 'Terjadi kesalahan.', 'error');
+                    toastGagal(res.message || 'Terjadi kesalahan.');
                 }
             },
             error: function() {
-                swal('Gagal', 'Terjadi kesalahan koneksi.', 'error');
+                toastGagal('Terjadi kesalahan koneksi.');
             }
         });
     });
@@ -295,55 +439,18 @@ $(document).ready(function() {
         var angkatan = $('#hapus_angkatan').val();
         if (!kode || !angkatan) {
             e.preventDefault();
-            swal('Gagal', 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.', 'error');
+            toastGagal('Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.');
             return;
         }
-        return confirm('Yakin ingin menghapus perwalian untuk angkatan ini? Data perwalian beserta konsultasi yang cocok akan dihapus permanen.');
+        e.preventDefault();
+        var form = this;
+        konfirmasi('Yakin ingin menghapus perwalian untuk angkatan ini? Data perwalian beserta konsultasi yang cocok akan dihapus permanen.', function() {
+            form.submit();
+        });
     });
 
     $('#btn-tampilkan-manual').on('click', function() {
-        var kode = $('#manual_kode_program_studi').val();
-        var angkatan = $('#manual_angkatan').val();
-        if (!kode || !angkatan) {
-            swal('Gagal', 'Silakan lengkapi program studi dan tahun angkatan terlebih dahulu.', 'error');
-            return;
-        }
-        var data = { kode_program_studi: kode, angkatan: angkatan };
-        data[csrf_name] = csrf_hash;
-        $.ajax({
-            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/manual_data") ?>',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-            success: function(res) {
-                if (res.status) {
-                    $('#manual_prodi_belum').val(kode);
-                    $('#manual_angkatan_belum').val(angkatan);
-                    $('#manual_prodi_sudah').val(kode);
-                    $('#manual_angkatan_sudah').val(angkatan);
-
-                    if ($('#dosen_belum').hasClass('select2-hidden-accessible')) {
-                        $('#dosen_belum').select2('destroy');
-                    }
-                    if ($('#dosen_sudah').hasClass('select2-hidden-accessible')) {
-                        $('#dosen_sudah').select2('destroy');
-                    }
-                    $('#dosen_belum').html(res.dosen_options).select2({ width: '100%' });
-                    $('#dosen_sudah').html(res.dosen_options).select2({ width: '100%' });
-
-                    $('#table-belum').html(res.table_belum);
-                    $('#table-sudah').html(res.table_sudah);
-                    $('#badge-belum').text(res.jumlah_belum);
-                    $('#badge-sudah').text(res.jumlah_sudah);
-                    $('#hasil-manual').show();
-                } else {
-                    swal('Gagal', res.message || 'Terjadi kesalahan.', 'error');
-                }
-            },
-            error: function() {
-                swal('Gagal', 'Terjadi kesalahan koneksi.', 'error');
-            }
-        });
+        muatDataManual();
     });
 
     $(document).on('change', '#check-all-belum', function() {
@@ -355,31 +462,35 @@ $(document).ready(function() {
     });
 
     $('#form-manual-belum').on('submit', function(e) {
+        e.preventDefault();
+        var form = this;
         if (!$('#dosen_belum').val()) {
-            e.preventDefault();
-            swal('Gagal', 'Silakan pilih dosen wali tujuan terlebih dahulu.', 'error');
+            toastGagal('Silakan pilih dosen wali tujuan terlebih dahulu.');
             return;
         }
         if ($('.check-belum:checked').length === 0) {
-            e.preventDefault();
-            swal('Gagal', 'Silakan centang minimal satu mahasiswa.', 'error');
+            toastGagal('Silakan centang minimal satu mahasiswa.');
             return;
         }
-        return confirm('Yakin ingin memberikan dosen wali kepada mahasiswa yang dicentang?');
+        konfirmasi('Yakin ingin memberikan dosen wali kepada mahasiswa yang dicentang?', function() {
+            simpanManual(form, 'belum');
+        });
     });
 
     $('#form-manual-sudah').on('submit', function(e) {
+        e.preventDefault();
+        var form = this;
         if (!$('#dosen_sudah').val()) {
-            e.preventDefault();
-            swal('Gagal', 'Silakan pilih dosen wali tujuan terlebih dahulu.', 'error');
+            toastGagal('Silakan pilih dosen wali tujuan terlebih dahulu.');
             return;
         }
         if ($('.check-sudah:checked').length === 0) {
-            e.preventDefault();
-            swal('Gagal', 'Silakan centang minimal satu mahasiswa.', 'error');
+            toastGagal('Silakan centang minimal satu mahasiswa.');
             return;
         }
-        return confirm('Yakin ingin memindahkan dosen wali mahasiswa yang dicentang?');
+        konfirmasi('Yakin ingin memindahkan dosen wali mahasiswa yang dicentang?', function() {
+            simpanManual(form, 'sudah');
+        });
     });
 });
 </script>

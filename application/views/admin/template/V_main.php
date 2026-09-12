@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/plugins/datepicker/datepicker3.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/daterangepicker/daterangepicker-bs3.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/select2/select2.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/plugins/lobibox/dist/css/lobibox.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/dist/css/AdminLTE.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/dist/css/skins/_all-skins.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/font-awesome/css/font-awesome.min.css'); ?>">
@@ -32,6 +33,7 @@
 <script src="<?= base_url('assets/plugins/chartjs/Chart.min.js'); ?>"></script>
 <script src="<?= base_url('assets/sweetalert/dist/sweetalert2.min.js') ?>"></script>
 <script>window.addEventListener('unhandledrejection',function(e){if(e.reason&&(e.reason==='overlay'||e.reason==='cancel'||e.reason==='close'))e.preventDefault()});</script>
+<script src="<?= base_url('assets/plugins/lobibox/dist/js/lobibox.min.js') ?>"></script>
 <script src="<?= base_url('assets/tableedit/jquery.tabledit.min.js') ?>?v=2"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">

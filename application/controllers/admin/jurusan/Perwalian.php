@@ -361,7 +361,7 @@ class Perwalian extends CI_Controller {
     public function mahasiswa_tidak_punya_dosen_wali($homebase) {
         $tahun_akademik = $this->m_tahun_akademik->get_semester();
         $tahun_angkatan = substr($tahun_akademik->ta, 2, 2);
-        $dosen = $this->m_dosen->get_dosen_and_homebase();
+        $dosen = $this->m_dosen->get_dosen_by_homebase($homebase);
         $mahasiswa = $this->Perwalian_model->get_mahasiswa_belum_ada_dosen_wali($tahun_angkatan, $homebase);
         if ($mahasiswa == false) {
             echo '<div class="callout callout-info">
@@ -369,38 +369,40 @@ class Perwalian extends CI_Controller {
                     Tidak ada data mahasiswa ditemukan
                   </div>';
         } else {
-            $table = '<table class="table demo-table">';
-            $table .= '<thead>';
-            $table .= '<tr>';
-            $table .= '<th width="3%" id="th">Cek</th>';
-            $table .= '<th id="th">NIM</th>';
-            $table .= '<th id="th">Nama Mahasiswa</th>';
-            $table .= '</tr>';
-            $table .= '</thead>';
-            $table .= '<tbody>';
-            $table .= '<tr>';
-            foreach ($mahasiswa as $row) :
-                $table .= '<td style="text-align: center;">';
-                $table .= '<input type="checkbox" name="nim[]" value="' . $row->nim . '">';
-                $table .= '</td>';
-                $table .= '<td align="center">' . $row->nim . '</td>';
-                $table .= '<td >' . $row->nama_mahasiswa . '</td>';
-                $table .= '</tr>';
-            endforeach;
-            $table .= '</tbody>';
-            $table .= '</table>';
-            $table .= '<div  class="form-group">';
-            $table .= '<div  class="col-sm-6"  style="padding: 0;">';
-            $table .= '<select required name="kode_dosen" class="form-control select2">';
-            $table .= '<option value="" selected disabled>Dosen Wali</option>';
+            $html = '<div class="form-group">';
+            $html .= '<label class="control-label">Dosen Wali</label>';
+            $html .= '<div>';
+            $html .= '<select required name="kode_dosen" class="form-control select2">';
+            $html .= '<option value="" selected disabled>Pilih Dosen Wali</option>';
             foreach ($dosen as $row) :
-                $table .= '<option value="' . $row->kode_dosen . '">' . $row->nama_dosen . ' (' . $row->singkatan_program_studi . ')</option>';
+                $html .= '<option value="' . e($row->kode_dosen) . '">' . e($row->nama_dosen) . ' (' . e($row->singkatan_program_studi) . ')</option>';
             endforeach;
-            $table .= '</select>';
-            $table .= '</div>';
-            $table .= '</div>';
+            $html .= '</select>';
+            $html .= '</div>';
+            $html .= '</div>';
 
-            echo $table;
+            $html .= '<div class="table-responsive" style="max-height: 300px; overflow: auto;">';
+            $html .= '<table class="table table-bordered table-striped">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th width="3%">Cek</th>';
+            $html .= '<th>NIM</th>';
+            $html .= '<th>Nama Mahasiswa</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+            foreach ($mahasiswa as $row) :
+                $html .= '<tr>';
+                $html .= '<td style="text-align: center;"><input type="checkbox" name="nim[]" value="' . e($row->nim) . '"></td>';
+                $html .= '<td align="center">' . e($row->nim) . '</td>';
+                $html .= '<td>' . e($row->nama_mahasiswa) . '</td>';
+                $html .= '</tr>';
+            endforeach;
+            $html .= '</tbody>';
+            $html .= '</table>';
+            $html .= '</div>';
+
+            echo $html;
         }
     }
 

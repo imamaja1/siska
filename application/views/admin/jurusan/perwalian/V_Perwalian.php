@@ -119,8 +119,59 @@
 </div>
 
 <script type="text/javascript">
+    $('#nama-program-studi').change(function () {
+        var homebase = $(this).val();
+
+        $.ajax({
+            url: "<?= site_url('admin/jurusan/perwalian/mahasiswa_tidak_punya_dosen_wali') ?>/" + homebase,
+            type: "POST",
+            data: "homebase=" + homebase,
+            success: function (result) {
+                $('#data-mahasiswa').html(result);
+                $('.select2').select2();
+            },
+            error: function () {
+                alert('kamu gagal')
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
     var super_kode_dosen;
     $(document).ready(function () {
+        $("#search-box").keyup(function () {
+            $.ajax({
+                type: "POST",
+                url: "<?= site_url('admin/jurusan/perwalian/autocomplate') ?>",
+                data: 'keyword=' + $(this).val(),
+                beforeSend: function () {
+                    $("#search-box").css("background", "#FFF");
+                },
+                success: function (data) {
+                    $("#suggesstion-box").show();
+                    $("#suggesstion-box").html(data);
+                    $("#search-box-dosen").css("background", "#FFF");
+                }
+            });
+        });
+
+        $("#search-box-dosen").keyup(function () {
+            $.ajax({
+                type: "POST",
+                url: "<?= site_url('admin/jurusan/perwalian/autocomplatedosen') ?>",
+                data: 'keyword=' + $(this).val(),
+                beforeSend: function () {
+                    $("#search-box-dosen").css("background", "#FFF");
+                },
+                success: function (data) {
+                    $("#suggesstion-box-dosen").show();
+                    $("#suggesstion-box-dosen").html(data);
+                    $("#search-box-dosen").css("background", "#FFF");
+                }
+            });
+        });
+
         $("#form").submit(function (e) {
             e.preventDefault();
             var url = $(this).attr('action');
@@ -152,6 +203,18 @@
             beforeSend : function () { $("#landing").html("<div class='text-center'><img src='https://assets.website-files.com/5c7fdbdd4e3feeee8dd96dd2/5ce46f8ffd710a2c22c15e48_cust_ami.gif'/></div>"); },
             success : function (res) { $("#landing").html(res); }
         })
+    }
+
+    function selectNim(val) {
+        $("#search-box").val(val);
+        $("#suggesstion-box").hide();
+    }
+
+    function selectDosen(val, nama) {
+        super_kode_dosen = val;
+        $("#search-box-dosen").val(nama);
+        $("#kode-dosen-cari").val(val);
+        $("#suggesstion-box-dosen").hide();
     }
 </script>
 <script>

@@ -144,8 +144,11 @@ class MahasiswaService extends MY_Service {
     public function generateSandi($nim) {
         $mhs = $this->mahasiswa_model->get_mahasiswa_by_nim($nim);
         if ($mhs) {
-            $tgl = date('dmY', strtotime($mhs->tanggal_lahir));
-            $sandi = substr(md5($tgl), 0, 8);
+            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+            $sandi = '';
+            for ($i = 0; $i < 10; $i++) {
+                $sandi .= $chars[random_int(0, strlen($chars) - 1)];
+            }
             
             $data = array('sandi' => $sandi);
             $this->mahasiswa_model->update($nim, $data);

@@ -361,7 +361,7 @@ class Perwalian extends CI_Controller {
     public function mahasiswa_tidak_punya_dosen_wali($homebase) {
         $tahun_akademik = $this->m_tahun_akademik->get_semester();
         $tahun_angkatan = substr($tahun_akademik->ta, 2, 2);
-        $dosen = $this->m_dosen->get_dosen_by_homebase($homebase);
+        $dosen = $this->m_dosen->get_dosen_and_homebase();
         $mahasiswa = $this->Perwalian_model->get_mahasiswa_belum_ada_dosen_wali($tahun_angkatan, $homebase);
         if ($mahasiswa == false) {
             echo '<div class="callout callout-info">

@@ -538,11 +538,12 @@ class Distribusi_perwalian extends CI_Controller {
         $angkatan = $this->input->post('angkatan');
         $nim = $this->input->post('nim');
 
+        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
+
         if (empty($kode_tahun_akademik)) {
             echo json_encode(array('status' => false, 'message' => 'Tahun akademik wajib dipilih.'));
             return;
         }
-        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
 
         if (!empty($nim)) {
             $sql = "INSERT INTO konsultasi_perwalian (kode_tahun_akademik, nim, kode_dosen, status_cetak)

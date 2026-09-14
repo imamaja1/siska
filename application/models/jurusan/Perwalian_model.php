@@ -472,6 +472,55 @@ class Perwalian_model extends CI_Model
         return $affected;
     }
 
+    public function get_konsultasi_kode_dosen_null($kode_tahun_akademik = null)
+    {
+        $this->db->select('kp.kode_konsultasi_perwalian, kp.nim, kp.kode_tahun_akademik, m.nama_mahasiswa, p.kode_dosen, d.nama_dosen, ta.tahun_akademik, ta.semester')
+            ->from('konsultasi_perwalian as kp')
+            ->join('perwalian as p', 'p.nim=kp.nim')
+            ->join('mahasiswa as m', 'm.nim=kp.nim', 'left')
+            ->join('dosen as d', 'd.kode_dosen=p.kode_dosen', 'left')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik=kp.kode_tahun_akademik', 'left')
+            ->where('kp.kode_dosen IS NULL')
+            ->group_by('kp.kode_konsultasi_perwalian')
+            ->order_by('kp.kode_tahun_akademik', 'DESC')
+            ->order_by('kp.nim', 'ASC');
+        if ($kode_tahun_akademik !== null) {
+            $this->db->where('kp.kode_tahun_akademik', $kode_tahun_akademik);
+        }
+        return $this->db->get()->result();
+    }
+
+    public function sync_konsultasi_kode_dosen($kode_tahun_akademik = null, $kode_konsultasi_perwalian = null)
+    {
+        $sql = "UPDATE konsultasi_perwalian kp
+                JOIN (SELECT p.nim, p.kode_dosen FROM perwalian p
+                      JOIN (SELECT nim, MAX(kode_perwalian) AS maxid FROM perwalian GROUP BY nim) m
+                        ON m.nim = p.nim AND m.maxid = p.kode_perwalian) pw
+                  ON pw.nim = kp.nim
+                SET kp.kode_dosen = pw.kode_dosen
+                WHERE kp.kode_dosen IS NULL";
+
+        $params = array();
+        if ($kode_tahun_akademik !== null) {
+            $sql .= " AND kp.kode_tahun_akademik = ?";
+            $params[] = $kode_tahun_akademik;
+        }
+        if ($kode_konsultasi_perwalian !== null) {
+            $sql .= " AND kp.kode_konsultasi_perwalian = ?";
+            $params[] = $kode_konsultasi_perwalian;
+        }
+
+        $this->db->trans_start();
+        $this->db->query($sql, $params);
+        $affected = $this->db->affected_rows();
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        }
+        return $affected;
+    }
+
     function cek_status_cetak($nim, $kode_tahun_akademik)
     {
         $query = $this->db->select('*')

@@ -208,6 +208,45 @@
     </div>
 </div>
 
+<div class="box box-primary flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-random"></i> Sinkronisasi Dosen Wali Konsultasi</h3>
+    </div>
+    <div class="box-body">
+        <p>Isi <b>konsultasi_perwalian.kode_dosen</b> yang masih kosong (NULL) dengan dosen wali dari tabel perwalian. Hanya record yang <b>NULL</b> yang diisi; riwayat konsultasi yang sudah punya dosen tidak diubah.</p>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Tahun Akademik</label>
+                    <select id="sync_kode_tahun_akademik" class="form-control select2" style="width: 100%;">
+                        <option value="">Semua Tahun Akademik</option>
+                        <?php foreach ($tahun_akademik_list as $ta): ?>
+                        <option value="<?= (int)$ta->kode_tahun_akademik ?>" <?= (isset($tahun_akademik) && (int)$tahun_akademik->kode_tahun_akademik === (int)$ta->kode_tahun_akademik) ? 'selected' : '' ?>>
+                            <?= e($ta->tahun_akademik) ?> - <?= e($ta->semester == '1' ? 'Ganjil' : 'Genap') ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div>
+                        <button type="button" class="btn btn-info flat" id="btn-muat-sync"><i class="fa fa-search"></i> Muat Data</button>
+                        <button type="button" class="btn btn-primary flat" id="btn-sync-semua"><i class="fa fa-refresh"></i> Sync Semua (kode_dosen NULL)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hasil-sync" style="display: none;">
+            <p id="info-sync" class="text-muted"></p>
+            <div id="table-sync"></div>
+        </div>
+    </div>
+</div>
+
 <style>
 .siska-toast {
     position: fixed;
@@ -496,6 +535,82 @@ $(document).ready(function() {
 
     $('#btn-muat-duplikat').on('click', function() {
         muatDuplikat();
+    });
+
+    function muatSync() {
+        var kodeTa = $('#sync_kode_tahun_akademik').val() || '';
+        var data = { kode_tahun_akademik: kodeTa };
+        data[csrf_name] = csrf_hash;
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/sync_data") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                if (res.status) {
+                    $('#hasil-sync').show();
+                    $('#info-sync').text('Jumlah record konsultasi dengan dosen wali NULL: ' + res.jumlah);
+                    $('#table-sync').html(res.html);
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    }
+
+    function prosesSync(data, $btn, labelBtn) {
+        data[csrf_name] = csrf_hash;
+        if ($btn) {
+            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+        }
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/sync_proses") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                if ($btn) {
+                    $btn.prop('disabled', false).html(labelBtn);
+                }
+                if (res.status) {
+                    toastSukses(res.message);
+                    muatSync();
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                if ($btn) {
+                    $btn.prop('disabled', false).html(labelBtn);
+                }
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    }
+
+    $('#btn-muat-sync').on('click', function() {
+        muatSync();
+    });
+
+    $('#btn-sync-semua').on('click', function() {
+        var kodeTa = $('#sync_kode_tahun_akademik').val() || '';
+        var labelTa = kodeTa ? ('tahun akademik terpilih') : 'semua tahun akademik';
+        konfirmasi('Yakin ingin mengisi kode_dosen NULL di konsultasi_perwalian dengan dosen wali dari perwalian (' + labelTa + ')?', function() {
+            prosesSync({ kode_tahun_akademik: kodeTa }, $('#btn-sync-semua'), '<i class="fa fa-refresh"></i> Sync Semua (kode_dosen NULL)');
+        });
+    });
+
+    $(document).on('click', '.btn-sync-konsultasi', function() {
+        var $btn = $(this);
+        var id = $btn.data('kode_konsultasi_perwalian');
+        var nim = $btn.data('nim');
+        var dosen = $btn.data('dosen');
+        konfirmasi('Isi kode_dosen konsultasi NIM ' + nim + ' dengan dosen wali ' + dosen + '?', function() {
+            prosesSync({ kode_konsultasi_perwalian: id }, $btn, '<i class="fa fa-refresh"></i> Sync');
+        });
     });
 
     $(document).on('click', '.btn-resolusi-duplikat', function() {

@@ -31,6 +31,7 @@ class Distribusi_perwalian extends CI_Controller {
             'sub_judul' => 'Distribusi Perwalian',
             'program_studi' => $this->Nama_jurusan_model->get(),
             'tahun_akademik' => $this->M_tahun_akademik->get_semester(),
+            'tahun_akademik_list' => $this->M_tahun_akademik->get(),
             'angkatan_list' => $this->Perwalian_model->get_angkatan_list(),
         );
 
@@ -413,6 +414,80 @@ class Distribusi_perwalian extends CI_Controller {
             'status' => true,
             'message' => 'Selesai: ' . $deleted . ' record dosen wali lama dihapus untuk NIM ' . $nim . '. Dosen wali terbaru sekarang yang digunakan.',
         ));
+    }
+
+    public function sync_data()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : $kode_tahun_akademik;
+
+        $rows = $this->Perwalian_model->get_konsultasi_kode_dosen_null($kode_tahun_akademik);
+
+        $html = '<div class="table-responsive" style="max-height: 400px; overflow: auto;">';
+        $html .= '<table class="table table-bordered table-striped">';
+        $html .= '<thead><tr>';
+        $html .= '<th class="text-center">No.</th>';
+        $html .= '<th>NIM</th>';
+        $html .= '<th>Nama Mahasiswa</th>';
+        $html .= '<th>Tahun Akademik</th>';
+        $html .= '<th>Dosen Wali (perwalian)</th>';
+        $html .= '<th class="text-center">Aksi</th>';
+        $html .= '</tr></thead><tbody>';
+
+        if (!empty($rows)) {
+            $i = 1;
+            foreach ($rows as $r) {
+                $ta = $r->tahun_akademik ? $r->tahun_akademik . ' - ' . ($r->semester == '1' ? 'Ganjil' : 'Genap') : '-';
+                $html .= '<tr>';
+                $html .= '<td class="text-center">' . $i++ . '</td>';
+                $html .= '<td>' . e($r->nim) . '</td>';
+                $html .= '<td>' . e($r->nama_mahasiswa) . '</td>';
+                $html .= '<td>' . e($ta) . '</td>';
+                $html .= '<td>' . e($r->nama_dosen) . ' <small class="text-muted">(#' . (int)$r->kode_dosen . ')</small></td>';
+                $html .= '<td class="text-center">';
+                $html .= '<button type="button" class="btn btn-primary btn-xs flat btn-sync-konsultasi" '
+                    . 'data-kode_konsultasi_perwalian="' . (int)$r->kode_konsultasi_perwalian . '" '
+                    . 'data-nim="' . e($r->nim) . '" '
+                    . 'data-dosen="' . e($r->nama_dosen) . '">'
+                    . '<i class="fa fa-refresh"></i> Sync</button>';
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+        } else {
+            $html .= '<tr><td colspan="6" class="text-center">Tidak ada record konsultasi dengan dosen wali kosong (NULL).</td></tr>';
+        }
+
+        $html .= '</tbody></table></div>';
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah' => count($rows),
+            'html' => $html,
+        ));
+    }
+
+    public function sync_proses()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_konsultasi_perwalian = $this->input->post('kode_konsultasi_perwalian');
+
+        $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : $kode_tahun_akademik;
+        $kode_konsultasi_perwalian = ($kode_konsultasi_perwalian === '' || $kode_konsultasi_perwalian === null) ? null : (int)$kode_konsultasi_perwalian;
+
+        $updated = $this->Perwalian_model->sync_konsultasi_kode_dosen($kode_tahun_akademik, $kode_konsultasi_perwalian);
+
+        if ($updated === false) {
+            echo json_encode(array('status' => false, 'message' => 'Gagal melakukan sinkronisasi.'));
+            return;
+        }
+
+        if ($kode_konsultasi_perwalian !== null) {
+            $message = 'Selesai: record konsultasi diperbarui dengan dosen wali dari perwalian.';
+        } else {
+            $message = 'Selesai: ' . $updated . ' record konsultasi_perwalian diisi dosen wali dari perwalian.';
+        }
+
+        echo json_encode(array('status' => true, 'message' => $message, 'updated' => $updated));
     }
 
     public function hapus()

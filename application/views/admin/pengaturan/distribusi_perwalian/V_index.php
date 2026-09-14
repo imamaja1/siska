@@ -213,10 +213,10 @@
         <h3 class="box-title"><i class="fa fa-random"></i> Sinkronisasi Dosen Wali Konsultasi</h3>
     </div>
     <div class="box-body">
-        <p>Isi <b>konsultasi_perwalian.kode_dosen</b> yang masih kosong (NULL) dengan dosen wali dari tabel perwalian. Hanya record yang <b>NULL</b> yang diisi; riwayat konsultasi yang sudah punya dosen tidak diubah.</p>
+        <p>Sinkronkan <b>konsultasi_perwalian.kode_dosen</b> dengan dosen wali dari tabel <b>perwalian</b>. Mengisi kode_dosen yang <b>NULL</b> atau <b>mismatch</b> (berbeda dari perwalian), dan membuat record konsultasi yang belum ada untuk mahasiswa yang sudah punya dosen wali. Riwayat konsultasi yang kode_dosen-nya sudah cocok tidak diubah.</p>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="control-label">Tahun Akademik</label>
                     <select id="sync_kode_tahun_akademik" class="form-control select2" style="width: 100%;">
@@ -229,20 +229,37 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Tahun Angkatan</label>
+                    <select id="sync_angkatan" class="form-control select2" style="width: 100%;">
+                        <option value="">Semua Angkatan</option>
+                        <?php foreach ($angkatan_list as $a): ?>
+                        <option value="<?= e($a->angkatan) ?>" <?= ($a->angkatan == '26') ? 'selected' : '' ?>><?= '20' . e($a->angkatan) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="form-group">
                     <label class="control-label">&nbsp;</label>
                     <div>
                         <button type="button" class="btn btn-info flat" id="btn-muat-sync"><i class="fa fa-search"></i> Muat Data</button>
-                        <button type="button" class="btn btn-primary flat" id="btn-sync-semua"><i class="fa fa-refresh"></i> Sync Semua (kode_dosen NULL)</button>
+                        <button type="button" class="btn btn-primary flat" id="btn-sync-semua"><i class="fa fa-refresh"></i> Sync Kode Dosen (NULL/Mismatch)</button>
+                        <button type="button" class="btn btn-success flat" id="btn-buat-semua"><i class="fa fa-plus"></i> Buat Konsultasi yang Hilang</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="hasil-sync" style="display: none;">
+            <h4><i class="fa fa-exclamation-circle"></i> Konsultasi kode_dosen NULL / Mismatch <span class="badge bg-red" id="badge-sync-null">0</span></h4>
             <p id="info-sync" class="text-muted"></p>
             <div id="table-sync"></div>
+            <hr>
+            <h4><i class="fa fa-plus-circle"></i> Perwalian Tanpa Record Konsultasi <span class="badge bg-orange" id="badge-sync-missing">0</span></h4>
+            <p id="info-sync-missing" class="text-muted"></p>
+            <div id="table-sync-missing"></div>
         </div>
     </div>
 </div>
@@ -539,7 +556,8 @@ $(document).ready(function() {
 
     function muatSync() {
         var kodeTa = $('#sync_kode_tahun_akademik').val() || '';
-        var data = { kode_tahun_akademik: kodeTa };
+        var angkatan = $('#sync_angkatan').val() || '';
+        var data = { kode_tahun_akademik: kodeTa, angkatan: angkatan };
         data[csrf_name] = csrf_hash;
         $.ajax({
             url: '<?= site_url("admin/pengaturan/distribusi_perwalian/sync_data") ?>',
@@ -549,8 +567,12 @@ $(document).ready(function() {
             success: function(res) {
                 if (res.status) {
                     $('#hasil-sync').show();
-                    $('#info-sync').text('Jumlah record konsultasi dengan dosen wali NULL: ' + res.jumlah);
+                    $('#badge-sync-null').text(res.jumlah);
+                    $('#badge-sync-missing').text(res.jumlah_missing);
+                    $('#info-sync').text('Jumlah record konsultasi dengan dosen wali NULL/mismatch: ' + res.jumlah);
                     $('#table-sync').html(res.html);
+                    $('#info-sync-missing').text('Jumlah perwalian yang belum punya record konsultasi: ' + res.jumlah_missing);
+                    $('#table-sync-missing').html(res.html_missing);
                 } else {
                     toastGagal(res.message || 'Terjadi kesalahan.');
                 }
@@ -591,15 +613,58 @@ $(document).ready(function() {
         });
     }
 
+    function prosesBuatKonsultasi(data, $btn, labelBtn) {
+        data[csrf_name] = csrf_hash;
+        if ($btn) {
+            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+        }
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/buat_konsultasi_proses") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                if ($btn) {
+                    $btn.prop('disabled', false).html(labelBtn);
+                }
+                if (res.status) {
+                    toastSukses(res.message);
+                    muatSync();
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                if ($btn) {
+                    $btn.prop('disabled', false).html(labelBtn);
+                }
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    }
+
     $('#btn-muat-sync').on('click', function() {
         muatSync();
     });
 
     $('#btn-sync-semua').on('click', function() {
         var kodeTa = $('#sync_kode_tahun_akademik').val() || '';
-        var labelTa = kodeTa ? ('tahun akademik terpilih') : 'semua tahun akademik';
-        konfirmasi('Yakin ingin mengisi kode_dosen NULL di konsultasi_perwalian dengan dosen wali dari perwalian (' + labelTa + ')?', function() {
-            prosesSync({ kode_tahun_akademik: kodeTa }, $('#btn-sync-semua'), '<i class="fa fa-refresh"></i> Sync Semua (kode_dosen NULL)');
+        var angkatan = $('#sync_angkatan').val() || '';
+        var label = 'Sync Kode Dosen (NULL/Mismatch)';
+        konfirmasi('Yakin ingin menyesuaikan kode_dosen konsultasi_perwalian (NULL/mismatch) dengan dosen wali dari perwalian sesuai filter?', function() {
+            prosesSync({ kode_tahun_akademik: kodeTa, angkatan: angkatan }, $('#btn-sync-semua'), '<i class="fa fa-refresh"></i> ' + label);
+        });
+    });
+
+    $('#btn-buat-semua').on('click', function() {
+        var kodeTa = $('#sync_kode_tahun_akademik').val() || '';
+        var angkatan = $('#sync_angkatan').val() || '';
+        if (!kodeTa) {
+            toastGagal('Silakan pilih tahun akademik terlebih dahulu.');
+            return;
+        }
+        konfirmasi('Yakin ingin membuat record konsultasi_perwalian untuk mahasiswa yang sudah punya dosen wali tapi belum punya record konsultasi (sesuai filter)?', function() {
+            prosesBuatKonsultasi({ kode_tahun_akademik: kodeTa, angkatan: angkatan }, $('#btn-buat-semua'), '<i class="fa fa-plus"></i> Buat Konsultasi yang Hilang');
         });
     });
 
@@ -610,6 +675,20 @@ $(document).ready(function() {
         var dosen = $btn.data('dosen');
         konfirmasi('Isi kode_dosen konsultasi NIM ' + nim + ' dengan dosen wali ' + dosen + '?', function() {
             prosesSync({ kode_konsultasi_perwalian: id }, $btn, '<i class="fa fa-refresh"></i> Sync');
+        });
+    });
+
+    $(document).on('click', '.btn-buat-konsultasi', function() {
+        var $btn = $(this);
+        var kodeTa = $('#sync_kode_tahun_akademik').val() || '';
+        if (!kodeTa) {
+            toastGagal('Silakan pilih tahun akademik terlebih dahulu.');
+            return;
+        }
+        var nim = $btn.data('nim');
+        var dosen = $btn.data('dosen');
+        konfirmasi('Buat record konsultasi untuk NIM ' + nim + ' dengan dosen wali ' + dosen + '?', function() {
+            prosesBuatKonsultasi({ kode_tahun_akademik: kodeTa, nim: nim }, $btn, '<i class="fa fa-plus"></i> Buat');
         });
     });
 

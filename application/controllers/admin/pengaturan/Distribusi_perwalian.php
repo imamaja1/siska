@@ -420,10 +420,13 @@ class Distribusi_perwalian extends CI_Controller {
     {
         $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
         $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : $kode_tahun_akademik;
+        $angkatan = $this->input->post('angkatan');
+        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
 
-        $rows = $this->Perwalian_model->get_konsultasi_kode_dosen_null($kode_tahun_akademik);
+        $rows = $this->Perwalian_model->get_konsultasi_kode_dosen_null($kode_tahun_akademik, $angkatan);
+        $missing = $this->Perwalian_model->get_perwalian_tanpa_konsultasi($kode_tahun_akademik, $angkatan);
 
-        $html = '<div class="table-responsive" style="max-height: 400px; overflow: auto;">';
+        $html = '<div class="table-responsive" style="max-height: 300px; overflow: auto;">';
         $html .= '<table class="table table-bordered table-striped">';
         $html .= '<thead><tr>';
         $html .= '<th class="text-center">No.</th>';
@@ -454,15 +457,50 @@ class Distribusi_perwalian extends CI_Controller {
                 $html .= '</tr>';
             }
         } else {
-            $html .= '<tr><td colspan="6" class="text-center">Tidak ada record konsultasi dengan dosen wali kosong (NULL).</td></tr>';
+            $html .= '<tr><td colspan="6" class="text-center">Tidak ada record konsultasi dengan dosen wali NULL/mismatch.</td></tr>';
         }
 
         $html .= '</tbody></table></div>';
+
+        $html_missing = '<div class="table-responsive" style="max-height: 300px; overflow: auto;">';
+        $html_missing .= '<table class="table table-bordered table-striped">';
+        $html_missing .= '<thead><tr>';
+        $html_missing .= '<th class="text-center">No.</th>';
+        $html_missing .= '<th>NIM</th>';
+        $html_missing .= '<th>Nama Mahasiswa</th>';
+        $html_missing .= '<th>Dosen Wali (perwalian)</th>';
+        $html_missing .= '<th class="text-center">Aksi</th>';
+        $html_missing .= '</tr></thead><tbody>';
+
+        if (!empty($missing)) {
+            $i = 1;
+            foreach ($missing as $r) {
+                $html_missing .= '<tr>';
+                $html_missing .= '<td class="text-center">' . $i++ . '</td>';
+                $html_missing .= '<td>' . e($r->nim) . '</td>';
+                $html_missing .= '<td>' . e($r->nama_mahasiswa) . '</td>';
+                $html_missing .= '<td>' . e($r->nama_dosen) . ' <small class="text-muted">(#' . (int)$r->kode_dosen . ')</small></td>';
+                $html_missing .= '<td class="text-center">';
+                $html_missing .= '<button type="button" class="btn btn-success btn-xs flat btn-buat-konsultasi" '
+                    . 'data-nim="' . e($r->nim) . '" '
+                    . 'data-kode_dosen="' . (int)$r->kode_dosen . '" '
+                    . 'data-dosen="' . e($r->nama_dosen) . '">'
+                    . '<i class="fa fa-plus"></i> Buat</button>';
+                $html_missing .= '</td>';
+                $html_missing .= '</tr>';
+            }
+        } else {
+            $html_missing .= '<tr><td colspan="5" class="text-center">Tidak ada perwalian yang belum punya record konsultasi.</td></tr>';
+        }
+
+        $html_missing .= '</tbody></table></div>';
 
         echo json_encode(array(
             'status' => true,
             'jumlah' => count($rows),
             'html' => $html,
+            'jumlah_missing' => count($missing),
+            'html_missing' => $html_missing,
         ));
     }
 
@@ -470,11 +508,13 @@ class Distribusi_perwalian extends CI_Controller {
     {
         $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
         $kode_konsultasi_perwalian = $this->input->post('kode_konsultasi_perwalian');
+        $angkatan = $this->input->post('angkatan');
 
         $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : $kode_tahun_akademik;
         $kode_konsultasi_perwalian = ($kode_konsultasi_perwalian === '' || $kode_konsultasi_perwalian === null) ? null : (int)$kode_konsultasi_perwalian;
+        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
 
-        $updated = $this->Perwalian_model->sync_konsultasi_kode_dosen($kode_tahun_akademik, $kode_konsultasi_perwalian);
+        $updated = $this->Perwalian_model->sync_konsultasi_kode_dosen($kode_tahun_akademik, $kode_konsultasi_perwalian, $angkatan);
 
         if ($updated === false) {
             echo json_encode(array('status' => false, 'message' => 'Gagal melakukan sinkronisasi.'));
@@ -483,11 +523,55 @@ class Distribusi_perwalian extends CI_Controller {
 
         if ($kode_konsultasi_perwalian !== null) {
             $message = 'Selesai: record konsultasi diperbarui dengan dosen wali dari perwalian.';
+        } elseif ($angkatan !== null) {
+            $message = 'Selesai: ' . $updated . ' record konsultasi_perwalian (angkatan ' . $angkatan . ') disinkronkan dengan dosen wali dari perwalian.';
         } else {
-            $message = 'Selesai: ' . $updated . ' record konsultasi_perwalian diisi dosen wali dari perwalian.';
+            $message = 'Selesai: ' . $updated . ' record konsultasi_perwalian disinkronkan dengan dosen wali dari perwalian.';
         }
 
         echo json_encode(array('status' => true, 'message' => $message, 'updated' => $updated));
+    }
+
+    public function buat_konsultasi_proses()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $angkatan = $this->input->post('angkatan');
+        $nim = $this->input->post('nim');
+
+        if (empty($kode_tahun_akademik)) {
+            echo json_encode(array('status' => false, 'message' => 'Tahun akademik wajib dipilih.'));
+            return;
+        }
+        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
+
+        if (!empty($nim)) {
+            $sql = "INSERT INTO konsultasi_perwalian (kode_tahun_akademik, nim, kode_dosen, status_cetak)
+                    SELECT ?, p.nim, p.kode_dosen, 'N'
+                    FROM perwalian p
+                    WHERE p.nim = ? AND NOT EXISTS (
+                        SELECT 1 FROM konsultasi_perwalian kp
+                        WHERE kp.nim = p.nim AND kp.kode_tahun_akademik = ?)";
+            $created = $this->db->query($sql, array($kode_tahun_akademik, $nim, $kode_tahun_akademik));
+            $affected = $created ? $this->db->affected_rows() : 0;
+            $message = $affected > 0
+                ? 'Record konsultasi untuk NIM ' . $nim . ' berhasil dibuat.'
+                : 'NIM ' . $nim . ' sudah memiliki record konsultasi untuk tahun akademik tersebut.';
+            echo json_encode(array('status' => true, 'message' => $message, 'updated' => $affected));
+            return;
+        }
+
+        $created = $this->Perwalian_model->buat_konsultasi_perwalian_hilang($kode_tahun_akademik, $angkatan);
+
+        if ($created === false) {
+            echo json_encode(array('status' => false, 'message' => 'Gagal membuat record konsultasi.'));
+            return;
+        }
+
+        $message = $angkatan !== null
+            ? 'Selesai: ' . $created . ' record konsultasi_perwalian dibuat untuk angkatan ' . $angkatan . '.'
+            : 'Selesai: ' . $created . ' record konsultasi_perwalian dibuat.';
+
+        echo json_encode(array('status' => true, 'message' => $message, 'updated' => $created));
     }
 
     public function hapus()

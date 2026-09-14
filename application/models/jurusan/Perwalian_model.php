@@ -472,25 +472,83 @@ class Perwalian_model extends CI_Model
         return $affected;
     }
 
-    public function get_konsultasi_kode_dosen_null($kode_tahun_akademik = null)
+    public function get_konsultasi_kode_dosen_null($kode_tahun_akademik = null, $angkatan = null)
     {
-        $this->db->select('kp.kode_konsultasi_perwalian, kp.nim, kp.kode_tahun_akademik, m.nama_mahasiswa, p.kode_dosen, d.nama_dosen, ta.tahun_akademik, ta.semester')
-            ->from('konsultasi_perwalian as kp')
-            ->join('perwalian as p', 'p.nim=kp.nim')
-            ->join('mahasiswa as m', 'm.nim=kp.nim', 'left')
-            ->join('dosen as d', 'd.kode_dosen=p.kode_dosen', 'left')
-            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik=kp.kode_tahun_akademik', 'left')
-            ->where('kp.kode_dosen IS NULL')
-            ->group_by('kp.kode_konsultasi_perwalian')
-            ->order_by('kp.kode_tahun_akademik', 'DESC')
-            ->order_by('kp.nim', 'ASC');
+        $sql = "SELECT kp.kode_konsultasi_perwalian, kp.nim, kp.kode_tahun_akademik, COALESCE(m.nama_mahasiswa, '(NO MAHASISWA)') AS nama_mahasiswa, pw.kode_dosen, d.nama_dosen, ta.tahun_akademik, ta.semester
+                FROM konsultasi_perwalian kp
+                JOIN (SELECT p.nim, p.kode_dosen FROM perwalian p
+                      JOIN (SELECT nim, MAX(kode_perwalian) AS maxid FROM perwalian GROUP BY nim) mx
+                        ON mx.nim = p.nim AND mx.maxid = p.kode_perwalian) pw
+                  ON pw.nim = kp.nim
+                LEFT JOIN mahasiswa m ON m.nim = kp.nim
+                LEFT JOIN dosen d ON d.kode_dosen = pw.kode_dosen
+                LEFT JOIN tahun_akademik ta ON ta.kode_tahun_akademik = kp.kode_tahun_akademik
+                WHERE (kp.kode_dosen IS NULL OR kp.kode_dosen != pw.kode_dosen)";
+
+        $params = array();
         if ($kode_tahun_akademik !== null) {
-            $this->db->where('kp.kode_tahun_akademik', $kode_tahun_akademik);
+            $sql .= " AND kp.kode_tahun_akademik = ?";
+            $params[] = $kode_tahun_akademik;
         }
-        return $this->db->get()->result();
+        if ($angkatan !== null) {
+            $sql .= " AND mid(kp.nim,1,2) = ?";
+            $params[] = $angkatan;
+        }
+        $sql .= " ORDER BY kp.kode_tahun_akademik DESC, kp.nim ASC";
+
+        return $this->db->query($sql, $params)->result();
     }
 
-    public function sync_konsultasi_kode_dosen($kode_tahun_akademik = null, $kode_konsultasi_perwalian = null)
+    public function get_perwalian_tanpa_konsultasi($kode_tahun_akademik = null, $angkatan = null)
+    {
+        $sql = "SELECT p.nim, COALESCE(m.nama_mahasiswa, '(NO MAHASISWA)') AS nama_mahasiswa, p.kode_dosen, d.nama_dosen
+                FROM perwalian p
+                LEFT JOIN mahasiswa m ON m.nim = p.nim
+                LEFT JOIN dosen d ON d.kode_dosen = p.kode_dosen
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM konsultasi_perwalian kp
+                    WHERE kp.nim = p.nim";
+        $params = array();
+        if ($kode_tahun_akademik !== null) {
+            $sql .= " AND kp.kode_tahun_akademik = ?";
+            $params[] = $kode_tahun_akademik;
+        }
+        $sql .= ")";
+        if ($angkatan !== null) {
+            $sql .= " AND mid(p.nim,1,2) = ?";
+            $params[] = $angkatan;
+        }
+        $sql .= " ORDER BY p.nim ASC";
+
+        return $this->db->query($sql, $params)->result();
+    }
+
+    public function buat_konsultasi_perwalian_hilang($kode_tahun_akademik, $angkatan = null)
+    {
+        $sql = "INSERT INTO konsultasi_perwalian (kode_tahun_akademik, nim, kode_dosen, status_cetak)
+                SELECT ?, p.nim, p.kode_dosen, 'N'
+                FROM perwalian p
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM konsultasi_perwalian kp
+                    WHERE kp.nim = p.nim AND kp.kode_tahun_akademik = ?)";
+        $params = array($kode_tahun_akademik, $kode_tahun_akademik);
+        if ($angkatan !== null) {
+            $sql .= " AND mid(p.nim,1,2) = ?";
+            $params[] = $angkatan;
+        }
+
+        $this->db->trans_start();
+        $this->db->query($sql, $params);
+        $affected = $this->db->affected_rows();
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        }
+        return $affected;
+    }
+
+    public function sync_konsultasi_kode_dosen($kode_tahun_akademik = null, $kode_konsultasi_perwalian = null, $angkatan = null)
     {
         $sql = "UPDATE konsultasi_perwalian kp
                 JOIN (SELECT p.nim, p.kode_dosen FROM perwalian p
@@ -498,12 +556,16 @@ class Perwalian_model extends CI_Model
                         ON m.nim = p.nim AND m.maxid = p.kode_perwalian) pw
                   ON pw.nim = kp.nim
                 SET kp.kode_dosen = pw.kode_dosen
-                WHERE kp.kode_dosen IS NULL";
+                WHERE (kp.kode_dosen IS NULL OR kp.kode_dosen != pw.kode_dosen)";
 
         $params = array();
         if ($kode_tahun_akademik !== null) {
             $sql .= " AND kp.kode_tahun_akademik = ?";
             $params[] = $kode_tahun_akademik;
+        }
+        if ($angkatan !== null) {
+            $sql .= " AND mid(kp.nim,1,2) = ?";
+            $params[] = $angkatan;
         }
         if ($kode_konsultasi_perwalian !== null) {
             $sql .= " AND kp.kode_konsultasi_perwalian = ?";

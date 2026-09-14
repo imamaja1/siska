@@ -85,6 +85,7 @@ class Perwalian extends CI_Controller {
                                 'kode_tahun_akademik' => $kode_tahun_akademik,
                             );
                             $this->Perwalian_model->simpan($data_perwalian);
+                            $this->perwalianservice->syncKonsultasiPerwalian($item->nim, $kode_dosen, $kode_tahun_akademik);
                             $i++;
                         }
                         $offset = $offset + $limit;
@@ -104,6 +105,7 @@ class Perwalian extends CI_Controller {
                                 'kode_tahun_akademik' => $kode_tahun_akademik,
                             );
                             $this->Perwalian_model->simpan($data_perwalian);
+                            $this->perwalianservice->syncKonsultasiPerwalian($item->nim, $kode_dosen, $kode_tahun_akademik);
                             $i++;
                         }
                         $offset2 = $offset2 + $limit2;
@@ -125,6 +127,7 @@ class Perwalian extends CI_Controller {
                                 'kode_tahun_akademik' => $kode_tahun_akademik,
                             );
                             $this->Perwalian_model->simpan($data_perwalian);
+                            $this->perwalianservice->syncKonsultasiPerwalian($item->nim, $kode_dosen, $kode_tahun_akademik);
                             $i++;
                         }
                         $offset = $offset + $limit;
@@ -221,6 +224,10 @@ class Perwalian extends CI_Controller {
 
 
         if ($this->Perwalian_model->ubah($data, $param)) {
+            $perwalian = $this->perwalianservice->getPerwalianById($param);
+            if ($perwalian) {
+                $this->perwalianservice->syncKonsultasiPerwalian($perwalian->nim, $kode_dosen_perwakilan);
+            }
             $this->session->set_flashdata('info', '<script>swal("Berhasil", "Data Berhasil di Ubah", "success");</script>'
             );
 
@@ -253,6 +260,12 @@ class Perwalian extends CI_Controller {
         }
 
         $this->Perwalian_model->ubah($data, $param);
+        if (isset($kode_dosen)) {
+            $perwalian = $this->perwalianservice->getPerwalianById($param);
+            if ($perwalian) {
+                $this->perwalianservice->syncKonsultasiPerwalian($perwalian->nim, $kode_dosen);
+            }
+        }
 //        if ($this->Perwalian_model->ubah($data, $param)) {
 //            $this->session->set_flashdata('info', '<script>swal("Berhasil", "Data Berhasil di Ubah", "success");</script>'
 //            );
@@ -418,6 +431,7 @@ class Perwalian extends CI_Controller {
                     'kode_tahun_akademik' => $kode_tahun_akademik,
                 );
                 $this->Perwalian_model->simpan($data_perwalian);
+                $this->perwalianservice->syncKonsultasiPerwalian($value, $kode_dosen, $kode_tahun_akademik);
             }
             $this->session->set_flashdata('info', '<script>swal("Suceess","Data berhasil disimpan","success");</script>');
 

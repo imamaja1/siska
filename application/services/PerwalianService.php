@@ -48,6 +48,36 @@ class PerwalianService extends MY_Service {
 
     public function pindahPerwalianDosen($kode_perwalian, $kode_dosen) {
         $this->db->where('kode_perwalian', $kode_perwalian)->update('perwalian', array('kode_dosen' => $kode_dosen));
+        $perwalian = $this->getPerwalianById($kode_perwalian);
+        if ($perwalian) {
+            $this->syncKonsultasiPerwalian($perwalian->nim, $kode_dosen);
+        }
+    }
+
+    public function syncKonsultasiPerwalian($nim, $kode_dosen, $kode_tahun_akademik = null) {
+        if (!$kode_tahun_akademik) {
+            $ta = $this->db->where('status', 'A')->get('tahun_akademik')->row();
+            $kode_tahun_akademik = $ta ? $ta->kode_tahun_akademik : null;
+        }
+        if ($nim && $kode_dosen && $kode_tahun_akademik) {
+            $cek = $this->db->get_where('konsultasi_perwalian', array(
+                'nim' => $nim,
+                'kode_tahun_akademik' => $kode_tahun_akademik
+            ))->row();
+            if ($cek) {
+                if ($cek->kode_dosen != $kode_dosen) {
+                    $this->db->where('kode_konsultasi_perwalian', $cek->kode_konsultasi_perwalian)
+                             ->update('konsultasi_perwalian', array('kode_dosen' => $kode_dosen));
+                }
+            } else {
+                $this->db->insert('konsultasi_perwalian', array(
+                    'kode_tahun_akademik' => $kode_tahun_akademik,
+                    'nim' => $nim,
+                    'kode_dosen' => $kode_dosen,
+                    'status_cetak' => 'N'
+                ));
+            }
+        }
     }
 
     public function pindahPerwalianPerwakilan($kode_perwalian, $kode_dosen) {

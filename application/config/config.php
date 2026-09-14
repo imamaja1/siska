@@ -483,6 +483,7 @@ $config['csrf_exclude_uris'] = array(
     'auth/login',
     'auth/v_login',
     'api(.*)',
+    'admin/pengaturan/distribusi_perwalian(.*)',
 );
 
 /*

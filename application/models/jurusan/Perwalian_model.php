@@ -431,6 +431,47 @@ class Perwalian_model extends CI_Model
         return $this->db->where('nim', $nim)->update($this->tabel, array('kode_dosen' => $kode_dosen));
     }
 
+    public function get_duplikat_perwalian()
+    {
+        return $this->db->select('p.nim, m.nama_mahasiswa, p.kode_tahun_akademik, COUNT(*) as jumlah_record, MIN(p.kode_perwalian) as kode_perwalian_lama, MAX(p.kode_perwalian) as kode_perwalian_terbaru, ta.tahun_akademik, ta.semester')
+            ->from('perwalian as p')
+            ->join('mahasiswa as m', 'm.nim=p.nim', 'left')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik=p.kode_tahun_akademik', 'left')
+            ->group_by('p.nim, p.kode_tahun_akademik')
+            ->having('COUNT(*) >', 1)
+            ->order_by('p.nim', 'ASC')
+            ->get()->result();
+    }
+
+    public function get_detail_duplikat()
+    {
+        return $this->db->select('p.kode_perwalian, p.nim, p.kode_dosen, d.nama_dosen, p.kode_tahun_akademik, p.date_created')
+            ->from('perwalian as p')
+            ->join('dosen as d', 'd.kode_dosen=p.kode_dosen', 'left')
+            ->where_in('p.nim', "SELECT nim FROM perwalian GROUP BY nim, kode_tahun_akademik HAVING COUNT(*) > 1", false)
+            ->order_by('p.nim', 'ASC')
+            ->order_by('p.kode_perwalian', 'ASC')
+            ->get()->result();
+    }
+
+    public function resolusi_duplikat($nim, $kode_tahun_akademik, $kode_perwalian_terbaru)
+    {
+        $this->db->trans_start();
+        $this->db->where('nim', $nim);
+        if ($kode_tahun_akademik !== null) {
+            $this->db->where('kode_tahun_akademik', $kode_tahun_akademik);
+        }
+        $this->db->where('kode_perwalian !=', $kode_perwalian_terbaru);
+        $this->db->delete('perwalian');
+        $affected = $this->db->affected_rows();
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        }
+        return $affected;
+    }
+
     function cek_status_cetak($nim, $kode_tahun_akademik)
     {
         $query = $this->db->select('*')

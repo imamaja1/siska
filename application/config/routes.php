@@ -91,3 +91,6 @@ $route['admin/pengaturan/distribusi_perwalian/view_data'] = 'admin/pengaturan/Di
 $route['admin/pengaturan/distribusi_perwalian/hapus'] = 'admin/pengaturan/Distribusi_perwalian/hapus';
 $route['admin/pengaturan/distribusi_perwalian/manual_data'] = 'admin/pengaturan/Distribusi_perwalian/manual_data';
 $route['admin/pengaturan/distribusi_perwalian/manual_proses'] = 'admin/pengaturan/Distribusi_perwalian/manual_proses';
+$route['admin/pengaturan/backup_database'] = 'admin/pengaturan/Backup_database/index';
+$route['admin/pengaturan/backup_database/export'] = 'admin/pengaturan/Backup_database/export';
+$route['admin/pengaturan/backup_database/import'] = 'admin/pengaturan/Backup_database/import';

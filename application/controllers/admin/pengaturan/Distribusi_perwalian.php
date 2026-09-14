@@ -330,6 +330,91 @@ class Distribusi_perwalian extends CI_Controller {
         ));
     }
 
+    public function duplikat_data()
+    {
+        $groups = $this->Perwalian_model->get_duplikat_perwalian();
+        $detail = $this->Perwalian_model->get_detail_duplikat();
+
+        $map = array();
+        foreach ($detail as $row) {
+            $map[$row->nim][$row->kode_perwalian] = $row->nama_dosen;
+        }
+
+        $html = '<div class="table-responsive" style="max-height: 400px; overflow: auto;">';
+        $html .= '<table class="table table-bordered table-striped">';
+        $html .= '<thead><tr>';
+        $html .= '<th class="text-center">No.</th>';
+        $html .= '<th>NIM</th>';
+        $html .= '<th>Nama Mahasiswa</th>';
+        $html .= '<th>Tahun Akademik</th>';
+        $html .= '<th>Dosen Wali Lama</th>';
+        $html .= '<th>Dosen Wali Terbaru</th>';
+        $html .= '<th class="text-center">Aksi</th>';
+        $html .= '</tr></thead><tbody>';
+
+        if (!empty($groups)) {
+            $i = 1;
+            foreach ($groups as $g) {
+                $nama_lama = isset($map[$g->nim][$g->kode_perwalian_lama]) ? $map[$g->nim][$g->kode_perwalian_lama] : '-';
+                $nama_terbaru = isset($map[$g->nim][$g->kode_perwalian_terbaru]) ? $map[$g->nim][$g->kode_perwalian_terbaru] : '-';
+                $ta = $g->tahun_akademik ? $g->tahun_akademik . ' - ' . ($g->semester == '1' ? 'Ganjil' : 'Genap') : 'Semua';
+                $html .= '<tr>';
+                $html .= '<td class="text-center">' . $i++ . '</td>';
+                $html .= '<td>' . e($g->nim) . '</td>';
+                $html .= '<td>' . e($g->nama_mahasiswa) . '</td>';
+                $html .= '<td>' . e($ta) . '</td>';
+                $html .= '<td>' . e($nama_lama) . ' <small class="text-muted">(#'.(int)$g->kode_perwalian_lama.')</small></td>';
+                $html .= '<td>' . e($nama_terbaru) . ' <small class="text-muted">(#'.(int)$g->kode_perwalian_terbaru.')</small></td>';
+                $html .= '<td class="text-center">';
+                $html .= '<button type="button" class="btn btn-warning btn-xs flat btn-resolusi-duplikat" '
+                    . 'data-nim="' . e($g->nim) . '" '
+                    . 'data-kode_tahun_akademik="' . e($g->kode_tahun_akademik) . '" '
+                    . 'data-kode_terbaru="' . (int)$g->kode_perwalian_terbaru . '" '
+                    . 'data-nama="' . e($g->nama_mahasiswa) . '" '
+                    . 'data-terbaru="' . e($nama_terbaru) . '">'
+                    . '<i class="fa fa-check"></i> Gunakan Dosen Wali Terbaru</button>';
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+        } else {
+            $html .= '<tr><td colspan="7" class="text-center">Tidak ada duplikat dosen wali.</td></tr>';
+        }
+
+        $html .= '</tbody></table></div>';
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah' => count($groups),
+            'html' => $html,
+        ));
+    }
+
+    public function duplikat_resolusi()
+    {
+        $nim = $this->input->post('nim');
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_terbaru = (int) $this->input->post('kode_terbaru');
+
+        if (empty($nim) || empty($kode_terbaru)) {
+            echo json_encode(array('status' => false, 'message' => 'Data tidak lengkap.'));
+            return;
+        }
+
+        $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : $kode_tahun_akademik;
+
+        $deleted = $this->Perwalian_model->resolusi_duplikat($nim, $kode_tahun_akademik, $kode_terbaru);
+
+        if ($deleted === false) {
+            echo json_encode(array('status' => false, 'message' => 'Gagal menyelesaikan duplikat.'));
+            return;
+        }
+
+        echo json_encode(array(
+            'status' => true,
+            'message' => 'Selesai: ' . $deleted . ' record dosen wali lama dihapus untuk NIM ' . $nim . '. Dosen wali terbaru sekarang yang digunakan.',
+        ));
+    }
+
     public function hapus()
     {
         $kode_program_studi = (int) $this->input->post('kode_program_studi');

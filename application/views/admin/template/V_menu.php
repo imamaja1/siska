@@ -308,7 +308,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Pengaturan -->
-            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens'])): ?>
+            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens', 'Backup_database'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Pengaturan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-cog"></i>
@@ -322,6 +322,9 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php if (has_access($acc, 'Api_tokens')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>
                     <li><a href="<?= site_url('admin/pengaturan/distribusi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Distribusi Perwalian</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Backup_database')): ?>
+                    <li><a href="<?= site_url('admin/pengaturan/backup_database'); ?>"><i class="fa fa-circle-o"></i> Export / Import Database</a></li>
                     <?php endif; ?>
                 </ul>
             </li>

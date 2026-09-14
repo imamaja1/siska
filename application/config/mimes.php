@@ -93,6 +93,7 @@ return array(
 	'htm'	=>	array('text/html', 'text/plain'),
 	'shtml'	=>	array('text/html', 'text/plain'),
 	'txt'	=>	'text/plain',
+	'sql'	=>	array('application/sql', 'text/plain', 'application/octet-stream', 'text/x-sql'),
 	'text'	=>	'text/plain',
 	'log'	=>	array('text/plain', 'text/x-log'),
 	'rtx'	=>	'text/richtext',

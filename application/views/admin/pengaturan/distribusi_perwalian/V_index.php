@@ -190,6 +190,24 @@
     </div>
 </div>
 
+<div class="box box-warning flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-exclamation-triangle"></i> Duplikat Dosen Wali</h3>
+    </div>
+    <div class="box-body">
+        <p>Mahasiswa yang memiliki lebih dari satu record dosen wali pada tahun akademik yang sama. Gunakan tombol aksi untuk mempertahankan <b>dosen wali terbaru</b> dan menghapus record lama. Data konsultasi perwalian tidak diubah.</p>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-info flat" id="btn-muat-duplikat"><i class="fa fa-refresh"></i> Muat Data Duplikat</button>
+        </div>
+
+        <div id="hasil-duplikat" style="display: none;">
+            <p id="info-duplikat" class="text-muted"></p>
+            <div id="table-duplikat"></div>
+        </div>
+    </div>
+</div>
+
 <style>
 .siska-toast {
     position: fixed;
@@ -451,6 +469,71 @@ $(document).ready(function() {
 
     $('#btn-tampilkan-manual').on('click', function() {
         muatDataManual();
+    });
+
+    function muatDuplikat() {
+        var data = {};
+        data[csrf_name] = csrf_hash;
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_data") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                if (res.status) {
+                    $('#hasil-duplikat').show();
+                    $('#info-duplikat').text('Jumlah duplikat dosen wali: ' + res.jumlah);
+                    $('#table-duplikat').html(res.html);
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    }
+
+    $('#btn-muat-duplikat').on('click', function() {
+        muatDuplikat();
+    });
+
+    $(document).on('click', '.btn-resolusi-duplikat', function() {
+        var $btn = $(this);
+        var nim = $btn.data('nim');
+        var kodeTahunAkademik = $btn.data('kode_tahun_akademik');
+        var kodeTerbaru = $btn.data('kode_terbaru');
+        var nama = $btn.data('nama');
+        var dosenTerbaru = $btn.data('terbaru');
+
+        konfirmasi('NIM ' + nim + ' (' + nama + ') akan menggunakan dosen wali terbaru (' + dosenTerbaru + '). Record lama akan dihapus permanen. Lanjutkan?', function() {
+            var data = {
+                nim: nim,
+                kode_tahun_akademik: kodeTahunAkademik,
+                kode_terbaru: kodeTerbaru
+            };
+            data[csrf_name] = csrf_hash;
+            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+            $.ajax({
+                url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_resolusi") ?>',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function(res) {
+                    $btn.prop('disabled', false).html('<i class="fa fa-check"></i> Gunakan Dosen Wali Terbaru');
+                    if (res.status) {
+                        toastSukses(res.message);
+                        muatDuplikat();
+                    } else {
+                        toastGagal(res.message || 'Terjadi kesalahan.');
+                    }
+                },
+                error: function() {
+                    $btn.prop('disabled', false).html('<i class="fa fa-check"></i> Gunakan Dosen Wali Terbaru');
+                    toastGagal('Terjadi kesalahan koneksi.');
+                }
+            });
+        });
     });
 
     $(document).on('change', '#check-all-belum', function() {

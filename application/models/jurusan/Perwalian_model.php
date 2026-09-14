@@ -350,6 +350,27 @@ class Perwalian_model extends CI_Model
 
     public function simpan_konsultasi_perwalian($data)
     {
+        if (!empty($data['nim']) && !empty($data['kode_tahun_akademik'])) {
+            $cek = $this->db->get_where('konsultasi_perwalian', array(
+                'nim' => $data['nim'],
+                'kode_tahun_akademik' => $data['kode_tahun_akademik']
+            ))->row();
+
+            if ($cek) {
+                if (!empty($data['kode_dosen']) && $cek->kode_dosen != $data['kode_dosen']) {
+                    return $this->db->where('kode_konsultasi_perwalian', $cek->kode_konsultasi_perwalian)
+                        ->update('konsultasi_perwalian', array('kode_dosen' => $data['kode_dosen']));
+                }
+                return TRUE;
+            }
+
+            if (empty($data['kode_dosen'])) {
+                $perwalian = $this->db->get_where('perwalian', array('nim' => $data['nim']))->row();
+                if ($perwalian && !empty($perwalian->kode_dosen)) {
+                    $data['kode_dosen'] = $perwalian->kode_dosen;
+                }
+            }
+        }
         return $this->db->insert('konsultasi_perwalian', $data);
     }
 

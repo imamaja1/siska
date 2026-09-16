@@ -35,9 +35,9 @@
                     ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= e($d->kode_krs) ?></td>
-                        <td><?= e($d->kode_tahun_akademik) ?></td>
-                        <td><?= e($d->nim) ?></td>
+                        <td><?= !empty($d->kode_krs) ? e($d->kode_krs) : '-' ?></td>
+                        <td><?= !empty($d->kode_tahun_akademik) ? e($d->kode_tahun_akademik) : '-' ?></td>
+                        <td><?= !empty($d->nim) ? e($d->nim) : '-' ?></td>
                         <td><?= $d->semester; ?></td>
                         <td>
                             <a href="<?= site_url('admin/double/hapus_krs/' . $d->kode_krs) ?>" class="btn btn-danger btn-sm"

@@ -159,7 +159,7 @@ class mahasiswa_model extends CI_Model {
     {
         $query = $this->db->select('*, mah.nim, ps.nama_program_studi')            
             ->from('mahasiswa as mah')          	
-          	->join('program_studi as ps', 'mah.program_studi_kode=ps.kode_program_studi')
+          	->join('program_studi as ps', 'mah.program_studi_kode=ps.kode_program_studi', 'LEFT')
             ->join('krs', 'mah.nim=krs.nim and krs.semester="K"', 'LEFT')
             ->where_not_in('status_pendaftaran','B')
 //            ->where('krs.semester','K')

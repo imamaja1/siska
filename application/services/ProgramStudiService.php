@@ -19,9 +19,9 @@ class ProgramStudiService extends MY_Service {
     // --- NAMA JURUSAN LOGIC ---
 
     public function getNamaJurusanLengkap() {
-        return $this->db->select('*')
+        return $this->db->select('ps.*, fk.nama_fakultas')
                 ->from('program_studi as ps')
-                ->join('fakultas as fk', 'ps.kode_fakultas=fk.kode_fakultas')
+                ->join('fakultas as fk', 'ps.kode_fakultas=fk.kode_fakultas', 'left')
                 ->get()->result_object();
     }
 

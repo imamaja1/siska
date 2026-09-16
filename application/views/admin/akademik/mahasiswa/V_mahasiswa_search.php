@@ -36,10 +36,10 @@
 
                         <tr>
                             <td align="center"><?= $no++; ?></td>
-                            <td align="center"><?= e($row->nim) ?> </td>
-                            <td align="center"><?= e($row->npm) ?> </td>
+                            <td align="center"><?= !empty($row->nim) ? e($row->nim) : '-' ?> </td>
+                            <td align="center"><?= !empty($row->npm) ? e($row->npm) : '-' ?> </td>
 
-                            <td><?= e($row->nama_mahasiswa) ?></td>
+                            <td><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                             <td align="center" width="190">
 
                                    <!--<a href="#!" class="btn-sm btn-danger flat"><i class="fa fa-refresh"></i> Reset Sandi</a>-->

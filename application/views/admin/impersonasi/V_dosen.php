@@ -39,7 +39,7 @@
                 <?php $i = 1; foreach ($dosen as $row): ?>
                 <tr>
                     <td><?= $i++ ?></td>
-                    <td style="text-align: left;"><?= e($row->nama_dosen) ?></td>
+                    <td style="text-align: left;"><?= !empty($row->nama_dosen) ? e($row->nama_dosen) : '-' ?></td>
                     <td>
                         <a href="<?= site_url('admin/impersonasi_dosen/menyamar/' . $row->kode_dosen) ?>" class="btn btn-warning btn-xs flat" onclick="return confirm('Menyamar sebagai <?= e($row->nama_dosen) ?>?')">
                             <i class="fa fa-user-secret"></i> Menyamar

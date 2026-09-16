@@ -16,6 +16,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_by_prodi($kode_prodi, $ta_status = 'A') {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('ps.singkatan_program_studi,status_nilai, validasi_nilai, validasi_dekan, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -32,6 +35,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_by_prodi_and_ta($kode_prodi, $kode_tahun_akademik) {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('ps.singkatan_program_studi,status_nilai, validasi_nilai, validasi_dekan, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -47,6 +53,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_uts_by_prodi($kode_prodi, $ta_status = 'A') {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('param_uts,kelas.valid_uts, cek_uts, ps.singkatan_program_studi,status_nilai_uts, validasi_nilai_uts, validasi_dekan_uts, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -63,6 +72,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_uts_by_prodi_and_ta($kode_prodi, $kode_tahun_akademik) {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('param_uts, kelas.valid_uts, cek_uts,ps.singkatan_program_studi,status_nilai_uts, validasi_nilai_uts, validasi_dekan_uts, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -78,6 +90,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_uas_by_prodi($kode_prodi, $kode_ta = '25') {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('param_uts, cek_uas, ps.singkatan_program_studi,status_nilai, validasi_nilai, validasi_dekan, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -94,6 +109,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_uas_by_prodi_and_ta($kode_prodi, $kode_tahun_akademik) {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('param_uts, cek_uas, ps.singkatan_program_studi,status_nilai, validasi_nilai, validasi_dekan, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -109,6 +127,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_validasi_by_prodi($kode_prodi) {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('param_uts, cek_uas, ps.singkatan_program_studi, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')
@@ -135,6 +156,9 @@ class ValidasiService extends MY_Service {
     }
 
     public function get_kelas_validasi_by_prodi_and_ta($kode_prodi, $kode_tahun_akademik) {
+        if (empty($kode_prodi)) {
+            return array();
+        }
         return $this->db->select('param_uts, cek_uas, ps.singkatan_program_studi, nama_kelas, nama_matakuliah,kelas.kelas_id, mengajar_id, GROUP_CONCAT(nama_dosen) as nama_dosen, mak.kode_matakuliah')
             ->from('kelas')
             ->join('nama_kelas as nk', 'nk.nama_kelas_id=kelas.nama_kelas_id')

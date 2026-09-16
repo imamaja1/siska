@@ -21,8 +21,8 @@
                 <?php $i=1; foreach ($data as $row) : ?>
                     <tr>
                         <td width="3%" align="center"><?= $i++ ?>.</td>
-                        <td align="center"><?= e($row->nim) ?></td>
-                        <td ><?= e($row->nama_mahasiswa) ?></td>
+                        <td align="center"><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
+                        <td ><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                         <td align="center"><?= $row->jumlah_sks ?></td>
                     </tr>
                 <?php endforeach; ?>

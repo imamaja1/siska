@@ -201,8 +201,9 @@ class Distribusi_perwalian extends CI_Controller {
 
         echo json_encode(array(
             'status' => true,
-            'jumlah_perwalian' => $jumlah_perwalian,
-            'jumlah_konsultasi' => $jumlah_konsultasi,
+            'jumlah' => count($groups),
+            'jumlah_null' => $jumlah_null,
+            'html' => $html,
         ));
     }
 
@@ -413,6 +414,229 @@ class Distribusi_perwalian extends CI_Controller {
         echo json_encode(array(
             'status' => true,
             'message' => 'Selesai: ' . $deleted . ' record dosen wali lama dihapus untuk NIM ' . $nim . '. Dosen wali terbaru sekarang yang digunakan.',
+        ));
+    }
+
+    public function duplikat_konsultasi_data()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : (int) $kode_tahun_akademik;
+        $angkatan = $this->input->post('angkatan');
+        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
+
+        $groups = $this->Perwalian_model->get_duplikat_konsultasi($kode_tahun_akademik, $angkatan);
+        $detail = $this->Perwalian_model->get_detail_duplikat_konsultasi($kode_tahun_akademik, $angkatan);
+        $jumlah_null = $this->Perwalian_model->count_konsultasi_null($angkatan);
+
+        $map = array();
+        foreach ($detail as $row) {
+            $map[$row->nim . '|' . $row->kode_tahun_akademik][] = $row;
+        }
+
+        $html = '<div class="table-responsive" style="max-height: 400px; overflow: auto;">';
+        $html .= '<table class="table table-bordered table-striped">';
+        $html .= '<thead><tr>';
+        $html .= '<th class="text-center">No.</th>';
+        $html .= '<th>NIM</th>';
+        $html .= '<th>Nama Mahasiswa</th>';
+        $html .= '<th>Tahun Akademik</th>';
+        $html .= '<th class="text-center">Jml Record</th>';
+        $html .= '<th>Detail Record</th>';
+        $html .= '<th class="text-center">Aksi</th>';
+        $html .= '</tr></thead><tbody>';
+
+        if (!empty($groups)) {
+            $i = 1;
+            foreach ($groups as $g) {
+                $ta = $g->tahun_akademik ? $g->tahun_akademik . ' - ' . ($g->semester == '1' ? 'Ganjil' : 'Genap') : 'TA ' . (int) $g->kode_tahun_akademik;
+
+                $html_detail = '';
+                if (isset($map[$g->nim . '|' . $g->kode_tahun_akademik])) {
+                    foreach ($map[$g->nim . '|' . $g->kode_tahun_akademik] as $r) {
+                        $badge = ($r->is_real == '1')
+                            ? '<span class="label label-success">ASLI</span>'
+                            : '<span class="label label-default">KOSONG</span>';
+                        $jenis = $r->jenis_konsultasi !== null ? e($r->jenis_konsultasi) : '-';
+                        $status = $r->status_cetak !== null ? e($r->status_cetak) : '-';
+                        $tgl = $r->date_created !== null ? e($r->date_created) : '-';
+                        $html_detail .= '<div style="border-bottom: 1px dashed #ddd; padding: 3px 0;">';
+                        $html_detail .= '<code>#' . (int) $r->kode_konsultasi_perwalian . '</code> '
+                            . $badge . ' '
+                            . 'Dosen: ' . e($r->nama_dosen ? $r->nama_dosen : '(#' . (int) $r->kode_dosen . ')') . ' | '
+                            . 'Jenis: ' . $jenis . ' | '
+                            . 'Cetak: ' . $status . ' | '
+                            . 'Tgl: ' . $tgl;
+                        $html_detail .= '</div>';
+                    }
+                }
+
+                $html .= '<tr>';
+                $html .= '<td class="text-center">' . $i++ . '</td>';
+                $html .= '<td>' . e($g->nim) . '</td>';
+                $html .= '<td>' . e($g->nama_mahasiswa) . '</td>';
+                $html .= '<td>' . e($ta) . '</td>';
+                $html .= '<td class="text-center"><span class="badge bg-red">' . (int) $g->jumlah_record . '</span></td>';
+                $html .= '<td>' . $html_detail . '</td>';
+                $html .= '<td class="text-center">';
+                $html .= '<button type="button" class="btn btn-primary btn-xs flat btn-lihat-duplikat-konsultasi" '
+                    . 'data-nim="' . e($g->nim) . '" '
+                    . 'data-kode_tahun_akademik="' . (int) $g->kode_tahun_akademik . '" '
+                    . 'data-nama="' . e($g->nama_mahasiswa) . '">'
+                    . '<i class="fa fa-eye"></i> Lihat</button> ';
+                $html .= '<button type="button" class="btn btn-warning btn-xs flat btn-resolusi-duplikat-konsultasi" '
+                    . 'data-nim="' . e($g->nim) . '" '
+                    . 'data-kode_tahun_akademik="' . (int) $g->kode_tahun_akademik . '" '
+                    . 'data-nama="' . e($g->nama_mahasiswa) . '">'
+                    . '<i class="fa fa-check"></i> Resolve</button>';
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+        } else {
+            $html .= '<tr><td colspan="7" class="text-center">Tidak ada duplikat konsultasi perwalian.</td></tr>';
+        }
+
+        $html .= '</tbody></table></div>';
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah' => count($groups),
+            'html' => $html,
+        ));
+    }
+
+    public function duplikat_konsultasi_detail()
+    {
+        $nim = $this->input->post('nim');
+        $kode_tahun_akademik = (int) $this->input->post('kode_tahun_akademik');
+
+        if (empty($nim) || empty($kode_tahun_akademik)) {
+            echo json_encode(array('status' => false, 'message' => 'Data tidak lengkap.'));
+            return;
+        }
+
+        $rows = $this->Perwalian_model->get_detail_konsultasi_grup($nim, $kode_tahun_akademik);
+
+        $html = '';
+        $ta_group = '';
+        if (!empty($rows)) {
+            foreach ($rows as $r) {
+                $badge = ($r->is_real == '1')
+                    ? '<span class="label label-success">ASLI</span>'
+                    : '<span class="label label-default">KOSONG</span>';
+                $ta = $r->tahun_akademik
+                    ? e($r->tahun_akademik . ' - ' . ($r->semester == '1' ? 'Ganjil' : 'Genap'))
+                    : 'TA #' . (int) $r->kode_tahun_akademik;
+                if ($ta_group === '') {
+                    $ta_group = $ta;
+                }
+                $jenis = $r->jenis_konsultasi !== null ? e($r->jenis_konsultasi) : '-';
+                $status = $r->status_cetak !== null ? e($r->status_cetak) : '-';
+                $tgl = $r->date_created !== null ? e($r->date_created) : '-';
+
+                $html .= '<div class="box box-default flat" style="margin-bottom: 12px;">';
+                $html .= '<div class="box-header with-border">';
+                $html .= '<h4 class="box-title"><code>#' . (int) $r->kode_konsultasi_perwalian . '</code> ' . $badge . '</h4>';
+                $html .= '</div>';
+                $html .= '<div class="box-body">';
+                $html .= '<table class="table table-condensed">';
+                $html .= '<tr><th style="width:150px;">Tahun Akademik</th><td>' . $ta . '</td></tr>';
+                $html .= '<tr><th>Dosen</th><td>' . e($r->nama_dosen ? $r->nama_dosen : '(#' . (int) $r->kode_dosen . ')') . '</td></tr>';
+                $html .= '<tr><th>Jenis</th><td>' . $jenis . '</td></tr>';
+                $html .= '<tr><th>Status Cetak</th><td>' . $status . '</td></tr>';
+                $html .= '<tr><th>Tanggal Dibuat</th><td>' . $tgl . '</td></tr>';
+                $html .= '<tr><th>Isi Konsultasi</th><td>' . ($r->isi_konsultasi !== null && $r->isi_konsultasi !== '' ? nl2br(e($r->isi_konsultasi)) : '<span class="text-muted">-</span>') . '</td></tr>';
+                $html .= '<tr><th>Tanggapan</th><td>' . ($r->tanggapan !== null && $r->tanggapan !== '' ? nl2br(e($r->tanggapan)) : '<span class="text-muted">-</span>') . '</td></tr>';
+                $html .= '</table>';
+
+                $details = $this->Perwalian_model->get_detail_konsultasi_per_detail($r->kode_konsultasi_perwalian);
+                $html .= '<h5><i class="fa fa-list"></i> Detail Konsultasi (' . count($details) . ')</h5>';
+                if (!empty($details)) {
+                    $html .= '<table class="table table-bordered table-condensed">';
+                    $html .= '<thead><tr><th class="text-center">No.</th><th>Jenis</th><th>Isi</th><th>Tanggapan</th><th>Tanggal</th></tr></thead><tbody>';
+                    $no = 1;
+                    foreach ($details as $d) {
+                        $html .= '<tr>';
+                        $html .= '<td class="text-center">' . $no++ . '</td>';
+                        $html .= '<td>' . ($d->jenis_konsultasi !== null ? e($d->jenis_konsultasi) : '-') . '</td>';
+                        $html .= '<td>' . ($d->isi_konsultasi !== null && $d->isi_konsultasi !== '' ? nl2br(e($d->isi_konsultasi)) : '<span class="text-muted">-</span>') . '</td>';
+                        $html .= '<td>' . ($d->tanggapan !== null && $d->tanggapan !== '' ? nl2br(e($d->tanggapan)) : '<span class="text-muted">-</span>') . '</td>';
+                        $html .= '<td>' . ($d->date_created !== null ? e($d->date_created) : '-') . '</td>';
+                        $html .= '</tr>';
+                    }
+                    $html .= '</tbody></table>';
+                } else {
+                    $html .= '<p class="text-muted">Tidak ada detail konsultasi.</p>';
+                }
+
+                $html .= '</div></div>';
+            }
+        } else {
+            $html .= '<p class="text-center text-muted">Data konsultasi tidak ditemukan.</p>';
+        }
+
+        echo json_encode(array(
+            'status' => true,
+            'jumlah' => count($rows),
+            'ta' => $ta_group,
+            'html' => $html,
+        ));
+    }
+
+    public function duplikat_konsultasi_resolusi()
+    {
+        $nim = $this->input->post('nim');
+        $kode_tahun_akademik = (int) $this->input->post('kode_tahun_akademik');
+
+        if (empty($nim) || empty($kode_tahun_akademik)) {
+            echo json_encode(array('status' => false, 'message' => 'Data tidak lengkap.'));
+            return;
+        }
+
+        $deleted = $this->Perwalian_model->resolusi_duplikat_konsultasi($nim, $kode_tahun_akademik);
+
+        if ($deleted === false) {
+            echo json_encode(array('status' => false, 'message' => 'Gagal menyelesaikan duplikat konsultasi.'));
+            return;
+        }
+
+        if ($deleted === 0) {
+            $message = 'NIM ' . $nim . ' sudah tidak memiliki duplikat konsultasi pada tahun akademik tersebut.';
+        } else {
+            $message = 'Selesai: ' . $deleted . ' record konsultasi placeholder dihapus untuk NIM ' . $nim . '. Tersisa minimal 1 record (asli) sesuai nim & tahun akademik.';
+        }
+
+        echo json_encode(array(
+            'status' => true,
+            'message' => $message,
+        ));
+    }
+
+    public function duplikat_konsultasi_resolusi_semua()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_tahun_akademik = ($kode_tahun_akademik === '' || $kode_tahun_akademik === null) ? null : (int) $kode_tahun_akademik;
+        $angkatan = $this->input->post('angkatan');
+        $angkatan = ($angkatan === '' || $angkatan === null) ? null : $angkatan;
+
+        $deleted = $this->Perwalian_model->resolusi_semua_duplikat_konsultasi($kode_tahun_akademik, $angkatan);
+
+        if ($deleted === false) {
+            echo json_encode(array('status' => false, 'message' => 'Gagal menyelesaikan semua duplikat konsultasi.'));
+            return;
+        }
+
+        $keterangan = array();
+        if ($kode_tahun_akademik !== null) {
+            $keterangan[] = 'tahun akademik #' . $kode_tahun_akademik;
+        }
+        if ($angkatan !== null) {
+            $keterangan[] = 'angkatan ' . $angkatan;
+        }
+        $label = empty($keterangan) ? '' : ' (' . implode(', ', $keterangan) . ')';
+
+        echo json_encode(array(
+            'status' => true,
+            'message' => 'Selesai: ' . $deleted . ' record konsultasi placeholder' . $label . ' dihapus. Setiap nim & tahun akademik tersisa minimal 1 record (asli).',
         ));
     }
 

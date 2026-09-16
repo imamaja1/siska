@@ -147,13 +147,18 @@ class Dosen extends CI_Controller {
         
         if ($this->input->is_ajax_request()) {
             if ($res['status']) {
-                $dosen = $this->dosenservice->searchByKodeDosen($kode_dosen)[0];
-                echo json_encode(array(
-                    'status' => true,
-                    'password_string' => $res['password_string'],
-                    'nama_dosen' => $dosen->nama_dosen,
-                    'alamat_email' => $dosen->alamat_email
-                ));
+                $dosen_list = $this->dosenservice->searchByKodeDosen($kode_dosen);
+                $dosen = $dosen_list[0] ?? null;
+                if (empty($dosen)) {
+                    echo json_encode(array('status' => false, 'msg' => 'Data dosen tidak ditemukan'));
+                } else {
+                    echo json_encode(array(
+                        'status' => true,
+                        'password_string' => $res['password_string'],
+                        'nama_dosen' => $dosen->nama_dosen,
+                        'alamat_email' => $dosen->alamat_email
+                    ));
+                }
             } else {
                 echo json_encode(array('status' => false, 'msg' => 'Gagal generate sandi'));
             }

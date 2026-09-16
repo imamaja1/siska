@@ -20,7 +20,7 @@
                 $label = "GENAP";
             }
             ?>
-            DAFTAR NILAI UJIAN AKHIR SEMESTER <?= e($label) ?> TA. <?= e($query1->tahun_akademik) ?>
+            DAFTAR NILAI UJIAN AKHIR SEMESTER <?= !empty($label) ? e($label) : '' ?> TA. <?= !empty($query1->tahun_akademik) ? e($query1->tahun_akademik) : '' ?>
             <br><br>
         </div>
         <table style="border-collapse: separate;  font-size: 12px;">
@@ -28,37 +28,37 @@
                 <tr>
                     <th style="text-align:left;">Fakultas</th>
                     <th>:<th>
-                    <td><?= e($query1->nama_fakultas) ?></td>
+                    <td><?= !empty($query1->nama_fakultas) ? e($query1->nama_fakultas) : '-' ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Program Studi</th>
                     <th>:<th>
-                    <td><?= e($query1->nama_program_studi) ?></td>
+                    <td><?= !empty($query1->nama_program_studi) ? e($query1->nama_program_studi) : '-' ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Kode Matakuliah</th>
                     <th>:<th>
-                    <td><?= e($query1->mtkm) ?></td>
+                    <td><?= !empty($query1->mtkm) ? e($query1->mtkm) : '-' ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Nama Matakuliah</th>
                     <th>:<th>
-                    <td><?= e($query1->nama_matakuliah) ?></td>
+                    <td><?= !empty($query1->nama_matakuliah) ? e($query1->nama_matakuliah) : '-' ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Jumlah SKS</th>
                     <th>:<th>
-                    <td><?= e($query1->sks_teori + $query1->sks_praktek + $query1->sks_praktikum) ?></td>
+                    <td><?= (!empty($query1) && isset($query1->sks_teori)) ? e($query1->sks_teori + $query1->sks_praktek + $query1->sks_praktikum) : '-' ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Semester / Kelas</th>
                     <th>:<th>
-                    <td><?= e($query1->kls) ?>/<?= e($query1->nama_kelas) ?></td>
+                    <td><?= !empty($query1->kls) ? e($query1->kls) : '-' ?>/<?= !empty($query1->nama_kelas) ? e($query1->nama_kelas) : '-' ?></td>
                 </tr>
                 <tr>
                     <th style="text-align:left;">Dosen</th>
                     <th>:<th>
-                    <td><?= e($nama_dosen->nama_dosen) ?></td>
+                    <td><?= !empty($nama_dosen->nama_dosen) ? e($nama_dosen->nama_dosen) : '-' ?></td>
                 </tr>
 
             </thead>

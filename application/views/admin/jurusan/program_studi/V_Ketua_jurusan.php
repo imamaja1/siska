@@ -25,8 +25,8 @@
                         ?>
                         <tr>
                             <td align="center"><?= $i++ ?>.</td>
-                            <td align="left"><?= e($row->nama_program_studi) ?></td>
-                            <td><?= e($row->nama_dosen) ?></td>
+                            <td align="left"><?= !empty($row->nama_program_studi) ? e($row->nama_program_studi) : '<span class="text-muted">-</span>' ?></td>
+                            <td><?= !empty($row->nama_dosen) ? e($row->nama_dosen) : '<span class="text-muted">-</span>' ?></td>
                             <td align="center">
                                 <form id="form-file-<?= e($row->kode_kaprodi) ?>" action="" enctype="multipart/form-data" method="post">
                                     <input id="upload-<?= e($row->kode_kaprodi) ?>" name="foto" type="file" style="display: none" onchange="readURL(this,<?= e($row->kode_kaprodi) ?>);">

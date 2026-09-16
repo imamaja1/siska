@@ -49,8 +49,8 @@
                 <?php $i = 1 + ((int) $this->input->get('hal') ?: 0); foreach ($mahasiswa as $row): ?>
                 <tr>
                     <td><?= $i++ ?></td>
-                    <td><?= e($row->nim) ?></td>
-                    <td style="text-align: left;"><?= e($row->nama_mahasiswa) ?></td>
+                    <td><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
+                    <td style="text-align: left;"><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                     <td><?= isset($row->nama_program_studi) ? e($row->nama_program_studi) : '-' ?></td>
                     <td>
                         <a href="<?= site_url('admin/impersonasi_mahasiswa/menyamar/' . $row->nim) ?>" class="btn btn-warning btn-xs flat" onclick="return confirm('Menyamar sebagai <?= e($row->nama_mahasiswa) ?>?')">

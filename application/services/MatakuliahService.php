@@ -42,14 +42,16 @@ class MatakuliahService extends MY_Service {
 
     public function simpanMatakuliah($post_data) {
         $data = array(
-            'kode_matakuliah' => $post_data['kode_matakuliah'],
-            'nama_matakuliah' => trim(str_replace('&nbsp;', ' ', $post_data['nama_matakuliah'])),
-            'sks_teori' => $post_data['sks_teori'],
-            'sks_praktek' => $post_data['sks_praktek'],
-            'sks_praktikum' => $post_data['sks_praktikum'],
-            'kode_program_studi' => $post_data['kode_nama_jurusan'],
-            'jenis' => $post_data['jenis'],
-            'block' => $post_data['block'],
+            'kode_matakuliah' => $post_data['kode_matakuliah'] ?? '',
+            'nama_matakuliah' => trim(str_replace('&nbsp;', ' ', $post_data['nama_matakuliah'] ?? '')),
+            'sks_teori' => ($post_data['sks_teori'] ?? '') !== '' ? $post_data['sks_teori'] : 0,
+            'sks_praktek' => ($post_data['sks_praktek'] ?? '') !== '' ? $post_data['sks_praktek'] : 0,
+            'sks_praktikum' => ($post_data['sks_praktikum'] ?? '') !== '' ? $post_data['sks_praktikum'] : 0,
+            'kode_program_studi' => !empty($post_data['kode_nama_jurusan']) ? $post_data['kode_nama_jurusan'] : null,
+            'jenis' => ($post_data['jenis'] ?? '') !== '' ? $post_data['jenis'] : null,
+            'block' => ($post_data['block'] ?? '') !== '' ? $post_data['block'] : '0',
+            'kode_pengguna' => $this->session->userdata('id') ?: 1,
+            'param1' => 0
         );
         if (!empty($post_data['kode_kompetensi'])) {
             $data['kode_kompetensi'] = $post_data['kode_kompetensi'];
@@ -70,20 +72,22 @@ class MatakuliahService extends MY_Service {
     }
 
     public function ubahMatakuliah($post_data) {
-        $param = $post_data['param_edit'];
+        $param = $post_data['param_edit'] ?? '';
         $data_matakuliah = array(
-            'kode_matakuliah' => $post_data['kode_matakuliah'],
-            'nama_matakuliah' => trim(str_replace('&nbsp;', ' ', $post_data['nama_matakuliah'])),
-            'sks_teori' => $post_data['sks_teori'],
-            'sks_praktek' => $post_data['sks_praktek'],
-            'sks_praktikum' => $post_data['sks_praktikum'],
-            'kode_program_studi' => $post_data['kode_nama_jurusan'],
-            'jenis' => $post_data['jenis'],
-            'block' => $post_data['block'],
+            'kode_matakuliah' => $post_data['kode_matakuliah'] ?? '',
+            'nama_matakuliah' => trim(str_replace('&nbsp;', ' ', $post_data['nama_matakuliah'] ?? '')),
+            'sks_teori' => ($post_data['sks_teori'] ?? '') !== '' ? $post_data['sks_teori'] : 0,
+            'sks_praktek' => ($post_data['sks_praktek'] ?? '') !== '' ? $post_data['sks_praktek'] : 0,
+            'sks_praktikum' => ($post_data['sks_praktikum'] ?? '') !== '' ? $post_data['sks_praktikum'] : 0,
+            'kode_program_studi' => !empty($post_data['kode_nama_jurusan']) ? $post_data['kode_nama_jurusan'] : null,
+            'jenis' => ($post_data['jenis'] ?? '') !== '' ? $post_data['jenis'] : null,
+            'block' => ($post_data['block'] ?? '') !== '' ? $post_data['block'] : '0',
         );
 
         if (!empty($post_data['kode_kompetensi'])) {
             $data_matakuliah['kode_kompetensi'] = $post_data['kode_kompetensi'];
+        } else {
+            $data_matakuliah['kode_kompetensi'] = null;
         }
 
         if ($this->m_matakuliah->ubah($data_matakuliah, $param)) {

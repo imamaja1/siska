@@ -116,8 +116,8 @@ header("Expires: 0");
     <?php $no=1; foreach ($data as $row) : ?>
         <tr>
             <td align="center" style="border: 0.1pt solid black;"><?= $no++ ?>.</td>
-            <td align="center" style="border: 0.1pt solid black;"><?= e($row->nim) ?></td>
-            <td align="left" style="border: 0.1pt solid black;"><?= e($row->nama_mahasiswa) ?></td>
+            <td align="center" style="border: 0.1pt solid black;"><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
+            <td align="left" style="border: 0.1pt solid black;"><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
             <td style="border: 0.1pt solid black;"></td>
             <td style="border: 0.1pt solid black;"></td>
             <td style="border: 0.1pt solid black;"></td>

@@ -19,7 +19,7 @@ class Status_perkuliahan_model extends CI_Model {
 
             $query = $this->db->select('kode_status_perkuliahan, status_perkuliahan, nama_mahasiswa, mah.nim, kode_tahun_akademik')
                 ->from('status_perkuliahan as sp')
-                ->join('mahasiswa as mah','sp.nim=mah.nim')
+                ->join('mahasiswa as mah','sp.nim=mah.nim', 'left')
                 ->where('mah.program_studi_kode', $kode_prodi)
                 ->where('substring(sp.nim,1,2)', $angkatan)
                 ->where('kode_tahun_akademik', $kode_tahun_akademik)
@@ -31,7 +31,7 @@ class Status_perkuliahan_model extends CI_Model {
 
             $cek = $this->db->select('sp.nim')
                 ->from('status_perkuliahan as sp')
-                ->join('mahasiswa as mah','mah.nim=sp.nim')
+                ->join('mahasiswa as mah','mah.nim=sp.nim', 'left')
                 ->where('kode_tahun_akademik', $kode_tahun_akademik)
                 ->where('mah.program_studi_kode', $kode_program_studi)
                 ->where('substring(mah.nim,1,2)', $angkatan)

@@ -30,9 +30,9 @@
                     ?>
                     <tr>
                         <td align="center"><?= $no++ ?>.</td>
-                        <td align="center"><?= e($data->nama_pengguna) ?></td>
-                        <td align="center"><?= e($data->nama_login) ?></td>
-                        <td align="center"><?= e($data->nama_role) ?></td>
+                        <td align="center"><?= !empty($data->nama_pengguna) ? e($data->nama_pengguna) : '-' ?></td>
+                        <td align="center"><?= !empty($data->nama_login) ? e($data->nama_login) : '-' ?></td>
+                        <td align="center"><?= !empty($data->nama_role) ? e($data->nama_role) : '-' ?></td>
                         <td align="center" width="130">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-flat btn-xs">Tindakan</button>

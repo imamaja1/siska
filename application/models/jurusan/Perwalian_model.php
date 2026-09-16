@@ -493,6 +493,189 @@ class Perwalian_model extends CI_Model
         return $affected;
     }
 
+    public function get_duplikat_konsultasi($kode_tahun_akademik = null, $angkatan = null)
+    {
+        $this->db->select("kp.nim, COALESCE(m.nama_mahasiswa, '(NO MAHASISWA)') AS nama_mahasiswa, kp.kode_tahun_akademik, ta.tahun_akademik, ta.semester, COUNT(*) AS jumlah_record, MIN(kp.kode_konsultasi_perwalian) AS kode_lama, MAX(kp.kode_konsultasi_perwalian) AS kode_terbaru")
+            ->from('konsultasi_perwalian as kp')
+            ->join('mahasiswa as m', 'm.nim = kp.nim', 'left')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik = kp.kode_tahun_akademik', 'left')
+            ->where('kp.kode_tahun_akademik IS NOT NULL')
+            ->where('kp.nim IS NOT NULL');
+        if ($kode_tahun_akademik !== null) {
+            $this->db->where('kp.kode_tahun_akademik', $kode_tahun_akademik);
+        }
+        if ($angkatan !== null) {
+            $this->db->where('mid(kp.nim,1,2)', $angkatan);
+        }
+        return $this->db->group_by('kp.nim, kp.kode_tahun_akademik')
+            ->having('COUNT(*) >', 1)
+            ->order_by('kp.kode_tahun_akademik', 'DESC')
+            ->order_by('kp.nim', 'ASC')
+            ->get()->result();
+    }
+
+    public function get_detail_duplikat_konsultasi($kode_tahun_akademik = null, $angkatan = null)
+    {
+        $sql = "SELECT kp.kode_konsultasi_perwalian, kp.nim, kp.kode_tahun_akademik, kp.kode_dosen, d.nama_dosen, kp.jenis_konsultasi, kp.status_cetak, kp.date_created,
+                (kp.jenis_konsultasi IS NOT NULL OR kp.status_cetak = 'A' OR kp.date_created IS NOT NULL
+                  OR kp.isi_konsultasi IS NOT NULL OR kp.tanggapan IS NOT NULL
+                  OR EXISTS (SELECT 1 FROM konsultasi_perwalian_detail kd WHERE kd.kode_konsultasi_perwalian = kp.kode_konsultasi_perwalian)) AS is_real
+                FROM konsultasi_perwalian kp
+                LEFT JOIN dosen d ON d.kode_dosen = kp.kode_dosen
+                WHERE kp.kode_tahun_akademik IS NOT NULL
+                  AND kp.nim IS NOT NULL
+                  AND EXISTS (SELECT 1 FROM konsultasi_perwalian k2
+                              WHERE k2.nim = kp.nim AND k2.kode_tahun_akademik = kp.kode_tahun_akademik
+                              GROUP BY k2.nim, k2.kode_tahun_akademik HAVING COUNT(*) > 1)";
+        $params = array();
+        if ($kode_tahun_akademik !== null) {
+            $sql .= " AND kp.kode_tahun_akademik = ?";
+            $params[] = $kode_tahun_akademik;
+        }
+        if ($angkatan !== null) {
+            $sql .= " AND mid(kp.nim,1,2) = ?";
+            $params[] = $angkatan;
+        }
+        $sql .= " ORDER BY kp.kode_tahun_akademik DESC, kp.nim ASC, kp.kode_konsultasi_perwalian ASC";
+        return $this->db->query($sql, $params)->result();
+    }
+
+    public function count_konsultasi_null($angkatan = null)
+    {
+        $this->db->from('konsultasi_perwalian');
+        $this->db->group_start();
+        $this->db->where('kode_tahun_akademik IS NULL');
+        $this->db->or_where('nim IS NULL');
+        $this->db->group_end();
+        if ($angkatan !== null) {
+            $this->db->where('mid(nim,1,2)', $angkatan);
+        }
+        return $this->db->count_all_results();
+    }
+
+    public function get_detail_konsultasi_grup($nim, $kode_tahun_akademik)
+    {
+        $sql = "SELECT kp.kode_konsultasi_perwalian, kp.nim, kp.kode_tahun_akademik, kp.kode_dosen, d.nama_dosen, kp.jenis_konsultasi, kp.status_cetak, kp.date_created, kp.isi_konsultasi, kp.tanggapan, ta.tahun_akademik, ta.semester,
+                (kp.jenis_konsultasi IS NOT NULL OR kp.status_cetak = 'A' OR kp.date_created IS NOT NULL
+                  OR kp.isi_konsultasi IS NOT NULL OR kp.tanggapan IS NOT NULL
+                  OR EXISTS (SELECT 1 FROM konsultasi_perwalian_detail kd WHERE kd.kode_konsultasi_perwalian = kp.kode_konsultasi_perwalian)) AS is_real
+                FROM konsultasi_perwalian kp
+                LEFT JOIN dosen d ON d.kode_dosen = kp.kode_dosen
+                LEFT JOIN tahun_akademik ta ON ta.kode_tahun_akademik = kp.kode_tahun_akademik
+                WHERE kp.nim = ? AND kp.kode_tahun_akademik = ?
+                ORDER BY kp.kode_konsultasi_perwalian ASC";
+        return $this->db->query($sql, array($nim, $kode_tahun_akademik))->result();
+    }
+
+    public function get_detail_konsultasi_per_detail($kode_konsultasi_perwalian)
+    {
+        return $this->db->where('kode_konsultasi_perwalian', $kode_konsultasi_perwalian)
+            ->order_by('kode_konsultasi_perwalian_detail', 'ASC')
+            ->get('konsultasi_perwalian_detail')->result();
+    }
+
+    public function get_kode_konsultasi_asli($nim, $kode_tahun_akademik)
+    {
+        $sql = "SELECT kp.kode_konsultasi_perwalian
+                FROM konsultasi_perwalian kp
+                WHERE kp.nim = ? AND kp.kode_tahun_akademik = ?
+                ORDER BY
+                  (EXISTS (SELECT 1 FROM konsultasi_perwalian_detail kd WHERE kd.kode_konsultasi_perwalian = kp.kode_konsultasi_perwalian)) DESC,
+                  (kp.status_cetak = 'A') DESC,
+                  (kp.date_created IS NOT NULL) DESC,
+                  (kp.jenis_konsultasi IS NOT NULL) DESC,
+                  kp.kode_konsultasi_perwalian DESC
+                LIMIT 1";
+        $row = $this->db->query($sql, array($nim, $kode_tahun_akademik))->row();
+        return $row ? (int) $row->kode_konsultasi_perwalian : null;
+    }
+
+    public function resolusi_duplikat_konsultasi($nim, $kode_tahun_akademik)
+    {
+        $this->db->trans_start();
+
+        // Guard pra-hapus: hanya proses jika memang duplikat (jumlah record > 1)
+        $this->db->where('nim', $nim);
+        $this->db->where('kode_tahun_akademik', $kode_tahun_akademik);
+        $jumlah_sebelum = $this->db->count_all_results('konsultasi_perwalian');
+        if ($jumlah_sebelum <= 1) {
+            $this->db->trans_complete();
+            return 0;
+        }
+
+        $kode_asli = $this->get_kode_konsultasi_asli($nim, $kode_tahun_akademik);
+        if ($kode_asli === null) {
+            $this->db->trans_complete();
+            return false;
+        }
+
+        $this->db->where('nim', $nim);
+        $this->db->where('kode_tahun_akademik', $kode_tahun_akademik);
+        $this->db->where('kode_konsultasi_perwalian !=', $kode_asli);
+        $this->db->delete('konsultasi_perwalian');
+        $affected = $this->db->affected_rows();
+
+        // Verifikasi pasca-hapus: minimal 1 record tersisa untuk (nim, kode_tahun_akademik)
+        $this->db->where('nim', $nim);
+        $this->db->where('kode_tahun_akademik', $kode_tahun_akademik);
+        $jumlah_sesudah = $this->db->count_all_results('konsultasi_perwalian');
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE || $jumlah_sesudah < 1) {
+            return false;
+        }
+        return $affected;
+    }
+
+    public function resolusi_semua_duplikat_konsultasi($kode_tahun_akademik = null, $angkatan = null)
+    {
+        $groups = $this->get_duplikat_konsultasi($kode_tahun_akademik, $angkatan);
+        if (empty($groups)) {
+            return 0;
+        }
+
+        $total = 0;
+        $this->db->trans_start();
+        foreach ($groups as $g) {
+            // Guard pra-hapus: hanya proses jika memang duplikat
+            $this->db->where('nim', $g->nim);
+            $this->db->where('kode_tahun_akademik', $g->kode_tahun_akademik);
+            $jumlah_sebelum = $this->db->count_all_results('konsultasi_perwalian');
+            if ($jumlah_sebelum <= 1) {
+                continue;
+            }
+
+            $kode_asli = $this->get_kode_konsultasi_asli($g->nim, $g->kode_tahun_akademik);
+            if ($kode_asli === null) {
+                continue;
+            }
+
+            $this->db->where('nim', $g->nim);
+            $this->db->where('kode_tahun_akademik', $g->kode_tahun_akademik);
+            $this->db->where('kode_konsultasi_perwalian !=', $kode_asli);
+            $this->db->delete('konsultasi_perwalian');
+            $affected = $this->db->affected_rows();
+
+            // Verifikasi pasca-hapus: minimal 1 record tersisa
+            $this->db->where('nim', $g->nim);
+            $this->db->where('kode_tahun_akademik', $g->kode_tahun_akademik);
+            $jumlah_sesudah = $this->db->count_all_results('konsultasi_perwalian');
+            if ($jumlah_sesudah < 1) {
+                $this->db->trans_rollback();
+                return false;
+            }
+
+            $total += $affected;
+        }
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        }
+        return $total;
+    }
+
     public function get_konsultasi_kode_dosen_null($kode_tahun_akademik = null, $angkatan = null)
     {
         $sql = "SELECT kp.kode_konsultasi_perwalian, kp.nim, kp.kode_tahun_akademik, COALESCE(m.nama_mahasiswa, '(NO MAHASISWA)') AS nama_mahasiswa, pw.kode_dosen, d.nama_dosen, ta.tahun_akademik, ta.semester

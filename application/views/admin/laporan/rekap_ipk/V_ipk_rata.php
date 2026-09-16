@@ -34,9 +34,9 @@
                 <?php $i = 1 + $this->uri->segment(5); foreach ($data as $row) : ?>
                     <tr>
                         <td width="3%" align="center"><?= $i++ ?>.</td>
-                        <td align="center"><?= e($row->nim) ?></td>
-                        <td ><?= e($row->nama_mahasiswa) ?></td>
-                        <td align="center"><?= e($row->jenis_kelamin) ?></td>
+                        <td align="center"><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
+                        <td ><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
+                        <td align="center"><?= !empty($row->jenis_kelamin) ? e($row->jenis_kelamin) : '-' ?></td>
                         <td align="center"><?= $row->ip ?></td>
                         <td align="center"><?= $row->ipk ?></td>
                         <td align="center"><?= $row->total_sks ?></td>

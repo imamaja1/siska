@@ -51,11 +51,11 @@ header("Cache-Control: private", false);
     <?php foreach ($mahasiswa_aktif as $key => $row) : ?>
         <tr>
             <td><?= $key + 1 ?>.</td>
-            <td><?= e($row->nim) ?></td>
-            <td><?= e($row->nama_mahasiswa) ?></td>
-            <td><?= e($row->telepon) ?></td>
-            <td><?= e($row->email) ?></td>
-            <td><?= e($row->nama_program_studi) ?></td>
+            <td><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
+            <td><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
+            <td><?= !empty($row->telepon) ? e($row->telepon) : '-' ?></td>
+            <td><?= !empty($row->email) ? e($row->email) : '-' ?></td>
+            <td><?= !empty($row->nama_program_studi) ? e($row->nama_program_studi) : '-' ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

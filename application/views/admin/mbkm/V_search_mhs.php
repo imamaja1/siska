@@ -22,9 +22,9 @@
             <?php foreach ($mahasiswa as $key => $value) {  ?> 
                     <tr>
                         <td><?= $key+1 ?></td>
-                        <td><?= e($value->nim) ?></td>
-                        <td><?= e($value->nama_mahasiswa) ?></td>
-                        <td><?= e($value->nama_program_studi) ?></td>
+                        <td><?= !empty($value->nim) ? e($value->nim) : '-' ?></td>
+                        <td><?= !empty($value->nama_mahasiswa) ? e($value->nama_mahasiswa) : '-' ?></td>
+                        <td><?= !empty($value->nama_program_studi) ? e($value->nama_program_studi) : '-' ?></td>
                         <td><?= $ta->semester == 1 ? "Ganjil":"Genap" ?>, <?= e($ta->tahun_akademik) ?></td>
                         <td>
                             <?php if ($cek == 0) : ?>

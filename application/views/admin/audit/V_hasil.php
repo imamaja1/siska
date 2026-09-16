@@ -26,13 +26,13 @@
                         <?php $no = 1; foreach ($data as $row) : ?>
                         <tr class="<?= $row->is_mbkm && $row->is_diubah ? 'info' : ($row->is_mbkm ? 'success' : ($row->is_diubah ? 'warning' : ($row->status == 'Tidak Sinkron' ? 'danger' : ''))) ?>">
                             <td align="center"><?= $no++ ?></td>
-                            <td><?= e($row->nim) ?></td>
-                            <td><?= e($row->nama_mahasiswa) ?></td>
-                            <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></td>
-                            <td><?= e($row->nama_kelas) ?></td>
-                            <td align="center"><?= e($row->level) ?></td>
-                            <td align="center"><?= e($row->na) ?></td>
-                            <td align="center"><?= e($row->nilai_akhir) ?></td>
+                            <td><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
+                            <td><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
+                            <td><?= !empty($row->kode_matakuliah) ? e($row->kode_matakuliah) : '-' ?> - <?= !empty($row->nama_matakuliah) ? e($row->nama_matakuliah) : '-' ?></td>
+                            <td><?= !empty($row->nama_kelas) ? e($row->nama_kelas) : '-' ?></td>
+                            <td align="center"><?= !empty($row->level) ? e($row->level) : '-' ?></td>
+                            <td align="center"><?= !empty($row->na) ? e($row->na) : '-' ?></td>
+                            <td align="center"><?= !empty($row->nilai_akhir) ? e($row->nilai_akhir) : '-' ?></td>
                             <td align="center">
                                 <?php if ($row->status == 'Sinkron') : ?>
                                     <span class="label label-success">Sinkron</span>

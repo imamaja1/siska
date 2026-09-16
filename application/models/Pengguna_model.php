@@ -27,7 +27,7 @@ class pengguna_model extends CI_Model {
     function get_pagination($limit, $offset) {
         return $this->db->select('*')
             ->from('pengguna')
-            ->join('role', 'role.id_role=pengguna.id_role')
+            ->join('role', 'role.id_role=pengguna.id_role', 'left')
             ->limit($limit)
             ->offset($offset)
             ->get()->result();

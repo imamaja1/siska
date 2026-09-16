@@ -27,10 +27,10 @@
                             ?>
                             <tr>
                                 <td align="center"><?= $no++ ?>.</td>
-                                <td><?= e($row->nama_fakultas) ?></td>
+                                <td><?= !empty($row->nama_fakultas) ? e($row->nama_fakultas) : '<span class="text-muted">-</span>' ?></td>
                                 <td id="nama-program-studi-<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></td>
-                                <td id="singkatan-<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></td>
-                                <td><?= $row->kompetensi == 'Y' ? 'Ada' : 'Tidak Ada'; ?></td>
+                                <td id="singkatan-<?= e($row->kode_program_studi) ?>"><?= !empty($row->singkatan_program_studi) ? e($row->singkatan_program_studi) : '<span class="text-muted">-</span>' ?></td>
+                                <td><?= ($row->kompetensi ?? 'N') == 'Y' ? 'Ada' : 'Tidak Ada'; ?></td>
                                 <td width="150" align="center">
                                     <a href="#" class="btn btn-xs btn-info flat"
                                        onclick="javascript:editNamajurusan('<?= e($row->kode_program_studi) ?>')"><i class="fa fa-edit"></i> Ubah</a>

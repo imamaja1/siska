@@ -21,10 +21,10 @@
             </thead>
             <?php if (isset($data_mahasiswa) && $data_mahasiswa) : ?>
                 <tr>
-                    <td align="center"><?= e($data_mahasiswa->nim); ?></td>
-                    <td align="center"><?= e($data_mahasiswa->nama_mahasiswa); ?></td>
-                    <td align="center"><?= e($data_mahasiswa->email); ?></td>
-                    <td align="center" style='font-size: 17px;'><b><?= e($kirim_string); ?></b></td>
+                    <td align="center"><?= !empty($data_mahasiswa->nim) ? e($data_mahasiswa->nim) : '-'; ?></td>
+                    <td align="center"><?= !empty($data_mahasiswa->nama_mahasiswa) ? e($data_mahasiswa->nama_mahasiswa) : '-'; ?></td>
+                    <td align="center"><?= !empty($data_mahasiswa->email) ? e($data_mahasiswa->email) : '-'; ?></td>
+                    <td align="center" style='font-size: 17px;'><b><?= !empty($kirim_string) ? e($kirim_string) : '-'; ?></b></td>
                 </tr>
             <?php endif; ?>
         </table>

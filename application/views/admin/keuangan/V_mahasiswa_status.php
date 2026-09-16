@@ -28,8 +28,8 @@
                         foreach ($data as $row) { ?>
                             <tr>
                                 <td width="3%"><?= $i++  ?></td>
-                                <td><?= e($row->nim)  ?></td>
-                                <td><?= e($row->nama_mahasiswa)  ?></td>
+                                <td><?= !empty($row->nim) ? e($row->nim) : '-'  ?></td>
+                                <td><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-'  ?></td>
                                 <?php if ($row->status_perkuliahan == 'A') : ?>
                                     <td id="edit-<?= e($row->kode_status_perkuliahan) ?>"><span class="badge bg-green"><?= $row->status_perkuliahan  ?></span> <span class="text-aqua" onclick="edit('<?= e($row->kode_status_perkuliahan) ?>')"><i class="fa fa-pencil"></i></span></td>
                                 <?php elseif ($row->status_perkuliahan == 'C') : ?>

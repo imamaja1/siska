@@ -208,6 +208,76 @@
     </div>
 </div>
 
+<div class="box box-warning flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-files-o"></i> Konsultasi Double per Tahun Akademik</h3>
+    </div>
+    <div class="box-body">
+        <p>Cek <b>konsultasi_perwalian</b> berdasarkan <b>Tahun Akademik</b> yang dipilih (bisa dikombinasikan dengan tahun angkatan). Record yang <b>nim</b> atau <b>kode_tahun_akademik</b>-nya <b>NULL</b> diabaikan dari daftar agar data normal dan tidak terlalu banyak. Record <b>ASLI</b> dipertahankan, record <b>KOSONG</b> (placeholder) dihapus otomatis. Data <b>konsultasi_perwalian_detail</b> tidak diubah.</p>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Tahun Akademik</label>
+                    <select id="duplikat_konsultasi_tahun_akademik" class="form-control select2" style="width: 100%;">
+                        <option value="">Semua Tahun Akademik</option>
+                        <?php foreach ($tahun_akademik_list as $ta): ?>
+                        <option value="<?= (int)$ta->kode_tahun_akademik ?>" <?= (isset($tahun_akademik) && (int)$tahun_akademik->kode_tahun_akademik === (int)$ta->kode_tahun_akademik) ? 'selected' : '' ?>>
+                            <?= e($ta->tahun_akademik) ?> - <?= e($ta->semester == '1' ? 'Ganjil' : 'Genap') ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Tahun Angkatan</label>
+                    <select id="duplikat_konsultasi_angkatan" class="form-control select2" style="width: 100%;">
+                        <option value="">Semua Angkatan</option>
+                        <?php foreach ($angkatan_list as $a): ?>
+                        <option value="<?= e($a->angkatan) ?>"><?= '20' . e($a->angkatan) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div>
+                        <button type="button" class="btn btn-info flat" id="btn-muat-duplikat-konsultasi"><i class="fa fa-refresh"></i> Muat Data Duplikat Konsultasi</button>
+                        <button type="button" class="btn btn-danger flat" id="btn-resolve-semua-konsultasi"><i class="fa fa-check-circle"></i> Resolve Semua</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hasil-duplikat-konsultasi" style="display: none;">
+            <p id="info-duplikat-konsultasi" class="text-muted"></p>
+            <p id="info-duplikat-konsultasi-null" class="text-muted"></p>
+            <div id="table-duplikat-konsultasi"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-detail-konsultasi" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-files-o"></i> Detail Konsultasi Ganda</h4>
+            </div>
+            <div class="modal-body">
+                <p id="info-detail-konsultasi" class="text-muted"></p>
+                <div id="body-detail-konsultasi"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default flat" data-dismiss="modal"><i class="fa fa-times"></i> Tutup</button>
+                <button type="button" class="btn btn-warning flat" id="btn-resolve-dari-modal"><i class="fa fa-check"></i> Resolve Grup Ini</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="box box-primary flat">
     <div class="box-header with-border">
         <h3 class="box-title"><i class="fa fa-random"></i> Sinkronisasi Dosen Wali Konsultasi</h3>
@@ -552,6 +622,182 @@ $(document).ready(function() {
 
     $('#btn-muat-duplikat').on('click', function() {
         muatDuplikat();
+    });
+
+    function muatDuplikatKonsultasi() {
+        var kodeTa = $('#duplikat_konsultasi_tahun_akademik').val() || '';
+        var angkatan = $('#duplikat_konsultasi_angkatan').val() || '';
+        var data = { kode_tahun_akademik: kodeTa, angkatan: angkatan };
+        data[csrf_name] = csrf_hash;
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_konsultasi_data") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                if (res.status) {
+                    $('#hasil-duplikat-konsultasi').show();
+                    $('#info-duplikat-konsultasi').text('Jumlah duplikat konsultasi per tahun akademik: ' + res.jumlah);
+                    $('#info-duplikat-konsultasi-null').text('Record dengan nim/tahun akademik NULL yang diabaikan: ' + res.jumlah_null);
+                    $('#table-duplikat-konsultasi').html(res.html);
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    }
+
+    $('#btn-muat-duplikat-konsultasi').on('click', function() {
+        muatDuplikatKonsultasi();
+    });
+
+    function prosesResolveKonsultasi(data, $btn, labelBtn) {
+        data[csrf_name] = csrf_hash;
+        if ($btn) {
+            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+        }
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_konsultasi_resolusi") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                if ($btn) {
+                    $btn.prop('disabled', false).html(labelBtn);
+                }
+                if (res.status) {
+                    toastSukses(res.message);
+                    muatDuplikatKonsultasi();
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                if ($btn) {
+                    $btn.prop('disabled', false).html(labelBtn);
+                }
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    }
+
+    $(document).on('click', '.btn-resolusi-duplikat-konsultasi', function() {
+        var $btn = $(this);
+        var nim = $btn.data('nim');
+        var kodeTahunAkademik = $btn.data('kode_tahun_akademik');
+        var nama = $btn.data('nama');
+
+        konfirmasi('NIM ' + nim + ' (' + nama + ') memiliki konsultasi ganda pada satu tahun akademik. Record asli akan dipertahankan dan record placeholder akan dihapus permanen. Lanjutkan?', function() {
+            prosesResolveKonsultasi({ nim: nim, kode_tahun_akademik: kodeTahunAkademik }, $btn, '<i class="fa fa-check"></i> Resolve');
+        });
+    });
+
+    var detailKonsultasiGroup = { nim: null, kode_tahun_akademik: null, nama: '' };
+
+    $(document).on('click', '.btn-lihat-duplikat-konsultasi', function() {
+        var $btn = $(this);
+        var nim = $btn.data('nim');
+        var kodeTahunAkademik = $btn.data('kode_tahun_akademik');
+        var nama = $btn.data('nama');
+        detailKonsultasiGroup = { nim: nim, kode_tahun_akademik: kodeTahunAkademik, nama: nama };
+
+        var data = { nim: nim, kode_tahun_akademik: kodeTahunAkademik };
+        data[csrf_name] = csrf_hash;
+        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+        $.ajax({
+            url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_konsultasi_detail") ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function(res) {
+                $btn.prop('disabled', false).html('<i class="fa fa-eye"></i> Lihat');
+                if (res.status) {
+                    var labelTa = res.ta ? ' — Tahun Akademik: ' + res.ta : '';
+                    $('#info-detail-konsultasi').text('NIM ' + nim + ' (' + nama + ')' + labelTa + ' — ' + res.jumlah + ' record konsultasi.');
+                    $('#body-detail-konsultasi').html(res.html);
+                    $('#modal-detail-konsultasi').modal('show');
+                } else {
+                    toastGagal(res.message || 'Terjadi kesalahan.');
+                }
+            },
+            error: function() {
+                $btn.prop('disabled', false).html('<i class="fa fa-eye"></i> Lihat');
+                toastGagal('Terjadi kesalahan koneksi.');
+            }
+        });
+    });
+
+    $('#btn-resolve-dari-modal').on('click', function() {
+        var $btn = $(this);
+        if (!detailKonsultasiGroup.nim) {
+            return;
+        }
+        konfirmasi('NIM ' + detailKonsultasiGroup.nim + ' (' + detailKonsultasiGroup.nama + '): record asli dipertahankan, placeholder dihapus permanen. Lanjutkan?', function() {
+            var data = { nim: detailKonsultasiGroup.nim, kode_tahun_akademik: detailKonsultasiGroup.kode_tahun_akademik };
+            data[csrf_name] = csrf_hash;
+            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+            $.ajax({
+                url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_konsultasi_resolusi") ?>',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function(res) {
+                    $btn.prop('disabled', false).html('<i class="fa fa-check"></i> Resolve Grup Ini');
+                    if (res.status) {
+                        toastSukses(res.message);
+                        $('#modal-detail-konsultasi').modal('hide');
+                        muatDuplikatKonsultasi();
+                    } else {
+                        toastGagal(res.message || 'Terjadi kesalahan.');
+                    }
+                },
+                error: function() {
+                    $btn.prop('disabled', false).html('<i class="fa fa-check"></i> Resolve Grup Ini');
+                    toastGagal('Terjadi kesalahan koneksi.');
+                }
+            });
+        });
+    });
+
+    $('#btn-resolve-semua-konsultasi').on('click', function() {
+        var $btn = $(this);
+        var kodeTa = $('#duplikat_konsultasi_tahun_akademik').val() || '';
+        var angkatan = $('#duplikat_konsultasi_angkatan').val() || '';
+        var keterangan = [];
+        if (kodeTa) {
+            keterangan.push('tahun akademik #' + kodeTa);
+        }
+        if (angkatan) {
+            keterangan.push('angkatan ' + angkatan);
+        }
+        var label = keterangan.length ? ' ' + keterangan.join(', ') : '';
+        konfirmasi('Yakin ingin menyelesaikan SEMUA duplikat konsultasi' + label + '? Record asli dipertahankan dan seluruh placeholder yang ganda akan dihapus permanen.', function() {
+            var data = { kode_tahun_akademik: kodeTa, angkatan: angkatan };
+            data[csrf_name] = csrf_hash;
+            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+            $.ajax({
+                url: '<?= site_url("admin/pengaturan/distribusi_perwalian/duplikat_konsultasi_resolusi_semua") ?>',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function(res) {
+                    $btn.prop('disabled', false).html('<i class="fa fa-check-circle"></i> Resolve Semua');
+                    if (res.status) {
+                        toastSukses(res.message);
+                        muatDuplikatKonsultasi();
+                    } else {
+                        toastGagal(res.message || 'Terjadi kesalahan.');
+                    }
+                },
+                error: function() {
+                    $btn.prop('disabled', false).html('<i class="fa fa-check-circle"></i> Resolve Semua');
+                    toastGagal('Terjadi kesalahan koneksi.');
+                }
+            });
+        });
     });
 
     function muatSync() {

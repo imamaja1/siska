@@ -8,15 +8,14 @@ class Fakultas_model extends CI_Model
   public function get($id = null)
     {
         if ($id == null) {
-
             return $this->db->select('f.kode_fakultas, f.nama_fakultas, d.kode_dosen as dekan_kode, d.nama_dosen as dekan')
                 ->from('fakultas as f')
-                ->join('dosen as d', 'f.dekan=d.kode_dosen')
+                ->join('dosen as d', 'f.dekan=d.kode_dosen', 'left')
                 ->get()->result();
         } else {
-            return $this->db->select('f.kode_fakultas, f.nama_fakultas, d.kode_dosen, d.nama_dosen as dekan')
+            return $this->db->select('f.kode_fakultas, f.nama_fakultas, d.kode_dosen as dekan_kode, d.nama_dosen as dekan')
                 ->from('fakultas as f')
-                ->join('dosen as d', 'f.dekan=d.kode_dosen')
+                ->join('dosen as d', 'f.dekan=d.kode_dosen', 'left')
                 ->where('kode_fakultas', $id)
                 ->get()->row_object();
         }

@@ -27,8 +27,8 @@
                         <tr>
                             <td align="center"><?= $i++ ?></td>
                             <td id="nama-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= e($row->nama_kompetensi) ?></td>
-                            <td align="center" id="singkatan-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= e($row->singkatan_kompetensi) ?></td>
-                            <td align="center"><?php $ns = []; foreach($kode_nama_jurusan as $n) $ns[$n->kode_program_studi ?? $n->kode_program_studi] = $n->nama_program_studi ?? $n->singkatan_program_studi; echo e($ns[$row->kode_program_studi] ?? '-'); ?></td>
+                            <td align="center" id="singkatan-kompetensi-<?= e($row->kode_kompetensi) ?>"><?= !empty($row->singkatan_kompetensi) ? e($row->singkatan_kompetensi) : '<span class="text-muted">-</span>' ?></td>
+                            <td align="center"><?php $ns = []; foreach($kode_nama_jurusan as $n) $ns[$n->kode_program_studi] = !empty($n->nama_program_studi) ? $n->nama_program_studi : $n->singkatan_program_studi; echo isset($ns[$row->kode_program_studi]) ? e($ns[$row->kode_program_studi]) : '<span class="text-muted">-</span>'; ?></td>
                     <td hidden id="kode-nama-jurusan-<?= e($row->kode_kompetensi) ?>"><?= e($row->kode_program_studi) ?></td>
                     <td align="center">
                         <a href="#" class="btn btn-xs btn-info flat" onclick="javascript:editKompetensi(<?= e($row->kode_kompetensi) ?>)"><i class="fa fa-edit"></i> Ubah</a>

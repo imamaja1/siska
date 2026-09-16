@@ -278,6 +278,10 @@ class Perwalian extends CI_Controller {
             redirect(site_url('admin/jurusan/perwalian/get_perwalian'));
         }else{
             $datas = $this->perwalianservice->getPerwalianDetail($param);
+            if (!$datas) {
+                echo json_encode(array('status' => false, 'msg' => 'Data perwalian tidak ditemukan'));
+                return;
+            }
             $data['kode_perwalian'] = $datas->kode_perwalian;
             $data['nim'] = $datas->nim;
             $data['nama_mahasiswa'] = $datas->nama_mahasiswa;
@@ -350,6 +354,10 @@ class Perwalian extends CI_Controller {
     public function edit_dosen_wali() {
         $nim = $this->input->post('nim');
         $datas = $this->Perwalian_model->get_perwalian_by_nim($nim);
+        if (!$datas) {
+            echo '<div class="alert alert-warning flat">Data perwalian untuk NIM <b>' . e($nim) . '</b> tidak ditemukan.</div>';
+            return;
+        }
         $data['kode_perwalian'] = $datas->kode_perwalian;
         $data['nim'] = $datas->nim;
         $data['nama_mahasiswa'] = $datas->nama_mahasiswa;
@@ -493,6 +501,10 @@ class Perwalian extends CI_Controller {
         $data['filter'] = $filter;
         $data['dosen'] = $this->m_dosen->get();
         $data['data'] = $this->perwalianservice->getPerwalianById($kode_perwalian);
+        if (empty($data['data'])) {
+            echo '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title">Edit Dosen Perwalian</h4></div><div class="modal-body"><div class="alert alert-warning flat">Data perwalian tidak ditemukan.</div></div>';
+            return;
+        }
 
         $this->load->view('admin/jurusan/perwalian/Modal_edit', $data);
     }

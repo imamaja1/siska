@@ -33,15 +33,16 @@ class validasikhusus extends CI_Controller {
         $kode_fkk = $this->validasiservice->get_fakultas_by_kode(1);
 //        $ta = $this->m_tahun_akademik->get();
         $ta = $this->m_tahun_akademik->get();
-        $prodi = $this->Fakultas_model->getProdiFromDekan($kode_fkk['dekan']);
+        $prodi = is_array($kode_fkk) ? $this->Fakultas_model->getProdiFromDekan($kode_fkk['dekan']) : array();
         $kode_prodi = array_column($prodi, 'kode_program_studi');
 //        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
-        $kelas = $this->validasiservice->get_kelas_by_prodi($kode_prodi);
+        $kelas = !empty($kode_prodi) ? $this->validasiservice->get_kelas_by_prodi($kode_prodi) : array();
 
         $data['content'] = 'admin/akademik/nilai/V_validasi_khusus';
         $data['judul'] = 'Akademik';
         $data['tahun_akademik'] = $ta;
         $data['sub_judul'] = 'Nilai';
+        $data['match_kode_fakultas'] = null;
         $data['kelas'] = $kelas;
 
         $this->load->view('admin/template/V_main', $data);
@@ -59,7 +60,7 @@ class validasikhusus extends CI_Controller {
         $prodi = $this->Fakultas_model->getProdiFromDekan($kode_fakultas);
         $kode_prodi = array_column($prodi, 'kode_program_studi');
 //        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
-        $kelas = $this->validasiservice->get_kelas_by_prodi_and_ta($kode_prodi, $kode_tahun_akademik);
+        $kelas = !empty($kode_prodi) ? $this->validasiservice->get_kelas_by_prodi_and_ta($kode_prodi, $kode_tahun_akademik) : array();
 
         $data['content'] = 'admin/akademik/nilai/V_validasi_khusus';
         $data['judul'] = 'Akademik';

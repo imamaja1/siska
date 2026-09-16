@@ -44,7 +44,7 @@ class DosenService extends MY_Service {
         $this->form_validation->set_rules('status_dosen', 'status_dosen', 'required', array('required' => 'Field Status Dosen harus dipilih'));
         $this->form_validation->set_rules('homebase', 'homebase', 'required', array('required' => 'Field Homebase harus dipilih'));
         $this->form_validation->set_rules('alamat_email', 'alamat_email', 'required|valid_email', array('required' => 'Field Alamat Email harus diisi', 'valid_email' => 'Email tidak valid'));
-        $this->form_validation->set_rules('password', 'password', 'required|min_length[8]|max_length[20]', array('required' => 'Field Password harus diisi', 'min_length' => 'Field Password minimal 6 Karakter', 'max_length' => 'Field Password Maksimal 8 Karakter'));
+        $this->form_validation->set_rules('password', 'password', 'required|min_length[8]|max_length[20]', array('required' => 'Field Password harus diisi', 'min_length' => 'Field Password minimal 8 Karakter', 'max_length' => 'Field Password Maksimal 20 Karakter'));
         $this->form_validation->set_rules('ulangi_password', 'ulangi_password', 'required|matches[password]', array('required' => 'Field Ulangi Password harus diisi', 'matches' => 'Password tidak cocok'));
         $this->form_validation->set_rules('status_login', 'status_login', 'required', array('required' => 'Field Status Login harus dipilih'));
 
@@ -64,7 +64,8 @@ class DosenService extends MY_Service {
             'alamat_email' => $post_data['alamat_email'],
             'sandi_pengguna' => md5($post_data['password']),
             'status_login' => $post_data['status_login'],
-            'no_telp' => $post_data['no_telp']
+            'no_telp' => $post_data['no_telp'],
+            'chatid' => ''
         );
         $this->m_dosen->add($data_dosen);
         
@@ -77,6 +78,8 @@ class DosenService extends MY_Service {
             'username' => $post_data['alamat_email'],
             'active' => '1',
             'password' => password_hash($post_data['password'], PASSWORD_BCRYPT),
+            'ip_address' => $this->input->ip_address(),
+            'created_on' => time(),
         );
         $this->db->insert('users', $data_arr);
         $new_id = $this->db->insert_id();
@@ -89,7 +92,7 @@ class DosenService extends MY_Service {
 
     public function ubahPassword($post_data) {
         $kode_dosen = $post_data['kode_dosen_password'];
-        $this->form_validation->set_rules('password', 'password', 'required|min_length[8]|max_length[20]', array('required' => 'Field Password harus diisi', 'min_length' => 'Field Password minimal 6 Karakter', 'max_length' => 'Field Password Maksimal 8 Karakter'));
+        $this->form_validation->set_rules('password', 'password', 'required|min_length[8]|max_length[20]', array('required' => 'Field Password harus diisi', 'min_length' => 'Field Password minimal 8 Karakter', 'max_length' => 'Field Password Maksimal 20 Karakter'));
         $this->form_validation->set_rules('ulangi_password', 'ulangi_password', 'required|matches[password]', array('required' => 'Field Ulangi Password harus diisi', 'matches' => 'Password tidak cocok'));
 
         if ($this->form_validation->run() == false) {

@@ -11,10 +11,10 @@ class Ketua_jurusan_model extends CI_Model {
     public function get() {
         // return $this->db->get($this->table)->result();
 //        return $this->db->query("SELECT * FROM kaprodi, dosen, program_studi, jenjang WHERE jenjang.id_jenjang=program_studi.id_jenjang and  kaprodi.kode_dosen=dosen.kode_dosen and kaprodi.kode_program_studi=program_studi.kode_program_studi")->result_object();
-        return $this->db->select("*")
+        return $this->db->select("kaprodi.*, dosen.nama_dosen, ps.nama_program_studi")
             ->from('kaprodi')
-            ->join('dosen','kaprodi.kode_dosen=dosen.kode_dosen')
-            ->join('program_studi as ps','ps.kode_program_studi=kaprodi.kode_program_studi')
+            ->join('dosen','kaprodi.kode_dosen=dosen.kode_dosen', 'left')
+            ->join('program_studi as ps','ps.kode_program_studi=kaprodi.kode_program_studi', 'left')
             ->get()->result();
     }
 

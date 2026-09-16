@@ -15,12 +15,12 @@
                 foreach ($semua_mhs as $row) : ?>
                     <tr>
                         <td align="center"><?= $i++ ?>.</td>
-                        <td align="center"><?= e($row->nim) ?></td>
+                        <td align="center"><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
                         <td align="center">
-                            <input type="checkbox" name="kode_krs_detail"
-                                   value="<?= e($row->kode_krs_detail) ?>">
+                            <input type="checkbox" name="kode_krs_detail[]"
+                                   value="<?= !empty($row->kode_krs_detail) ? e($row->kode_krs_detail) : '' ?>">
                         </td>
-                        <td><?= e($row->nama_mahasiswa) ?></td>
+                        <td><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

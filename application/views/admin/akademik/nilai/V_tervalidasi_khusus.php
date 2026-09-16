@@ -62,11 +62,11 @@
                         ?>
                         <tr>
                             <td><?= $no++; ?></td>
-                            <td><?= e($row->kelas_id); ?></td>
-                            <td><?= e($row->singkatan_program_studi); ?></td>
-                            <td><?= e($row->kode_matakuliah); ?> - <?= e($row->nama_matakuliah); ?> - Kelas
-                                : <?= e($row->nama_kelas); ?></td>
-                            <td><?= e($row->nama_dosen); ?></td>
+                            <td><?= !empty($row->kelas_id) ? e($row->kelas_id) : '-'; ?></td>
+                            <td><?= !empty($row->singkatan_program_studi) ? e($row->singkatan_program_studi) : '-'; ?></td>
+                            <td><?= !empty($row->kode_matakuliah) ? e($row->kode_matakuliah) : '-'; ?> - <?= !empty($row->nama_matakuliah) ? e($row->nama_matakuliah) : '-'; ?> - Kelas
+                                : <?= !empty($row->nama_kelas) ? e($row->nama_kelas) : '-'; ?></td>
+                            <td><?= !empty($row->nama_dosen) ? e($row->nama_dosen) : '-'; ?></td>
                             <td>
                                 <?php foreach ($row->nilai_validasi as $key => $value): ?>
                                     <?php if ($value) : ?>

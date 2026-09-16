@@ -147,13 +147,14 @@
                     <div class="form-group"><div class="row">
                         <div class="col-xs-4"><label>Nama Kompetensi</label>
                             <select name="kode_kompetensi" class="form-control" id="edit-kode-kompetensi">
+                                <option value="">Pilih Kompetensi</option>
                                 <?php foreach ($kompetensi as $k) { ?>
                                     <option value="<?= e($k->kode_kompetensi) ?>"> <?= e($k->nama_kompetensi) ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                         <div class="col-xs-4"><label>Jenis</label>
-                            <select name="jenis" class="form-control" id="edit-jenis"><option value="0">Wajib</option><option value="1">Pilihan</option></select>
+                            <select name="jenis" class="form-control" id="edit-jenis"><option value="">Wajib</option><option value="1">Pilihan</option></select>
                         </div>
                         <div class="col-xs-4"><label>Block (Kedokteran)</label>
                             <select name="block" class="form-control" id="edit-block"><option value="0">Non Block</option><option value="1">Block</option></select>
@@ -192,9 +193,14 @@
                 $.ajax({
                     url: url, data: data, type: "post",
                     success: function (res) {
-                        var obj = JSON.parse(res);
-                        if (obj.status) { all(); $("#myModal").modal('hide'); swal('Success!', obj.msg, 'success');
-                        } else { swal('Gagal!', obj.msg, 'error'); }
+                        try {
+                            var obj = JSON.parse(res);
+                            if (obj.status) { all(); $("#myModal").modal('hide'); swal('Success!', obj.msg, 'success');
+                            } else { swal('Gagal!', obj.msg, 'error'); }
+                        } catch(e) {
+                            console.error("Backend Error Response:", res);
+                            swal('Error Backend!', 'Lihat console untuk detail pesan error PHP.', 'error');
+                        }
                     }
                 })
             }
@@ -208,9 +214,14 @@
                 $.ajax({
                     url: url, data: data, type: "post",
                     success: function (res) {
-                        var obj = JSON.parse(res);
-                        if (obj.status) { all(); $("#edit-matakuliah").modal('hide'); swal('Success!', obj.msg, 'success');
-                        } else { swal('Gagal!', obj.msg, 'error'); }
+                        try {
+                            var obj = JSON.parse(res);
+                            if (obj.status) { all(); $("#edit-matakuliah").modal('hide'); swal('Success!', obj.msg, 'success');
+                            } else { swal('Gagal!', obj.msg, 'error'); }
+                        } catch(e) {
+                            console.error("Backend Error Response:", res);
+                            swal('Error Backend!', 'Lihat console untuk detail pesan error PHP.', 'error');
+                        }
                     }
                 })
             }
@@ -258,9 +269,14 @@
         }).then(function () {
             $.ajax({
                 url: url, success: function (res) {
-                    var obj = JSON.parse(res);
-                    if (obj.status) { all(); swal('Success!', obj.msg, 'success');
-                    } else { swal('Gagal!', obj.msg, 'error'); }
+                    try {
+                        var obj = JSON.parse(res);
+                        if (obj.status) { all(); swal('Success!', obj.msg, 'success');
+                        } else { swal('Gagal!', obj.msg, 'error'); }
+                    } catch(e) {
+                        console.error("Backend Error Response:", res);
+                        swal('Error Backend!', 'Lihat console untuk detail pesan error PHP.', 'error');
+                    }
                 }
             })
         });

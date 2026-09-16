@@ -69,9 +69,9 @@
                     <?php foreach ($data_mhs as $key => $value) : ?>
                     <tr>
                         <th scope="row"><?= $key+1 ?></th>
-                        <td><?= e($value->nim) ?></td>
-                        <td><?= e($value->nama_mahasiswa) ?></td>
-                        <td><?= e($value->nama_dosen) ?></td>
+                        <td><?= !empty($value->nim) ? e($value->nim) : '-' ?></td>
+                        <td><?= !empty($value->nama_mahasiswa) ? e($value->nama_mahasiswa) : '-' ?></td>
+                        <td><?= !empty($value->nama_dosen) ? e($value->nama_dosen) : '-' ?></td>
                         <td><?= $value->status_cetak == "A" ? '<span class="badge btn-success"> Divalidasi</span>':'<span class="badge btn-danger">Belum Divaldiasi</span>' ?></td>
                       	<td><?= $value->pembayaran_sks != '0' ? '<span class="badge btn-success"> Divalidasi</span>':'<span class="badge btn-danger">Belum Divaldiasi</span>' ?></td>
                     </tr>

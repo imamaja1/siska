@@ -43,8 +43,8 @@ class KeuanganService extends MY_Service {
     public function getMahasiswaAktifByTA($kode_tahun_akademik) {
         return $this->db->select('mah.nim, nama_mahasiswa, mah.email, nama_program_studi, mah.telepon')
                 ->from('krs')
-                ->join('mahasiswa as mah','mah.nim=krs.nim')
-                ->join('program_studi as ps','ps.kode_program_studi=mah.program_studi_kode')
+                ->join('mahasiswa as mah','mah.nim=krs.nim', 'left')
+                ->join('program_studi as ps','ps.kode_program_studi=mah.program_studi_kode', 'left')
                 ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                 ->where_not_in('krs.semester', ['K'])
                 ->order_by('mah.program_studi_kode')

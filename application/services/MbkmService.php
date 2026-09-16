@@ -10,9 +10,9 @@ class MbkmService extends MY_Service {
     public function getMahasiswaMbkm($ta, $kode_program_studi = null) {
         $this->db->select('mahasiswa.nim,mahasiswa.nama_mahasiswa,nama_program_studi,tahun_akademik.semester,mbkm.id as id_fix')
             ->from('mbkm')
-            ->join('mahasiswa','mahasiswa.nim = mbkm.nim')
-            ->join('tahun_akademik','tahun_akademik.kode_tahun_akademik = mbkm.kode_ta')
-            ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode')
+            ->join('mahasiswa','mahasiswa.nim = mbkm.nim', 'LEFT')
+            ->join('tahun_akademik','tahun_akademik.kode_tahun_akademik = mbkm.kode_ta', 'LEFT')
+            ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode', 'LEFT')
             ->where('mbkm.kode_ta', $ta);
         
         if ($kode_program_studi) {
@@ -26,8 +26,8 @@ class MbkmService extends MY_Service {
     public function searchMahasiswaMbkm($nim, $ta) {
         return $this->db->select('mahasiswa.*,program_studi.*,mbkm.id as id_mbkm,mbkm.kode_ta as ta_now')
             ->from('mahasiswa')
-            ->join('mbkm','mahasiswa.nim = mbkm.nim')
-            ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode')
+            ->join('mbkm','mahasiswa.nim = mbkm.nim', 'LEFT')
+            ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode', 'LEFT')
             ->where('mahasiswa.nim', $nim)->where('mbkm.kode_ta', $ta)
             ->get()->result_object();
     }
@@ -35,7 +35,7 @@ class MbkmService extends MY_Service {
     public function searchMahasiswaOnly($nim) {
         return $this->db->select('mahasiswa.*,program_studi.*')
             ->from('mahasiswa')
-            ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode')
+            ->join('program_studi','program_studi.kode_program_studi = mahasiswa.program_studi_kode', 'LEFT')
             ->where('mahasiswa.nim', $nim)
             ->get()->result_object();
     }

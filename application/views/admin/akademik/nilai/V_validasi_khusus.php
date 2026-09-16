@@ -55,9 +55,6 @@
                     <?php
                     $no = 1;
                     foreach ($kelas as $row) {
-                      	if($row->nama_dosen){
-                          continue;
-                        }
                         ?>
                         <tr>
                             <td><?= $no++; ?></td>

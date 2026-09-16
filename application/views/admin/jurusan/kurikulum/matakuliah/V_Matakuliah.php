@@ -65,7 +65,7 @@
         </table>
     </div>
     <div class="box-footer">
-        <?php if (count($data) > 0): ?>
+        <?php if (is_array($data) && count($data) > 0): ?>
             <span class="btn flat btn-default btn-sm " style="cursor: default">Terdapat <b><?= e($jumlah_data) ?> Record</b></span>
             <div class="pull-right" id="halaman">
                 <?= $halaman ?>

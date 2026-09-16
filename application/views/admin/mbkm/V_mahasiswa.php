@@ -43,9 +43,9 @@
                     <?php foreach ($mahasiswa as $key => $value): ?>
                         <tr>
                             <td><?= $key + 1 ?></td>
-                            <td><?= e($value->nim) ?></td>
-                            <td><?= e($value->nama_mahasiswa) ?></td>
-                            <td><?= e($value->nama_program_studi) ?></td>
+                            <td><?= !empty($value->nim) ? e($value->nim) : '-' ?></td>
+                            <td><?= !empty($value->nama_mahasiswa) ? e($value->nama_mahasiswa) : '-' ?></td>
+                            <td><?= !empty($value->nama_program_studi) ? e($value->nama_program_studi) : '-' ?></td>
                             <td>
                                 <a href="<?= site_url('admin/mbkm/daftar/nilai/'.$value->id_fix.'/'.$kode_tahun_akademik) ?>" class="btn btn-success btn-sm">Penilaian</a>
                                 <button type="button" class="btn btn-danger btn-sm" onclick="hapus(<?= e($value->id_fix) ?>)">Hapus</button>

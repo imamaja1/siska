@@ -24,7 +24,7 @@
                             <td align="center"><?= $no++ ?></td>
                             <td align="center"><?= e($row->kode_fakultas) ?></td>
                             <td><?= e($row->nama_fakultas) ?></td>
-                            <td><?= e($row->dekan) ?></td>
+                            <td><?= !empty($row->dekan) ? e($row->dekan) : '<span class="text-muted">-</span>' ?></td>
                             <td align="center">
                                 <a href="#!" class="btn-xs btn-info flat" onclick="editFakultas('<?= e($row->kode_fakultas) ?>', '<?= e($row->nama_fakultas) ?>', '<?= e($row->dekan_kode) ?>')"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
                                 <a href="#!" class="btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/universitas/fakultas/delete/' . $row->kode_fakultas) ?>')"><i class="fa fa-trash"></i> Hapus</a>

@@ -7,8 +7,8 @@
             </div>
         </div>
         <div class="box-body">
-            <p align="center"><strong>HASIL PENGISIAN KUISONER PELAYANAN TA. <?= $tahun_akademik->tahun_akademik ?>
-                    - <?= $tahun_akademik->semester == 0 ? 'GENAP' : 'GANJIL' ?></strong></p>
+            <p align="center"><strong>HASIL PENGISIAN KUISONER PELAYANAN TA. <?= e($tahun_akademik ? $tahun_akademik->tahun_akademik : '') ?>
+                    - <?= ($tahun_akademik && $tahun_akademik->semester == 0) ? 'GENAP' : 'GANJIL' ?></strong></p>
                 <dl class="dl-horizontal">
                     <dt>Program Studi :</dt>
                     <dd><?= e($prodi->nama_program_studi) ?></dd>

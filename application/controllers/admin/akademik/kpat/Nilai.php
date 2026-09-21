@@ -84,14 +84,15 @@ class Nilai extends CI_Controller {
         $data = $this->kpatservice->getMatakuliahByProdiTa($kode_program_studi, $kode_tahun_akademik);
 
         foreach ($data as $row) {
-            echo "<option value='" . $row->id_matakuliah . "'>".$row->kode_matakuliah ." - ". $row->nama_matakuliah . "</option>";
+            echo "<option value='" . $row->id_matakuliah . "'>".e($row->kode_matakuliah) ." - ". e($row->nama_matakuliah) . "</option>";
         }
     }
 
     public function ubah_nilai() {
         $input = filter_input_array(INPUT_POST);
+        $action = isset($input['action']) ? $input['action'] : null;
 
-        if ($input['action'] === 'edit') {
+        if ($action === 'edit') {
             if (isset($input['nilai_harian'])) {
                 $this->kpatservice->updateNilaiKhsDetail($input['kode_khs_detail'], 'nilai_harian', $input['nilai_harian']);
             }
@@ -104,13 +105,13 @@ class Nilai extends CI_Controller {
             if (isset($input['nilai_akhir'])) {
                 $this->kpatservice->updateNilaiKhsDetail($input['kode_khs_detail'], 'nilai_akhir', $input['nilai_akhir']);
             }
-        } else if ($input['action'] === 'delete') {
+        } else if ($action === 'delete') {
             $this->kpatservice->softDeleteKhsDetail($input['kode_khs_detail']);
-        } else if ($input['action'] === 'restore') {
+        } else if ($action === 'restore') {
             $this->kpatservice->restoreKhsDetailNilai($input['kode_khs_detail']);
         }
 
-        echo json_encode($input);
+        echo json_encode(array('status' => true, 'action' => $action));
     }
 
 }

@@ -36,6 +36,9 @@ class Mahasiswa_aktif extends CI_Controller
 
     public function excel($kode_tahun_akademik){
         $data['tahun_akademik'] = $this->keuanganservice->getTahunAkademikRow($kode_tahun_akademik);
+        if (empty($data['tahun_akademik'])) {
+            show_error('Tahun akademik tidak ditemukan.');
+        }
         $semester = $data['tahun_akademik']->semester == '1' ? 'GANJIL' : 'GENAP';
         $data['filename'] = $data['tahun_akademik']->tahun_akademik."-".$semester;
         $data['mahasiswa_aktif'] = $this->keuanganservice->getMahasiswaAktifByTA($kode_tahun_akademik);

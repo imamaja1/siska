@@ -14,6 +14,7 @@
         <div class="box box-primary flat">
             <div class="box-body">
                 <?php if (count($data) > 0): ?>
+                    <div class="table-responsive">
                     <table class="table demo-table" id="example1">
                         <thead>
                         <tr>
@@ -47,6 +48,7 @@
                         <?php } ?>
                         </tbody>
                     </table>
+                    </div>
                 <?php else : ?>
                     <p class="alert alert-warning">Data tidak ditemukan</p>
                 <?php endif ?>

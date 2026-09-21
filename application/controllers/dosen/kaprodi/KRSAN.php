@@ -33,16 +33,17 @@ class KRSAN extends CI_Controller
         $data['semester'] = $this->m_tahun_akademik->get_semester();        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
         $data['angkatan'] = $this->m_tahun_akademik->tahun_angkatan();   
-        $data['kode_tahun_akademik'] = $data['semester']->kode_tahun_akademik;
+        $data['kode_tahun_akademik'] = $data['semester'] ? $data['semester']->kode_tahun_akademik : null;
         $this->load->view('dosen/template/V_main', $data);
         
     }
     public function get_mahasiswa($ta = null, $angkatan = false, $status_krs = false) {
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $ta = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
-        $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_row_kode($kode_dosen)->kode_program_studi;
+        $prodi_row = $this->kaprodiservice->get_kaprodi_prodi_row_kode($kode_dosen);
+        $kode_program_studi = $prodi_row ? $prodi_row->kode_program_studi : null;
         $data['data'] = $this->kaprodiservice->get_mahasiswa_krsan($ta, $kode_program_studi, $angkatan, $status_krs);
         
         $this->load->view('dosen/kaprodi/krsan/v_data_mhs',$data);

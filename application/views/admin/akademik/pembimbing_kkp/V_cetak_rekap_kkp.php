@@ -25,7 +25,7 @@ header("Expires: 0");
 <p><img class="img" src="<?= base_url('assets/gambar/header_krs.png') ?>" alt=""><p>
 <hr size="2"></p>
 
-<p align="center"><strong>REKAP KKP </strong><br><strong>TA. <?= $tahun_akademik->tahun_akademik ?> <?= $tahun_akademik->semester == 0 ? 'GENAP' : 'GANJIL' ?></strong></p>
+<p align="center"><strong>REKAP KKP </strong><br><strong>TA. <?= e(isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '-') ?> <?= isset($tahun_akademik->semester) ? ($tahun_akademik->semester == 0 ? 'GENAP' : 'GANJIL') : '' ?></strong></p>
 <!--<p align="center"><strong>KULIAH KERJA PRAKTEK (KKP)</strong></p>-->
 <table border="1" style="font-size: 12px; border: 1px solid black; border-collapse: collapse">
     <tr>

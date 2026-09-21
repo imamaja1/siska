@@ -73,7 +73,7 @@ class Kelas extends CI_Controller {
         $data['sub_judul'] = '| Status Kelas';
         $data['content'] = 'admin/kelas/V_status_kelas';
         $data['nama_matakuliah'] = $this->m_matakuliah->get_nama_matakuliah($id_matakuliah);
-        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah)->kode_matakuliah;
+        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '';
         $data['nama_kelas'] = $this->kelas_model->get_kelas_combobox($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         $data['matakuliah'] = $this->kelas_model->get_matakuliah_combobox($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         $data['exis_kelas'] = count($this->kelas_model->cek_exis_kelas_mahasiswa($kode_tahun_akademik, $kode_program_studi, $id_matakuliah));
@@ -101,7 +101,7 @@ class Kelas extends CI_Controller {
                 $i = 0;
                 $data_kelas = array(
                     'nama_kelas_id' => $nama_kelas[0]['nama_kelas_id'],
-                    'semester' => substr(get_matakuliah($id_matakuliah)->kode_matakuliah, 5, 1),
+                    'semester' => substr(get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '', 5, 1),
                     'id_matakuliah' => $id_matakuliah,
                     'kode_tahun_akademik' => $kode_tahun_akademik,
                     'kode_program_studi' => $kode_program_studi,
@@ -126,7 +126,7 @@ class Kelas extends CI_Controller {
                 for ($i = 1; $i <= $n; $i++) {
                     $data_kelas = array(
                         'nama_kelas_id' => $nama_kelas[$m]['nama_kelas_id'],
-                        'semester' => substr(get_matakuliah($id_matakuliah)->kode_matakuliah, 5, 1),
+                        'semester' => substr(get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '', 5, 1),
                         'id_matakuliah' => $id_matakuliah,
                         'kode_tahun_akademik' => $kode_tahun_akademik,
                         'kode_program_studi' => $kode_program_studi,
@@ -180,10 +180,11 @@ class Kelas extends CI_Controller {
         $nama_kelas_id = $this->session->userdata('nama_kelas_id_sess');
         $id_matakuliah = $this->session->userdata('id_matakuliah_sess');
         $matakuliah = get_matakuliah($id_matakuliah);
+        $nama_makul = $matakuliah ? $matakuliah->nama_matakuliah : '';
         $data['nama_kelas'] = $this->kelas_model->get_nama_kelas_by_kelas_id($kelas_id);
-        $data['file_name'] = $matakuliah->nama_matakuliah . '-' . $data['nama_kelas']->nama_kelas;
-        $data['nama_matakuliah'] = $matakuliah->nama_matakuliah;
-        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah)->kode_matakuliah;
+        $data['file_name'] = $nama_makul . '-' . (isset($data['nama_kelas']->nama_kelas) ? $data['nama_kelas']->nama_kelas : '');
+        $data['nama_matakuliah'] = $nama_makul;
+        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '';
         $data['tahun_akademik'] = $tahun_akademik;
         $data['prodi'] = $this->mengajar_model->get_program_studi_by_kode_mk($id_matakuliah);
         $data['data'] = $this->kelas_model->get_mahasiswa_kelas($kelas_id);
@@ -197,9 +198,9 @@ class Kelas extends CI_Controller {
         $kode_krs_detail = $this->input->post('kode_krs_detail');
         $kelas_id = $this->session->userdata('kelas_id');
         $cek_exis = $this->kelas_model->cek_exis($kode_krs_detail);
-        if (count($cek_exis) > 0) {
+        if (!empty($cek_exis)) {
             $res['status'] = 0;
-            $res['message'] = "Data atas nama <strong>" . $cek_exis->nama_mahasiswa . "</strong> sudah ada di <strong>kelas " . $cek_exis->nama_kelas . "</strong>";
+            $res['message'] = "Data atas nama <strong>" . e($cek_exis->nama_mahasiswa) . "</strong> sudah ada di <strong>kelas " . e($cek_exis->nama_kelas) . "</strong>";
         } else {
             $data_array = array(
                 'kelas_id' => $kelas_id,
@@ -217,12 +218,15 @@ class Kelas extends CI_Controller {
     public function pindah_kelas() {
         $kelas_mahsiswa_id = $this->input->post('kelas_mahasiswa_id');
         $kelas_id = $this->input->post('kelas_id');
-        foreach ($kelas_mahsiswa_id as $key => $value) {
-            $data_update = array(
-                'kelas_id' => $kelas_id,
-            );
-            $pindah = $this->kelas_model->pindah_kelas($data_update, $value);
+        if (is_array($kelas_mahsiswa_id)) {
+            foreach ($kelas_mahsiswa_id as $key => $value) {
+                $data_update = array(
+                    'kelas_id' => $kelas_id,
+                );
+                $pindah = $this->kelas_model->pindah_kelas($data_update, $value);
+            }
         }
+        echo json_encode(array('status' => 1));
 //    $this->session->set_flashdata('info',
 //            '<script>swal("Success", "Data berhasil diubah", "success");</script>'
 //    );
@@ -239,7 +243,7 @@ class Kelas extends CI_Controller {
             if (!empty($result)) {
                 echo '<ul id="nim-list" class="list-group">';
                 foreach ($result as $nim) {
-                    echo '<li onClick="selectNim(' . $nim->nim . ',' . $nim->kode_krs_detail . ')" class="list-group-item">' . $nim->nim . ' - ' . $nim->nama_mahasiswa . '</li>';
+                    echo '<li onClick="selectNim(' . e($nim->nim) . ',' . e($nim->kode_krs_detail) . ')" class="list-group-item">' . e($nim->nim) . ' - ' . e($nim->nama_mahasiswa) . '</li>';
                 }
                 echo '</ul>';
             } else {
@@ -264,12 +268,13 @@ class Kelas extends CI_Controller {
 
     public function add_kelas() {
         $nama_kelas_id = $this->input->post('nama_kelas_id');
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $ta_aktif = tahun_akademik();
+        $tahun_akademik = $ta_aktif ? $ta_aktif->kode_tahun_akademik : null;
         $kode_program_studi = $this->session->userdata('kode_program_studi_sess');
         $id_matakuliah = $this->session->userdata('id_matakuliah_sess');
         $data_kelas = array(
             'nama_kelas_id' => $nama_kelas_id,
-            'semester' => substr(get_matakuliah($id_matakuliah)->kode_matakuliah, 5, 1),
+            'semester' => substr(get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '', 5, 1),
             'id_matakuliah' => $id_matakuliah,
             'kode_tahun_akademik' => $tahun_akademik,
             'kode_program_studi' => $kode_program_studi,
@@ -326,7 +331,7 @@ class Kelas extends CI_Controller {
         $this->session->set_userdata($data_sess);
         $data['kelas'] = $this->kuisionerservice->getAllNamaKelas();
         $data['nama_matakuliah'] = $this->m_matakuliah->get_nama_matakuliah($id_matakuliah);
-        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah)->kode_matakuliah;
+        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '';
         $data['nama_kelas'] = $this->kelas_model->get_kelas_combobox($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         $data['matakuliah'] = $this->kelas_model->get_matakuliah_combobox($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         $this->load->view('admin/kelas/partial/V_nama_kelas', $data);
@@ -343,14 +348,18 @@ class Kelas extends CI_Controller {
 //    $kelas_id = $this->input->post('kelas_id');
         $kode_dosen = $this->input->post('kode_dosen');
 
-        foreach ($kode_dosen as $key => $value) {
-            $data_mengajar = array(
-                'kode_dosen' => $value,
-                'kelas_id' => $kelas_id
-            );
+        if (is_array($kode_dosen)) {
+            foreach ($kode_dosen as $key => $value) {
+                $data_mengajar = array(
+                    'kode_dosen' => $value,
+                    'kelas_id' => $kelas_id
+                );
 
-            $this->mengajar_model->simpan($data_mengajar);
+                $this->mengajar_model->simpan($data_mengajar);
+            }
         }
+
+        echo json_encode(array('status' => 1));
     }
 
     public function hapus_pengampu($id) {
@@ -383,13 +392,16 @@ class Kelas extends CI_Controller {
     public function add_mahasiswa() {
         $kode_krs_detail = $this->input->post('kode_krs_detail');
         $kelas_id = $this->input->post('kelas_id');
-        foreach ($kode_krs_detail as $key => $value) {
-            $data_insert = array(
-                'kelas_id' => $kelas_id,
-                'kode_krs_detail' => $value,
-            );
-            $this->kuisionerservice->insertKelasMahasiswa($data_insert);
+        if (is_array($kode_krs_detail)) {
+            foreach ($kode_krs_detail as $key => $value) {
+                $data_insert = array(
+                    'kelas_id' => $kelas_id,
+                    'kode_krs_detail' => $value,
+                );
+                $this->kuisionerservice->insertKelasMahasiswa($data_insert);
+            }
         }
+        echo json_encode(array('status' => 1));
     }
 
     public function aktivasi_nilai() {

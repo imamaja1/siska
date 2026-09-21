@@ -158,14 +158,14 @@ class Khs extends CI_Controller {
         $data['prodi'] = $khs_data['prodi'];
 
         $table = '<table style="text-align: left;">';
-        $table .= '<tr style="align:left"><td>Nama Mahasiswa</td><td>'. $khs_data['nama_mahasiswa'].'</td></tr>';
-        $table .= '<tr><td style="align:left">NIM</td><td>'. $khs_data['nim'].'</td></tr>';
-        $table .= '<tr><td>Semester</td><td>'. $khs_data['semester'].'</td></tr>';
-        $table .= '<tr><td>Kurikulum</td><td>'. $khs_data['kurikulum'].'</td></tr>';
+        $table .= '<tr style="align:left"><td>Nama Mahasiswa</td><td>'. e($khs_data['nama_mahasiswa']).'</td></tr>';
+        $table .= '<tr><td style="align:left">NIM</td><td>'. e($khs_data['nim']).'</td></tr>';
+        $table .= '<tr><td>Semester</td><td>'. e($khs_data['semester']).'</td></tr>';
+        $table .= '<tr><td>Kurikulum</td><td>'. e($khs_data['kurikulum']).'</td></tr>';
         $table .= '</table>';
         
         $table .= '<table style="text-align: left;" border="1">';
-        $table .= '<tr><th colspan ="7" style="align:center">KHS - ' . $khs_data['prodi']->singkatan_program_studi  . ' - TA : ' . $khs_data['tahun_akademik']->tahun_akademik.'</th></tr>';
+        $table .= '<tr><th colspan ="7" style="align:center">KHS - ' . e(isset($khs_data['prodi']->singkatan_program_studi) ? $khs_data['prodi']->singkatan_program_studi : '-')  . ' - TA : ' . e(isset($khs_data['tahun_akademik']->tahun_akademik) ? $khs_data['tahun_akademik']->tahun_akademik : '-') . '</th></tr>';
         $table .= '<tr><th>NO.</th><th>KODE</th><th>MATAKULIAH</th><th>SKS (SEMESTER)</th><th>GRADE</th><th>SKSN</th><th>KET</th></tr>';
         
         $total_ipk = 0;
@@ -174,11 +174,11 @@ class Khs extends CI_Controller {
         foreach ($khs_data['data_nilai'] as $key => $value) {
             $table .= '<tr>';
             $table .= '<td>'.strval($key+1).'.</td>';
-            $table .= '<td>'.$value['kode_matakuliah'].'</td>';
-            $table .= '<td>'.$value['nama_matakuliah'].'</td>';
-            $table .= '<td>'.$value['sks'].'</td>';
-            $table .= '<td>'.$value['grade'].'</td>';
-            $table .= '<td>'.$value['sksn'].'</td>';
+            $table .= '<td>'.e($value['kode_matakuliah']).'</td>';
+            $table .= '<td>'.e($value['nama_matakuliah']).'</td>';
+            $table .= '<td>'.e($value['sks']).'</td>';
+            $table .= '<td>'.e($value['grade']).'</td>';
+            $table .= '<td>'.e($value['sksn']).'</td>';
             $table .= '<td></td>';
             $table .= '</tr>';
             $total_ipk += $value['sksn'];

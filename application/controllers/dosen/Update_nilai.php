@@ -36,9 +36,12 @@ class Update_nilai extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $time = $this->dosenakademikservice->getAktivasi($kode_tahun_akademik);
+        if (!$time) {
+            show_error('Data aktivasi nilai belum tersedia.');
+        }
         $kode_dosen = $this->session->userdata('kode_dosen');
         
         $data['data'] = $this->dosenakademikservice->getMengajarWithUpdate($kode_dosen, $kode_tahun_akademik);
@@ -194,9 +197,9 @@ class Update_nilai extends CI_Controller {
             'pesan' => $pesan,
             'param' => 'uts',
             'target' => $user2,
-            'dosen' => $dosen->nama_dosen,
-            'prodi' => $prodi->nama_dosen,
-            'dekan' => $dekan->nama_dosen,
+            'dosen' => $dosen ? $dosen->nama_dosen : '',
+            'prodi' => $prodi ? $prodi->nama_dosen : '',
+            'dekan' => $dekan ? $dekan->nama_dosen : '',
         ];
 
         if ($user1 == 'dosen') {
@@ -208,7 +211,14 @@ class Update_nilai extends CI_Controller {
         }
     }
     public function pesan_all($kelas_id, $user1, $param, $user2) {
-        if (isset($_POST['pesan']) && !empty($_POST['pesan'])) {
+        $pesan = $this->input->post('pesan');
+        if (!empty($pesan)) {
+            $tgl = $this->input->post('tgl');
+            if (empty($tgl)) {
+                $tgl = date('Y-m-d H:i:s');
+            }
+
+            $data = array();
             if ($user1 == 'dosen') {
                 if ($user2 == 'prodi') {
                     $data = array(
@@ -216,8 +226,8 @@ class Update_nilai extends CI_Controller {
                         'kode_dosen' => 1,
                         'kode_prodi' => 1,
                         'param_dosen' => 1,
-                        'pesan_dosen' => $_POST['pesan'],
-                        'tgl_dosen' => $_POST['tgl']
+                        'pesan_dosen' => $pesan,
+                        'tgl_dosen' => $tgl
                     );
                 } else {
                     $data = array(
@@ -225,8 +235,8 @@ class Update_nilai extends CI_Controller {
                         'kode_dosen' => 1,
                         'kode_dekan' => 1,
                         'param_dosen' => 1,
-                        'pesan_dosen' => $_POST['pesan'],
-                        'tgl_dosen' => $_POST['tgl']
+                        'pesan_dosen' => $pesan,
+                        'tgl_dosen' => $tgl
                     );
                 }
             } else if ($user1 == 'koprodi') {
@@ -235,8 +245,8 @@ class Update_nilai extends CI_Controller {
                     'kode_dosen' => 1,
                     'kode_prodi' => 1,
                     'param_prodi' => 1,
-                    'pesan_prodi' => $_POST['pesan'],
-                    'tgl_prodi' => $_POST['tgl']
+                    'pesan_prodi' => $pesan,
+                    'tgl_prodi' => $tgl
                 );
             } else if ($user1 == 'dekan') {
                 $data = array(
@@ -244,21 +254,21 @@ class Update_nilai extends CI_Controller {
                     'kode_dosen' => 1,
                     'kode_dekan' => 1,
                     'param_dekan' => 1,
-                    'pesan_dekan' => $_POST['pesan'],
-                    'tgl_prodi' => $_POST['tgl']
+                    'pesan_dekan' => $pesan,
+                    'tgl_prodi' => $tgl
                 );
             }
 
-            if ($param == 'uts') {
-                $resutl = $this->dosenakademikservice->insertUpdateCatatanRevisi('update_catatan_revisi', $data);
-            } else if ($param == 'uas') {
-                $resutl = $this->dosenakademikservice->insertUpdateCatatanRevisi('update_catatan_revisi_uas', $data);
+            $resutl = false;
+            if (!empty($data)) {
+                if ($param == 'uts') {
+                    $resutl = $this->dosenakademikservice->insertUpdateCatatanRevisi('update_catatan_revisi', $data);
+                } else if ($param == 'uas') {
+                    $resutl = $this->dosenakademikservice->insertUpdateCatatanRevisi('update_catatan_revisi_uas', $data);
+                }
             }
-            if ($resutl) {
-                echo 'success';
-            } else {
-                echo 'error';
-            }
+
+            echo $resutl ? 'success' : 'error';
         }
     }
 

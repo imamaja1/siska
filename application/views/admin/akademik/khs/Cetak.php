@@ -172,14 +172,14 @@
     <tr>
         <td height="10px">&nbsp;</td>
         <td>&nbsp;</td>
-        <td><img src="<?= !empty($signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $signature) ? base_url('assets/signature-dosen/'.$signature) : base_url('assets/gambar/notfound.png') ?>" onclick="cot(6)" id="upload_link-6"  style="height: 70px" alt=""></td>
+        <td><img src="<?= e(!empty($signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $signature) ? base_url('assets/signature-dosen/'.rawurlencode($signature)) : base_url('assets/gambar/notfound.png')) ?>" onclick="cot(6)" id="upload_link-6"  style="height: 70px" alt=""></td>
         
       	
     </tr>
     <tr>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td><div class="garis_bawah"><?php echo bodo_kop($data['nim'])['dekan']; ?></div>NIK: <?php echo bodo_kop($data['nim'])['nik']; ?></td>
+        <td><div class="garis_bawah"><?= e(bodo_kop($data['nim'])['dekan'] ?? '') ?></div>NIK: <?= e(bodo_kop($data['nim'])['nik'] ?? '') ?></td>
     </tr>
 </table>
 <!-- End Footer KHS -->

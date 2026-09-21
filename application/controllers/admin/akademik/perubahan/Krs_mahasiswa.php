@@ -39,7 +39,7 @@ class Krs_mahasiswa extends CI_Controller {
             if (!empty($result)) {
                 echo '<ul id="nim-list" class="list-group">';
                 foreach ($result as $row) {
-                    echo '<li onClick="selectNim(\'' . $row->nim . '\')" class="list-group-item">' . $row->nim . '</li>';
+                    echo '<li onClick="selectNim(\'' . e($row->nim) . '\')" class="list-group-item">' . e($row->nim) . '</li>';
                 }
                 echo '</ul>';
             } else {

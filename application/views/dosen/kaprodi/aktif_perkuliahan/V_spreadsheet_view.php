@@ -1,12 +1,12 @@
 <?php
 header("Content-type: application/octet-stream");
-header("Content-Disposition: attachment; filename=" . $file_name . ".xls");
+header("Content-Disposition: attachment; filename=" . str_replace(array("\r","\n",'"'), '', $file_name) . ".xls");
 header("Pragma: no-cache");
 header("Expires: 0");
 ?>
 <p style="text-align: left; font-size: 12pt">
-    Prodi : <?= e($prodi->nama_program_studi) ?> <br>
-    Tahun Akademik : <?= e($ta->tahun_akademik) ?> - <?= e($ta->semester == 1 ? 'Ganjil' : 'Genap') ?>
+    Prodi : <?= e(isset($prodi->nama_program_studi) ? $prodi->nama_program_studi : '') ?> <br>
+    Tahun Akademik : <?= e(isset($ta->tahun_akademik) ? $ta->tahun_akademik : '') ?> - <?= (isset($ta->semester) && $ta->semester == 1) ? 'Ganjil' : 'Genap' ?>
 </p>
 <p style="text-align: center;">Tanggal Export : <?= date('d-M-Y H:i:s') ?></p>
 <hr>

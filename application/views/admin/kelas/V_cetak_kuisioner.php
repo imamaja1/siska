@@ -1,12 +1,12 @@
 <?php
 header("Content-type: application/octet-stream");
-header("Content-Disposition: attachment; filename=".$file_name.".xls");
+header("Content-Disposition: attachment; filename=".str_replace(array("\r","\n",'"'), '', $file_name).".xls");
 header("Pragma: no-cache");
 header("Expires: 0");
 ?>
 <p><img src="<?= base_url('assets/gambar/header_krs.png') ?>" alt=""><p align="right"><strong>BG/BAA/QSR/007-00/09</strong></p>
 <hr size="2"></p>
-<p align="center">HASIL KUISIONER SEMESTER <?= $tahun_akademik->semester == 1 ? 'GANJIL' : 'GENAP' ?> TAHUN AKADEMIK <?= $tahun_akademik->ta ?></p>
+<p align="center">HASIL KUISIONER SEMESTER <?= ($tahun_akademik && $tahun_akademik->semester == 1) ? 'GANJIL' : 'GENAP' ?> TAHUN AKADEMIK <?= e($tahun_akademik ? $tahun_akademik->ta : '') ?></p>
 
 <table style="font-family: 'Arial Narrow','Arial';">
     <tr>

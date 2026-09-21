@@ -83,7 +83,7 @@ class Matakuliah_prasyarat extends CI_Controller {
             $matakuliah_prasyarat = $this->m_matakuliah_prasyarat->get_matakuliah_prasyarat_by_kode_nama_kurikulum($kode_nama_kurikulum);
             if (count($matakuliah_prasyarat) > 0) {
                 $table = '<div class="box box-primary flat"><div class="box-body">';
-              	$table .= '<div align="center"><h4><b>MK Prasyarat ' . strtoupper($nama_prodi) . ' (Kurikulum : ' . $nama_kurikulum->nama_kurikulum . ')</b></h4></div><br />';
+              	$table .= '<div align="center"><h4><b>MK Prasyarat ' . e(strtoupper($nama_prodi)) . ' (Kurikulum : ' . e($nama_kurikulum ? $nama_kurikulum->nama_kurikulum : '') . ')</b></h4></div><br />';
                 $table .= '<div class="table-responsive"><table class="table demo-table">';
                 $table .= '<thead><tr>';
                 $table .= '<th>NO.</th>';
@@ -96,20 +96,20 @@ class Matakuliah_prasyarat extends CI_Controller {
                 foreach ($matakuliah_prasyarat as $row) {
                     $table .= '<tr>';
                     $table .= '<td><div align="center">' . $no . '.</div></td>';
-                    $table .= '<td><div align="center">' . $row->kode_matakuliah_ambil . '</div></td>';
+                    $table .= '<td><div align="center">' . e($row->kode_matakuliah_ambil) . '</div></td>';
                     if (in_array(substr($row->matakuliah_yg_diambil,6,2),$pilihan))
                     {
-                        $table .= '<td><i>' . $row->nama_matakuliah_yg_diambil . '</i></td>';
+                        $table .= '<td><i>' . e($row->nama_matakuliah_yg_diambil) . '</i></td>';
                     }else{
-                        $table .= '<td>' . $row->nama_matakuliah_yg_diambil . '</td>';
+                        $table .= '<td>' . e($row->nama_matakuliah_yg_diambil) . '</td>';
                     }
-                    $table .= '<td><div  align="center">' . $row->kode_matakuliah_syarat . '</div></td>';
+                    $table .= '<td><div  align="center">' . e($row->kode_matakuliah_syarat) . '</div></td>';
                     if (in_array(substr($row->matakuliah_yg_diambil,6,2),$pilihan))
                     {
-                        $table .= '<td><i>' . $row->nama_matakuliah_prasyarat . '</i></td>';
+                        $table .= '<td><i>' . e($row->nama_matakuliah_prasyarat) . '</i></td>';
 
                     }else{
-                        $table .= '<td>' . $row->nama_matakuliah_prasyarat . '</td>';
+                        $table .= '<td>' . e($row->nama_matakuliah_prasyarat) . '</td>';
 
                     }
                     $table .= '</tr>';

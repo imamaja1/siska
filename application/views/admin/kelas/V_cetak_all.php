@@ -12,19 +12,20 @@ foreach ($matakuliah as $mak)
     {
         $kelas = $CI->kelas_model->get_nama_kelas_by_kelas_id($kel->kelas_id);
         $top = $CI->kuisioner_model->get_matakuliah_dan_dosen($kode_tahun_akademik, $mak->id_matakuliah, $kel->kelas_id);
-        $nama_kelas = $kelas->nama_kelas;
+        $nama_kelas = $kelas ? $kelas->nama_kelas : '';
         $tahun_akademik = $CI->db->select('*, tahun_akademik as ta')->from('tahun_akademik')->where('kode_tahun_akademik',$kode_tahun_akademik)->get()->row_object();
         $data = $CI->kuisioner_model->get_hasil_kuisioner($kode_tahun_akademik, $mak->id_matakuliah, $kel->kelas_id);
-        $file_name = 'Kusisioner Kelas-'.$kelas->nama_kelas.'-'. $data['top']['nama_matakuliah']->nama_matakuliah;
+        $nama_matakuliah = isset($data['top']['nama_matakuliah']) ? $data['top']['nama_matakuliah']->nama_matakuliah : '';
+        $file_name = 'Kusisioner Kelas-'.$nama_kelas.'-'.$nama_matakuliah;
         header("Content-type: application/octet-stream");
-        header("Content-Disposition: attachment; filename=".$file_name.".xls");
+        header("Content-Disposition: attachment; filename=".str_replace(array("\r","\n",'"'), '', $file_name).".xls");
         header("Pragma: no-cache");
         header("Expires: 0");
         ?>
 
         <p><img src="<?= base_url('assets/gambar/header_krs.png') ?>" alt=""><p align="right"><strong>BG/BAA/QSR/007-00/09</strong></p>
         <hr size="2"></p>
-        <p align="center">HASIL KUISIONER SEMESTER <?= $tahun_akademik->semester == 1 ? 'GANJIL' : 'GENAP' ?> TAHUN AKADEMIK <?= $tahun_akademik->ta ?></p>
+        <p align="center">HASIL KUISIONER SEMESTER <?= ($tahun_akademik && $tahun_akademik->semester == 1) ? 'GANJIL' : 'GENAP' ?> TAHUN AKADEMIK <?= e($tahun_akademik ? $tahun_akademik->ta : '') ?></p>
 
         <table style="font-family: 'Arial Narrow','Arial';">
             <tr>

@@ -59,10 +59,10 @@
     <div class="col-md-12">
         <div class="box flat">
             <div style="padding:20px 20px 0 20px; text-align:right" >
-                <a href="<?= base_url('admin/mbkm/daftar/print_view_non_aktif/'.$data_mhs->nim.'/'.$data_mhs->kode_tahun_akademik) ?>" type="button" class="btn btn-sm btn-danger">
+                <a href="<?= e(base_url('admin/mbkm/daftar/print_view_non_aktif/'.rawurlencode($data_mhs->nim).'/'.rawurlencode($data_mhs->kode_tahun_akademik))) ?>" type="button" class="btn btn-sm btn-danger">
                     Download Non Aktif
                 </a>
-                <a href="<?= base_url('admin/mbkm/daftar/print_view_aktif/'.$data_mhs->nim.'/'.$data_mhs->kode_tahun_akademik) ?>" type="button" class="btn btn-sm btn-danger">
+                <a href="<?= e(base_url('admin/mbkm/daftar/print_view_aktif/'.rawurlencode($data_mhs->nim).'/'.rawurlencode($data_mhs->kode_tahun_akademik))) ?>" type="button" class="btn btn-sm btn-danger">
                     Download Aktif
                 </a>
             </div>

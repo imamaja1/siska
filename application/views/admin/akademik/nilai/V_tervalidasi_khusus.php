@@ -134,7 +134,7 @@
                                 if (isset($row->param_uas) && ($row->param_uas == "1")) {
                                     ?>
                                         <a class="btn btn-info btn-xs btn-flat"
-                                        href="#" onclick='validasi("<?= $row->kelas_id ?>")'>
+                                        href="#" onclick='validasi("<?= e($row->kelas_id) ?>")'>
                                             <i class="fa fa-check-circle"></i>
                                             Validasi
                                         </a>

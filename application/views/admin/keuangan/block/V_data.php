@@ -25,7 +25,7 @@
                         <td><?= e($row->nama_mahasiswa) ?></td>
                        <td class="text-center"><?= e($row->tahun_akademik) ?></td>
                         <td class="text-center"><?= $row->semester == 1 ? 'Ganjil' : 'Genap'; ?></td>
-                        <td class="text-center"><?= date('d M, Y', strtotime($row->created_at)); ?></td>
+                        <td class="text-center"><?= !empty($row->created_at) ? date('d M, Y', strtotime($row->created_at)) : '-' ?></td>
                         <td class="text-center">
                             <button onclick="hapus('<?= e($row->id) ?>')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Hapus</button>
                         </td>

@@ -9,6 +9,11 @@ class Daftar extends CI_Controller {
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
         }
+        $class = $this->router->fetch_class();
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
         $this->load->model(array(
             'akademik/krs_model',
             'kuisioner/kelas_model',
@@ -26,14 +31,15 @@ class Daftar extends CI_Controller {
     public function index() {
         $ta = $this->input->get('ta');
         $prodi = $this->input->get('prodi');
+        $semester = $this->m_tahun_akademik->get_semester();
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $ta = $semester ? $semester->kode_tahun_akademik : null;
         }
 
         $data['content'] = 'admin/mbkm/V_mahasiswa';
         $data['judul'] = 'mbkm';
         $data['sub_judul'] = 'MBKM';
-        $data['semester'] = $this->m_tahun_akademik->get_semester();
+        $data['semester'] = $semester;
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
         $data['kode_tahun_akademik'] = $ta;
         $data['kode_program_studi_filter'] = $prodi;
@@ -58,7 +64,8 @@ class Daftar extends CI_Controller {
 
     public function get_mahasiswa($ta = null) {
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $semester = $this->m_tahun_akademik->get_semester();
+            $ta = $semester ? $semester->kode_tahun_akademik : null;
         }
         $data['ta'] = $ta;
         $data['mahasiswa'] = $this->mbkmservice->getMahasiswaMbkm($ta);
@@ -116,6 +123,9 @@ class Daftar extends CI_Controller {
 
     public function nilai($id, $ta){
         $data['data_mhs'] = $this->mbkmservice->getNilaiMahasiswa($id, $ta);
+        if (!$data['data_mhs']) {
+            show_error('Data nilai mahasiswa MBKM tidak ditemukan.');
+        }
         $kode_kurikulum = kode_nama_kurikulum($data['data_mhs']->nim);
         $data['kurikulum'] = $this->mbkmservice->getKurikulum($kode_kurikulum);
         $data['data_nilai'] = $this->mbkmservice->getDataNilai($id, $ta);
@@ -164,7 +174,12 @@ class Daftar extends CI_Controller {
     public function status($id){
         $tmp = $this->mbkmservice->getStatusMbkm($id);
 
-        if ($tmp->id_mk_mbkm) {
+        if (!$tmp || !isset($tmp->kode_krs_detail)) {
+            echo json_encode(array('status' => 0));
+            return;
+        }
+
+        if (!empty($tmp->id_mk_mbkm)) {
             if ($tmp->status_mbkm == 1) {
                 $this->mbkmservice->updateStatusMbkm($id, '0');
                 $eco = array(
@@ -190,8 +205,14 @@ class Daftar extends CI_Controller {
     public function print_view_aktif($nim, $kode_ta) {
         $ta = $this->mbkmservice->getTahunAkademik($kode_ta);
         $get_semester = $this->mbkmservice->getKrs($nim, $kode_ta);
-      	$semester = $get_semester->semester;
+        if (!$ta || !$get_semester) {
+            show_error('Data KHS MBKM tidak ditemukan.');
+        }
+        $semester = $get_semester->semester;
         $program_studi = get_kode_prodi($nim);
+        if (!$program_studi) {
+            show_error('Program studi mahasiswa tidak ditemukan.');
+        }
 
         $data_krs = $this->Khs_model->khs_kpat_aktif($get_semester->kode_krs);
         $data_penilaian = data_penilaian($nim, $semester);
@@ -235,8 +256,14 @@ class Daftar extends CI_Controller {
     public function print_view_non_aktif($nim, $kode_ta) {
         $ta = $this->mbkmservice->getTahunAkademik($kode_ta);
         $get_semester = $this->mbkmservice->getKrs($nim, $kode_ta);
-      	$semester = $get_semester->semester;
+        if (!$ta || !$get_semester) {
+            show_error('Data KHS MBKM tidak ditemukan.');
+        }
+        $semester = $get_semester->semester;
         $program_studi = get_kode_prodi($nim);
+        if (!$program_studi) {
+            show_error('Program studi mahasiswa tidak ditemukan.');
+        }
 
         $data_krs = $this->Khs_model->khs_kpat_non_aktif($get_semester->kode_krs);
         $data_penilaian = data_penilaian($nim, $semester);

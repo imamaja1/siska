@@ -34,9 +34,12 @@ class Status_perkuliahan extends CI_Controller
     public function index()
     {
         if (is_null(get_cookie('kode_tahun_akademik'))){
-            setcookie('kode_tahun_akademik',tahun_akademik()->kode_tahun_akademik,time()+(60*15),'/');
-            setcookie('tahun_akademik',tahun_akademik()->tahun_akademik,time()+(60*15),'/');
-            setcookie('semester',tahun_akademik()->semester,time()+(60*15),'/');
+            $ta = tahun_akademik();
+            if (!empty($ta)) {
+                setcookie('kode_tahun_akademik',$ta->kode_tahun_akademik,time()+(60*15),'/');
+                setcookie('tahun_akademik',$ta->tahun_akademik,time()+(60*15),'/');
+                setcookie('semester',$ta->semester,time()+(60*15),'/');
+            }
         }
         $data['content'] = 'admin/keuangan/V_status_perkuliahan';
         $data['judul'] = "Keuangan";
@@ -212,7 +215,7 @@ class Status_perkuliahan extends CI_Controller
         if (!empty($result)) {
             echo '<ul id="nim-list" class="list-group">';
             foreach ($result as $nim) {
-                echo '<li onClick="selectNim(' . $nim->nim . ')" class="list-group-item">' . $nim->nim . '</li>';
+                echo '<li onClick="selectNim(' . e($nim->nim) . ')" class="list-group-item">' . e($nim->nim) . '</li>';
             }
             echo '</ul>';
         } else {
@@ -224,6 +227,10 @@ class Status_perkuliahan extends CI_Controller
     {
         $data['id'] = $kode_status_perkuliahan;
         $data['data'] = $this->keuanganservice->getStatusPerkuliahanByKode($kode_status_perkuliahan);
+        if (empty($data['data'])) {
+            echo '<div class="alert alert-warning">Data tidak ditemukan.</div>';
+            return;
+        }
         $this->load->view('admin/keuangan/Popover_edit', $data);
     }
 
@@ -233,6 +240,9 @@ class Status_perkuliahan extends CI_Controller
         $kode_tahun_akademik = $this->session->userdata('tahun_akademik_sess');
         $kode_prodi = $this->session->userdata('kode_prodi_sess');
         $sp = $this->keuanganservice->getNimFromStatusPerkuliahan($id);
+        if (empty($sp)) {
+            redirect(site_url('admin/keuangan/status_perkuliahan'));
+        }
         $data = $this->input->post();
         $status = $this->input->post('status_perkuliahan');
         if ($status == 'L') {
@@ -263,8 +273,14 @@ class Status_perkuliahan extends CI_Controller
         $kode_program_studi = $this->input->post('prodi');
 
         $kode = $this->Nama_jurusan_model->get_kode($kode_program_studi);
-        $kode_jurusan = $this->Kode_jurusan_model->get_kode($kode->id_jurusan)->kode_jurusan;
-        $kode_jenjang = $this->Jenjang_model->get_kode($kode->id_jenjang)->kode_jenjang;
+        if (empty($kode)) {
+            $this->session->set_flashdata('info', '<div class="alert alert-danger alert-dismissible">Program studi tidak ditemukan.</div>');
+            redirect(site_url('admin/keuangan/status_perkuliahan/rekap'));
+        }
+        $kode_jurusan_row = $this->Kode_jurusan_model->get_kode($kode->id_jurusan);
+        $kode_jenjang_row = $this->Jenjang_model->get_kode($kode->id_jenjang);
+        $kode_jurusan = $kode_jurusan_row ? $kode_jurusan_row->kode_jurusan : null;
+        $kode_jenjang = $kode_jenjang_row ? $kode_jenjang_row->kode_jenjang : null;
 
         $data_sess = array(
             'tahun_akademik_sess' => $kode_tahun_akademik,
@@ -286,33 +302,34 @@ class Status_perkuliahan extends CI_Controller
         $tahun_angkatan = $this->m_tahun_akademik->tahun_angkatan();
 
         $status = array('A', 'C', 'T', 'B', 'P', 'L');
+        $res = [];
         $i = 0;
         foreach ($tahun_angkatan as $row) {
             $angkatan = substr($row->tahun_akademik, 2, 2);
             $tahun_angkatan = substr($row->tahun_akademik, 0, 4);
             $nama_kurikulum = $this->keuanganservice->getNamaKurikulumByAngkatan($angkatan, $kode_prodi);
-            $tugas_akhir = $this->keuanganservice->getTugasAkhirId($nama_kurikulum->kode_nama_kurikulum);
+            $tugas_akhir = $nama_kurikulum ? $this->keuanganservice->getTugasAkhirId($nama_kurikulum->kode_nama_kurikulum) : null;
             if ($angkatan < 19) {
-                $mhs_tugas_akhir = $this->keuanganservice->getMhsTugasAkhirOld($kode_tahun_akademik, $tugas_akhir, $kode_jurusan, $kode_jenjang, $angkatan);
+                $mhs_tugas_akhir = $tugas_akhir ? $this->keuanganservice->getMhsTugasAkhirOld($kode_tahun_akademik, $tugas_akhir->id_matakuliah, $kode_jurusan, $kode_jenjang, $angkatan) : [];
             } else {
                 $kode = $this->keuanganservice->getProgramStudiByKode($kode_prodi);
-                $mhs_tugas_akhir = $this->keuanganservice->getMhsTugasAkhirNew($kode_tahun_akademik, $tugas_akhir, $kode->kode_fakultas, $kode->kode_prodi_univ, $angkatan);
+                $mhs_tugas_akhir = ($tugas_akhir && $kode) ? $this->keuanganservice->getMhsTugasAkhirNew($kode_tahun_akademik, $tugas_akhir->id_matakuliah, $kode->kode_fakultas, $kode->kode_prodi_univ, $angkatan) : [];
             }
 
             $res[$i]['mhs_tugas_akhir'] = count($mhs_tugas_akhir);
-            $res[$i]['tugas_akhir'] = $tugas_akhir;
-            $res[$i]['kode_nama_kuirkulum'] = $nama_kurikulum->kode_nama_kurikulum;
+            $res[$i]['tugas_akhir'] = $tugas_akhir ? $tugas_akhir->id_matakuliah : null;
+            $res[$i]['kode_nama_kuirkulum'] = $nama_kurikulum ? $nama_kurikulum->kode_nama_kurikulum : null;
             $res[$i]['angkatan'] = $tahun_angkatan;
             if ($angkatan < 19) {
                 foreach ($status as $key => $val) {
                     $sp = $this->keuanganservice->getStatusPerkuliahanCountOld($kode_tahun_akademik, $angkatan, $kode_jurusan, $kode_jenjang, $val);
-                    $res[$i][$val] = count($sp) > 0 ? $sp->jumlah : 0;
+                    $res[$i][$val] = !empty($sp) ? $sp->jumlah : 0;
                 }
             } else {
                 $kode = $this->keuanganservice->getProgramStudiByKode($kode_prodi);
                 foreach ($status as $key => $val) {
-                    $sp = $this->keuanganservice->getStatusPerkuliahanCountNew($kode_tahun_akademik, $angkatan, $kode->kode_fakultas, $kode->kode_prodi_univ, $val);
-                    $res[$i][$val] = count($sp) > 0 ? $sp->jumlah : 0;
+                    $sp = $kode ? $this->keuanganservice->getStatusPerkuliahanCountNew($kode_tahun_akademik, $angkatan, $kode->kode_fakultas, $kode->kode_prodi_univ, $val) : null;
+                    $res[$i][$val] = !empty($sp) ? $sp->jumlah : 0;
                 }
             }
 
@@ -341,6 +358,9 @@ class Status_perkuliahan extends CI_Controller
     {
         $kode_prodi = $this->session->userdata('kode_prodi_sess');
         $prodi = $this->Nama_jurusan_model->get_all_byid($kode_prodi);
+        if (empty($prodi)) {
+            show_error('Program studi tidak ditemukan.');
+        }
         $data = $this->data();
 
         $table = '<table border="1">';
@@ -380,7 +400,12 @@ class Status_perkuliahan extends CI_Controller
     }
 
     public function filter_rekap_sks(){
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $ta = tahun_akademik();
+        if (empty($ta)) {
+            echo '<p class="alert alert-warning">Tahun akademik aktif tidak ditemukan.</p>';
+            return;
+        }
+        $kode_tahun_akademik = $ta->kode_tahun_akademik;
         $kkp_skripsi = get_kode_matakuliah_skripsi();
 
         $data['data'] = $this->keuanganservice->getRekapSksData($kode_tahun_akademik, $kkp_skripsi);
@@ -390,17 +415,26 @@ class Status_perkuliahan extends CI_Controller
 
   public function cetak_filter_rekap_sks()
     {
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $ta = tahun_akademik();
+        if (empty($ta)) {
+            show_error('Tahun akademik aktif tidak ditemukan.');
+        }
+        $kode_tahun_akademik = $ta->kode_tahun_akademik;
         $kkp_skripsi = get_kode_matakuliah_skripsi();
 
         $data['data'] = $this->keuanganservice->getRekapSksData($kode_tahun_akademik, $kkp_skripsi);
-        $data['filename'] = 'Rekap SKS Mahasiswa ' . tahun_akademik()->tahun_akademik . ' ' . (tahun_akademik()->semester == 0 ? 'Genap' : 'Ganjil') . ' - ' . date('d-m-Y');
+        $data['filename'] = 'Rekap SKS Mahasiswa ' . $ta->tahun_akademik . ' ' . ($ta->semester == 0 ? 'Genap' : 'Ganjil') . ' - ' . date('d-m-Y');
         return $this->load->view('admin/keuangan/V_cetak_hasil_rekap_sks', $data);
 
     }
 
     public function filter_rekap_sks_skripsi(){
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $ta = tahun_akademik();
+        if (empty($ta)) {
+            echo '<p class="alert alert-warning">Tahun akademik aktif tidak ditemukan.</p>';
+            return;
+        }
+        $kode_tahun_akademik = $ta->kode_tahun_akademik;
         $kkp_skripsi = get_kode_matakuliah_skripsi();
 
         $data['data'] = $this->keuanganservice->getRekapSksSkripsiData($kode_tahun_akademik, $kkp_skripsi);
@@ -409,16 +443,25 @@ class Status_perkuliahan extends CI_Controller
 
    public function cetak_filter_rekap_sks_skripsi()
     {
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $ta = tahun_akademik();
+        if (empty($ta)) {
+            show_error('Tahun akademik aktif tidak ditemukan.');
+        }
+        $kode_tahun_akademik = $ta->kode_tahun_akademik;
         $kkp_skripsi = get_kode_matakuliah_skripsi();
 
         $data['data'] = $this->keuanganservice->getRekapSksSkripsiData($kode_tahun_akademik, $kkp_skripsi);
-        $data['filename'] = 'Rekap Pembayaran Skripsi Mahasiswa ' . tahun_akademik()->tahun_akademik . ' ' . (tahun_akademik()->semester == 0 ? 'Genap' : 'Ganjil') . ' - ' . date('d-m-Y');
+        $data['filename'] = 'Rekap Pembayaran Skripsi Mahasiswa ' . $ta->tahun_akademik . ' ' . ($ta->semester == 0 ? 'Genap' : 'Ganjil') . ' - ' . date('d-m-Y');
         return $this->load->view('admin/keuangan/V_cetak_hasil_rekap_sks_skripsi', $data);
     }
 
     public function bayar_sks($kode_status_perkuliahan){
         $sp = $this->keuanganservice->getStatusPerkuliahanByKode($kode_status_perkuliahan);
+        if (empty($sp)) {
+            $res['status'] = 'false';
+            echo json_encode($res);
+            return;
+        }
         if ($sp->pembayaran_sks == '0'){
             $val = '1';
         }else{
@@ -437,6 +480,11 @@ class Status_perkuliahan extends CI_Controller
 
     public function bayar_lab($kode_status_perkuliahan){
         $sp = $this->keuanganservice->getStatusPerkuliahanByKode($kode_status_perkuliahan);
+        if (empty($sp)) {
+            $res['status'] = 'false';
+            echo json_encode($res);
+            return;
+        }
         if ($sp->pembayaran_lab == '0'){
             $val = '1';
         }else{
@@ -476,6 +524,10 @@ class Status_perkuliahan extends CI_Controller
     public function ganti_tahun_akademik(){
         $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
         $ta = $this->keuanganservice->getTahunAkademikByKode($kode_tahun_akademik);
+        if (empty($ta)) {
+            $this->session->set_flashdata('info', '<div class="alert alert-danger alert-dismissible">Tahun akademik tidak ditemukan.</div>');
+            return redirect($_SERVER['HTTP_REFERER']);
+        }
         setcookie('kode_tahun_akademik',$ta->kode_tahun_akademik,time()+(60*15),'/');
         setcookie('tahun_akademik',$ta->tahun_akademik,time()+(60*15),'/');
         setcookie('semester',$ta->semester,time()+(60*15),'/');

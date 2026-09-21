@@ -75,7 +75,7 @@ class Kuisioner extends CI_Controller
         {
             foreach ($data as $row)
             {
-                echo '<option value="'.$row->kelas_id.'" > Kelas - '.$row->nama_kelas.'</option>';
+                echo '<option value="'.$row->kelas_id.'" > Kelas - '.e($row->nama_kelas).'</option>';
             }
         }else{
           echo '<option value="0">Kelas Belum dibagi</option>';
@@ -110,7 +110,7 @@ class Kuisioner extends CI_Controller
         $data['content'] = 'admin/kelas/V_hasil_kuisioner';
         $data['data'] = $this->kuisioner_model->get_hasil_kuisioner($kode_tahun_akademik, $id_matakuliah, $kelas_id);
         $data['top'] = $this->kuisioner_model->get_matakuliah_dan_dosen($kode_tahun_akademik, $id_matakuliah, $kelas_id);
-        $data['nama_kelas'] = $kelas->nama_kelas;
+        $data['nama_kelas'] = $kelas ? $kelas->nama_kelas : '';
         $this->load->view('admin/template/V_main', $data);
     }
 
@@ -122,10 +122,11 @@ class Kuisioner extends CI_Controller
         $kelas_id= $this->session->userdata('kelas_id_sess');
         $kelas = $this->kelas_model->get_nama_kelas_by_kelas_id($kelas_id);
         $data['top'] = $this->kuisioner_model->get_matakuliah_dan_dosen($kode_tahun_akademik, $id_matakuliah, $kelas_id);
-        $data['nama_kelas'] = $kelas->nama_kelas;
+        $data['nama_kelas'] = $kelas ? $kelas->nama_kelas : '';
         $data['tahun_akademik'] = $tahun_akademik;
         $data['data'] = $this->kuisioner_model->get_hasil_kuisioner($kode_tahun_akademik, $id_matakuliah, $kelas_id);
-        $data['file_name'] = 'Kusisioner Kelas-'.$kelas->nama_kelas.'-'. $data['top']['nama_matakuliah']->nama_matakuliah;
+        $nama_matakuliah = isset($data['top']['nama_matakuliah']) ? $data['top']['nama_matakuliah']->nama_matakuliah : '';
+        $data['file_name'] = 'Kusisioner Kelas-'.($kelas ? $kelas->nama_kelas : '').'-'.$nama_matakuliah;
 
         $this->load->view('admin/kelas/V_cetak_kuisioner', $data);
 
@@ -149,10 +150,11 @@ class Kuisioner extends CI_Controller
         $kelas_id= $this->session->userdata('kelas_id_sess');
         $kelas = $this->kelas_model->get_nama_kelas_by_kelas_id($kelas_id);
         $data['top'] = $this->kuisioner_model->get_matakuliah_dan_dosen($kode_tahun_akademik, $id_matakuliah, $kelas_id);
-        $data['nama_kelas'] = $kelas->nama_kelas;
+        $data['nama_kelas'] = $kelas ? $kelas->nama_kelas : '';
         $data['tahun_akademik'] = $tahun_akademik;
         $data['data'] = $this->kuisioner_model->get_hasil_kuisioner($kode_tahun_akademik, $id_matakuliah, $kelas_id);
-        $file_name = 'Kusisioner Kelas-'.$kelas->nama_kelas.'-'. $data['top']['nama_matakuliah']->nama_matakuliah;
+        $nama_matakuliah = isset($data['top']['nama_matakuliah']) ? $data['top']['nama_matakuliah']->nama_matakuliah : '';
+        $file_name = 'Kusisioner Kelas-'.($kelas ? $kelas->nama_kelas : '').'-'.$nama_matakuliah;
 
         require_once FCPATH . 'vendor/autoload.php';
 
@@ -245,10 +247,6 @@ class Kuisioner extends CI_Controller
 
         $tahun_akademik_obj = $this->kuisionerservice->getTahunAkademikByKode($kode_tahun_akademik);
         $ta_label = $tahun_akademik_obj ? $tahun_akademik_obj->tahun_akademik . ' - ' . ($tahun_akademik_obj->semester == 1 ? 'Ganjil' : 'Genap') : '';
-
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $spreadsheet->getActiveSheet()->setTitle('Sheet1');
-        $first = true;
 
         $styleHeader = [
             'borders' => ['allBorders' => ['style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM]],
@@ -402,7 +400,7 @@ class Kuisioner extends CI_Controller
         $filename = 'Download-PBM-' . ($tahun_akademik_obj ? $tahun_akademik_obj->tahun_akademik : $kode_tahun_akademik) . '.xls';
 
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: attachment; filename="' . str_replace(array("\r","\n",'"'), '', $filename) . '"');
         header('Cache-Control: max-age=0');
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($spreadsheet);
@@ -432,7 +430,8 @@ class Kuisioner extends CI_Controller
         $kode_tahun_akademik = $this->input->get('kode_tahun_akademik');
         if (!$kode_tahun_akademik) {
             $row = $this->db->select('kode_tahun_akademik')->from('kelas')->where('kelas_id', $kelas_id)->get()->row_object();
-            $kode_tahun_akademik = $row ? $row->kode_tahun_akademik : tahun_akademik()->kode_tahun_akademik;
+            $ta_aktif = tahun_akademik();
+            $kode_tahun_akademik = $row ? $row->kode_tahun_akademik : ($ta_aktif ? $ta_aktif->kode_tahun_akademik : null);
         }
         $kelas = $this->kelas_model->get_nama_kelas_by_kelas_id($kelas_id);
         if (!$kelas) {
@@ -512,7 +511,9 @@ class Kuisioner extends CI_Controller
         $data['prodi'] = $this->kuisionerservice->getProgramStudiByKode($kode_program_studi);
         $data['tahun_akademik'] = $this->kuisionerservice->getTahunAkademikByKode($kode_tahun_akademik);
 //        $data['angkatan'] = "20".$angkatan;
-        $data['file_name'] = "Kuisioner Pelayanan Prodi ".$data['prodi']->nama_program_studi." TA.".$data['tahun_akademik']->tahun_akademik;
+        $nama_prodi = isset($data['prodi']->nama_program_studi) ? $data['prodi']->nama_program_studi : '';
+        $nama_ta = isset($data['tahun_akademik']->tahun_akademik) ? $data['tahun_akademik']->tahun_akademik : '';
+        $data['file_name'] = "Kuisioner Pelayanan Prodi ".$nama_prodi." TA.".$nama_ta;
         $this->load->view('admin/kelas/kuisioner_layanan/V_cetak_kuisioner', $data);
     }
 }

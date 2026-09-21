@@ -97,8 +97,8 @@ class Aktif_perkuliahan extends CI_Controller
         foreach ($data as $row) :
             $table .= '<tr>';
             $table .= '<td>' . $i++ . '.</td>';
-            $table .= '<td>' . $row->nim . '</td>';
-            $table .= '<td>' . $row->nama_mahasiswa . '</td>';
+            $table .= '<td>' . e($row->nim) . '</td>';
+            $table .= '<td>' . e($row->nama_mahasiswa) . '</td>';
             $table .= '</tr>';
         endforeach;
         $table .= '</table>';
@@ -107,7 +107,7 @@ class Aktif_perkuliahan extends CI_Controller
         $nim_aktif = array_map(function ($value) {
             return $value['nim'];
         }, $result);
-        $data['tidak_aktif'] = $this->laporan_model->tidak_aktif_perangkatan_perprodi($tahun_angkatan, $kode_program_studi, $nim_aktif)->result_object();
+        $tidak_aktif = $this->laporan_model->tidak_aktif_perangkatan_perprodi($tahun_angkatan, $kode_program_studi, $nim_aktif)->result_object();
 
         $table2 = '<table border="1">';
         $table2 .= '<tr>';
@@ -116,23 +116,25 @@ class Aktif_perkuliahan extends CI_Controller
         $table2 .= '<th>NAMA MAHASISWA</th>';
         $table2 .= '</tr>';
         $i = 1;
-        foreach ($data as $row) :
+        foreach ($tidak_aktif as $row) :
             $table2 .= '<tr>';
             $table2 .= '<td>' . $i++ . '.</td>';
-            $table2 .= '<td>' . $row->nim . '</td>';
-            $table2 .= '<td>' . $row->nama_mahasiswa . '</td>';
+            $table2 .= '<td>' . e($row->nim) . '</td>';
+            $table2 .= '<td>' . e($row->nama_mahasiswa) . '</td>';
             $table2 .= '</tr>';
         endforeach;
         $table2 .= '</table>';
 
-        $data['table'] = $table;
-        $data['table2'] = $table2;
-        $data['file_name'] = $prodi->singkatan_program_studi . '-' . $prodi->nama_program_studi;
-        $data['angkatan'] = $tahun_angkatan;
-        $data['ta'] = $this->m_tahun_akademik->get_tahun_akademik_by_kode($kode_tahun_akademik);
-        $data['prodi'] = $prodi;
+        $view_data = array(
+            'table' => $table,
+            'table2' => $table2,
+            'file_name' => $prodi ? $prodi->singkatan_program_studi . '-' . $prodi->nama_program_studi : '',
+            'angkatan' => $tahun_angkatan,
+            'ta' => $this->m_tahun_akademik->get_tahun_akademik_by_kode($kode_tahun_akademik),
+            'prodi' => $prodi,
+        );
 
-        $this->load->view('dosen/kaprodi/aktif_perkuliahan/V_spreadsheet_view', $data);
+        $this->load->view('dosen/kaprodi/aktif_perkuliahan/V_spreadsheet_view', $view_data);
 
 
     }

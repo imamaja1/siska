@@ -10,12 +10,12 @@
             <tr>
                 <td><button class="btn btn-default btn-xs"><?= e($total_dosen) ?> Dosen (100%) </button></td>
                 <td>
-                    <button class="btn btn-default btn-xs"><?= e($sudah_ngisi) ?> Dosen (<?= number_format(($sudah_ngisi / $total_dosen) * 100, 2) ?>%)</button>
+                    <button class="btn btn-default btn-xs"><?= e($sudah_ngisi) ?> Dosen (<?= ($total_dosen > 0 ? number_format(($sudah_ngisi / $total_dosen) * 100, 2) : '0') ?>%)</button>
                     <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal_sudah_ngisi"><i class="fa fa-eye"></i></button>
                 </td>
 
                 <td>
-                    <button class="btn btn-default btn-xs"><?= e($total_dosen - $sudah_ngisi) ?> Dosen (<?= number_format((($total_dosen - $sudah_ngisi) / $total_dosen) * 100, 2) ?>%)</button>
+                    <button class="btn btn-default btn-xs"><?= e($total_dosen - $sudah_ngisi) ?> Dosen (<?= ($total_dosen > 0 ? number_format((($total_dosen - $sudah_ngisi) / $total_dosen) * 100, 2) : '0') ?>%)</button>
                     <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modal_belum_ngisi"><i class="fa fa-eye"></i></button>
                 </td>
             </tr>
@@ -208,6 +208,9 @@
 
 
 <script>
+    function escHtml(s) {
+        return $('<div>').text(s == null ? '' : s).html();
+    }
     function show_jumlah_dosen(id_bidang) {
 //        alert(id_bidang);
         $.ajax({
@@ -224,10 +227,10 @@
                 for (i = 0; i < data.length; i++) {
                     nomor++;
 
-                    $('.tampil_data_dosen').append('<tr><td>' + nomor + '</td><td>' + data[i].nama_dosen + '</td></tr>');
+                    $('.tampil_data_dosen').append('<tr><td>' + nomor + '</td><td>' + escHtml(data[i].nama_dosen) + '</td></tr>');
                 }
                 $('#judul_nama_bidang').empty();
-                $('#judul_nama_bidang').append('Nama dosen dengan bidang ilmu ' + data[0].nama_bidang);
+                $('#judul_nama_bidang').append('Nama dosen dengan bidang ilmu ' + escHtml(data[0].nama_bidang));
                 $("#modal-jumlah_dosen").modal('show');
             },
         });

@@ -66,14 +66,14 @@
             <tr>
                 <td width="85%" style="border-bottom: 0.5px solid #000000;  ;text-align: center ;vertical-align: bottom; font-family:serif; font-size: 8pt;">
                     <!--<img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.$prodi->kode_fakultas.'.png'); ?>">-->
-                    <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.bodo_kop($perwalian->nim)['kop']) ?>">
+                    <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($perwalian->nim)['kop'] ?? ''))) ?>">
                 </td>
                 <td width="15%">
                     <table style="border:1px solid #000000; width:80px; font-size: 8pt">
                         <tr>
 <!--                            <td align="center" height="100px" valign="middle"><strong>FOTO<br />3 x 4</strong>-->
                             <td align="center" height="100px" valign="middle">
-                                <img src="<?= base_url('assets/foto/'.$perwalian->foto) ?>" style="height: 120px;" alt="">
+                                <img src="<?= e(base_url('assets/foto/' . rawurlencode($perwalian->foto))) ?>" style="height: 120px;" alt="">
                             </td>
                         </tr>
                     </table>

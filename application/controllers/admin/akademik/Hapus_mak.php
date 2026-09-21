@@ -7,6 +7,11 @@ class Hapus_mak extends CI_Controller {
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
         }
+        $class = $this->router->fetch_class();
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
         $this->load->service('NilaiService');
     }
 
@@ -50,9 +55,9 @@ class Hapus_mak extends CI_Controller {
         
         $title = $res['status'] ? 'Success!' : ($type == 'error' ? 'Gagal!' : 'Warning!');
         
-        $this->session->set_flashdata('info', '<script>swal("'.$title.'", "'.$res['message'].'", "'.$type.'");</script>');
+        $this->session->set_flashdata('info', '<script>swal('.json_encode($title).', '.json_encode($res['message']).', '.json_encode($type).');</script>');
         
-        redirect(site_url('admin/akademik/hapus_mak/cari/'.$this->session->userdata('sess_nim_cari')));
+        redirect(site_url('admin/akademik/hapus_mak/cari/'.rawurlencode($this->session->userdata('sess_nim_cari'))));
     }
 }
 ?>

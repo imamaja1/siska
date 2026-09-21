@@ -53,7 +53,7 @@ class Semester_lalu extends CI_Controller {
             //Generate
             $cek = $this->nilaiservice->get_krs_by_nim_ta($nim, $tahun_akademik);
 //            $kode_nama_kurikulum = kode_nama_kurikulum($nim);
-            $data_penilaian = data_penilaian($nim, $cek->semester);
+            $data_penilaian = data_penilaian($nim, $cek ? $cek->semester : null);
 //            if (stup_grade($kode_nama_kurikulum, $cek->semester))
 //            {
 //                $data_penilaian = stup_grade($kode_nama_kurikulum, $cek->semester);
@@ -96,7 +96,7 @@ class Semester_lalu extends CI_Controller {
                 $khs['total_sks'] += $khs['data_nilai'][$i]['sks'];
                 $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
                 $khs['prodi'] = $program_studi;
-                $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($program_studi->kode_program_studi);
+                $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($program_studi ? $program_studi->kode_program_studi : null);
 
                 $i++;
             }
@@ -211,7 +211,7 @@ class Semester_lalu extends CI_Controller {
             foreach ($result as $nim) {
 
 
-                echo '<li onClick="selectNim(' . $nim->nim . ')" class="list-group-item">' . $nim->nim . '</li>';
+                echo '<li onClick="selectNim(' . e($nim->nim) . ')" class="list-group-item">' . e($nim->nim) . '</li>';
             }
             echo '</ul>';
         } else {

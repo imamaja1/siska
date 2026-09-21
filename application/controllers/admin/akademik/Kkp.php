@@ -135,7 +135,7 @@ class Kkp extends CI_Controller {
             'data' => $nilai_kkp,
         );
         if ($data_count <= 0) {
-            $data['message'] = "Tidak ditemukan satupun Data nilai KKP mahasiswa untuk Angkatan " . $this->session->userdata('angkatan') . " dan Jurusan " . $this->session->userdata('singkatan_program_studi') . " serta Semester " . $this->session->userdata('semester') . "!";
+            $data['message'] = "Tidak ditemukan satupun Data nilai KKP mahasiswa untuk Angkatan " . e($this->session->userdata('angkatan')) . " dan Jurusan " . e($this->session->userdata('singkatan_program_studi')) . " serta Semester " . e($this->session->userdata('semester')) . "!";
         }
         $this->load->view('admin/template/V_main', $data);
     }
@@ -165,7 +165,7 @@ class Kkp extends CI_Controller {
             if ($berdasarkan == 'nim'){
                 $this->session->set_userdata('search', true);
                 $data['data'] = $this->Kkp_model->get_nilai_kkp_by_nim($kata_kunci);
-                $data['message'] = 'Kata kunci <strong>'.$kata_kunci.'</strong> tidak ditemukan';
+                $data['message'] = 'Kata kunci <strong>'.e($kata_kunci).'</strong> tidak ditemukan';
                 $data['content'] = 'admin/akademik/kkp/V_search_find';
                 $data['judul'] = 'Akademik';
                 $data['sub_judul'] = 'Pencarian "<i>'.e($kata_kunci).'</i>"';
@@ -174,7 +174,7 @@ class Kkp extends CI_Controller {
             }else{
                 $this->session->set_userdata('search', true);
                 $data['data'] = $this->Kkp_model->get_nilai_kkp_by_nama_mahasiswa($kata_kunci);
-                $data['message'] = 'Kata kunci <strong>'.$kata_kunci.'</strong> tidak ditemukan';
+                $data['message'] = 'Kata kunci <strong>'.e($kata_kunci).'</strong> tidak ditemukan';
                 $data['content'] = 'admin/akademik/kkp/V_search_find';
                 $data['judul'] = 'Akademik';
                 $data['sub_judul'] = 'Pencarian "<i>'.e($kata_kunci).'</i>"';

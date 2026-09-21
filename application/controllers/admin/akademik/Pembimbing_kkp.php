@@ -37,6 +37,10 @@ class Pembimbing_kkp extends CI_Controller
     public function tambah()
     {
         $tahun_akademik = tahun_akademik();
+        if (empty($tahun_akademik)) {
+            echo '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title"><i class="fa fa-warning"></i> Bagi bimbingan</h4></div><div class="modal-body"><div class="alert alert-warning">Tahun akademik aktif tidak ditemukan.</div></div>';
+            return;
+        }
         $sub = $this->pembimbingkkpservice->getExistingPembimbing();
         if (count($sub) > 0)
         {
@@ -59,6 +63,17 @@ class Pembimbing_kkp extends CI_Controller
 
     public function add()
     {
+        $tahun_akademik = tahun_akademik();
+        if (empty($tahun_akademik)) {
+            $this->session->set_flashdata('info',
+                '<div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-check"></i> Gagal!</h4>
+                Tahun akademik aktif tidak ditemukan.
+              </div>');
+            redirect(site_url('admin/akademik/pembimbing_kkp'));
+        }
+
         $data = array(
             'nim' => $this->input->post('nim'),
             'kode_dosen' => $this->input->post('kode_dosen'),
@@ -67,7 +82,7 @@ class Pembimbing_kkp extends CI_Controller
             'tgl_pelaksanaan' => $this->input->post('tgl_pelaksanaan'),
             'batas_pelaksanaan' => $this->input->post('batas_pelaksanaan'),
             'batas_laporan' => $this->input->post('batas_laporan'),
-            'kode_tahun_akademik' => tahun_akademik()->kode_tahun_akademik,
+            'kode_tahun_akademik' => $tahun_akademik->kode_tahun_akademik,
         );
         $simpan = $this->pembimbingkkpservice->simpanPembimbing($data);
         if ($simpan)
@@ -109,6 +124,10 @@ class Pembimbing_kkp extends CI_Controller
     public function edit($id, $kode_dosen)
     {
         $data['data'] = $this->pembimbingkkpservice->getPembimbingById($id);
+        if (empty($data['data'])) {
+            echo '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title"><i class="fa fa-warning"></i> Bagi bimbingan</h4></div><div class="modal-body"><div class="alert alert-warning">Data pembimbing tidak ditemukan.</div></div>';
+            return;
+        }
         $data['id'] = $id;
         $data['kode_dosen'] = $kode_dosen;
         $this->load->view('admin/akademik/pembimbing_kkp/Modal_edit_bimbingan', $data);
@@ -209,6 +228,9 @@ class Pembimbing_kkp extends CI_Controller
     public function penilaian_pembimbing($id_pembimbing_kkp)
     {
         $data['data'] = $this->data($id_pembimbing_kkp);
+        if (empty($data['data'])) {
+            show_error('Data nilai pembimbing KKP tidak ditemukan.');
+        }
         $data['file_name'] = 'Nilai Pembimbing KKP';
         $this->load->view('admin/akademik/pembimbing_kkp/V_cetak_nilai_pembimbing', $data);
     }
@@ -216,6 +238,9 @@ class Pembimbing_kkp extends CI_Controller
     public function nilai_gabungan($id_pembimbing_kkp)
     {
         $data['data'] = $this->data($id_pembimbing_kkp);
+        if (empty($data['data'])) {
+            show_error('Data nilai gabungan KKP tidak ditemukan.');
+        }
         $data['file_name'] = 'Nilai Gabungan KKP';
         $this->load->view('admin/akademik/pembimbing_kkp/V_cetak_nilai_gabungan', $data);
     }
@@ -223,6 +248,15 @@ class Pembimbing_kkp extends CI_Controller
     public function rekap_kkp()
     {
         $tahun_akademik = tahun_akademik();
+        if (empty($tahun_akademik)) {
+            $this->session->set_flashdata('info',
+                '<div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-check"></i> Gagal!</h4>
+                Tahun akademik aktif tidak ditemukan.
+              </div>');
+            redirect(site_url('admin/akademik/pembimbing_kkp'));
+        }
         $data['tahun_akademik'] = $tahun_akademik;
         $data['data'] = $this->pembimbingkkpservice->getRekapKkp($tahun_akademik->kode_tahun_akademik);
 

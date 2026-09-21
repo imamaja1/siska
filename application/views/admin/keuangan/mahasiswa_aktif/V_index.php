@@ -24,7 +24,7 @@
     var super_kode_tahun_akademik;
     var loading = "<p style='text-align: center'><img src='<?= base_url('assets/siska/img/logo-ubg.gif') ?>' alt=''></p>"
     $(document).ready(function () {
-        super_kode_tahun_akademik = "<?= tahun_akademik()->kode_tahun_akademik ?>"
+        super_kode_tahun_akademik = "<?= e(tahun_akademik() ? tahun_akademik()->kode_tahun_akademik : '') ?>"
         get_data();
         
         $("#kode-tahun-akademik").change(function () {

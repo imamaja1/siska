@@ -42,9 +42,13 @@
 </div>
 
 <script>
-    var loading = "<p style='text-align: center'><img src='<?= base_url("assets/siska/img/logo-ubg.gif") ?>' alt=''></p>";
+    var loading = "<p style='text-align: center'><img src='<?= e(base_url("assets/siska/img/logo-ubg.gif")) ?>' alt=''></p>";
     var kelasList = [];
     var taGlobal = '';
+
+    function escHtml(s) {
+        return $('<div>').text(s == null ? '' : s).html();
+    }
 
     function downloadAllLoop() {
         if (kelasList.length === 0) return;
@@ -82,8 +86,8 @@
             html += '</div><div class="box-body"><div class="table-responsive"><table class="table table-bordered data-table"><thead><tr><th>No</th><th>Kode MK</th><th>Matakuliah</th><th>Kelas</th><th>Aksi</th></tr></thead><tbody>';
             if (res.length > 0) {
                 $.each(res, function (i, v) {
-                    var url = '<?= site_url("admin/kuisioner/kuisioner/cetak_pmb") ?>/' + v.kelas_id + '?kode_tahun_akademik=' + kode_tahun_akademik;
-                    html += '<tr><td>' + (i + 1) + '</td><td>' + v.kode_matakuliah + '</td><td>' + v.nama_matakuliah + '</td><td>' + v.nama_kelas + '</td><td><a href="' + url + '" class="btn btn-success btn-sm flat"><i class="fa fa-download"></i> Download</a></td></tr>';
+                    var url = '<?= site_url("admin/kuisioner/kuisioner/cetak_pmb") ?>/' + encodeURIComponent(v.kelas_id) + '?kode_tahun_akademik=' + encodeURIComponent(kode_tahun_akademik);
+                    html += '<tr><td>' + (i + 1) + '</td><td>' + escHtml(v.kode_matakuliah) + '</td><td>' + escHtml(v.nama_matakuliah) + '</td><td>' + escHtml(v.nama_kelas) + '</td><td><a href="' + url + '" class="btn btn-success btn-sm flat"><i class="fa fa-download"></i> Download</a></td></tr>';
                 });
             } else {
                 html += '<tr><td colspan="5" class="text-center">Tidak ada data kelas</td></tr>';

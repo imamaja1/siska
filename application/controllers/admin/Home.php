@@ -16,6 +16,6 @@ class home extends CI_Controller {
         $data['judul'] = "Home";
         $data['sub_judul'] = "";
 
-        $this->load->view('admin/template/V_Main', $data);
+        $this->load->view('admin/template/V_main', $data);
     }
 }

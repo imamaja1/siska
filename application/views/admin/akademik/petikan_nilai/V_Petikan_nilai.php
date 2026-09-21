@@ -27,18 +27,13 @@
 					<td><?= e($row->nama_mahasiswa) ?></td>
                   	
                     <td style="text-align: center;">
-						<a href="#"  onclick="view_ganjil('<?= e($row->nim) ?>')" class="btn btn-primary btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Ganjil</a>
-                        <a href="#"  onclick="view_genap('<?= e($row->nim) ?>')" class="btn btn-primary btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Genap</a>
+						<a href="#"  onclick="view('<?= e($row->nim) ?>')" class="btn btn-info btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> View</a>
 					</td>
                   	<td style="text-align: center;">
-						<!--<a href="#"  onclick="view('<?= $row->nim ?>')" class="btn btn-info btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Lihat</a>&nbsp;-->
-                        <a href="<?= site_url('admin/akademik/Petikan_nilai/cetak_ganjil/'.$row->nim) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-download"></i> Ganjil</a>
-                        <a href="<?= site_url('admin/akademik/Petikan_nilai/cetak_genap/'.$row->nim) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-download"></i> Genap</a>
+                        <a href="<?= e(site_url('admin/akademik/Petikan_nilai/cetak/'.rawurlencode($row->nim))) ?>" class="btn btn-warning btn-xs flat"><i class="fa fa-download"></i> Download</a>
 					</td>
                     <td style="text-align: center;">
-						<!--<a href="#"  onclick="view('<?= $row->nim ?>')" class="btn btn-info btn-xs flat"><i class="fa fa fa-eye" aria-hidden="true"></i> Lihat</a>&nbsp;-->
-                        <a href="<?= site_url('admin/akademik/Petikan_nilai/print_view_ganjil/'.$row->nim) ?>" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Ganjil </a>
-                        <a href="<?= site_url('admin/akademik/Petikan_nilai/print_view_genap/'.$row->nim) ?>" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Genap</a>
+                        <a href="<?= e(site_url('admin/akademik/Petikan_nilai/print_view/'.rawurlencode($row->nim))) ?>" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Print</a>
 					</td>
 				</tr>
 			<?php endforeach; ?>

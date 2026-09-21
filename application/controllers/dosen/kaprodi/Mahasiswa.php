@@ -27,19 +27,20 @@ class Mahasiswa extends CI_Controller {
 
         $kode_dosen = $this->session->userdata('kode_dosen');
 
-        $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
+        $prodi = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
+        $kode_prodi = !empty($prodi) ? $prodi[0]['kode_program_studi'] : null;
 
-        $nama_program_studi = $this->kaprodiservice->get_prodi_nama($kode_program_studi['kode_program_studi']);
+        $nama_program_studi = $this->kaprodiservice->get_prodi_nama($kode_prodi);
 
-        $jumlah_semua = $this->kaprodiservice->get_jumlah_semua_mahasiswa($kode_program_studi['kode_program_studi']);
+        $jumlah_semua = $this->kaprodiservice->get_jumlah_semua_mahasiswa($kode_prodi);
        
-        $jumlah_aktif = $this->kaprodiservice->get_jumlah_aktif_mahasiswa($kode_program_studi['kode_program_studi']);
+        $jumlah_aktif = $this->kaprodiservice->get_jumlah_aktif_mahasiswa($kode_prodi);
 
-        $jumlah_tidak_aktif = $this->kaprodiservice->get_jumlah_tidak_aktif_mahasiswa($kode_program_studi['kode_program_studi']);
+        $jumlah_tidak_aktif = $this->kaprodiservice->get_jumlah_tidak_aktif_mahasiswa($kode_prodi);
 
         $data = array(
             'content' => 'dosen/kaprodi/mahasiswa/V_mahasiswa_semua',
-            'judul' => 'Mahasiswa ' . $nama_program_studi['nama_program_studi'],
+            'judul' => 'Mahasiswa ' . (isset($nama_program_studi['nama_program_studi']) ? $nama_program_studi['nama_program_studi'] : ''),
             'sub_judul' => 'Mahasiswa',
             'title_h1' => '<li>Prodi</li>',
             'a_data_semua_mahasiswa' => 'active',
@@ -58,17 +59,18 @@ class Mahasiswa extends CI_Controller {
     function semua($id) {
         $kode_dosen = $this->session->userdata('kode_dosen');
 
-        $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
+        $prodi = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
+        $kode_prodi = !empty($prodi) ? $prodi[0]['kode_program_studi'] : null;
 
-        $nama_program_studi = $this->kaprodiservice->get_prodi_nama($kode_program_studi['kode_program_studi']);
+        $nama_program_studi = $this->kaprodiservice->get_prodi_nama($kode_prodi);
 
-        $query = $this->kaprodiservice->get_mahasiswa_by_angkatan($kode_program_studi['kode_program_studi'], $id);
+        $query = $this->kaprodiservice->get_mahasiswa_by_angkatan($kode_prodi, $id);
 
-        $query_count = $this->kaprodiservice->get_jumlah_mahasiswa_angkatan($kode_program_studi['kode_program_studi']);
+        $query_count = $this->kaprodiservice->get_jumlah_mahasiswa_angkatan($kode_prodi);
 
         $data = array(
             'content' => 'dosen/kaprodi/mahasiswa/V_mahasiswa_semua',
-            'judul' => 'Mahasiswa ' . $nama_program_studi['nama_program_studi'],
+            'judul' => 'Mahasiswa ' . (isset($nama_program_studi['nama_program_studi']) ? $nama_program_studi['nama_program_studi'] : ''),
             'sub_judul' => 'Mahasiswa',
             'title_h1' => '<li>Prodi</li>',
             'a_data_semua_mahasiswa' => 'active',

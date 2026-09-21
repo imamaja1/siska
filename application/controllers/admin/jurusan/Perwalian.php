@@ -29,29 +29,12 @@ class Perwalian extends CI_Controller {
         }
     }
 
-    public function coba() {
-        $homebase = $this->Perwalian_model->get_homebase();
-        $tahun_akademik = $this->m_tahun_akademik->get_semester();
-        $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
-        $ta = substr($tahun_akademik->ta, 2, 2);
-        $cek_perwalian_baru = $this->Perwalian_model->cek_mahasiswa_baru($ta);
-        $i = 0;
-        foreach ($homebase as $row) {
-            $data['jumlah_dosen'][$i] = $row->jumlah_dosen;
-            $data['homebase'][$i] = $row->homebase;
-//            $data_dosen = $this->Perwalian_model->get_dosen_by_homebase($row->homebase);
-//            $data['data_mahasiswa'][$i] = $this->Perwalian_model->get_mahasiswa_by_homebase($row->homebase, $ta, $limit, $offset);
-            $cek_mahasiswa_baru = $this->Mahasiswa_model->cek_mahasiswa_baru($row->homebase, $ta);
-            $data['jumlah_mahasiswa'][$i] = count($cek_mahasiswa_baru);
-            $i++;
-        }
-        echo '<pre>';
-        print_r($data);
-    }
-
     public function add_perwalian() {
         $homebase = $this->Perwalian_model->get_homebase();
         $tahun_akademik = $this->m_tahun_akademik->get_semester();
+        if (!$tahun_akademik) {
+            show_error('Tahun akademik aktif tidak ditemukan.');
+        }
         $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
         $ta = substr($tahun_akademik->ta, 2, 2);
         $cek_perwalian_baru = $this->Perwalian_model->cek_mahasiswa_baru($ta);
@@ -303,7 +286,7 @@ class Perwalian extends CI_Controller {
                 foreach ($result as $nim) {
 
 
-                    echo '<li onClick="selectNim(' . $nim->nim . ')" class="list-group-item">' . $nim->nim . '</li>';
+                    echo '<li onClick="selectNim(' . e($nim->nim) . ')" class="list-group-item">' . e($nim->nim) . '</li>';
                 }
                 echo '</ul>';
             } else {
@@ -321,9 +304,7 @@ class Perwalian extends CI_Controller {
             if (!empty($result)) {
                 echo '<ul id="nim-list" class="list-group">';
                 foreach ($result as $row) {
-                    $nama = "'$row->nama_dosen'";
-
-                    echo '<li onClick="selectDosen(' . $row->kode_dosen . ','.$nama.')" class="list-group-item">' . $row->nama_dosen . '</li>';
+                    echo '<li onClick="selectDosen(' . e($row->kode_dosen) . ',' . e(json_encode($row->nama_dosen)) . ')" class="list-group-item">' . e($row->nama_dosen) . '</li>';
                 }
                 echo '</ul>';
             } else {

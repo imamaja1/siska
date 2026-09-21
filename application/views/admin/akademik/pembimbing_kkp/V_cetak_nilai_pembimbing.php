@@ -22,6 +22,9 @@ header("Expires: 0");
     </style>
 </head>
 <body class="page">
+<?php if (empty($data)) : ?>
+    <p align="center"><strong>Data nilai pembimbing KKP tidak ditemukan.</strong></p>
+<?php else : ?>
 <p><img class="img" src="<?= base_url('assets/gambar/header_krs.png') ?>" alt=""><p>
 <hr size="2"></p>
 
@@ -38,7 +41,7 @@ header("Expires: 0");
     </tr>
     <tr>
         <td colspan="2">Prodi</td>
-        <td colspan="3">: <?= e(get_kode_prodi($data->nim)->nama_program_studi) ?></td>
+        <td colspan="3">: <?php $prodi = get_kode_prodi($data->nim); echo e($prodi ? $prodi->nama_program_studi : '-'); ?></td>
     </tr>
     <tr>
         <td colspan="2">Lokasi Kerja Praktek</td>
@@ -121,4 +124,5 @@ NIK/NIP. <?= e($data->nik) ?>&emsp;&emsp;&emsp;&emsp;&emsp;</p>
 
 </body>
 </html>
+<?php endif; ?>
 

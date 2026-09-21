@@ -237,7 +237,7 @@ class Krs extends CI_Controller
 
             echo '<ul id="nim-list" class="list-group">';
             foreach ($result as $nim) {
-                echo '<li onClick="selectNim(' . $nim->nim . ')" class="list-group-item">' . $nim->nim . '</li>';
+                echo '<li onClick="selectNim(' . e($nim->nim) . ')" class="list-group-item">' . e($nim->nim) . '</li>';
             }
             echo '</ul>';
         } else {
@@ -399,13 +399,13 @@ class Krs extends CI_Controller
                 $this->session->set_flashdata('info', '<script>swal("Success", "Data berhasil disimpan", "success");</script>');
 
 //                redirect('admin/akademik/perubahan/semester_ini/perubahan/' . $nim);
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect(safe_referer(site_url('admin/akademik/kpat/krs')));
             }
         } else {
             $this->session->set_flashdata('info', '<script>swal("Gagal", "Data gagal disimpan", "error");</script>');
 
 //            redirect('admin/akademik/perubahan/semester_ini/perubahan/' . $nim);
-            redirect($_SERVER['HTTP_REFERER']);
+            redirect(safe_referer(site_url('admin/akademik/kpat/krs')));
         }
     }
 
@@ -433,7 +433,7 @@ class Krs extends CI_Controller
             $this->kpatservice->restoreKhsDetail(isset($input['kode_khs_detail']) ? $input['kode_khs_detail'] : null);
         }
 
-        echo json_encode($input);
+        echo json_encode(array('status' => true, 'action' => isset($input['action']) ? $input['action'] : null));
     }
 
     public function hapus_krs($kode_krs)

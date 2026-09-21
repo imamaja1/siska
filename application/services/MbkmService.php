@@ -166,6 +166,7 @@ class MbkmService extends MY_Service {
     }
 
     public function getNamaMahasiswa($nim) {
-        return $this->db->get_where('mahasiswa', array('nim' => $nim))->row_object()->nama_mahasiswa;
+        $row = $this->db->get_where('mahasiswa', array('nim' => $nim))->row_object();
+        return $row ? $row->nama_mahasiswa : null;
     }
 }

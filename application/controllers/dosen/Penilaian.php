@@ -101,6 +101,9 @@ class Penilaian extends CI_Controller {
 
     public function nilai_mahasiswa_uts($kelas_id) {
         $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
 
         $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUts($kelas_id);
 
@@ -129,6 +132,9 @@ class Penilaian extends CI_Controller {
 
     public function nilai_mahasiswa_uts_exp($kelas_id, $kode_tahun_akademik) {
         $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
 
         $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUts($kelas_id);
         // } else {
@@ -165,6 +171,9 @@ class Penilaian extends CI_Controller {
     public function nilai_mahasiswa_uas($kelas_id) {
         $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
         $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
 
         if ($data_kelas->status_nilai != 'T') {
             $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUas($kelas_id);
@@ -190,6 +199,9 @@ class Penilaian extends CI_Controller {
     public function nilai_mahasiswa_uas_exp($kelas_id) {
         $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
         $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
 
         if ($data_kelas->status_nilai != 'T') {
             $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUas($kelas_id);
@@ -254,7 +266,7 @@ class Penilaian extends CI_Controller {
 
         $persentasi_nilai = $this->dosenakademikservice->getPersentasiNilai($kelas);
         $nil = $this->dosenakademikservice->getDummyNilaiByKhs($kode_khs_detail);
-        $nilai_akhir = ($nil->dummy_harian * $persentasi_nilai->nilai_harian / 100) + ($nil->dummy_uts * $persentasi_nilai->nilai_uts / 100) + ($nil->dummy_uas * $persentasi_nilai->nilai_uas / 100);
+        $nilai_akhir = ($nil && $persentasi_nilai) ? (($nil->dummy_harian * $persentasi_nilai->nilai_harian / 100) + ($nil->dummy_uts * $persentasi_nilai->nilai_uts / 100) + ($nil->dummy_uas * $persentasi_nilai->nilai_uas / 100)) : 0;
         $this->dosenakademikservice->updateDummyNilaiNa($kode_khs_detail, $nilai_akhir);
         if ($ubah) {
             $res['status'] = 'true';
@@ -285,7 +297,7 @@ class Penilaian extends CI_Controller {
         }
         $persentasi_nilai = $this->dosenakademikservice->getPersentasiNilai($this->session->userdata('sess_kelas_id'));
         $nil = $this->dosenakademikservice->getDummyNilaiByKhs($kode_khs_detail);
-        $nilai_akhir = ($nil->dummy_harian * $persentasi_nilai->nilai_harian / 100) + ($nil->dummy_uts * $persentasi_nilai->nilai_uts / 100) + ($nil->dummy_uas * $persentasi_nilai->nilai_uas / 100);
+        $nilai_akhir = ($nil && $persentasi_nilai) ? (($nil->dummy_harian * $persentasi_nilai->nilai_harian / 100) + ($nil->dummy_uts * $persentasi_nilai->nilai_uts / 100) + ($nil->dummy_uas * $persentasi_nilai->nilai_uas / 100)) : 0;
         $this->dosenakademikservice->updateDummyNilaiNa($kode_khs_detail, $nilai_akhir);
         if ($ubah) {
             $res['status'] = 'true';
@@ -316,7 +328,7 @@ class Penilaian extends CI_Controller {
         }
         $persentasi_nilai = $this->dosenakademikservice->getPersentasiNilai($kelas);
         $nil = $this->dosenakademikservice->getDummyNilaiByKhs($kode_khs_detail);
-        $nilai_akhir = ($nil->dummy_harian * $persentasi_nilai->nilai_harian / 100) + ($nil->dummy_uts * $persentasi_nilai->nilai_uts / 100) + ($nil->dummy_uas * $persentasi_nilai->nilai_uas / 100);
+        $nilai_akhir = ($nil && $persentasi_nilai) ? (($nil->dummy_harian * $persentasi_nilai->nilai_harian / 100) + ($nil->dummy_uts * $persentasi_nilai->nilai_uts / 100) + ($nil->dummy_uas * $persentasi_nilai->nilai_uas / 100)) : 0;
         $this->dosenakademikservice->updateDummyNilaiNa($kode_khs_detail, $nilai_akhir);
         if ($ubah) {
             $res['status'] = 'true';
@@ -333,7 +345,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_tahun_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
 
@@ -360,7 +372,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
 
         $kode_dosen = $this->session->userdata('kode_dosen');
@@ -379,7 +391,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
         $data['data'] = $this->dosenakademikservice->getChooseNilaiUts($kode_dosen, $kode_tahun_akademik);
@@ -390,7 +402,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $time = $this->dosenakademikservice->getAktivasi($kode_tahun_akademik);
         $kode_dosen = $this->session->userdata('kode_dosen');
@@ -540,7 +552,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $time = $this->dosenakademikservice->getAktivasi($kode_tahun_akademik);
 
@@ -632,9 +644,9 @@ class Penilaian extends CI_Controller {
             'pesan' => $pesan,
             'param' => 'uts',
             'target' => $user2,
-            'dosen' => $dosen->nama_dosen,
-            'prodi' => $prodi->nama_dosen,
-            'dekan' => $dekan->nama_dosen,
+            'dosen' => $dosen ? $dosen->nama_dosen : '',
+            'prodi' => $prodi ? $prodi->nama_dosen : '',
+            'dekan' => $dekan ? $dekan->nama_dosen : '',
         ];
 
         if ($user1 == 'dosen') {
@@ -669,9 +681,9 @@ class Penilaian extends CI_Controller {
             'pesan' => $pesan,
             'param' => 'uas',
             'target' => $user2,
-            'dosen' => $dosen->nama_dosen,
-            'prodi' => $prodi->nama_dosen,
-            'dekan' => $dekan->nama_dosen,
+            'dosen' => $dosen ? $dosen->nama_dosen : '',
+            'prodi' => $prodi ? $prodi->nama_dosen : '',
+            'dekan' => $dekan ? $dekan->nama_dosen : '',
         ];
 
         if ($user1 == 'dosen') {
@@ -884,7 +896,7 @@ class Penilaian extends CI_Controller {
         $jml = $data_store['nilai_harian'] + $data_store['nilai_uts'] + $data_store['nilai_uas'];
         if ($jml != 100) {
             $this->session->set_flashdata('info', 'swal("Gagal!","Jumlah Gabungan Presentase Nilai Harus 100 %","error")');
-            return redirect($_SERVER['HTTP_REFERER']);
+            return redirect(safe_referer(site_url('dosen')));
         }
         $save = $this->dosenakademikservice->storePersentasiNilai($data_store);
         if ($save) {
@@ -892,7 +904,7 @@ class Penilaian extends CI_Controller {
         } else {
             $this->session->set_flashdata('info', 'swal("Gagal!","Data gagal disimpan","error")');
         }
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function update_persentasi_penilaian($id) {
@@ -900,7 +912,7 @@ class Penilaian extends CI_Controller {
         $jml = $data_store['nilai_harian'] + $data_store['nilai_uts'] + $data_store['nilai_uas'];
         if ($jml != 100) {
             $this->session->set_flashdata('info', 'swal("Gagal!","Jumlah Gabungan Presentase Nilai Harus 100 %","error")');
-            return redirect($_SERVER['HTTP_REFERER']);
+            return redirect(safe_referer(site_url('dosen')));
         }
         $save = $this->dosenakademikservice->updatePersentasiNilai($data_store['kelas_id'], $data_store);
         if ($save) {
@@ -908,7 +920,7 @@ class Penilaian extends CI_Controller {
         } else {
             $this->session->set_flashdata('info', 'swal("Gagal!","Data gagal diubah","error")');
         }
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     // ===================== PENILAIAN FINAL =====================
@@ -928,7 +940,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
         $data_kelas = $this->dosenakademikservice->getChooseFinal($kode_dosen, $kode_tahun_akademik);
@@ -973,7 +985,7 @@ class Penilaian extends CI_Controller {
         if ($this->input->post('kode_nilai_akademik')) {
             $kode_tahun_akademik = $this->input->post('kode_nilai_akademik');
         } else {
-            $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+            $kode_tahun_akademik = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
         $data_kelas = $this->dosenakademikservice->getChooseRevisi($kode_dosen, $kode_tahun_akademik);
@@ -1008,7 +1020,7 @@ class Penilaian extends CI_Controller {
     }
     public function nilai_mahasiswa_uas_revisi($kelas_id, $ta = null) {
         $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $tahun_akademik = ta_kode();
         $ta = ($ta) ? $ta : $tahun_akademik; 
         $semua_kelas = $this->dosenakademikservice->getDummyUpdateKelas($kelas_id);
         if (!$semua_kelas) {
@@ -1207,7 +1219,7 @@ class Penilaian extends CI_Controller {
     public function revisi_nilai_mahasiswa($ta = null){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $tahun_akademik = ta_kode();
         $ta = ($ta) ? $ta : $tahun_akademik;
         $kelas_mahasiswa = $this->dosenakademikservice->getRevisiNilaiMahasiswa($kelas, $level, $ta);
         $sistem_nilai = $this->dosenakademikservice->getSistemPenilaian();
@@ -1283,18 +1295,19 @@ class Penilaian extends CI_Controller {
                 $this->dosenakademikservice->insertDummyUpdateNilai($new_obj);
             }else{
                 $datax = $this->dosenakademikservice->getDummyUpdateNilaiData($id, $level - 1);
-
-                $new_obj = array(
-                    'kelas_id' => $kelas,
-                    'kode_khs_detail' => $id,
-                    'harian' => $datax->harian,
-                    'uts' => $datax->uts,
-                    'uas' => $datax->uas,
-                    'ket' => $ket,
-                    'na' => $datax->na,
-                    'level' => $level
-                );
-                $this->dosenakademikservice->insertDummyUpdateNilai($new_obj);
+                if ($datax) {
+                    $new_obj = array(
+                        'kelas_id' => $kelas,
+                        'kode_khs_detail' => $id,
+                        'harian' => $datax->harian,
+                        'uts' => $datax->uts,
+                        'uas' => $datax->uas,
+                        'ket' => $ket,
+                        'na' => $datax->na,
+                        'level' => $level
+                    );
+                    $this->dosenakademikservice->insertDummyUpdateNilai($new_obj);
+                }
             }
         }
         
@@ -1312,7 +1325,7 @@ class Penilaian extends CI_Controller {
         $persentase = $this->dosenakademikservice->getPersentaseFrom('persentasi_nilai_dosen', $kelas_id);
         if (!$persentase) {
             $this->session->set_flashdata('fail_download', 'Tidak Dapar Mendownload Excel Anda Harus Mengisi <b>Presentasi Penilaian</b> Terlebih Dahulu');
-            redirect($_SERVER['HTTP_REFERER']);
+            redirect(safe_referer(site_url('dosen')));
         }
 
         require_once FCPATH . 'vendor/autoload.php';
@@ -1356,7 +1369,7 @@ class Penilaian extends CI_Controller {
         require_once FCPATH . 'vendor/autoload.php';
         if (!isset($_FILES['file_excel']) || $_FILES['file_excel']['error'] != 0) {
             $this->session->set_flashdata('fail_download', 'Tidak DapaT Mengupload Excel Anda');
-            redirect($_SERVER['HTTP_REFERER']);
+            redirect(safe_referer(site_url('dosen')));
         }
         $tmp_file = $_FILES['file_excel']['tmp_name'];
         $fileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($tmp_file);
@@ -1388,11 +1401,14 @@ class Penilaian extends CI_Controller {
         }
         $this->dosenakademikservice->insertBatchDummyUpdateNilai($obj);
         $this->session->set_flashdata('success', 'Data Berhasil di Import');
-        redirect($_SERVER['HTTP_REFERER']);
+        redirect(safe_referer(site_url('dosen')));
     }
 
     public function uts_final($kelas_id) {
         $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUts($kelas_id);
         $data['content'] = 'dosen/penilaian/V_input_penilaian_uts_final';
         $data['judul'] = 'Penilaian Mahasiswa';
@@ -1409,6 +1425,9 @@ class Penilaian extends CI_Controller {
     public function uas_final($kelas_id) {
         $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
         $data_kelas = $this->dosenakademikservice->getKelasById($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         if ($data_kelas->status_nilai != 'T') {
             $kelas_mahasiswa = $this->dosenakademikservice->getNilaiMahasiswaUas($kelas_id);
         } else {
@@ -1428,7 +1447,7 @@ class Penilaian extends CI_Controller {
 
     public function revisi_final($kelas_id, $ta = null) {
         $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $tahun_akademik = ta_kode();
         $ta = ($ta) ? $ta : $tahun_akademik;
         $semua_kelas = $this->dosenakademikservice->getDummyUpdateKelas($kelas_id);
         if (!$semua_kelas) {

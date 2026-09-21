@@ -29,9 +29,9 @@
                                     <td><?= $no++ ?>.</td>
                                     <td align="center"><?= e($row->nim) ?></td>
                                     <td><?= e($row->nama_mahasiswa) ?></td>
-                                    <td><?= date('d M Y', strtotime($row->tgl_pelaksanaan)) ?></td>
-                                    <td><?= date('d M Y', strtotime($row->batas_laporan)) ?></td>
-                                    <td><?= day_left($row->batas_laporan) ?></td>
+                                    <td><?= !empty($row->tgl_pelaksanaan) ? date('d M Y', strtotime($row->tgl_pelaksanaan)) : '-' ?></td>
+                                    <td><?= !empty($row->batas_laporan) ? date('d M Y', strtotime($row->batas_laporan)) : '-' ?></td>
+                                    <td><?= !empty($row->batas_laporan) ? day_left($row->batas_laporan) : '-' ?></td>
                                     <td align="center">
                                         <div class="btn-group btn-group-xs">
                                             <?php if ($row->id_nilai == null) : ?>

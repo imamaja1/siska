@@ -460,7 +460,7 @@
                     <?php if ($data_mahasiswa->foto == '') : ?>
                         <img src="<?= base_url('assets/dist/img/default-50x50.gif') ?>" class="img-bordered" onclick="cot(<?= e($data_mahasiswa->nim) ?>)" id="upload_link-<?= e($data_mahasiswa->nim) ?>"  style="height:150px" alt=""><br>
                     <?php else: ?>
-                        <img src="<?= base_url('assets/foto/'.e($data_mahasiswa->foto)) ?>" class="img-bordered" onclick="cot(<?= e($data_mahasiswa->nim) ?>)" id="upload_link-<?= e($data_mahasiswa->nim) ?>"  style="height:150px" alt=""><br>
+                        <img src="<?= e(base_url('assets/foto/'.rawurlencode($data_mahasiswa->foto))) ?>" class="img-bordered" onclick="cot(<?= e($data_mahasiswa->nim) ?>)" id="upload_link-<?= e($data_mahasiswa->nim) ?>"  style="height:150px" alt=""><br>
                     <?php endif; ?>
                 </div>
             </div>

@@ -34,7 +34,7 @@ header("Cache-Control: private", false);
     </style>
 </head>
 <body>
-<p style="text-align: center; font-weight: bold; font-size: 16pt">Mahasiswa Aktif TA. <?= e($tahun_akademik->tahun_akademik) ?> <?= $tahun_akademik->semester == '1' ? 'GANJIL' : 'GENAP' ?></p>
+<p style="text-align: center; font-weight: bold; font-size: 16pt">Mahasiswa Aktif TA. <?= e(isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '-') ?> <?= isset($tahun_akademik->semester) ? ($tahun_akademik->semester == '1' ? 'GANJIL' : 'GENAP') : '' ?></p>
 <hr>
 <table id="customers">
     <thead>

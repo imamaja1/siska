@@ -42,10 +42,11 @@ class Kelas extends CI_Controller
         $data['judul'] = 'Mahsiswa KRS';
         $data['sub_judul'] = 'Data Mahasiswa';
         $data['sub_judul'] = 'Halaman Mahasiswa';
-        $data['kode_tahun_akademik'] = tahun_akademik()->kode_tahun_akademik;
+        $data['kode_tahun_akademik'] = ta_kode();
         $data['semester'] = $this->m_tahun_akademik->get_semester();
         $data['tahun_akademik'] = $this->kaprodiservice->order_by_get('tahun_akademik', 'kode_tahun_akademik DESC');
-        $data['prodi'] = $this->kaprodiservice->get_kaprodi_prodi_row_kode($this->session->userdata('kode_dosen'))->kode_program_studi;
+        $prodi_row = $this->kaprodiservice->get_kaprodi_prodi_row_kode($this->session->userdata('kode_dosen'));
+        $data['prodi'] = $prodi_row ? $prodi_row->kode_program_studi : null;
         $data['kelas'] = $this->kaprodiservice->get_kelas_by_prodi_ta($data['prodi'], $data['tahun_now']);
         
         $this->load->view('dosen/template/V_main', $data);
@@ -62,7 +63,7 @@ class Kelas extends CI_Controller
         $data['tahun'] = $kode_tahun_akademik;
         $data['kelas'] = $this->kaprodiservice->get_all_nama_kelas();
         $data['nama_matakuliah'] = $this->m_matakuliah->get_nama_matakuliah($id_matakuliah);
-        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah)->kode_matakuliah;
+        $data['kode_matakuliah'] = get_matakuliah($id_matakuliah) ? get_matakuliah($id_matakuliah)->kode_matakuliah : '';
         $data['nama_kelas'] = $this->kelas_model->get_kelas_combobox($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         $data['matakuliah'] = $this->kelas_model->get_matakuliah_combobox($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         $this->load->view('dosen/kaprodi/kelas/nama_kelas', $data);
@@ -98,7 +99,7 @@ class Kelas extends CI_Controller
             if (!empty($result)) {
                 echo '<ul id="nim-list" class="list-group">';
                 foreach ($result as $nim) {
-                    echo '<li onClick="selectNim(' . $nim->nim . ',' . $nim->kode_krs_detail . ')" class="list-group-item">' . $nim->nim . ' - ' . $nim->nama_mahasiswa . '</li>';
+                    echo '<li onClick="selectNim(' . e($nim->nim) . ',' . e($nim->kode_krs_detail) . ')" class="list-group-item">' . e($nim->nim) . ' - ' . e($nim->nama_mahasiswa) . '</li>';
                 }
                 echo '</ul>';
             } else {
@@ -113,10 +114,11 @@ class Kelas extends CI_Controller
     }
     public function get_mahasiswa($ta = null, $angkatan = false, $status_krs = false) {
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $ta = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
-        $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_row_kode($kode_dosen)->kode_program_studi;
+        $prodi_row = $this->kaprodiservice->get_kaprodi_prodi_row_kode($kode_dosen);
+        $kode_program_studi = $prodi_row ? $prodi_row->kode_program_studi : null;
         $data['data'] = $this->kaprodiservice->get_mahasiswa_krsan($ta, $kode_program_studi, $angkatan, $status_krs);
         
         $this->load->view('dosen/kaprodi/krsan/v_data_mhs',$data);

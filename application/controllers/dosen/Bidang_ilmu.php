@@ -65,6 +65,10 @@ class Bidang_ilmu extends CI_Controller {
 
         $kode_dosen = $this->session->userdata('kode_dosen');
 
+        if (!isKaprodi($kode_dosen)) {
+            redirect('denied');
+        }
+
         $data['content'] = 'dosen/kaprodi/V_bidang_ilmu';
         $data['judul'] = 'Data Bidang Ilmu Dosen';
         $data['sub_judul'] = 'Untuk Kaprodi';
@@ -95,6 +99,10 @@ class Bidang_ilmu extends CI_Controller {
 
     public function info_bidang_ilmu_for_dekan() {
         $kode_dosen = $this->session->userdata('kode_dosen');
+
+        if (!isDekan($kode_dosen)) {
+            redirect('denied');
+        }
 
         $data['content'] = 'dosen/dekan/V_bidang_ilmu';
         $data['judul'] = 'Data Bidang Ilmu Dosen';

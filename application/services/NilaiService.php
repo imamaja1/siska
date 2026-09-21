@@ -19,77 +19,100 @@ class NilaiService extends MY_Service {
      * @param string $type  'all', 'ganjil', 'genap'
      * @return array
      */
-    public function get_petikan_nilai_data($nim, $type = 'all') {
+    public function get_petikan_nilai_data($nim, $type = 'all', $kode_tahun_akademik = null) {
         $kode_nama_kurikulum = kode_nama_kurikulum($nim);
         $tahun_akademik_aktif = tahun_akademik();
-        $tahun_akademik_id = $tahun_akademik_aktif->kode_tahun_akademik - 1;
 
         $mahasiswa = $this->Mahasiswa_model->get($nim);
-        $ta_data = $this->db->select('*, tahun_akademik as ta')
-            ->from('tahun_akademik')
-            ->where('kode_tahun_akademik', $tahun_akademik_id)
-            ->get()->row_object();
         $prodi = get_kode_prodi($nim);
+
+        $ta_terpilih = null;
+        if ($kode_tahun_akademik !== null && $kode_tahun_akademik !== '') {
+            $ta_terpilih = $this->db->select('*, tahun_akademik as ta')
+                ->from('tahun_akademik')
+                ->where('kode_tahun_akademik', $kode_tahun_akademik)
+                ->get()->row_object();
+        }
 
         $data_petikan = null;
         $semester_target = null;
+        $semester_total = null;
+        $semester_jalan = null;
 
-        if ($type === 'all') {
-            $data_petikan = $this->Petikan_nilai_model->petikan_nilai($nim, $kode_nama_kurikulum);
+        if ($ta_terpilih) {
+            // Snapshot per Tahun Akademik: KRS dengan kode_tahun_akademik <= TA terpilih
+            $semester_target = null;
+            $semester_jalan = null;
+
+            $data_petikan = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum, null, $ta_terpilih->kode_tahun_akademik);
+
+            $ta_data = $ta_terpilih;
+            $type = 'snapshot';
         } else {
-            // Logic for ganjil/genap
-            $semester_record = $this->db->select('semester')
-                ->from('krs')
-                ->where('nim', $nim)
-                ->order_by('kode_krs', 'desc')
-                ->limit(1)
-                ->get()->row();
-                
-            $semester = $semester_record ? $semester_record->semester : 1;
-            
-            // Calculate running semester (semester jalan)
-            $angkatan = substr($nim, 0, 2);
-            $tahun_akademik_year = substr($tahun_akademik_aktif->tahun_akademik, -2);
-            $semester_jalan_awal = $tahun_akademik_year - $angkatan;
+            $tahun_akademik_id = $tahun_akademik_aktif->kode_tahun_akademik - 1;
+            $ta_data = $this->db->select('*, tahun_akademik as ta')
+                ->from('tahun_akademik')
+                ->where('kode_tahun_akademik', $tahun_akademik_id)
+                ->get()->row_object();
 
-            if ($tahun_akademik_aktif->semester == 1) {
-                $semester_jalan = ($semester_jalan_awal - 1) * 2 + 1;
+            if ($type === 'all') {
+                $data_petikan = $this->Petikan_nilai_model->petikan_nilai($nim, $kode_nama_kurikulum);
             } else {
-                $semester_jalan = ($semester_jalan_awal - 1) * 2 + 2;
-            }
+                // Logic for ganjil/genap
+                $semester_record = $this->db->select('semester')
+                    ->from('krs')
+                    ->where('nim', $nim)
+                    ->order_by('kode_krs', 'desc')
+                    ->limit(1)
+                    ->get()->row();
 
-            if ($semester < $semester_jalan) {
-                $semester = $semester_jalan;
-            } else {
+                $semester = $semester_record ? $semester_record->semester : 1;
+
+                // Calculate running semester (semester jalan)
+                $angkatan = substr($nim, 0, 2);
+                $tahun_akademik_year = substr($tahun_akademik_aktif->tahun_akademik, -2);
+                $semester_jalan_awal = $tahun_akademik_year - $angkatan;
+
+                if ($tahun_akademik_aktif->semester == 1) {
+                    $semester_jalan = ($semester_jalan_awal - 1) * 2 + 1;
+                } else {
+                    $semester_jalan = ($semester_jalan_awal - 1) * 2 + 2;
+                }
+
+                if ($semester < $semester_jalan) {
+                    $semester = $semester_jalan;
+                } else {
+                    if ($type === 'ganjil') {
+                        if ($semester % 2 === 0) {
+                            $semester = $semester - 1;
+                        }
+                    } else if ($type === 'genap') {
+                        if ($semester % 2 != 0) {
+                            $semester = $semester - 1;
+                        }
+                    }
+                }
+
+                $semester_target = $semester + 1;
+                $semester_total = $semester;
+                $data_petikan = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum, $semester_target);
+
+                // fix_ta logic
                 if ($type === 'ganjil') {
-                    if ($semester % 2 === 0) {
-                        $semester = $semester - 1;
+                    if ($tahun_akademik_aktif->kode_tahun_akademik % 2 == 1) {
+                        $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik;
+                    } else {
+                        $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik - 1;
                     }
+                    $ta_data = $this->db->select('*, tahun_akademik as ta')->from('tahun_akademik')->where('kode_tahun_akademik', $fix_ta)->get()->row_object();
                 } else if ($type === 'genap') {
-                    if ($semester % 2 != 0) {
-                        $semester = $semester - 1;
+                    if ($tahun_akademik_aktif->kode_tahun_akademik % 2 == 0) {
+                        $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik;
+                    } else {
+                        $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik - 1;
                     }
+                    $ta_data = $this->db->select('*, tahun_akademik as ta')->from('tahun_akademik')->where('kode_tahun_akademik', $fix_ta)->get()->row_object();
                 }
-            }
-            
-            $semester_target = $semester + 1;
-            $data_petikan = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum, $semester_target);
-            
-            // fix_ta logic
-            if ($type === 'ganjil') {
-                if ($tahun_akademik_aktif->kode_tahun_akademik % 2 == 1) { // sometimes the original code checks == 2 for ganjil which might be a bug, let's keep it safe or map to original
-                    $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik;
-                } else {
-                    $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik - 1;
-                }
-                $ta_data = $this->db->select('*, tahun_akademik as ta')->from('tahun_akademik')->where('kode_tahun_akademik', $fix_ta)->get()->row_object();
-            } else if ($type === 'genap') {
-                if ($tahun_akademik_aktif->kode_tahun_akademik % 2 == 0) {
-                    $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik;
-                } else {
-                    $fix_ta = $tahun_akademik_aktif->kode_tahun_akademik - 1;
-                }
-                $ta_data = $this->db->select('*, tahun_akademik as ta')->from('tahun_akademik')->where('kode_tahun_akademik', $fix_ta)->get()->row_object();
             }
         }
 
@@ -101,6 +124,8 @@ class NilaiService extends MY_Service {
             $ttd = $dosen ? $dosen->signature : '';
         }
 
+        $total = $this->hitung_total_petikan($data_petikan, $type, $semester_total);
+
         return array(
             'sub_judul' => $nim,
             'data' => $data_petikan,
@@ -109,7 +134,48 @@ class NilaiService extends MY_Service {
             'prodi' => $prodi,
             'semester' => $semester_target,
             'semester_jalan' => isset($semester_jalan) ? $semester_jalan : 0,
-            'ttd' => $ttd
+            'ttd' => $ttd,
+            'total_sks' => $total['total_sks'],
+            'total_sksn' => $total['total_sksn'],
+            'ipk' => $total['ipk'],
+        );
+    }
+
+    /**
+     * Hitung total SKS, SKSN, dan IPK transkrip (single source of truth).
+     *
+     * @param array  $data_petikan
+     * @param string $type     'all', 'ganjil', 'genap'
+     * @param int    $semester semester target (untuk ganjil/genap)
+     * @return array
+     */
+    public function hitung_total_petikan($data_petikan, $type = 'all', $semester = null) {
+        $total_sks = 0;
+        $total_sksn = 0;
+
+        if (is_array($data_petikan)) {
+            foreach ($data_petikan as $key) {
+                if (!isset($key['data_nilai'])) {
+                    continue;
+                }
+                foreach ($key['data_nilai'] as $row) {
+                    if ($type === 'all' || $type === 'snapshot') {
+                        $total_sks = $total_sks + $row['sks'];
+                        $total_sksn = $total_sksn + $row['sksn'];
+                    } else {
+                        if ((isset($row['semester']) && $row['semester'] <= $semester) || (isset($row['semester']) && $row['semester'] === 'K')) {
+                            $total_sks = $total_sks + ($row['sks_teori'] + $row['sks_praktek'] + $row['sks_praktikum']);
+                            $total_sksn = $total_sksn + $row['sksn'];
+                        }
+                    }
+                }
+            }
+        }
+
+        return array(
+            'total_sks' => $total_sks,
+            'total_sksn' => $total_sksn,
+            'ipk' => $total_sks != 0 ? $total_sksn / $total_sks : 0,
         );
     }
 

@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php $sub_judul = isset($sub_judul) ? $sub_judul : ''; $judul = isset($judul) ? $judul : ''; ?>
         <?php if (!empty($judul) || !empty($sub_judul)): ?>
-            <title>SISKA UBG | <?php echo $judul . " - " . $sub_judul; ?></title>
+            <title>SISKA UBG | <?php echo e($judul) . " - " . e($sub_judul); ?></title>
         <?php else: ?>
             <title>SISKA UBG</title>
         <?php endif; ?>

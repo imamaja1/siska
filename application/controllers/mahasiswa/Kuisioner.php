@@ -87,7 +87,7 @@ class Kuisioner extends CI_Controller
 
     public function simpan_layanan()
     {
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         $hasil = $this->input->post('hasil');
         $nim = $this->session->userdata('nim');
         $masukan = $this->input->post('masukan');

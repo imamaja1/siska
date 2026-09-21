@@ -26,12 +26,12 @@
                     <?php foreach ($row['data'] as $mk) : ?>
                     <tr>
                         <td style="text-align: center;">
-                            <input type="checkbox" name="id_matakuliah[]" value="<?= $mk->id_matakuliah?>" id="<?= $mk->id_matakuliah ?>" onclick="mati('<?= $mk->id_matakuliah ?>')">
+                            <input type="checkbox" name="id_matakuliah[]" value="<?= e($mk->id_matakuliah) ?>" id="<?= e($mk->id_matakuliah) ?>" onclick="mati('<?= e($mk->id_matakuliah) ?>')">
                         </td>
                         <td style="text-align: center;"><?= e($mk->kode_matakuliah) ?></td>
                         <td><?= e($mk->nama_matakuliah) ?></td>
                         <td style="text-align: center;">
-                            <input required disabled id="mk-<?= $mk->id_matakuliah ?>" type="number" max="100" min="0" name="nilai_akhir[]" class="form-control input-sm">
+                            <input required disabled id="mk-<?= e($mk->id_matakuliah) ?>" type="number" max="100" min="0" name="nilai_akhir[]" class="form-control input-sm">
                             <input name="nim" type="hidden" value="<?= e($data_mahasiswa->nim) ?>">
                         </td>
                     </tr>

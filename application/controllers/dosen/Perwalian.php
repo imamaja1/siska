@@ -63,7 +63,7 @@ class Perwalian extends CI_Controller {
         }
         if ($this->form_validation->run() == TRUE) {
             $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
-            $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
+            $kode_tahun_akademik = $tahun_akademik ? $tahun_akademik->kode_tahun_akademik : null;
             if ($this->input->post('berdasarkan') == 'nim') {
                 $data['perwalian'] = $this->perwalian_model->get_perwalian_by_nim_dan_kode_dosen($this->input->post('kata_kunci'), $this->session->userdata('auth_kode_dosen'), $kode_tahun_akademik);
                 $this->load->view('dosen/template/V_main', $data);
@@ -110,7 +110,7 @@ class Perwalian extends CI_Controller {
 
             #mengirim singkatan program studi
             $nama_jurusan = $this->nama_jurusan_model->get_kode_nama_jurusan($kode_jurusan, $kode_jenjang);
-            $this->session->set_userdata('singkatan_jurusan', $nama_jurusan->singkatan_program_studi);
+            $this->session->set_userdata('singkatan_jurusan', $nama_jurusan ? $nama_jurusan->singkatan_program_studi : null);
 
 
 
@@ -134,7 +134,7 @@ class Perwalian extends CI_Controller {
         );
 
         $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
-        $kode_tahun_akademik_aktif = $tahun_akademik->kode_tahun_akademik;
+        $kode_tahun_akademik_aktif = $tahun_akademik ? $tahun_akademik->kode_tahun_akademik : null;
 
 
         $this->session->set_userdata('kode_tahun_akademik_aktif', $kode_tahun_akademik_aktif);
@@ -175,7 +175,7 @@ class Perwalian extends CI_Controller {
             if ($this->form_validation->run() == TRUE) {
 
                 $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
-                $kode_tahun_akademik_aktif = $tahun_akademik->kode_tahun_akademik;
+                $kode_tahun_akademik_aktif = $tahun_akademik ? $tahun_akademik->kode_tahun_akademik : null;
 
                 $kode_dosen_perwakilan = $this->input->post('kode_dosen');
                 $perwalian = $this->perwalian_model->get_perwalian_by_kode_dosen_dan_kode_dosen_perwakilan($kode_tahun_akademik_aktif, $kode_dosen_perwakilan, $this->session->userdata('auth_kode_dosen'));
@@ -184,8 +184,8 @@ class Perwalian extends CI_Controller {
                 if ($num_rows > 0) {
                     // mengambil nama dosen
                     $dosen = $this->m_dosen->get_dosen_by_kode($kode_dosen_perwakilan);
-                    $nama_dosen = $dosen->nama_dosen;
-                    $data['header'] = "<div align=\"center\"><h4><b>PERWAKILAN PERWALIAN DOSEN \"$nama_dosen\"</b></h4></div>";
+                    $nama_dosen = $dosen ? $dosen->nama_dosen : '';
+                    $data['header'] = "<div align=\"center\"><h4><b>PERWAKILAN PERWALIAN DOSEN \"" . e($nama_dosen) . "\"</b></h4></div>";
                     $data['num_rows'] = $num_rows;
                     $table = '<div class="table-responsive"><table class="table demo-table">';
                     $table .= '<thead><tr>';
@@ -199,8 +199,8 @@ class Perwalian extends CI_Controller {
                     foreach ($perwalian->result() as $row) {
                         $table .= '<tr>';
                         $table .= '<td><div align="center">' . $no . '.</div></td>';
-                        $table .= '<td><div align="center">' . $row->nim . '</div></td>';
-                        $table .= '<td>' . $row->nama_mahasiswa . '</td>';
+                        $table .= '<td><div align="center">' . e($row->nim) . '</div></td>';
+                        $table .= '<td>' . e($row->nama_mahasiswa) . '</td>';
                         switch ($row->status_perkuliahan) {
                             case 'A':
                                 $status_perkuliahan = 'AKTIF';

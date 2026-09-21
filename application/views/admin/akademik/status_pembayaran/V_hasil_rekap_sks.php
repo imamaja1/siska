@@ -1,6 +1,6 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Pembayaran Mahasiswa TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == '0' ? 'GENAP' : 'GANJIL' ?></h3>
+        <h3 class="box-title">Pembayaran Mahasiswa TA. <?php $ta = tahun_akademik(); echo e($ta ? $ta->tahun_akademik : '-'); ?> <?= $ta ? ($ta->semester == '0' ? 'GENAP' : 'GANJIL') : '' ?></h3>
     </div>
     <div class="box-body">
         <?php if(count($data) > 0) : ?>

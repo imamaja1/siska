@@ -76,7 +76,7 @@
                         <!-- 
 						<td align="center">
                             <div class="form-group" style="margin: 0px">
-                                <select onchange="tidak_berhak(<?= $row->kode_khs_detail ?>,this)" name="tidak_berhak" class="form-control" id="">
+                                <select onchange="tidak_berhak(<?= e($row->kode_khs_detail) ?>,this)" name="tidak_berhak" class="form-control" id="">
                                     <option value="">Pilih</option>
                                     <option value="N" <?= $row->tidak_berhak == 'N' ? 'selected' : '' ?> >N</option>
                                     <option value="A" <?= $row->tidak_berhak == 'A' ? 'selected' : '' ?> >A</option>

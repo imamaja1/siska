@@ -40,7 +40,12 @@ class Pembayaran extends CI_Controller
     }
 
     public function rekap(){
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = tahun_akademik();
+        if (empty($kode_tahun_akademik)) {
+            echo '<p class="alert alert-warning">Tahun akademik aktif tidak ditemukan.</p>';
+            return;
+        }
+        $kode_tahun_akademik = $kode_tahun_akademik->kode_tahun_akademik;
         $kkp_skripsi = get_kode_matakuliah_skripsi();
         $kode_program_studi = $this->input->post('kode_program_studi');
         $data['kode_program_studi'] = $kode_program_studi;
@@ -49,8 +54,15 @@ class Pembayaran extends CI_Controller
     }
 
     public function excel($kode_program_studi){
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $tahun_akademik = tahun_akademik();
+        if (empty($tahun_akademik)) {
+            show_error('Tahun akademik aktif tidak ditemukan.');
+        }
+        $kode_tahun_akademik = $tahun_akademik->kode_tahun_akademik;
         $program_studi = $this->keuanganservice->getProgramStudiRow($kode_program_studi);
+        if (empty($program_studi)) {
+            show_error('Program studi tidak ditemukan.');
+        }
         $data['program_studi'] = $program_studi;
         $data['filename'] = "Rekap Pembayaran Prodi ".$program_studi->nama_program_studi;
         $data['data'] = $this->keuanganservice->getRekapPembayaran($kode_tahun_akademik, $kode_program_studi);
@@ -110,9 +122,9 @@ class Pembayaran extends CI_Controller
             if (!empty($result)) {
                 echo '<ul id="nim-list" class="list-group">';
                 foreach ($result as $nim) {
-                    $nama = "'$nim->nama_mahasiswa'";
+                    $nama = "'" . e($nim->nama_mahasiswa) . "'";
 
-                    echo '<li onClick="selectNim('. $nim->nim . ',' .$nama. ')" class="list-group-item">' . $nim->nim . '-'.$nim->nama_mahasiswa.'</li>';
+                    echo '<li onClick="selectNim('. e($nim->nim) . ',' .$nama. ')" class="list-group-item">' . e($nim->nim) . '-'.e($nim->nama_mahasiswa).'</li>';
                 }
                 echo '</ul>';
             } else {

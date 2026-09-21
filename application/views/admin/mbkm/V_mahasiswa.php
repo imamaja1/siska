@@ -9,7 +9,7 @@
                 <label for="kode_tahun_akademik">Tahun Akademik</label>
                 <select name="ta" id="kode_tahun_akademik" class="form-control">
                     <?php foreach ($tahun_akademik as $value): ?>
-                        <option value='<?= e($value->kode_tahun_akademik) ?>' <?= ($value->kode_tahun_akademik == $kode_tahun_akademik) ? 'selected' : '' ?>>Semester <?= $value->semester == '1' ? 'Ganjil Tahun '.$value->tahun_akademik:'Genap Tahun '.$value->tahun_akademik?></option>
+                        <option value='<?= e($value->kode_tahun_akademik) ?>' <?= ($value->kode_tahun_akademik == $kode_tahun_akademik) ? 'selected' : '' ?>>Semester <?= $value->semester == '1' ? 'Ganjil Tahun '.e($value->tahun_akademik) : 'Genap Tahun '.e($value->tahun_akademik) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -47,7 +47,7 @@
                             <td><?= !empty($value->nama_mahasiswa) ? e($value->nama_mahasiswa) : '-' ?></td>
                             <td><?= !empty($value->nama_program_studi) ? e($value->nama_program_studi) : '-' ?></td>
                             <td>
-                                <a href="<?= site_url('admin/mbkm/daftar/nilai/'.$value->id_fix.'/'.$kode_tahun_akademik) ?>" class="btn btn-success btn-sm">Penilaian</a>
+                                <a href="<?= e(site_url('admin/mbkm/daftar/nilai/'.rawurlencode($value->id_fix).'/'.rawurlencode($kode_tahun_akademik))) ?>" class="btn btn-success btn-sm">Penilaian</a>
                                 <button type="button" class="btn btn-danger btn-sm" onclick="hapus(<?= e($value->id_fix) ?>)">Hapus</button>
                             </td>
                         </tr>

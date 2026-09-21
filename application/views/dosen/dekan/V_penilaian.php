@@ -49,7 +49,7 @@
 
     function lihat(kelas_id) {
         super_kelas_id = kelas_id;
-        var url = "<?= site_url('dosen/dekan/validasinilai/data_mahasiswa') ?>/" + kelas_id;
+        var url = "<?= site_url('dosen/dekan/validasinilai/data_mahasiswa_uts') ?>/" + kelas_id;
         $.ajax({
             url: url,
             success: function (res) {
@@ -61,7 +61,7 @@
     
 
     function validasi() {
-        var url = "<?= site_url('dosen/dekan/validasinilai/validasi') ?>/" + super_kelas_id;
+        var url = "<?= site_url('dosen/dekan/validasinilai/validasi_uts') ?>/" + super_kelas_id;
         swal({
             title: '',
             html: "<strong>Validasi Nilai</strong> berarti anda sudah selesai mengoreksi nilai mahasiswa yang di inputkan dosen." +
@@ -98,7 +98,7 @@
     };
 
     function revisi() {
-        var url = "<?= site_url('dosen/dekan/validasinilai/revisi_nilai') ?>/" + super_kelas_id;
+        var url = "<?= site_url('dosen/dekan/validasinilai/revisi_uts') ?>/" + super_kelas_id;
         swal({
             title: '',
             html: "Menekan tombol <strong>Revisi</strong> berarti meberikan akses kepada dosen untuk melakukan <strong>Revisi/Perbahan</strong>" +
@@ -124,7 +124,7 @@
     }
 
     function kelas() {
-        var url = "<?= site_url('dosen/dekan/ValidasiNilai/kelas') ?>";
+        var url = "<?= site_url('dosen/dekan/validasinilai/kelas_uts') ?>";
         $.ajax({
             url: url,
             beforeSend: function () {
@@ -137,7 +137,7 @@
     }
 
     function cari() {
-        var url = "<?= site_url('dosen/kaprodi/validasinilai/cari_kelas') ?>";
+        var url = "<?= site_url('dosen/dekan/validasinilai/kelas_uts') ?>";
         var data = "keyword=" + $("#keyword").val();
         $.ajax({
             url: url,

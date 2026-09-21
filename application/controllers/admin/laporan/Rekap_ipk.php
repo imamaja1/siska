@@ -117,8 +117,10 @@ class Rekap_ipk extends CI_Controller
 //        echo '<pre>';
 //        var_dump($data['data']);
 //        die();
-        $semester = $ta->semester == 0 ? 'Genap' : 'Ganjil';
-        $data['file_name'] = 'Rekap IPK - ' . $prodi->singkatan_program_studi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta->tahun_akademik . '-' . $semester;
+        $semester = ($ta && $ta->semester == 0) ? 'Genap' : 'Ganjil';
+        $singkatan_prodi = $prodi ? $prodi->singkatan_program_studi : '';
+        $ta_label = $ta ? $ta->tahun_akademik : '';
+        $data['file_name'] = 'Rekap IPK - ' . $singkatan_prodi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta_label . '-' . $semester;
 
 //        $this->load->view('admin/laporan/rekap_ipk/V_spreadsheet_view_new', $data);
         // Panggil class PHPExcel nya
@@ -185,6 +187,7 @@ class Rekap_ipk extends CI_Controller
         $no = 1; // Untuk penomoran tabel, di awal set dengan 1
         $numrow = 4; // Set baris pertama untuk isi tabel adalah baris ke 4
         $jumlah_data = count($datas);
+        $total_ipk = 0;
       
         foreach ($datas as $data) { // Lakukan looping pada variabel siswa
             $excel->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $no);
@@ -211,7 +214,7 @@ class Rekap_ipk extends CI_Controller
       
       
         $row_total = $numrow + 1;
-        $rata_ipk = number_format($total_ipk / $jumlah_data, 2);
+        $rata_ipk = $jumlah_data > 0 ? number_format($total_ipk / $jumlah_data, 2) : '0';
         $excel->setActiveSheetIndex(0)->setCellValue('A' . $row_total, 'Rata - Rata IPK');
         $excel->getActiveSheet()->mergeCells('A' . $row_total . ':E' . $row_total);
         $excel->setActiveSheetIndex(0)->setCellValue('F' . $row_total, $rata_ipk);
@@ -236,11 +239,11 @@ class Rekap_ipk extends CI_Controller
         $excel->getActiveSheet(0)->setTitle("Laporan IPK");
         $excel->setActiveSheetIndex(0);
 
-        $filename = 'Rekap IPK - ' . $prodi->singkatan_program_studi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta->tahun_akademik . '-' . $semester . '.xlsx';
+        $filename = 'Rekap IPK - ' . $singkatan_prodi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta_label . '-' . $semester . '.xlsx';
 
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment;filename=" . $filename);
+        header("Content-Disposition: attachment;filename=" . str_replace(array("\r","\n",'"'), '', $filename));
         header('Cache-Control: max-age=0');
 
         $write = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
@@ -317,9 +320,9 @@ class Rekap_ipk extends CI_Controller
         foreach ($data as $row) :
             $table .= '<tr>';
             $table .= '<td>'.$i++.'.</td>';
-            $table .= '<td>'. $row->nim.'</td>';
-            $table .= '<td>'. $row->nama_mahasiswa.'</td>';
-            $table .= '<td>'. $row->jenis_kelamin.'</td>';
+            $table .= '<td>'. e($row->nim).'</td>';
+            $table .= '<td>'. e($row->nama_mahasiswa).'</td>';
+            $table .= '<td>'. e($row->jenis_kelamin).'</td>';
             $table .= '<td>'. $row->ip.'</td>';
             $table .= '<td>'. $row->ipk.'</td>';
             $table .= '<td>'. $row->total_sks.'</td>';
@@ -343,13 +346,13 @@ class Rekap_ipk extends CI_Controller
         endforeach;
         $table .= '<tr>';
         $table .= '<td colspan="5" style="text-align: center"><b>IPK Rata-rata</b></td>';
-        $table .= '<td style="text-align: center; font-weight: bold">'.number_format($total_ipk/$jumah_data,2).'</td>';
+        $table .= '<td style="text-align: center; font-weight: bold">'.($jumah_data > 0 ? number_format($total_ipk/$jumah_data,2) : '0').'</td>';
         $table .= '<td colspan="4">-</td>';
         $table .= '</tr>';
         $table .= '</table>';
 
         $data['table'] = $table;
-        $data['file_name'] = $prodi->singkatan_program_studi.'-'.$prodi->nama_program_studi;
+        $data['file_name'] = $prodi ? $prodi->singkatan_program_studi.'-'.$prodi->nama_program_studi : '';
 
         $this->load->view('admin/laporan/rekap_ipk/V_spreadsheet_view', $data);
     }
@@ -360,13 +363,15 @@ class Rekap_ipk extends CI_Controller
         $kode_program_studi = $this->session->userdata('sess_kode_program_studi');
         $prodi = $this->Nama_jurusan_model->get_all_byid($kode_program_studi);
         $ta = $this->m_tahun_akademik->get_tahun_akademik_by_kode($kode_tahun_akademik);
-        $semester = $ta->semester == 0 ? 'Genap' : 'Ganjil';
+        $semester = ($ta && $ta->semester == 0) ? 'Genap' : 'Ganjil';
+        $singkatan_prodi = $prodi ? $prodi->singkatan_program_studi : '';
+        $ta_label = $ta ? $ta->tahun_akademik : '';
 
-        $data = $this->laporan_model->cetak_rekap_ipk_new($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi);
-      
-         $table .= '<table border="1">';
+        $data = $this->laporan_model->cetak_rekap_ipk_new($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi, $this->limit, 0);
+
+        $table = '<table border="1">';
         $table .= '<tr>';
-        $table .= '<th colspan ="7" style="align:center">Rekap IPK - ' . $prodi->singkatan_program_studi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta->tahun_akademik . '-' . $semester.'</th>';
+        $table .= '<th colspan ="7" style="align:center">Rekap IPK - ' . e($singkatan_prodi) . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . e($ta_label) . '-' . $semester.'</th>';
         $table .= '<tr>';
         $table .= '</tr>';
         $table .= '</tr>';
@@ -385,8 +390,8 @@ class Rekap_ipk extends CI_Controller
         foreach ($data as $row) :
             $table .= '<tr>';
             $table .= '<td>'.$i++.'.</td>';
-            $table .= '<td>'. $row->nim.'</td>';
-            $table .= '<td>'. $row->nama_mahasiswa.'</td>';
+            $table .= '<td>'. e($row->nim).'</td>';
+            $table .= '<td>'. e($row->nama_mahasiswa).'</td>';
             $table .= '<td>'. $row->sks.'</td>';
             $table .= '<td>'. $row->ip.'</td>';
             $table .= '<td>'. $row->ipk.'</td>';
@@ -396,13 +401,13 @@ class Rekap_ipk extends CI_Controller
         endforeach;
         $table .= '<tr>';
         $table .= '<td colspan="5" style="text-align: center"><b>IPK Rata-rata</b></td>';
-        $table .= '<td style="text-align: center; font-weight: bold">'.number_format($total_ipk/$jumah_data,2).'</td>';
+        $table .= '<td style="text-align: center; font-weight: bold">'.($jumah_data > 0 ? number_format($total_ipk/$jumah_data,2) : '0').'</td>';
         $table .= '<td colspan="1">-</td>';
         $table .= '</tr>';
         $table .= '</table>';
 
         $data['table'] = $table;
-        $data['file_name'] = $prodi->singkatan_program_studi.'-'.$prodi->nama_program_studi;
+        $data['file_name'] = $prodi ? $prodi->singkatan_program_studi.'-'.$prodi->nama_program_studi : '';
         $this->load->view('admin/laporan/rekap_ipk/V_spreadsheet_view', $data);
     }
 }

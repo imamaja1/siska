@@ -119,7 +119,8 @@ class Petikan_nilai extends CI_Controller
     }
     public function cetak(){
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik - 1;
+        $ta = tahun_akademik();
+        $tahun_akademik = $ta ? $ta->kode_tahun_akademik - 1 : null;
         $nim = $this->session->userdata('nim');
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         // echo json_encode($data['mahasiswa']);break;
@@ -127,7 +128,7 @@ class Petikan_nilai extends CI_Controller
         $data['prodi'] = get_kode_prodi($nim);
         $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
         $data['semester'] = ($sem && isset($sem->semester) && is_numeric($sem->semester)) ? $sem->semester - 1 : 0;
-        $data['semester_jalan'] = substr(tahun_akademik()->tahun_akademik, -2) - substr($nim, 0,2);
+        $data['semester_jalan'] = substr($ta ? $ta->tahun_akademik : '', -2) - substr($nim, 0,2);
         $data['data'] = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum,$data['semester']+1);
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
@@ -150,7 +151,8 @@ class Petikan_nilai extends CI_Controller
     }
    	public function Cetak_now(){
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik - 1;
+        $ta = tahun_akademik();
+        $tahun_akademik = $ta ? $ta->kode_tahun_akademik - 1 : null;
         $nim = $this->session->userdata('nim');
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         // echo json_encode($data['mahasiswa']);break;
@@ -158,7 +160,7 @@ class Petikan_nilai extends CI_Controller
         $data['prodi'] = get_kode_prodi($nim);
         $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
         $data['semester'] = ($sem && isset($sem->semester) && is_numeric($sem->semester)) ? $sem->semester : 0;
-        $data['semester_jalan'] = substr(tahun_akademik()->tahun_akademik, -2) - substr($nim, 0,2);
+        $data['semester_jalan'] = substr($ta ? $ta->tahun_akademik : '', -2) - substr($nim, 0,2);
         $data['data'] = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum,$data['semester']+1);
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);

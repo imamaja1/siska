@@ -8,10 +8,11 @@
 <!--<div class="col-md-12 col-xs-12 col-sm-12">-->
         <div class="box box-primary flat">
             <div class="box-header">
-                <h4><span class="text-success"><i class="fa fa-calendar"></i></span><strong> TAHUN AKADEMIK - <?= e($tahun_akademik->tahun_akademik) ?>  (<span class="text-success"><?= $tahun_akademik->semester == 0 ? "GENAP" : "GANJIL" ?></span>)</strong></h4>
+                <h4><span class="text-success"><i class="fa fa-calendar"></i></span><strong> TAHUN AKADEMIK - <?= e(isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '-') ?>  (<span class="text-success"><?= isset($tahun_akademik->semester) ? ($tahun_akademik->semester == 0 ? "GENAP" : "GANJIL") : '' ?></span>)</strong></h4>
             </div>
             <div class="box-body">
                 <?php if (count($data) > 0): ?>
+                    <div class="table-responsive">
                     <table class="table demo-table">
                         <thead>
                         <tr>
@@ -36,6 +37,7 @@
                         <?php endforeach; ?>
                         </tbody>
                     </table>
+                    </div>
                 <?php else : ?>
                     <p class="alert alert-warning">Data tidak ditemukan</p>
                 <?php endif ?>

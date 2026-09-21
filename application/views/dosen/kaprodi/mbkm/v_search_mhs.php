@@ -15,7 +15,7 @@
                 <th>Nama</th>
                 <th>Prodi</th>
                 <th>Tahun Akademik MBKM</th>
-                <th>Tindakan<?= e($ta) ?></th>
+                <th>Tindakan<?= e(is_object($ta) ? ($ta->tahun_akademik ?? '') : '') ?></th>
             </tr>
         </thead>
         <tbody>

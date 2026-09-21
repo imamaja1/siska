@@ -1,7 +1,7 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <p><center><strong>PETIKAN NILAI MAHASISWA</strong></center></p>
-        <P><center><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL" ;  ?> TA. <?= $tahun_akademik->ta  ?></strong></center></P>
+        <P><center><strong>SEMESTER <?= $tahun_akademik ? ($tahun_akademik->semester % 2 == 0 ? "GENAP" : "GANJIL") : '-' ?> TA. <?= e($tahun_akademik ? $tahun_akademik->ta : '-') ?></strong></center></P>
         <P><center><strong>ANGKATAN  20<?= substr($mahasiswa->nim, 0,2) ?> </strong></center></P>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -53,9 +53,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <?php $total_sks = 0; $total_sksn = 0; $j=1; foreach ($data as $key) : ?>
+                        <?php $j=1; foreach ((array) $data as $key) : ?>
                             <?php if (isset($key['data_nilai'])) :
-                                $sks=0; $sksn=0;  
                                 foreach ($key['data_nilai'] as $row) : ?>
                                 <tr>
                                     <td><center><?= $j++?>.</center></td>
@@ -67,8 +66,6 @@
                                     <td><center><?= e($row['sksn']) ?></center></td>
                                 </tr>
                                 <?php endforeach;
-                                $total_sks += $key['sks'];
-                                $total_sksn += $key['sksn'];
                             endif; ?>
                         <?php endforeach; ?>
                     </tbody>
@@ -95,7 +92,7 @@
                         <td style="border-bottom:1px solid black;"><strong>SKSN</strong></td>
                         <td rowspan="2">=</td>
                         <td style="border-bottom:1px solid black;"><strong><?= $total_sksn ?></strong></td>
-                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($total_sksn/$total_sks, 2) ?></strong></td>
+                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($ipk, 2) ?></strong></td>
                     </tr>
                     <tr>
                         <td ><strong>SKS</strong></td>
@@ -106,4 +103,3 @@
         </div>
     </div>
 </div>
-

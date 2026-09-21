@@ -8,6 +8,11 @@ class Tambah_makul extends CI_Controller
         if (!$this->session->userdata('nama_login')) {
             redirect(site_url('login_admin/login'));
         }
+        $class = $this->router->fetch_class();
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
         $this->load->model(array(
             'jurusan/m_tahun_akademik',
             'jurusan/program_studi/Nama_jurusan_model',

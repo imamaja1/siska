@@ -1,6 +1,6 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Pembayaran (SKRIPSI) Mahasiswa TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == '0' ? 'GENAP' : 'GANJIL' ?></h3>
+        <h3 class="box-title">Pembayaran (SKRIPSI) Mahasiswa TA. <?php $ta = tahun_akademik(); echo e($ta ? $ta->tahun_akademik : '-'); ?> <?= $ta ? ($ta->semester == '0' ? 'GENAP' : 'GANJIL') : '' ?></h3>
     </div>
     <div class="box-body">
         <?php if(count($data) > 0) : ?>
@@ -23,9 +23,9 @@
                     <td><?= $no++ ?></td>
                     <td><?= e($row->nim) ?></td>
                     <td><?= e($row->nama_mahasiswa) ?></td>
-                    <td><?= e(get_kode_prodi($row->nim)->nama_program_studi) ?></td>
-                    <td style="text-align: center"><?= $row->semester ?></td>
-                    <td style="text-align: center"><span class="badge bg-aqua-active"><?= $row->teori ?></span></td>
+                    <td><?= e(get_kode_prodi($row->nim) ? get_kode_prodi($row->nim)->nama_program_studi : '-') ?></td>
+                    <td style="text-align: center"><?= e($row->semester) ?></td>
+                    <td style="text-align: center"><span class="badge bg-aqua-active"><?= e($row->teori) ?></span></td>
                     <td style="text-align: center; width: 18%">
                         <div class="form-group">
                             <div class="checkbox pilihan">
@@ -75,12 +75,15 @@
     })
     var key = '';
     var kode_status_perkuliahan = '';
+    function esc(s) {
+        return $('<div>').text(s == null ? '' : s).html();
+    }
     function content() {
-        return  '<form action="<?= site_url('admin/keuangan/status_perkuliahan/bayar') ?>" method="post">\n' +
+        return  '<form action="<?= e(site_url('admin/keuangan/status_perkuliahan/bayar')) ?>" method="post">\n' +
             '    <div class="form-group">\n' +
             '        <div class="input-group">\n' +
-            '<input type="hidden" id="key" name="key" value="'+ key +'">\n'+
-            '<input type="hidden" id="kode_status_perkuliahan" name="kode_status_perkuliahan" value="'+kode_status_perkuliahan+'">\n'+
+            '<input type="hidden" id="key" name="key" value="'+ esc(key) +'">\n'+
+            '<input type="hidden" id="kode_status_perkuliahan" name="kode_status_perkuliahan" value="'+ esc(kode_status_perkuliahan) +'">\n'+
             '            <select name="value" required style="width:200px;" class="form-control">\n' +
             '                <option value="" selected disabled >Pilih</option>\n' +
             '                <option value="0" >Belum Lunas</option>\n' +
@@ -98,27 +101,27 @@
     function status(status,status_perkuliahan_id,key) {
         if(key == 'pembayaran_spp'){
             if(status == '0'){
-                return '<button onclick="bayar_spp('+status_perkuliahan_id+',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SPP</button>';
+                return '<button onclick="bayar_spp('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SPP</button>';
             }else if(status == '1'){
-                return '<button onclick="bayar_spp('+status_perkuliahan_id+',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SPP</button>';
+                return '<button onclick="bayar_spp('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SPP</button>';
             }else{
-                return '<button onclick="bayar_spp('+status_perkuliahan_id+',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SPP</button>';
+                return '<button onclick="bayar_spp('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SPP</button>';
             }
         }else if(key == 'pembayaran_sks'){
             if(status == '0'){
-                return '<button onclick="bayar_sks('+status_perkuliahan_id+',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SKS</button>';
+                return '<button onclick="bayar_sks('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> SKS</button>';
             }else if(status == '1'){
-                return '<button onclick="bayar_sks('+status_perkuliahan_id+',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SKS</button>';
+                return '<button onclick="bayar_sks('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> SKS</button>';
             }else{
-                return '<button onclick="bayar_sks('+status_perkuliahan_id+',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SKS</button>';
+                return '<button onclick="bayar_sks('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> SKS</button>';
             }
         }else{
             if(status == '0'){
-                return '<button onclick="bayar_lab('+status_perkuliahan_id+',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> LAB</button>';
+                return '<button onclick="bayar_lab('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-danger btn-xs"><i class="fa fa-times"></i> LAB</button>';
             }else if(status == '1'){
-                return '<button onclick="bayar_lab('+status_perkuliahan_id+',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> LAB</button>';
+                return '<button onclick="bayar_lab('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-success btn-xs"><i class="fa fa-check"></i> LAB</button>';
             }else{
-                return '<button onclick="bayar_lab('+status_perkuliahan_id+',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> LAB</button>';
+                return '<button onclick="bayar_lab('+esc(status_perkuliahan_id)+',this, event)"  class="btn btn-warning btn-xs"><i class="fa fa-history"></i> LAB</button>';
             }
         }
 
@@ -127,37 +130,43 @@
     function bayar_spp(id, contex, e) {
         kode_status_perkuliahan = id;
         key = 'pembayaran_spp';
-        var content_spp = content();
+        $('.pilihan button').not(contex).popover('hide');
         $(contex).popover({
             placement: 'left',
             title: 'Pembayaran SPP',
-            html:true,
-            content: content_spp,
-        })
+            html: true,
+            trigger: 'manual',
+            content: content(),
+        });
+        $(contex).popover('toggle');
     }
 
     function bayar_sks(id, contex, e) {
         kode_status_perkuliahan = id;
         key = 'pembayaran_sks';
-        var content_spp = content();
+        $('.pilihan button').not(contex).popover('hide');
         $(contex).popover({
             placement: 'left',
             title: 'Pembayaran SKS',
-            html:true,
-            content: content_spp,
-        })
+            html: true,
+            trigger: 'manual',
+            content: content(),
+        });
+        $(contex).popover('toggle');
     }
 
     function bayar_lab(id, contex, e) {
         kode_status_perkuliahan = id;
         key = 'pembayaran_lab';
-        var content_spp = content();
+        $('.pilihan button').not(contex).popover('hide');
         $(contex).popover({
             placement: 'left',
             title: 'Pembayaran LAB',
-            html:true,
-            content: content_spp,
-        })
+            html: true,
+            trigger: 'manual',
+            content: content(),
+        });
+        $(contex).popover('toggle');
     }
 
     function kirim(contex) {

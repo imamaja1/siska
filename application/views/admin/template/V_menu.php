@@ -109,7 +109,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Keuangan -->
-            <?php if (has_access($acc, ['Status_perkuliahan', 'Mahasiswa_aktif', 'Block', 'Pembayaran', 'Mahasiswa', 'Krs', 'Khs'])): ?>
+            <?php if (has_access($acc, ['Status_perkuliahan', 'Mahasiswa_aktif', 'Block', 'Pembayaran'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Keuangan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-money"></i>
@@ -129,15 +129,6 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php if (has_access($acc, 'Pembayaran')): ?>
                     <li><a href="<?= site_url('admin/keuangan/pembayaran'); ?>"><i class="fa fa-circle-o"></i> Pembayaran</a></li>
                     <?php endif; ?>
-                    <?php if (has_access($acc, 'Mahasiswa')): ?>
-                    <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
-                    <?php endif; ?>
-                    <?php if (has_access($acc, 'Krs')): ?>
-                    <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
-                    <?php endif; ?>
-                    <?php if (has_access($acc, 'Khs')): ?>
-                    <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
-                    <?php endif; ?>
                 </ul>
             </li>
             <?php endif; ?>
@@ -155,8 +146,19 @@ function has_access($acc, $controllers, $role = 0) {
                     <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
                     <li><a href="<?= site_url('admin/akademik/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
                     <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
+                    <?php if (has_access($acc, 'Nama_jurusan')): ?>
+                    <li><a href="<?= site_url('admin/akademik/kop_prodi'); ?>"><i class="fa fa-circle-o"></i> Kop Prodi</a></li>
+                    <?php endif; ?>
                     <li><a href="<?= site_url('admin/akademik/kkp'); ?>"><i class="fa fa-circle-o"></i> KKP</a></li>
-                    <li><a href="<?= site_url('admin/akademik/petikan_nilai'); ?>"><i class="fa fa-circle-o"></i> Petikan Nilai</a></li>
+                    <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Petikan Nilai') ? 'active' : ''; ?>">
+                        <a href="#"><i class="fa fa-circle-o"></i> Petikan Nilai
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="<?= site_url('admin/akademik/petikan_nilai/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                            <li><a href="<?= site_url('admin/akademik/petikan_nilai/prodi'); ?>"><i class="fa fa-circle-o"></i> Prodi</a></li>
+                        </ul>
+                    </li>
                     <li><a href="<?= site_url('admin/akademik/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi Matakuliah</a></li>
                     <li><a href="<?= site_url('admin/akademik/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi Mahasiswa</a></li>
                     <li><a href="<?= site_url('admin/akademik/pembayaran_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Pembayaran Mahasiswa</a></li>

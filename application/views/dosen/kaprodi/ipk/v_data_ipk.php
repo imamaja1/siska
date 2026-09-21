@@ -52,7 +52,7 @@
             </div>
       <?php if (count($data) > 0): ?>
             <h4 class="text-black" style="margin-bottom: 20px;">
-                Rata - Rata IPK : <b><?= number_format($total_ipk / $jumlah_data, 2) ?></b>
+                Rata - Rata IPK : <b><?= $jumlah_data > 0 ? number_format($total_ipk / $jumlah_data, 2) : '0' ?></b>
             </h4>
         <?php endif; ?>
         </div>

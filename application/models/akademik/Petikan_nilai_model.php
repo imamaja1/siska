@@ -64,6 +64,18 @@ class Petikan_nilai_model extends CI_Model {
         return $query;
     }
 
+    public function get_by_nim($nim, $angkatan = null) {
+        $this->db->select('mah.*')
+                ->from('mahasiswa as mah')
+                ->where('mah.nim', $nim);
+
+        if ($angkatan !== null && $angkatan !== '') {
+            $this->db->where('substring(mah.nim,1,2)', $angkatan);
+        }
+
+        return $this->db->get()->row_object();
+    }
+
     public function petikan_nilai($nim, $kode_nama_kurikulum) {
         $n = 0;
         $t_sks = 0;
@@ -86,7 +98,7 @@ class Petikan_nilai_model extends CI_Model {
                 $cek = $this->db->select('*,count(kd.kode_krs_detail) as jumlah')
                                 ->from('krs as k')
                                 ->join('krs_detail as kd', 'k.kode_krs=kd.kode_krs')
-                                ->join('khs_detail as hd', 'kd.kode_krs_detail=hd.kode_krs_detail')
+                                ->join('khs_detail as hd', 'kd.kode_krs_detail=hd.kode_krs_detail', 'left')
                                 ->join('matakuliah as m', 'kd.id_matakuliah=m.id_matakuliah')
                                 ->where('m.kode_matakuliah', $row->kode_matakuliah)
                                 ->where('k.nim', $nim)
@@ -124,7 +136,7 @@ class Petikan_nilai_model extends CI_Model {
                         $semua = $this->db->select('*')
                                 ->from('krs')
                                 ->join('krs_detail as kd', 'krs.kode_krs=kd.kode_krs')
-                                ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                                ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail', 'left')
                                 ->join('matakuliah as mak', 'kd.id_matakuliah=mak.id_matakuliah')
                                 ->where('nim', $nim)
                                 ->where('mak.kode_matakuliah', $row->kode_matakuliah)
@@ -239,7 +251,7 @@ class Petikan_nilai_model extends CI_Model {
         return $query->kode_program_studi;
     }
 
-    public function petikan_nilai_new($nim, $kode_nama_kurikulum, $mhs_semester) {
+    public function petikan_nilai_new($nim, $kode_nama_kurikulum, $mhs_semester = null, $kode_tahun_akademik = null) {
         $n = 0;
         $t_sks = 0;
         $t_sksn = 0;
@@ -259,15 +271,19 @@ class Petikan_nilai_model extends CI_Model {
             $data[$n]['semester'] = $j;
             $i = 0;
             foreach ($data_kurikulum as $row) {
-                $cek = $this->db->select('*,count(kd.kode_krs_detail) as jumlah')
+                $this->db->select('*,count(kd.kode_krs_detail) as jumlah')
                                 ->from('krs as k')
                                 ->join('krs_detail as kd', 'k.kode_krs=kd.kode_krs')
-                                ->join('khs_detail as hd', 'kd.kode_krs_detail=hd.kode_krs_detail')
+                                ->join('khs_detail as hd', 'kd.kode_krs_detail=hd.kode_krs_detail', 'left')
                                 ->join('matakuliah as m', 'kd.id_matakuliah=m.id_matakuliah')
                                 ->where('m.kode_matakuliah', $row->kode_matakuliah)
-                                ->where('k.nim', $nim)
-                                ->where('k.semester < ', $mhs_semester)
-                                ->get()->row_object();
+                                ->where('k.nim', $nim);
+                if ($kode_tahun_akademik !== null && $kode_tahun_akademik !== '') {
+                    $this->db->where('k.kode_tahun_akademik <=', $kode_tahun_akademik);
+                } else {
+                    $this->db->where('k.semester < ', $mhs_semester);
+                }
+                $cek = $this->db->get()->row_object();
                 if (isset($row->kode_kompetensi) && $row->kode_kompetensi) {
                     $data[$n]['data_nilai'][$i]['mk_pilihan'] = true;
                 }
@@ -310,15 +326,19 @@ class Petikan_nilai_model extends CI_Model {
                             }
                         }
                     } elseif ($cek->jumlah > 1) {
-                        $semua = $this->db->select('*')
+                        $this->db->select('*')
                                 ->from('krs')
                                 ->join('krs_detail as kd', 'krs.kode_krs=kd.kode_krs')
-                                ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail')
+                                ->join('khs_detail as khd', 'kd.kode_krs_detail=khd.kode_krs_detail', 'left')
                                 ->join('matakuliah as mak', 'kd.id_matakuliah=mak.id_matakuliah')
                                 ->where('nim', $nim)
-                                ->where('mak.kode_matakuliah', $row->kode_matakuliah)
-                                ->order_by('krs.semester', 'ASC')
-                                ->get()->result_object();
+                                ->where('mak.kode_matakuliah', $row->kode_matakuliah);
+                        if ($kode_tahun_akademik !== null && $kode_tahun_akademik !== '') {
+                            $this->db->where('krs.kode_tahun_akademik <=', $kode_tahun_akademik);
+                        } else {
+                            $this->db->where('krs.semester <', $mhs_semester);
+                        }
+                        $semua = $this->db->order_by('krs.semester', 'ASC')->get()->result_object();
                         $attempts = [];
                         $max_nilai = 0;
                         $max_grade = '-';

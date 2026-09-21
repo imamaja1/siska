@@ -16,7 +16,7 @@
     <div class="col-lg-12">
         <div class="pull-right">
             <div class="btn-ta">
-                TA. <?= get_cookie('tahun_akademik') ?> <?= get_cookie('semester') == '1' ? "GANJIL" : "GENAP" ?> |
+                TA. <?= e(get_cookie('tahun_akademik')) ?> <?= get_cookie('semester') == '1' ? "GANJIL" : "GENAP" ?> |
                 <a href="#" onclick="$('#modal-tahun-akademik').modal('toggle')" title="Ganti Tahun Akademik"><i
                             style="color: white" class="fa fa-edit"></i></a>
             </div>
@@ -169,6 +169,7 @@
 </div>
 <div class="box box-solid flat" id="find-box" style="display: none;">
     <div class="box-body">
+        <div class="table-responsive">
         <table class="table demo-table">
             <thead>
             <tr>
@@ -200,6 +201,7 @@
             </tr>
             </tbody>
         </table>
+        </div>
         <br>
         <button class="btn btn-success btn-sm flat" onclick="simpan_status()"><i class="fa fa-check-circle"></i> Simpan
         </button>

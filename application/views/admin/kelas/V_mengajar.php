@@ -40,9 +40,6 @@
         </form>
     </div>
 </div>
-<?php if (isset($data)) : ?>
-    <?= print_r($data) ?>
-<?php endif; ?>
 <!--modal tambah pengajar-->
 <div class="modal fade" id="modal-tambah">
     <div class="modal-dialog">

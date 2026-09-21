@@ -28,7 +28,7 @@ class Update_penilaian extends CI_Controller {
 
         $prodi = $this->Fakultas_model->getProdiFromDekan($id_dekan);
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         $kelas = $this->dekanservice->get_kelas_validasi_simple($kode_prodi, $kode_tahun_akademik);
 
         $data['content'] = 'dosen/dekan/V_penilaian';
@@ -42,7 +42,7 @@ class Update_penilaian extends CI_Controller {
         $id_dekan = $this->session->userdata('kode_dosen');
         $prodi = $this->Fakultas_model->getProdiFromDekan($id_dekan);
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         $kelas = $this->dekanservice->get_kelas_update_uts_dekan($kode_prodi, $kode_tahun_akademik);
         $data['kelas'] = $kelas;
 
@@ -60,7 +60,7 @@ class Update_penilaian extends CI_Controller {
         $id_dekan = $this->session->userdata('kode_dosen');
         $prodi = $this->Fakultas_model->getProdiFromDekan($id_dekan);
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         $kelas = $this->dekanservice->get_kelas_update_uas_dekan($kode_prodi, $kode_tahun_akademik);
 
         $data['kelas'] = $kelas;
@@ -70,6 +70,9 @@ class Update_penilaian extends CI_Controller {
         $kelas_mahasiswa = $this->dekanservice->get_mahasiswa_update_uts_dekan($kelas_id);
 
         $data_kelas = $this->dekanservice->get_kelas_update_detail_dekan($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $data['data'] = $kelas_mahasiswa;
         $data['data_kelas'] = $data_kelas;
 
@@ -79,6 +82,9 @@ class Update_penilaian extends CI_Controller {
     public function data_mahasiswa_uas($kelas_id) {
         $kelas_mahasiswa = $this->dekanservice->get_mahasiswa_uas_dekan($kelas_id);
         $data_kelas = $this->dekanservice->get_data_kelas_dekan($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $data['data'] = $kelas_mahasiswa;
         $data['data_kelas'] = $data_kelas;
 
@@ -110,7 +116,7 @@ class Update_penilaian extends CI_Controller {
                             'tgl_dekan' => date_create('now', timezone_open('Asia/Singapore'))->format('Y-m-d H:i:s'));
 
         $this->dekanservice->insert('catatan_revisi_uas',$massage1);
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function revisi_uts() {
@@ -125,7 +131,7 @@ class Update_penilaian extends CI_Controller {
 
         $query_fakultas = $this->dekanservice->get_query_fakultas_dekan($kelas_id);
 
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function validasi_uts($kelas_id) {
@@ -161,7 +167,7 @@ class Update_penilaian extends CI_Controller {
                             'tgl_dekan' => date_create('now', timezone_open('Asia/Singapore'))->format('Y-m-d H:i:s'));
        
         $resss = $this->dekanservice->insert('catatan_revisi',$massage1);
-        echo $resss;
+        echo json_encode(array('status' => (bool) $resss));
     }
 
     public function validasi_uas($kelas_id) {
@@ -198,14 +204,14 @@ class Update_penilaian extends CI_Controller {
                             'tgl_dekan' => date_create('now', timezone_open('Asia/Singapore'))->format('Y-m-d H:i:s'));
        
         $resss = $this->dekanservice->insert('catatan_revisi_uas',$massage1);
-        echo $resss;
+        echo json_encode(array('status' => (bool) $resss));
     }
 
    public function validasi_nilai_uas() {
         $dekan = $this->dekanservice->get_dekan_prodi($this->session->userdata('kode_dosen'));
 
-        $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_prodi = array_column($dekan, 'kode_program_studi');
+        $kode_tahun_akademik = ta_kode();
 
         $kelas = $this->dekanservice->get_kelas_validasi_simple($kode_prodi, $kode_tahun_akademik);
 
@@ -222,8 +228,10 @@ class Update_penilaian extends CI_Controller {
     public function validasi_nilai_uts() {
         $dekan = $this->dekanservice->get_dekan_prodi($this->session->userdata('kode_dosen'));
 
-        $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_prodi = array_column($dekan, 'kode_program_studi');
+        $kode_tahun_akademik = ta_kode();
+
+        $kelas = array();
 
         $data['content'] = 'dosen/dekan/update-nilai/V_index_uts';
         $data['judul'] = 'Validas Nilai UTS';

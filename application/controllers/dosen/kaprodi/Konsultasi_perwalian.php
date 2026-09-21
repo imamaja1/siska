@@ -39,7 +39,7 @@ class Konsultasi_perwalian extends CI_Controller
     public function filter() {
         $angkatan = $this->input->post('angkatan');
         $prodi = $this->kaprodiservice->get_kaprodi_prodi_row($this->session->userdata('kode_dosen'));
-        $kode_program_studi = $prodi->kode_program_studi;
+        $kode_program_studi = $prodi ? $prodi->kode_program_studi : null;
 
         $data_session = array(
             'sess_angkatan' => $angkatan,
@@ -176,8 +176,7 @@ class Konsultasi_perwalian extends CI_Controller
             if (!empty($result)) {
                 echo '<ul id="nim-list" class="list-group">';
                 foreach ($result as $row) {
-                    $nama = "'$row->nama_dosen'";
-                    echo '<li onClick="selectDosen(' . $row->kode_dosen . ',' . $nama . ')" class="list-group-item">' . $row->nama_dosen . '</li>';
+                    echo '<li onClick="selectDosen(' . e($row->kode_dosen) . ',' . e(json_encode($row->nama_dosen)) . ')" class="list-group-item">' . e($row->nama_dosen) . '</li>';
                 }
                 echo '</ul>';
             } else {

@@ -30,7 +30,7 @@ class Kpat extends CI_Controller
         $data = $this->kaprodiservice->get_matakuliah_kpat_by_prodi($kode_tahun_akademik, $kode_program_studi);
         if($data){
             foreach ($data as $row) {
-                echo "<option value='" . $row->id_matakuliah . "'>".$row->kode_matakuliah ." - ". $row->nama_matakuliah . "</option>";
+                echo "<option value='" . $row->id_matakuliah . "'>".e($row->kode_matakuliah) ." - ". e($row->nama_matakuliah) . "</option>";
             }
         }else{
             echo "<option value='' onlyread>Tidak Ada Matakuliah</option>";
@@ -47,12 +47,12 @@ class Kpat extends CI_Controller
         $data['semester'] = $this->m_tahun_akademik->get_semester();        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
         $data['angkatan'] = $this->m_tahun_akademik->tahun_angkatan();
-        $data['kode_tahun_akademik'] = $data['semester']->kode_tahun_akademik;
+        $data['kode_tahun_akademik'] = $data['semester'] ? $data['semester']->kode_tahun_akademik : null;
         $this->load->view('dosen/template/V_main', $data);
     }
     public function get_mahasiswa($ta = null, $angkatan = null, $kode_matakuliah = null) {
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $ta = ta_kode();
         }
         $data['data'] = $this->kaprodiservice->get_mahasiswa_kpat($ta, $kode_matakuliah, $angkatan);
         $this->load->view('dosen/kaprodi/Kpat/v_data_mhs',$data);

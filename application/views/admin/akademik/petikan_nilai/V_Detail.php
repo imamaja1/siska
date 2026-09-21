@@ -1,7 +1,7 @@
 <div class="box box-primary flat">
     <div class="box-body">
         <p><center><strong>PETIKAN NILAI MAHASISWA</strong></center></p>
-        <P><center><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0) ? "GENAP" : "GANJIL" ;  ?> TA. <?= $tahun_akademik->ta  ?></strong></center></P>
+        <P><center><strong>SEMESTER <?= $tahun_akademik ? ($tahun_akademik->semester % 2 == 0 ? "GENAP" : "GANJIL") : '-' ?> TA. <?= e($tahun_akademik ? $tahun_akademik->ta : '-') ?></strong></center></P>
         <P><center><strong>ANGKATAN  20<?= substr($mahasiswa->nim, 0,2) ?> </strong></center></P>
         <br>
         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -39,7 +39,7 @@
         </div>
         <br>
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <?php $total_sks = 0; $total_sksn = 0; foreach ($data as $key) : ?>
+            <?php foreach ((array) $data as $key) : ?>
                 <p><strong>SEMESTER  <?= $key['semester'] ?></strong></p>
                 <div class="table-responsive">
                 <table class="table demo-table">
@@ -56,28 +56,27 @@
                     <tbody>
                     <?php
                     if (isset($key['data_nilai'])) :
-                    $sks=0; $sksn=0; $j=1; foreach ($key['data_nilai'] as $row) : ?>
+                    $j=1; foreach ($key['data_nilai'] as $row) :
+                        $belum = (!isset($row['jumlah_data']) || $row['jumlah_data'] == 0);
+                        $n_sks = $belum ? '-' : (isset($row['sks']) ? $row['sks'] : 0);
+                        $n_grade = $belum ? '-' : ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : 'E');
+                        $n_sksn = $belum ? '-' : (isset($row['sksn']) ? $row['sksn'] : 0);
+                        ?>
                         <tr>
                             <td><center><?= $j++?>.</center></td>
                             <td><center><?= e($row['kode_matakuliah']) ?></center></td>
                             <td><?= e($row['nama_matakuliah']) ?></td>
-                            <td><center><?= e($row['sks']) ?></center></td>
-                            <td><center><?= e($row['grade']) ?></center></td>
-                            <td><center><?= e($row['sksn']) ?></center></td>
+                            <td><center><?= e($n_sks) ?></center></td>
+                            <td><center><?= e($n_grade) ?></center></td>
+                            <td><center><?= e($n_sksn) ?></center></td>
                         </tr>
                     <?php endforeach;
-                        $total_sks += $key['sks'];
-                        $total_sksn += $key['sksn'];
                     endif;
                     ?>
                     </tbody>
                 </table>
                 </div>
                 <br>
-                <?php
-                $total_sks = $total_sks + $sks;
-                $total_sksn = $total_sksn + $sksn;
-                ?>
             <?php endforeach; ?>
         </div>
         <!-- end.col-12 -->
@@ -100,7 +99,7 @@
                         <td style="border-bottom:1px solid black;"><strong>SKSN</strong></td>
                         <td rowspan="2">=</td>
                         <td style="border-bottom:1px solid black;"><strong><?= $total_sksn ?></strong></td>
-                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($total_sksn/$total_sks, 2) ?></strong></td>
+                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($ipk, 2) ?></strong></td>
                     </tr>
                     <tr>
                         <td ><strong>SKS</strong></td>
@@ -111,4 +110,3 @@
         </div>
     </div>
 </div>
-

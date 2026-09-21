@@ -16,6 +16,7 @@
                 <?php if (count($data) > 0): ?>
                     <form class="form-horizontal" method="POST" action="<?= site_url('admin/keuangan/status_perkuliahan/tambah_status_semua')  ?>">
                         <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                        <div class="table-responsive">
                         <table class="table demo-table" id="example1">
                             <thead>
                             <tr>
@@ -35,6 +36,7 @@
                             <?php } ?>
                             </tbody>
                         </table>
+                        </div>
                         <hr>
                         <a href="#" onclick="pilih()" class="text-success"><i class="fa fa-check-circle"></i> Pilih semua</a> |
                         <a href="#" onclick="kosong()" class="text-danger"><i class="fa fa-times-circle"></i> Uncek semua</a>

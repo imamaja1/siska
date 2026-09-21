@@ -39,8 +39,8 @@ header("Cache-Control: private", false);
 </head>
 <body>
 <p style="text-align: center; font-weight: bold; font-size: 16pt">Rekap Pembayaran
-    TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == '0' ? 'GENAP' : 'GANJIL' ?>
-    <br>Program Studi <?= e($program_studi->nama_program_studi) ?></p>
+    TA. <?php $ta = tahun_akademik(); echo e($ta ? $ta->tahun_akademik : '-'); ?> <?= $ta ? ($ta->semester == '0' ? 'GENAP' : 'GANJIL') : '' ?>
+    <br>Program Studi <?= e(isset($program_studi->nama_program_studi) ? $program_studi->nama_program_studi : '-') ?></p>
 <hr>
 <table id="customers">
     <thead>

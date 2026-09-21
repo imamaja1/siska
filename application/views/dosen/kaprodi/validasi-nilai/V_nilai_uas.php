@@ -34,7 +34,7 @@
                                 <td><?= e($row->dummy_uts) ?></td>
                                 <td><?= e($row->dummy_uas) ?></td>
                                 <td><?= round($row->dummy_na) ?></td>
-                               <?php if (($row->grade == E) || ($row->grade == D)): ?>
+                               <?php if (($row->grade == 'E') || ($row->grade == 'D')): ?>
                                     <td style="text-align: center; font-weight: bold; background: red; color: white;"><?= e($row->grade) ?></td>
                                 <?php else: ?>
                                     <td style="text-align: center; font-weight: bold;"><?= e($row->grade) ?></td>

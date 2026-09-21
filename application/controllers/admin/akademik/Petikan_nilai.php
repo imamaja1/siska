@@ -30,23 +30,69 @@ class Petikan_nilai extends CI_Controller {
     }
 
     public function index() {
-        $data['content'] = 'admin/akademik/petikan_nilai/V_index';
+        redirect(site_url('admin/akademik/petikan_nilai/prodi'));
+    }
+
+    public function prodi() {
+        $data['content'] = 'admin/akademik/petikan_nilai/V_index_prodi';
         $data['judul'] = 'Akademik';
         $data['sub_judul'] = 'Petikan Nilai';
-        $data['judul_sub_judul'] ='';
+        $data['judul_sub_judul'] = 'Petikan Nilai';
         $data['tahun_angkatan'] = $this->m_tahun_akademik->tahun_angkatan();
         $data['nama_jurusan'] = $this->nama_jurusan_model->get();
+        $data['tahun_akademik'] = $this->m_tahun_akademik->get();
+
+        $ta_aktif = $this->m_tahun_akademik->get_semester();
+        $data['kode_tahun_akademik_aktif'] = $ta_aktif ? $ta_aktif->kode_tahun_akademik : '';
 
         $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function mahasiswa() {
+        $data['content'] = 'admin/akademik/petikan_nilai/V_index_mahasiswa';
+        $data['judul'] = 'Akademik';
+        $data['sub_judul'] = 'Petikan Nilai';
+        $data['judul_sub_judul'] = 'Petikan Nilai';
+        $data['tahun_akademik'] = $this->m_tahun_akademik->get();
+
+        $ta_aktif = $this->m_tahun_akademik->get_semester();
+        $data['kode_tahun_akademik_aktif'] = $ta_aktif ? $ta_aktif->kode_tahun_akademik : '';
+
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function cari_mahasiswa() {
+        $nim = trim((string) $this->input->post('keyword'));
+        $kode_tahun_akademik = $this->input->post('tahun_akademik');
+
+        try {
+            $mahasiswa = $this->Petikan_nilai_model->get_by_nim($nim);
+
+            if (!$mahasiswa) {
+                $data['keyword'] = $nim;
+                $this->load->view('admin/akademik/petikan_nilai/V_mahasiswa_kosong', $data);
+                return;
+            }
+
+            $this->session->set_userdata('input_kode_tahun_akademik', $kode_tahun_akademik);
+
+            $data = $this->nilaiservice->get_petikan_nilai_data($mahasiswa->nim, 'all', $kode_tahun_akademik);
+            $this->load->view('admin/akademik/petikan_nilai/V_Detail_Mahasiswa', $data);
+        } catch (Exception $e) {
+            log_message('error', 'Error in cari_mahasiswa(): ' . $e->getMessage());
+            show_error('Terjadi kesalahan saat memproses data', 500);
+        }
     }
 
     public function filter() {
         $angkatan = $this->input->post('angkatan');
         $kode_program_studi = $this->input->post('prodi');
+        $kode_tahun_akademik = $this->input->post('tahun_akademik');
         
         $data_session = array(
             'input_angkatan' => $angkatan,
             'input_kode_program_studi' => $kode_program_studi,
+            'input_kode_tahun_akademik' => $kode_tahun_akademik,
         );
 
         $this->session->set_userdata($data_session);
@@ -91,7 +137,7 @@ class Petikan_nilai extends CI_Controller {
                 show_error('Terjadi kesalahan saat memproses data', 500);
             }
         } else {
-            redirect(site_url('admin/akademik/Petikan_nilai/data_mahasiswa_petikan_nilai'));
+            redirect(site_url('admin/akademik/petikan_nilai/prodi'));
         }
     }
 
@@ -163,23 +209,16 @@ class Petikan_nilai extends CI_Controller {
         }
     }
 
-    public function data_cari() {
-        $cari = $this->input->post('cari');
-        $data['content'] = 'admin/akademik/petikan_nilai/V_data_cari';
-        $data['judul'] = 'Akademik';
-        $data['sub_judul'] = 'Petikan Nilai';
-        $data_count = count($this->Petikan_nilai_model->data_cari($cari));
-        $data['data'] = $this->Petikan_nilai_model->data_cari($cari);
-        if ($data_count > 0) {
-            $data['jumlah_data'] = $data_count;
-        } else {
-            $this->session->set_flashdata('keterangan', 'Data tidak ditemukan !');
+    private function kode_tahun_akademik_terpilih() {
+        $ta = $this->input->get('ta');
+        if ($ta === null || $ta === '') {
+            $ta = $this->session->userdata('input_kode_tahun_akademik');
         }
-        $this->load->view('admin/template/V_main', $data);
+        return ($ta === false || $ta === null) ? '' : $ta;
     }
 
     public function detail($nim) {
-        $data = $this->nilaiservice->get_petikan_nilai_data($nim, 'all');
+        $data = $this->nilaiservice->get_petikan_nilai_data($nim, 'all', $this->kode_tahun_akademik_terpilih());
         $data['content'] = 'admin/akademik/petikan_nilai/V_Detail';
         $data['judul'] = 'Akademik';
         $this->load->view('admin/akademik/petikan_nilai/V_Detail', $data);
@@ -200,18 +239,24 @@ class Petikan_nilai extends CI_Controller {
     }
   
     public function cetak($nim) {
-        $data = $this->nilaiservice->get_petikan_nilai_data($nim, 'all');
+        $data = $this->nilaiservice->get_petikan_nilai_data($nim, 'all', $this->kode_tahun_akademik_terpilih());
 
-        $content = $this->load->view('admin/akademik/petikan_nilai/cetak_petikan_nilai', $data, true);
-        $header = $this->load->view('admin/akademik/petikan_nilai/header_petikan_nilai', $data, true);
+        $content = $this->load->view('admin/akademik/petikan_nilai/cetak_petikan_nilai_all', $data, true);
         $namafile = $nim . "-Petikan_nilai.pdf";
 
         $this->load->library('pdf');
-        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
-        $mpdf = $this->pdf;
-        $mpdf->SetHTMLHeader($header);
-        $mpdf->WriteHTML($content);
-        $mpdf->Output($namafile, "D");
+        $this->pdf->reinitialize(['format' => 'Legal', 'margin_left' => 10, 'margin_right' => 10, 'margin_top' => 10, 'margin_bottom' => 10]);
+        $this->pdf->setPaper('legal', 'portrait');
+        $this->pdf->loadHtml($content);
+        $this->pdf->render();
+
+        if (ob_get_length()) {
+            while (ob_get_level() > 0 && ob_get_length()) {
+                @ob_end_clean();
+            }
+        }
+
+        $this->pdf->stream($namafile, ['Attachment' => true]);
     }
 
     public function cetak_ganjil($nim) {
@@ -245,7 +290,7 @@ class Petikan_nilai extends CI_Controller {
     }
 
     public function print_view($nim) {
-        $data = $this->nilaiservice->get_petikan_nilai_data($nim, 'all');
+        $data = $this->nilaiservice->get_petikan_nilai_data($nim, 'all', $this->kode_tahun_akademik_terpilih());
         $this->load->view('admin/akademik/petikan_nilai/print_view', $data);
     }
   

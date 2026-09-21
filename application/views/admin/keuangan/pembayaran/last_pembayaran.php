@@ -27,8 +27,8 @@
                     <td><?= e($row->nama_pembayaran) ?></td>
                     <td style="text-align: right"><?= number_format($row->nominal_pembayaran,0,',','.')  ?></td>
                     <td><?= e($row->nama_rek) ?></td>
-                    <td><?= $row->jml_sks ?></td>
-                    <td><?= date('d M Y',strtotime($row->tgl_pembayaran)) ?></td>
+                    <td><?= e($row->jml_sks) ?></td>
+                    <td><?= !empty($row->tgl_pembayaran) ? date('d M Y',strtotime($row->tgl_pembayaran)) : '-' ?></td>
                     <td style="text-align: center">
                         <a href="#" onclick="hapus('<?= e($row->pembayaran_id) ?>')" class="btn btn-danger btn-xs" title="Delete"><i class="fa fa-trash"></i></a>
                     </td>

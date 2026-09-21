@@ -22,6 +22,9 @@ header("Expires: 0");
     </style>
 </head>
 <body class="page">
+<?php if (empty($data)) : ?>
+    <p align="center"><strong>Data nilai gabungan KKP tidak ditemukan.</strong></p>
+<?php else : ?>
 <p><img class="img" src="<?= base_url('assets/gambar/header_krs.png') ?>" alt=""><p>
 <hr size="2"></p>
 
@@ -89,4 +92,5 @@ NIK/NIP. <?= e($data->nik) ?>&emsp;&emsp;&emsp;&emsp;&emsp;</p>
 
 </body>
 </html>
+<?php endif; ?>
 

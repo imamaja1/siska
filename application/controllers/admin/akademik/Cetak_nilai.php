@@ -7,6 +7,11 @@ class Cetak_nilai extends CI_Controller {
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
         }
+        $class = $this->router->fetch_class();
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
         $this->load->service('NilaiService');
     }
 

@@ -29,13 +29,13 @@ class MBKM extends CI_Controller
         $data['sub_judul'] = 'Data Mahasiswa';
         $data['semester'] = $this->m_tahun_akademik->get_semester();        
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();   
-        $data['kode_tahun_akademik'] = $data['semester']->kode_tahun_akademik;
+        $data['kode_tahun_akademik'] = $data['semester'] ? $data['semester']->kode_tahun_akademik : null;
         $this->load->view('dosen/template/V_main', $data);
         
     }
     public function get_mahasiswa($ta = null) {
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $ta = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
         $kode_program_studi = $this->kaprodiservice->get_kaprodi_prodi_row_array($kode_dosen);

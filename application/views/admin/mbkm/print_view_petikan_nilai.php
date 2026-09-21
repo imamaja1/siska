@@ -93,7 +93,7 @@
             <td style="text-align: center; vertical-align: bottom; font-family:serif; font-size: 8pt;">
                 <!--<img style="height: 120px;" src="<?= base_url('assets/gambar/kop/' . $prodi->kode_fakultas . '.png') ?>" />-->
                 <img style="height: 120px;"
-                    src="<?= base_url('assets/gambar/kop/' . bodo_kop($mahasiswa->nim)['kop']); ?>">
+                    src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
             </td>
         </tr>
     </table>
@@ -259,7 +259,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <img style="height: 50px;" src="<?= !empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.$ttd) : base_url('assets/gambar/notfound.png') ?>">
+                        <img style="height: 50px;" src="<?= e(!empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.rawurlencode($ttd)) : base_url('assets/gambar/notfound.png')) ?>">
                     </td>
                 </tr>
                 <tr>

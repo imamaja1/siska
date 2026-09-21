@@ -83,8 +83,8 @@ class Ipk extends CI_Controller
         $prodi = $this->Nama_jurusan_model->get_all_byid($kode_program_studi);
         $ta = $this->m_tahun_akademik->get_tahun_akademik_by_kode($kode_tahun_akademik);
         $datas = $this->laporan_model->rekap_all_ipk($kode_tahun_akademik, $tahun_angkatan, $kode_program_studi);
-        $semester = $ta->semester == 0 ? 'Genap' : 'Ganjil';
-        $data['file_name'] = 'Rekap IPK - ' . $prodi->singkatan_program_studi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta->tahun_akademik . '-' . $semester;
+        $semester = ($ta && $ta->semester == 0) ? 'Genap' : 'Ganjil';
+        $data['file_name'] = 'Rekap IPK - ' . (isset($prodi->singkatan_program_studi) ? $prodi->singkatan_program_studi : '') . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . (isset($ta->tahun_akademik) ? $ta->tahun_akademik : '') . '-' . $semester;
 
         require_once FCPATH . 'vendor/autoload.php';
         $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -166,7 +166,7 @@ class Ipk extends CI_Controller
             $total_ipk = $total_ipk + $data['ipk'];
         }
         $row_total = $numrow + 1;
-        $rata_ipk = number_format($total_ipk / $jumlah_data, 2);
+        $rata_ipk = ($jumlah_data > 0) ? number_format($total_ipk / $jumlah_data, 2) : '0';
         $excel->setActiveSheetIndex(0)->setCellValue('A' . $row_total, 'Rata - Rata IPK');
         $excel->getActiveSheet()->mergeCells('A' . $row_total . ':E' . $row_total);
         $excel->setActiveSheetIndex(0)->setCellValue('F' . $row_total, $rata_ipk);
@@ -186,10 +186,10 @@ class Ipk extends CI_Controller
         $excel->getActiveSheet(0)->setTitle("Laporan IPK");
         $excel->setActiveSheetIndex(0);
 
-        $filename = 'Rekap IPK - ' . $prodi->singkatan_program_studi . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . $ta->tahun_akademik . '-' . $semester . '.xlsx';
+        $filename = 'Rekap IPK - ' . (isset($prodi->singkatan_program_studi) ? $prodi->singkatan_program_studi : '') . ' - Angkatan: 20' . $tahun_angkatan . ' - TA : ' . (isset($ta->tahun_akademik) ? $ta->tahun_akademik : '') . '-' . $semester . '.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment;filename=" . $filename);
+        header("Content-Disposition: attachment;filename=" . str_replace(array("\r","\n",'"'), '', $filename));
         header('Cache-Control: max-age=0');
 
         $write = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
@@ -237,19 +237,5 @@ class Ipk extends CI_Controller
             $this->session->set_flashdata('keterangan', 'Tidak ditemukan satupun data mahasiswa untuk Angkatan dan Jurusan !');
         }
         return $this->load->view('dosen/kaprodi/ipk/v_pencarian', $data);
-    }
-
-    public function grafik_nilai($nim)
-    {
-        $kode_nama_kurikulum = kode_nama_kurikulum($nim);
-        $data['mahasiswa'] = $this->kaprodiservice->get_mahasiswa_ipk($nim);
-        $data_krs = $this->kaprodiservice->get_krs_ipk($nim);
-        $i = 0;
-        foreach ($data_krs as $row) {
-            $data['ipk'][$i] = $this->laporan_model->ipok($nim, $kode_nama_kurikulum, $row->kode_tahun_akademik)['ipk'];
-            $data['semester'][$i] = 'Semester ' . $row->semester;
-            $i++;
-        }
-        return $this->load->view('dosen/kaprodi/ipk/list', $data);
     }
 }

@@ -102,15 +102,15 @@ class Aktif_perkuliahan extends CI_Controller{
         foreach ($data as $row) :
         $table .= '<tr>';
         $table .= '<th>'.$i++.'.</th>';
-        $table .= '<th>'.$row->nim.'</th>';
-        $table .= '<th>'.$row->nama_mahasiswa.'</th>';
+        $table .= '<th>'.e($row->nim).'</th>';
+        $table .= '<th>'.e($row->nama_mahasiswa).'</th>';
         $table .= '<th>'.$row->jumlah_sks.'</th>';
         $table .= '</tr>';
         endforeach;
         $table .= '</table>';
 
         $data['table'] = $table;
-        $data['file_name'] = $prodi->singkatan_program_studi.'-'.$prodi->nama_program_studi;
+        $data['file_name'] = $prodi ? $prodi->singkatan_program_studi.'-'.$prodi->nama_program_studi : '';
 
         $this->load->view('admin/laporan/aktif_perkuliahan/V_spreadsheet_view', $data);
 

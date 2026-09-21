@@ -2,11 +2,22 @@
     <div class="col-md-12">
         <div class="box box-solid ">
             <div class="box-body">
-                <button onclick="ambil()" class="btn btn-warning btn-sm"><i class="fa fa-refresh"></i> SKS NON SKRIPSI</button> &emsp;
-                <button onclick="skripsi()" class="btn btn-danger btn-sm"><i class="fa fa-refresh"></i> SKRIPSI</button> &emsp;
-                <a href="<?= site_url('admin/keuangan/status_perkuliahan/cetak_filter_rekap_sks') ?>" class="btn btn-info btn-sm "><i class="fa fa-file-excel-o"></i> Cetak SKS NON Skripsi</a> &emsp;
-                <a href="<?= site_url('admin/keuangan/status_perkuliahan/cetak_filter_rekap_sks_skripsi') ?>" class="btn btn-success btn-sm "><i class="fa fa-file-excel-o"></i> Cetak SKS Skripsi</a>
-                <a href="<?= site_url('admin/keuangan/status_perkuliahan') ?>" class="btn btn-danger btn-sm pull-right"><i class="fa fa-arrow-circle-left"></i> Kembali</a>
+                <div class="row" style="margin-bottom: 8px;">
+                    <div class="col-xs-12 col-sm-6 col-md-3" style="margin-bottom: 5px;">
+                        <button onclick="ambil()" class="btn btn-warning btn-sm btn-block"><i class="fa fa-refresh"></i> SKS NON SKRIPSI</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3" style="margin-bottom: 5px;">
+                        <button onclick="skripsi()" class="btn btn-danger btn-sm btn-block"><i class="fa fa-refresh"></i> SKRIPSI</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3" style="margin-bottom: 5px;">
+                        <a href="<?= e(site_url('admin/keuangan/status_perkuliahan/cetak_filter_rekap_sks')) ?>" class="btn btn-info btn-sm btn-block"><i class="fa fa-file-excel-o"></i> Cetak SKS NON Skripsi</a>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3" style="margin-bottom: 5px;">
+                        <a href="<?= e(site_url('admin/keuangan/status_perkuliahan/cetak_filter_rekap_sks_skripsi')) ?>" class="btn btn-success btn-sm btn-block"><i class="fa fa-file-excel-o"></i> Cetak SKS Skripsi</a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <a href="<?= e(site_url('admin/keuangan/status_perkuliahan')) ?>" class="btn btn-danger btn-sm"><i class="fa fa-arrow-circle-left"></i> Kembali</a>
             </div>
         </div>
     </div>
@@ -80,7 +91,7 @@
 
     function ambil() {
         $.ajax({
-            url : "<?= site_url('admin/keuangan/status_perkuliahan/filter_rekap_sks') ?>",
+            url : "<?= e(site_url('admin/keuangan/status_perkuliahan/filter_rekap_sks')) ?>",
             beforeSend : function(){
                 $("#landing").html(loading);
             },
@@ -92,7 +103,7 @@
 
     function skripsi() {
         $.ajax({
-            url : "<?= site_url('admin/keuangan/status_perkuliahan/filter_rekap_sks_skripsi') ?>",
+            url : "<?= e(site_url('admin/keuangan/status_perkuliahan/filter_rekap_sks_skripsi')) ?>",
             beforeSend : function(){
                 $("#landing").html(loading);
             },

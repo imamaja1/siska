@@ -42,12 +42,12 @@
                                     <td><?= !empty($row->batas_laporan) ? day_left($row->batas_laporan) : '-' ?></td>
                                     <td align="center">
                                         <div class="btn-group btn-group-xs">
-                                            <a href="#" id="<?= $row->id_pembimbing_kkp ?>" class="btn btn-default pindah" title="Pindah Pembimbing"><i class="fa fa-arrow-circle-o-up"></i></a>
-                                            <a href="#" onclick="edit('<?= $row->id_pembimbing_kkp ?>','<?= $kode_dosen ?>')" class="btn btn-info" data-toggle="tooltip" data-placement="left" title="Edit"><i class="fa fa-edit"></i></a>
-                                            <a href="#" onclick="hapus('<?= $row->id_pembimbing_kkp ?>')" class="btn btn-danger" data-toggle="tooltip" data-placement="left" title="Hapus"><i class="fa fa-trash"></i></a>
+                                            <a href="#" id="<?= e($row->id_pembimbing_kkp) ?>" class="btn btn-default pindah" title="Pindah Pembimbing"><i class="fa fa-arrow-circle-o-up"></i></a>
+                                            <a href="#" onclick="edit('<?= e($row->id_pembimbing_kkp) ?>','<?= e($kode_dosen) ?>')" class="btn btn-info" data-toggle="tooltip" data-placement="left" title="Edit"><i class="fa fa-edit"></i></a>
+                                            <a href="#" onclick="hapus('<?= e($row->id_pembimbing_kkp) ?>')" class="btn btn-danger" data-toggle="tooltip" data-placement="left" title="Hapus"><i class="fa fa-trash"></i></a>
                                             <?php if ($row->id_nilai != null) : ?>
-                                            <a href="<?= site_url('admin/akademik/pembimbing_kkp/penilaian_pembimbing/'.$row->id_pembimbing_kkp) ?>" class="btn btn-warning" title="Penilaian pembimbing"><i class="fa fa-file-excel-o"></i></a>
-                                            <a href="<?= site_url('admin/akademik/pembimbing_kkp/nilai_gabungan/'.$row->id_pembimbing_kkp) ?>" class="btn btn-success" title="Nilai Gabungan"><i class="fa fa-file-excel-o"></i></a>
+                                            <a href="<?= e(site_url('admin/akademik/pembimbing_kkp/penilaian_pembimbing/'.$row->id_pembimbing_kkp)) ?>" class="btn btn-warning" title="Penilaian pembimbing"><i class="fa fa-file-excel-o"></i></a>
+                                            <a href="<?= e(site_url('admin/akademik/pembimbing_kkp/nilai_gabungan/'.$row->id_pembimbing_kkp)) ?>" class="btn btn-success" title="Nilai Gabungan"><i class="fa fa-file-excel-o"></i></a>
                                             <?php endif; ?>
                                         </div>
                                     </td>

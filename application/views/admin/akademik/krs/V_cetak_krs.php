@@ -360,11 +360,11 @@
             <tr>
                 <td height="60px">
                     <!--<img style="height: 60px" src="<?= base_url('assets/signature_kaprodi/' . $kajur->tanda_tangan) ?>"/>-->
-                    <img style="height: 60px" src="<?= !empty($kajur->signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $kajur->signature) ? base_url('assets/signature-dosen/'.$kajur->signature) : base_url('assets/gambar/notfound.png') ?>"/>
+                    <img style="height: 60px" src="<?= e(!empty($kajur->signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $kajur->signature) ? base_url('assets/signature-dosen/'.rawurlencode($kajur->signature)) : base_url('assets/gambar/notfound.png')) ?>"/>
                 </td>
                 <td height="60px">
                     <?php if (!empty($krs_mahasiswa->signature)) : ?>
-                        <img style="height: 60px" src="<?= file_exists(FCPATH . 'assets/signature-dosen/' . $krs_mahasiswa->signature) ? base_url('assets/signature-dosen/'.$krs_mahasiswa->signature) : base_url('assets/gambar/notfound.png') ?>"/>
+                        <img style="height: 60px" src="<?= e(file_exists(FCPATH . 'assets/signature-dosen/' . $krs_mahasiswa->signature) ? base_url('assets/signature-dosen/'.rawurlencode($krs_mahasiswa->signature)) : base_url('assets/gambar/notfound.png')) ?>"/>
                     <?php endif; ?>
                 </td>
                 <td>&nbsp;</td>

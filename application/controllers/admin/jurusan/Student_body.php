@@ -8,6 +8,11 @@ class Student_body extends CI_Controller {
         if (!$this->session->userdata('nama_login')) {
             redirect(site_url('login_admin/login'));
         }
+        $class = $this->router->fetch_class();
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
         $this->load->service('AkademikSetupService');
     }
 
@@ -40,18 +45,19 @@ class Student_body extends CI_Controller {
         $kode_program_studi = $this->session->userdata('kode_program_studi_sess');
         $angkatan = $this->session->userdata('angkatan_sess');
 
-        $data_mahasiswa = $this->akademiksetupservice->getDataMahasiswaBody($kode_program_studi, $angkatan);
-        
-        echo '<pre>';
-        print_r($data_mahasiswa);
-        die();
+        $data['content'] = 'admin/jurusan/student_body/V_index';
+        $data['judul'] = 'Jurusan';
+        $data['sub_judul'] = 'Student Body';
+        $data['angkatan'] = $this->akademiksetupservice->getTahunAngkatan();
+        $data['prodi'] = $this->akademiksetupservice->getProgramStudi();
+        $data['data_mahasiswa'] = $this->akademiksetupservice->getDataMahasiswaBody($kode_program_studi, $angkatan);
+
+        $this->load->view('admin/template/V_main', $data);
     }
 
     public function ip($nim) {
         $keterangan = $this->akademiksetupservice->getIpMahasiswa($nim);
-        
-        echo '<pre>';
-        print_r($keterangan);
-        die();
+
+        echo json_encode($keterangan);
     }
 }

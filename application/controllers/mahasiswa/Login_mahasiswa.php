@@ -52,7 +52,8 @@ class Login_mahasiswa extends CI_Controller
 
                 if (!empty($cek)) {
 //                    $kode_program_studi = $this->Nama_jurusan_model->get_id($jurusan, $jenjang);
-                    $kode_program_studi = get_kode_prodi($nim)->kode_program_studi;
+                    $prodi = get_kode_prodi($nim);
+                    $kode_program_studi = $prodi ? $prodi->kode_program_studi : null;
 //                    $nama_kurikulum = $this->m_data_kurikulum->get_nama_kurikulum($nim);
                     $data_user = array(
                             'nim' => $cek->nim,

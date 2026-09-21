@@ -26,7 +26,11 @@ class Cetak_nilai extends CI_Controller {
        // $data['savename'] = FCPATH . 'tes.png';
        // $this->ciqrcode->generate($data);
 
-        $namafile = $data['query1']->mtkm . " - " . $data['query1']->nama_matakuliah . " - Kelas " . $data['query1']->nama_kelas . ".pdf";
+        if ($data['query1']) {
+            $namafile = $data['query1']->mtkm . " - " . $data['query1']->nama_matakuliah . " - Kelas " . $data['query1']->nama_kelas . ".pdf";
+        } else {
+            show_error('Data nilai tidak ditemukan.');
+        }
         $this->load->library('pdf');
         $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Folio', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 38, 'margin_bottom' => 20, 'margin_header' => 5, 'margin_footer' => 5]);
         $mpdf = $this->pdf;

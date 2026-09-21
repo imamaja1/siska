@@ -55,7 +55,7 @@
     <tr>
         <td style="vertical-align: bottom; font-family:serif; font-size: 8pt; text-align: center">
             <!--<img style="height: 120px" src="<?= base_url('assets/gambar/kop/'.$prodi->kode_fakultas.'.png') ?>" />-->
-               <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.bodo_kop($data['nim'])['kop']); ?>">
+               <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/'.rawurlencode(bodo_kop($data['nim'])['kop'] ?? ''))) ?>">
         </td>
     </tr>
 </table>
@@ -191,7 +191,7 @@
     <tr>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td><div class="garis_bawah"><?php echo bodo_kop($data['nim'])['dekan']; ?></div>NIK: <?php echo bodo_kop($data['nim'])['nik']; ?></td>
+        <td><div class="garis_bawah"><?= e(bodo_kop($data['nim'])['dekan'] ?? '') ?></div>NIK: <?= e(bodo_kop($data['nim'])['nik'] ?? '') ?></td>
     </tr>
 </table>
 <!-- End Footer KHS -->

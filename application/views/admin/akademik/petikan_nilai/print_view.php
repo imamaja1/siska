@@ -86,7 +86,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: bottom; font-family:serif; font-size: 8pt;">
                     <!--<img style="height: 120px;" src="<?= base_url('assets/gambar/kop/' . $prodi->kode_fakultas . '.png') ?>" />-->
-                    <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/' . bodo_kop($mahasiswa->nim)['kop']); ?>">
+                    <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
                 </td>
             </tr>
         </table>
@@ -148,59 +148,25 @@
                 </thead>
                 <tbody>
                     <?php
-                    $total_sks = 0;
-                    $total_sksn = 0;
                     for ($i = 0; $i <= 4; $i++) :
                         if (isset($data[$i]['data_nilai'])) :
                             ?>
                             <?php
-                            $sks = 0;
-                            $sksn = 0;
                             $j = 1;
                             foreach ($data[$i]['data_nilai'] as $row) :
+                                $belum = (!isset($row['jumlah_data']) || $row['jumlah_data'] == 0);
+                                $n_sks = $belum ? '-' : (isset($row['sks']) ? $row['sks'] : 0);
+                                $n_grade = $belum ? '-' : ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : 'E');
+                                $n_sksn = $belum ? '-' : (isset($row['sksn']) ? $row['sksn'] : 0);
                                 ?>
                                 <tr>
                                     <td align="center"><?= $j++ ?>.</td>
                                     <td align="center"><?= e($row['kode_matakuliah']) ?></td>
                                     <td><?= e($row['nama_matakuliah']) ?></td>
-                                    <td align="center">
-                                        <?php
-                                  if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
-                                            echo "0";
-                                        } else {
-                                             echo e($row['sks']);
-                                        }
-                                        ?>
-                                    </td>
-                                    <td align="center">
-                                        <?= isset($row['grade']) ? e($row['grade']) : '-' ?>
-                                    </td>
-                                    <td align="center">
-                                      <?php
-                                        if ($row['grade'] == "E"|| !$row['nilai_harian'] || !$row['nilai_uas']) {
-                                            echo "0";
-                                        } else {
-                                            echo e($row['sksn']);
-                                        }
-                                        ?>
-                                  </td>
+                                    <td align="center"><?= e($n_sks) ?></td>
+                                    <td align="center"><?= e($n_grade) ?></td>
+                                    <td align="center"><?= e($n_sksn) ?></td>
                                 </tr>
-                                <?php
-//                    if ($row['sksn'] != 0) {
-                                if ($row['grade'] == "E") {
-                                  if($row['jumlah_data'] == 0 ){
-                                      $sks = ($sks + $row['sks']) - ($row['sks_teori'] + $row['sks_praktek'] + $sks['sks_praktikum']);
-                                      $sksn = $sksn + $row['sksn'];
-                                  }
-                                } else {
-                                    $sks = $sks + $row['sks'];
-                                    $sksn = $sksn + $row['sksn'];
-                                }
-//                    } else {
-//                        $sks = $sks + 0;
-//                        $sksn = $sksn + 0;
-//                    }
-                                ?>
                                 <?php
                             endforeach;
                             ?>
@@ -208,9 +174,6 @@
                                 <td colspan="6"></td>
                             </tr>
                             <?php
-                            $total_sks = $total_sks + $sks;
-                            $total_sksn = $total_sksn + $sksn;
-//                    $ipk = $total_sksn / $total_sks;
                         endif;
                     endfor;
                     ?>
@@ -233,83 +196,30 @@
                     </thead>
                     <tbody>
                         <?php
-                        $total_sks1 = 0;
-                        $total_sksn1 = 0;
                         for ($k = 5; $k <= 7; $k++) :
                             if (isset($data[$k]['data_nilai'])) :
-                                $sks1 = 0;
-                                $sksn1 = 0;
                                 $j = 1;
                                 foreach ($data[$k]['data_nilai'] as $row) :
+                                    $belum = (!isset($row['jumlah_data']) || $row['jumlah_data'] == 0);
+                                    $n_sks = $belum ? '-' : (isset($row['sks']) ? $row['sks'] : 0);
+                                    $n_grade = $belum ? '-' : ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : 'E');
+                                    $n_sksn = $belum ? '-' : (isset($row['sksn']) ? $row['sksn'] : 0);
                                     ?>
                                     <tr>
                                         <td align="center"><?= $j++ ?>.</td>
                                         <td align="center"><?= e($row['kode_matakuliah']) ?></td>
                                         <td><?= e($row['nama_matakuliah']) ?></td>
-                                        <!--<td align="center"><?= substr($row['kode_matakuliah'], 4, 1) ?></td>-->
-                                        <td align="center">
-                                            <?php
-                                            if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
-                                                echo "0";
-                                            } else {
-                                                echo e(substr($row['kode_matakuliah'], 4, 1));
-                                            }
-                                            ?>
-                                        </td>
-                                        <td align="center">
-                                            <?php
-                                            if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
-                                                echo "-";
-                                            } else {
-                                                echo e($row['grade']);
-                                            }
-                                            ?>
-                                        </td>
-                                        <td align="center">
-                                          <?php
-                                            if (($row['grade'] == "E") || ($row['grade'] == "-") || !$row['nilai_harian'] || !$row['nilai_uas']) {
-                                                echo "0";
-                                            } else {
-                                                echo e($row['sksn']);
-                                            }
-                                            ?>
-                                      </td>
+                                        <td align="center"><?= e($n_sks) ?></td>
+                                        <td align="center"><?= e($n_grade) ?></td>
+                                        <td align="center"><?= e($n_sksn) ?></td>
                                     </tr>
-                                    <?php
-//                        if ($row['sks'] == ") {
-
-                                    if ($row['grade'] == "E" ) {
-                                      	if($row['jumlah_data'] == 0){
-                                            $sks = ($sks + $row['sks']) - ($row['sks_teori'] + $row['sks_praktek'] + $sks['sks_praktikum']);
-                                            $sksn = $sksn + $row['sksn'];
-                                        }
-                                    } else {
-                                        $sks1 = $sks1 + $row['sks'];
-                                        $sksn1 = $sksn1 + $row['sksn'];
-                                    }
-
-
-//                        } else {
-//                            $sks1 = $sks1 + 0;
-//                            $sksn1 = $sksn1 + 0;
-//                        }
-                                    ?>
                                 <?php endforeach; ?>
                                 <tr>
                                     <td colspan="6"></td>
                                 </tr>
-
-                                <?php
-                                $total_sks1 = $total_sks1 + $sks1;
-                                $total_sksn1 = $total_sksn1 + $sksn1;
-//                    $ipk = $total_sksn / $total_sks;
-                                ?>
                                 <?php
                             endif;
                         endfor;
-                        $super_sks = $total_sks + $total_sks1;
-                        $super_sksn = $total_sksn + $total_sksn1;
-                        $super_sks !== 0 ? $ipk = $super_sksn / $super_sks : $ipk = 0;
                         ?>
                     </tbody>
                 </table>
@@ -323,14 +233,14 @@
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="25%" style="border-bottom:1px solid black;" align="center">&#931; SKSN</td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
-                        <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($super_sksn); ?></td>
+                        <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($total_sksn); ?></td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="15%" rowspan="2" valign="middle"
                             align="center"><?php echo e(number_format($ipk, 2, '.', '')); ?></td>
                     </tr>
                     <tr>
                         <td align="center">&#931; SKS</td>
-                        <td align="center"><?php echo e($super_sks); ?></td>
+                        <td align="center"><?php echo e($total_sks); ?></td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
@@ -344,7 +254,7 @@
                         <td>Dekan,</td>
                     </tr>
                     <tr>
-                       <img style="height: 50px" src="<?= !empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.$ttd) : base_url('assets/gambar/notfound.png') ?>"/>
+                       <img style="height: 50px" src="<?= e(!empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.rawurlencode($ttd)) : base_url('assets/gambar/notfound.png')) ?>"/>
                     </tr>
                     <tr>
                         <td>

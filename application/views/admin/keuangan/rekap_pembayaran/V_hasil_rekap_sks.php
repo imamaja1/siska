@@ -1,8 +1,12 @@
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Rekap SKS Mahasiswa TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == '0' ? 'GENAP' : 'GANJIL' ?></h3>
-        <div class="box-tools pull-right">
-            <a href="<?= site_url('admin/keuangan/pembayaran/excel/'.$kode_program_studi) ?>" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
+        <div class="row">
+            <div class="col-xs-12 col-sm-8">
+                <h3 class="box-title">Rekap SKS Mahasiswa TA. <?php $ta = tahun_akademik(); echo e($ta ? $ta->tahun_akademik : '-'); ?> <?= $ta ? ($ta->semester == '0' ? 'GENAP' : 'GANJIL') : '' ?></h3>
+            </div>
+            <div class="col-xs-12 col-sm-4" style="margin-top: 5px;">
+                <a href="<?= e(site_url('admin/keuangan/pembayaran/excel/'.rawurlencode($kode_program_studi))) ?>" class="btn btn-success btn-sm btn-block"><i class="fa fa-file-excel-o"></i> Excel</a>
+            </div>
         </div>
     </div>
     <div class="box-body">
@@ -26,9 +30,9 @@
                     <td><?= $no++ ?></td>
                     <td><?= e($row->nim) ?></td>
                     <td><?= e($row->nama_mahasiswa) ?></td>
-                    <td style="text-align: center"><?= $row->semester ?></td>
-                    <td style="text-align: center"><span class="badge bg-aqua-active"><?= $row->teori ?></span></td>
-                    <td style="text-align: center"><span class="badge bg-red"><?= $row->praktikum ?></span></td>
+                    <td style="text-align: center"><?= e($row->semester) ?></td>
+                    <td style="text-align: center"><span class="badge bg-aqua-active"><?= e($row->teori) ?></span></td>
+                    <td style="text-align: center"><span class="badge bg-red"><?= e($row->praktikum) ?></span></td>
                     <td style="text-align: center; width: 18%">
                         <div class="form-group">
                             <div class="checkbox pilihan">

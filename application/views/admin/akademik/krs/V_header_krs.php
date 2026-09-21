@@ -5,7 +5,7 @@
     <tr>
         <td width="85%" style="text-align: center ;vertical-align: bottom; font-family:serif; font-size: 8pt;">
             <!--<img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.$prodi->kode_fakultas.'.png'); ?>">-->
-            <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.bodo_kop($krs_mahasiswa->nim)['kop']); ?>">
+            <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/'.rawurlencode(bodo_kop($krs_mahasiswa->nim)['kop'] ?? ''))) ?>">
         </td>
         <td width="15%">
             <table style=" width:80px;">
@@ -16,7 +16,7 @@
                         <?php if (empty($krs_mahasiswa->foto)) : ?>
                             <img src="<?= base_url('assets/foto/default.png') ?>" style="height: 120px" alt="">
                         <?php else: ?>
-                            <img src="<?= base_url('assets/foto/'.$krs_mahasiswa->foto) ?>" style="height: 120px;" alt="">
+                            <img src="<?= e(base_url('assets/foto/'.rawurlencode($krs_mahasiswa->foto))) ?>" style="height: 120px;" alt="">
                         <?php endif; ?>
                     </td>
                 </tr>

@@ -39,7 +39,7 @@ header("Cache-Control: private", false);
 </head>
 <body>
 <p style="text-align: center; font-weight: bold; font-size: 16pt">Rekap Pembayaran
-    TA. <?= tahun_akademik()->tahun_akademik ?> <?= tahun_akademik()->semester == '0' ? 'GENAP' : 'GANJIL' ?></p>
+    TA. <?php $ta = tahun_akademik(); echo e($ta ? $ta->tahun_akademik : '-'); ?> <?= $ta ? ($ta->semester == '0' ? 'GENAP' : 'GANJIL') : '' ?></p>
 <hr>
 <table id="customers">
     <thead>
@@ -63,10 +63,10 @@ header("Cache-Control: private", false);
             <td style="text-align: center"><?= $no++ ?></td>
             <td style="text-align: center"><?= e($row->nim) ?></td>
             <td><?= e($row->nama_mahasiswa) ?></td>
-            <td><?= e(get_kode_prodi($row->nim)->nama_program_studi) ?></td>
-            <td style="text-align: center"><?= $row->semester ?></td>
-            <td style="text-align: center"><?= $row->teori ?></td>
-            <td style="text-align: center"><?= $row->praktikum ?></td>
+            <td><?= e(get_kode_prodi($row->nim) ? get_kode_prodi($row->nim)->nama_program_studi : '-') ?></td>
+            <td style="text-align: center"><?= e($row->semester) ?></td>
+            <td style="text-align: center"><?= e($row->teori) ?></td>
+            <td style="text-align: center"><?= e($row->praktikum) ?></td>
             <td style="text-align: center">
                 <?php if ($row->pembayaran_spp == '0') : ?>
                     BELUM LUNAS

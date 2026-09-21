@@ -36,7 +36,7 @@
                 <div class="col-sm-7">
                     <textarea class="form-control" name="bearer_token" rows="3" placeholder="Kosongkan jika tidak diubah"><?= set_value('bearer_token') ?></textarea>
                     <small class="text-muted">Biarkan kosong untuk mempertahankan token yang tersimpan.</small>
-                    <br><small class="text-muted">Token saat ini: <code><?= substr($token->bearer_token, 0, 12) ?>...<?= substr($token->bearer_token, -4) ?></code></small>
+                    <br><small class="text-muted">Token saat ini: <code><?= e(substr($token->bearer_token, 0, 12)) ?>...<?= e(substr($token->bearer_token, -4)) ?></code></small>
                 </div>
             </div>
 

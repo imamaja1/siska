@@ -62,13 +62,13 @@ class Mahasiswa extends CI_Controller {
         $res = $this->mahasiswaservice->getValidasiKrsMahasiswa($ta, $prodi);
         $data_mhs = $res['data_mhs'];
         
-        $table = '<h3>' . $nama_prodi . '</h3>';
+        $table = '<h3>' . e($nama_prodi) . '</h3>';
         $table .= '<table style="text-align: left;" border="1">';
         $table .= '<tr><th>NO.</th><th>NIM</th><th>NAMA MAHASISWA</th><th>NAMA DOSEN WALI</th><th>VALIDASI (Dosen)</th><th>VALIDASI SKS (Keuangan)</th></tr>';
         foreach ($data_mhs as $key => $value) {
             $val_dosen = $value->status_cetak == 'A' ? 'Divalidasi' : 'Belum Divalidasi';
             $val_sks = $value->pembayaran_sks == 1 ? 'Divalidasi' : 'Belum Divalidasi';
-            $table .= '<tr><td>'.($key+1).'.</td><td>'.$value->nim.'</td><td>'.$value->nama_mahasiswa.'</td><td>'.$value->nama_dosen.'</td><td>'.$val_dosen.'</td><td>'.$val_sks.'</td></tr>';
+            $table .= '<tr><td>'.($key+1).'.</td><td>'.e($value->nim).'</td><td>'.e($value->nama_mahasiswa).'</td><td>'.e($value->nama_dosen).'</td><td>'.$val_dosen.'</td><td>'.$val_sks.'</td></tr>';
         }
         $table .= '</table>';
         
@@ -103,10 +103,10 @@ class Mahasiswa extends CI_Controller {
         } else {
             $res = $this->mahasiswaservice->simpanMahasiswa($this->input->post());
             if ($res['status']) {
-                $this->session->set_flashdata('info', '<script>swal("Sukses!","' . $res['msg'] . '","success")</script>');
+                $this->session->set_flashdata('info', '<script>swal("Sukses!","' . e($res['msg']) . '","success")</script>');
                 redirect('admin/akademik/mahasiswa/tambah');
             } else {
-                $this->session->set_flashdata('info', '<script>swal("Gagal!","' . $res['msg'] . '","error")</script>');
+                $this->session->set_flashdata('info', '<script>swal("Gagal!","' . e($res['msg']) . '","error")</script>');
                 $this->tambah();
             }
         }
@@ -138,10 +138,10 @@ class Mahasiswa extends CI_Controller {
         } else {
             $res = $this->mahasiswaservice->ubahMahasiswa($nim, $this->input->post());
             if ($res['status']) {
-                $this->session->set_flashdata('info', '<script>swal("Sukses!","' . $res['msg'] . '","success")</script>');
+                $this->session->set_flashdata('info', '<script>swal("Sukses!","' . e($res['msg']) . '","success")</script>');
                 redirect('admin/akademik/mahasiswa');
             } else {
-                $this->session->set_flashdata('info', '<script>swal("Gagal!","' . $res['msg'] . '","error")</script>');
+                $this->session->set_flashdata('info', '<script>swal("Gagal!","' . e($res['msg']) . '","error")</script>');
                 $this->update($nim);
             }
         }
@@ -250,8 +250,8 @@ class Mahasiswa extends CI_Controller {
                 if ($res['count'] > 0) {
                     $table = '<div class="box box-primary flat" ><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">PRODI</th><th id="th">FOTO</th><th id="th">TINDAKAN</th></tr></thead>';
                     foreach ($res['data'] as $row) {
-                        $img = base_url('assets/foto/' . $row->foto);
-                        $table .= '<tr><td align="center">' . $row->nim . '</td><td align="center">' . $row->nama_mahasiswa . '</td><td align="center">' . get_kode_prodi($row->nim)->nama_program_studi . '</td><td align="center"><img height="30px" src="' . $img . '"></td><td align="center">';
+                        $img = base_url('assets/foto/' . rawurlencode($row->foto));
+                        $table .= '<tr><td align="center">' . e($row->nim) . '</td><td align="center">' . e($row->nama_mahasiswa) . '</td><td align="center">' . e(get_kode_prodi($row->nim) ? get_kode_prodi($row->nim)->nama_program_studi : '-') . '</td><td align="center"><img height="30px" src="' . e($img) . '"></td><td align="center">';
                         $table .= '<a href="' . site_url('admin/akademik/mahasiswa/update/' . $row->nim) . '" class=" btn-primary btn-xs flat"><i class="fa fa-edit"></i> Edit</a>&nbsp;';
                         $table .= anchor_popup('admin/akademik/mahasiswa/biodata_mahasiswa/' . $row->nim, '<i class="fa fa-eye"></i> Detail', array('class' => 'btn-warning btn-xs flat')) . '&nbsp;';
                         $table .= '<a href="' . site_url('admin/akademik/mahasiswa/cetak/' . $row->nim) . '" class=" btn-info btn-xs flat"><i class="fa fa-print"></i> Cetak</a></td></tr>';
@@ -259,7 +259,7 @@ class Mahasiswa extends CI_Controller {
                     $table .= '</table></div></div>';
                     $data['table'] = $table;
                 } else {
-                    $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . $kata_kunci . '</b> !</div>');
+                    $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . e($kata_kunci) . '</b> !</div>');
                 }
                 $this->load->view('admin/template/V_main', $data);
             } else {
@@ -306,8 +306,8 @@ class Mahasiswa extends CI_Controller {
             $no = 1 + $offset;
             $table = '<div class="box box-primary flat" ><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NO.</th><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">PRODI</th><th id="th">FOTO</th><th id="th">TINDAKAN</th></tr></thead>';
             foreach ($res['data'] as $row) {
-                $img = base_url('assets/foto/' . $row->foto);
-                $table .= '<tr><td align="center">' . $no++ . '.</td><td align="center">' . $row->nim . '</td><td>' . $row->nama_mahasiswa . '</td><td align="center">' . get_kode_prodi($row->nim)->nama_program_studi . '</td><td align="center"><img height="35px" src="' . $img . '"></td><td align="center">';
+                $img = base_url('assets/foto/' . rawurlencode($row->foto));
+                $table .= '<tr><td align="center">' . $no++ . '.</td><td align="center">' . e($row->nim) . '</td><td>' . e($row->nama_mahasiswa) . '</td><td align="center">' . e(get_kode_prodi($row->nim) ? get_kode_prodi($row->nim)->nama_program_studi : '-') . '</td><td align="center"><img height="35px" src="' . e($img) . '"></td><td align="center">';
                 $table .= '<a href="' . site_url('admin/akademik/mahasiswa/update/' . $row->nim) . '" class=" btn-primary btn-xs flat"><i class="fa fa-edit"></i> Edit</a>&nbsp;';
                 $table .= anchor_popup('admin/akademik/mahasiswa/biodata_mahasiswa/' . $row->nim, '<i class="fa fa-eye"></i> Detail', array('class' => 'btn-warning btn-xs flat')) . '&nbsp;';
                 $table .= '<a href="' . site_url('admin/akademik/mahasiswa/cetak/' . $row->nim) . '" class=" btn-info btn-xs flat"><i class="fa fa-print"></i> Cetak</a></td></tr>';
@@ -353,13 +353,13 @@ class Mahasiswa extends CI_Controller {
             if ($res['count'] > 0) {
                 $table = '<div class="box box-primary flat" ><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
                 foreach ($res['data'] as $row) {
-                    $table .= '<tr><td align="center">' . $row->nim . '</td><td align="center">' . $row->nama_mahasiswa . '</td><td align="center">';
-                    $table .= '<a href="' . site_url('admin/akademik/mahasiswa/generate_sandi/' . $row->nim) . '" class=" btn-danger btn-xs flat"><i class="fa fa-refresh"></i> Reset Sandi</a>&nbsp;</td></tr>';
+                    $table .= '<tr><td align="center">' . e($row->nim) . '</td><td align="center">' . e($row->nama_mahasiswa) . '</td><td align="center">';
+                    $table .= '<a href="' . site_url('admin/akademik/mahasiswa/generate_sandi/' . rawurlencode($row->nim)) . '" class=" btn-danger btn-xs flat"><i class="fa fa-refresh"></i> Reset Sandi</a>&nbsp;</td></tr>';
                 }
                 $table .= '</table></div></div>';
                 $data['table'] = $table;
             } else {
-                $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan NIM <b>' . $kata_kunci . '</b> !</div>');
+                $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan NIM <b>' . e($kata_kunci) . '</b> !</div>');
             }
             $this->load->view('admin/template/V_main', $data);
         }
@@ -394,7 +394,7 @@ class Mahasiswa extends CI_Controller {
         $table = '<table border="1"><tr><th>NO.</th><th>NIM</th><th>NPM</th><th>NO.PENDAFTARAN</th><th>NO.PENDAFTARAN ULANG</th><th>NAMA MAHASISWA</th><th>TEMPAT LAHIR</th><th>TANGGAL LAHIR</th><th>ALAMAT</th><th>KOTA</th><th>PROPINSI</th><th>NO.TELEPON</th><th>JENIS KELAMIN</th><th>AGAMA</th><th>GOLONGAN DARAH</th><th>KEWARGANEGARAAN</th><th>NAMA INSTANSI</th><th>EMAIL</th><th>NAMA AYAH</th><th>AGAMA AYAH</th><th>PEKERJAAN AYAH</th><th>NAMA IBU</th><th>AGAMA IBU</th><th>PEKERJAAN IBU</th><th>ALAMAT ORANG TUA</th><th>KOTA ORANG TUA</th><th>PROPINSI ORANG TUA</th><th>NO.TELEPON ORANG TUA</th><th>STATUS</th><th>STATUS PENDAFTARAN</th></tr>';
         $i = 0;
         foreach ($query as $row) {
-            $table .= '<tr><td><div align="center">' . ++$i . '.</div></td><td><div align="center">' . $row->nim . '</div></td><td>' . $row->npm . '</td><td>' . $row->nomor_pendaftaran . '</td><td>' . $row->nomor_pendaftaran_ulang . '</td><td>' . $row->nama_mahasiswa . '</td><td>' . $row->tempat_lahir . '</td><td>' . $row->tanggal_lahir . '</td><td>' . $row->alamat . '</td><td>' . $row->kota . '</td><td>' . $row->propinsi . '</td><td>' . $row->telepon . '</td><td>' . $row->jenis_kelamin . '</td><td>' . $row->agama . '</td><td>' . $row->golongan_darah . '</td><td>' . $row->kewarganegaraan . '</td><td>' . $row->nama_instansi . '</td><td>' . $row->email . '</td><td>' . $row->nama_ayah . '</td><td>' . $row->agama_ayah . '</td><td>' . $row->pekerjaan_ayah . '</td><td>' . $row->nama_ibu . '</td><td>' . $row->agama_ibu . '</td><td>' . $row->pekerjaan_ibu . '</td><td>' . $row->alamat_orangtua . '</td><td>' . $row->kota_orangtua . '</td><td>' . $row->propinsi_orangtua . '</td><td>' . $row->telepon_orangtua . '</td><td>' . $row->status . '</td><td>' . $row->status_pendaftaran . '</td></tr>';
+            $table .= '<tr><td><div align="center">' . ++$i . '.</div></td><td><div align="center">' . e($row->nim) . '</div></td><td>' . e($row->npm) . '</td><td>' . e($row->nomor_pendaftaran) . '</td><td>' . e($row->nomor_pendaftaran_ulang) . '</td><td>' . e($row->nama_mahasiswa) . '</td><td>' . e($row->tempat_lahir) . '</td><td>' . e($row->tanggal_lahir) . '</td><td>' . e($row->alamat) . '</td><td>' . e($row->kota) . '</td><td>' . e($row->propinsi) . '</td><td>' . e($row->telepon) . '</td><td>' . e($row->jenis_kelamin) . '</td><td>' . e($row->agama) . '</td><td>' . e($row->golongan_darah) . '</td><td>' . e($row->kewarganegaraan) . '</td><td>' . e($row->nama_instansi) . '</td><td>' . e($row->email) . '</td><td>' . e($row->nama_ayah) . '</td><td>' . e($row->agama_ayah) . '</td><td>' . e($row->pekerjaan_ayah) . '</td><td>' . e($row->nama_ibu) . '</td><td>' . e($row->agama_ibu) . '</td><td>' . e($row->pekerjaan_ibu) . '</td><td>' . e($row->alamat_orangtua) . '</td><td>' . e($row->kota_orangtua) . '</td><td>' . e($row->propinsi_orangtua) . '</td><td>' . e($row->telepon_orangtua) . '</td><td>' . e($row->status) . '</td><td>' . e($row->status_pendaftaran) . '</td></tr>';
         }
         $table .= '</table>';
 

@@ -256,7 +256,7 @@ class Krs extends CI_Controller {
         $table = '<table border="1"><tr><td>NO.</td><td>NIM</td><td>NAMA MAHASISWA</td></tr>';
         $i = 0;
         foreach ($query as $row) {
-            $table .= '<tr><td><div align="center">' . ++$i . '.</div></td><td><div align="center">' . $row->nim . '</div></td><td>' . $row->nama_mahasiswa . '</td></tr>';
+            $table .= '<tr><td><div align="center">' . ++$i . '.</div></td><td><div align="center">' . e($row->nim) . '</div></td><td>' . e($row->nama_mahasiswa) . '</td></tr>';
         }
         $table .= '</table>';
 
@@ -350,15 +350,15 @@ class Krs extends CI_Controller {
                 if ($data_count > 0) {
                     $table = '<div class="box box-primary flat"><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
                     foreach ($data_mahasiswa as $row) {
-                        $table .= '<tr><td align="center">' . $row->nim . '</td><td align="center">' . $row->nama_mahasiswa . '</td><td align="center">';
-                        $table .= '<a href="' . site_url('admin/akademik/krs/cetak/' . $row->nim) . '" class="btn btn-info btn-xs flat"><i class="fa fa-download"></i> Download</a>&nbsp;';
-                        $table .= '<a href="' . site_url('admin/akademik/krs/print_view_any/' . $row->nim) . '" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Cetak</a>&nbsp;</td></tr>';
+                        $table .= '<tr><td align="center">' . e($row->nim) . '</td><td align="center">' . e($row->nama_mahasiswa) . '</td><td align="center">';
+                        $table .= '<a href="' . site_url('admin/akademik/krs/cetak/' . rawurlencode($row->nim)) . '" class="btn btn-info btn-xs flat"><i class="fa fa-download"></i> Download</a>&nbsp;';
+                        $table .= '<a href="' . site_url('admin/akademik/krs/print_view_any/' . rawurlencode($row->nim)) . '" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Cetak</a>&nbsp;</td></tr>';
                     }
                     $table .= '</table></div></div>';
                     $data['table'] = $table;
                     $this->session->set_userdata('nama_semester', $semester);
                 } else {
-                    $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . $kata_kunci . '</b> !</div>');
+                    $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . e($kata_kunci) . '</b> !</div>');
                 }
                 $this->load->view('admin/template/V_main', $data);
             } else {
@@ -410,15 +410,15 @@ class Krs extends CI_Controller {
             $no = 1 + $offset;
             $table = '<div class="box box-primary flat"><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NO.</th><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
             foreach ($data_mahasiswa as $row) {
-                $table .= '<tr><td align="center">' . $no++ . '.</td><td align="center">' . $row->nim . '</td><td>' . $row->nama_mahasiswa . '</td><td align="center">';
-                $table .= '<a href="' . site_url('admin/akademik/krs/cetak/' . $row->nim) . '" class="btn btn-info btn-xs flat"><i class="fa fa-download"></i> Download</a>&nbsp;';
-                $table .= '<a href="' . site_url('admin/akademik/krs/print_view_any/' . $row->nim) . '" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Cetak</a>&nbsp;</td></tr>';
+                $table .= '<tr><td align="center">' . $no++ . '.</td><td align="center">' . e($row->nim) . '</td><td>' . e($row->nama_mahasiswa) . '</td><td align="center">';
+                $table .= '<a href="' . site_url('admin/akademik/krs/cetak/' . rawurlencode($row->nim)) . '" class="btn btn-info btn-xs flat"><i class="fa fa-download"></i> Download</a>&nbsp;';
+                $table .= '<a href="' . site_url('admin/akademik/krs/print_view_any/' . rawurlencode($row->nim)) . '" target="_blank" class="btn btn-danger btn-xs flat"><i class="fa fa-print"></i> Cetak</a>&nbsp;</td></tr>';
             }
             $table .= '</table></div></div>';
             $data['table'] = $table;
             $this->session->set_userdata('nama_semester', $semester);
         } else {
-            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . $kata_kunci . '</b> !</div>');
+            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . e($kata_kunci) . '</b> !</div>');
         }
         $this->load->view('admin/template/V_main', $data);
     }

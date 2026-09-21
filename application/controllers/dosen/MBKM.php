@@ -35,12 +35,12 @@ class MBKM extends CI_Controller
     }
     public function get_mahasiswa($ta = null) {
         if (!$ta) {
-            $ta = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $ta = ta_kode();
         }
         $kode_dosen = $this->session->userdata('kode_dosen');
         $kode_program_studi = $this->dosenservice->getKaprodiKode($kode_dosen);
         $data['mahasiswa'] = $this->dosenservice->getMahasiswaMbkm($kode_program_studi['kode_program_studi'], $ta);
-        $this->load->view('dosen/kaprodi/mbkm/V_data_mhs_mbkm',$data);
+        $this->load->view('dosen/kaprodi/mbkm/v_data_mhs_mbkm',$data);
         // echo json_encode($data);
     }
     public function search_mahasiswa($nim, $ta) {
@@ -75,7 +75,7 @@ class MBKM extends CI_Controller
                 $data['cek'] = 2;
             } 
         }
-        $this->load->view('dosen/kaprodi/mbkm/V_search_mhs',$data);
+        $this->load->view('dosen/kaprodi/mbkm/v_search_mhs',$data);
     }
 
     public function tambah_mhs_mbkm($nim, $ta){

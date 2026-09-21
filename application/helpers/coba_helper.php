@@ -273,6 +273,40 @@ if (!function_exists('e')) {
     }
 }
 
+if (!function_exists('ta_kode')) {
+    /**
+     * Kode tahun akademik aktif, null bila tidak ada (null-safe).
+     */
+    function ta_kode()
+    {
+        $ta = tahun_akademik();
+        return $ta ? $ta->kode_tahun_akademik : null;
+    }
+}
+
+if (!function_exists('safe_referer')) {
+    /**
+     * Kembalikan HTTP_REFERER hanya jika berasal dari host yang sama,
+     * selain itu gunakan URL fallback (mencegah open redirect).
+     */
+    function safe_referer($fallback = null)
+    {
+        $CI = get_instance();
+        $ref = $CI->input->server('HTTP_REFERER');
+        if ($fallback === null) {
+            $fallback = site_url();
+        }
+        if (!empty($ref)) {
+            $ref_host = parse_url($ref, PHP_URL_HOST);
+            $base_host = parse_url(base_url(), PHP_URL_HOST);
+            if ($ref_host !== null && $ref_host === $base_host) {
+                return $ref;
+            }
+        }
+        return $fallback;
+    }
+}
+
 if (!function_exists('log_aktivitas_nilai')) {
     function log_aktivitas_nilai($aksi, $kolom = null, $nilai_lama = null, $nilai_baru = null, $sumber = 'perubahan', $kode_khs_detail = null, $kode_krs_detail = null, $kode_krs = null)
     {

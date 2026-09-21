@@ -1,6 +1,6 @@
 <div class="box box-solid">
     <div class="box-header">
-        <h3 class="box-title">Mahasiswa Aktif TA. <?= e($tahun_akademik->tahun_akademik) ?> <?= $tahun_akademik->semester == '1' ? 'GANJIL' : 'GENAP' ?></h3>
+        <h3 class="box-title">Mahasiswa Aktif TA. <?= e(isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '-') ?> <?= isset($tahun_akademik->semester) ? ($tahun_akademik->semester == '1' ? 'GANJIL' : 'GENAP') : '' ?></h3>
         <button onclick="cetak()" class="btn btn-success btn-sm pull-right"><i class="fa fa-file-excel-o"></i> Excel</button>
     </div>
     <div class="box-body">

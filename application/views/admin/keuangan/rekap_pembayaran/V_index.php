@@ -5,7 +5,7 @@
                 <h3 class="box-title">Rekap Pembayaran</h3>
             </div>
             <div class="box-body">
-                <form action="<?= site_url('admin/keuangan/pembayaran/rekap') ?>" method="post" id="form-search">
+                <form action="<?= e(site_url('admin/keuangan/pembayaran/rekap')) ?>" method="post" id="form-search">
                     <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="form-group">
                     <label for="">Program Studi <span class="text-danger">*</span></label>
@@ -17,7 +17,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary pull-right">Cari</button>
+                    <button type="submit" class="btn btn-primary btn-block">Cari</button>
                 </div>
                 </form>
             </div>
@@ -33,7 +33,7 @@
 </div>
 <script>
     var kode_program_studi_super = "";
-    var loading = "<p style='text-align: center'><img src='<?= base_url('assets/siska/img/logo-ubg.gif') ?>' alt=''></p>";
+    var loading = "<p style='text-align: center'><img src='<?= e(base_url('assets/siska/img/logo-ubg.gif')) ?>' alt=''></p>";
     $(document).ready(function () {
         $("#form-search").submit(function (e) {
             e.preventDefault();

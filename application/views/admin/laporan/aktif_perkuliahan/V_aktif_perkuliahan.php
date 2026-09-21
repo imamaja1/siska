@@ -2,7 +2,7 @@
     <div class="box-body">
         <a href="<?= site_url('admin/laporan/aktif_perkuliahan') ?>" class="btn btn-success btn-sm flat"><i class="fa fa-arrow-left"></i> Kembali</a>
         <a href="<?= site_url('admin/laporan/aktif_perkuliahan/cetak_aktif_perkuliahan') ?>" class="btn btn-warning btn-sm flat"><i class="fa fa-file-excel-o"></i> Cetak to Excel</a>
-                        <span class="badge bg-aqua pull-right"><?= e($prodi->singkatan_program_studi) ?> - <?= e($prodi->nama_program_studi) ?></span>
+                        <span class="badge bg-aqua pull-right"><?= e(isset($prodi->singkatan_program_studi) ? $prodi->singkatan_program_studi : '') ?> - <?= e(isset($prodi->nama_program_studi) ? $prodi->nama_program_studi : '') ?></span>
     </div>
 </div>
 <div class="box box-solid flat">

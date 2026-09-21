@@ -334,6 +334,10 @@ class HelperService extends MY_Service
         $prodi = $this->getKodeProdi($nim);
         $res = [];
 
+        if (!$prodi) {
+            return ['kop' => '', 'nama_fakultas' => '', 'dekan' => '', 'nik' => ''];
+        }
+
         if (substr($nim, 2, 4) == '0108' && $prodi->kode_fakultas == '08' || substr($nim, 2, 4) == '0402' && $prodi->kode_fakultas == '08') {
             $res["kop"] = "PAS.png";
             $res["nama_fakultas"] = "Program Pascasarjana";
@@ -361,6 +365,12 @@ class HelperService extends MY_Service
                     $res = ["kop" => "FKD.png", "nama_fakultas" => "Kedokteran", "dekan" => "dr. Karina Anindita, M.Biomed, Sp.PD., FINASIM", "nik" => "24.6.718"]; break;
             }
         }
+
+        $prodi_kop = glob(FCPATH . 'assets/gambar/kop/prodi_' . $prodi->kode_program_studi . '.*');
+        if (!empty($prodi_kop)) {
+            $res['kop'] = basename($prodi_kop[0]);
+        }
+
         return $res;
     }
 

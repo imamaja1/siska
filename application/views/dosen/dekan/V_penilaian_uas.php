@@ -106,7 +106,7 @@
     };
 
     function revisi() {
-        var url = "<?= site_url('dosen/dekan/validasinilai/revisi_nilai') ?>/" + super_kelas_id;
+        var url = "<?= site_url('dosen/dekan/validasinilai/revisi_uas') ?>/" + super_kelas_id;
         swal({
             title: '',
             html: "Menekan tombol <strong>Revisi</strong> berarti meberikan akses kepada dosen untuk melakukan <strong>Revisi/Perbahan</strong>" +
@@ -132,7 +132,7 @@
     }
 
     function kelas() {
-        var url = "<?= site_url('dosen/dekan/ValidasiNilai/kelas_uas') ?>";
+        var url = "<?= site_url('dosen/dekan/validasinilai/kelas_uas') ?>";
         $.ajax({
             url: url,
             beforeSend: function () {
@@ -145,7 +145,7 @@
     }
 
     function cari() {
-        var url = "<?= site_url('dosen/kaprodi/validasinilai/cari_kelas') ?>";
+        var url = "<?= site_url('dosen/dekan/validasinilai/kelas_uas') ?>";
         var data = "keyword=" + $("#keyword").val();
         $.ajax({
             url: url,

@@ -19,6 +19,9 @@ class Kalender extends CI_Controller{
     public function index()
     {
         $ta = $this->m_tahun_akademik->get_semester();
+        if (!$ta) {
+            show_error('Tahun akademik aktif tidak ditemukan.');
+        }
         $tahun_akadmeik = $ta->ta;
         $data = array(
             'conten' => 'mahasiswa/V_kalender',

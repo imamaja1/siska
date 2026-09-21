@@ -73,13 +73,13 @@ class Kompetensi extends CI_Controller
             $table .= '</thead>';
             foreach ($data_mahasiswa as $row) {
                 $table .= '<tr>';
-                $table .= '<td align="center">' . $row->nim . '</td>';
-                $table .= '<td align="center">' . $row->nama_mahasiswa . '</td>';
-                $table .= '<td align="center">' . $row->nama_program_studi . '</td>';
-                $table .= '<td align="center">' . $row->status_pendaftaran . '</td>';
-                $table .= '<td align="center">' . $row->nama_kompetensi . '</td>';
+                $table .= '<td align="center">' . e($row->nim) . '</td>';
+                $table .= '<td align="center">' . e($row->nama_mahasiswa) . '</td>';
+                $table .= '<td align="center">' . e($row->nama_program_studi) . '</td>';
+                $table .= '<td align="center">' . e($row->status_pendaftaran) . '</td>';
+                $table .= '<td align="center">' . e($row->nama_kompetensi) . '</td>';
                 $table .= '<td align="center">';
-                $table .= '<a href="' . site_url('admin/akademik/kompetensi/update/' . $row->nim . '/' . $row->kode_program_studi) . '" class=" btn-primary btn-xs flat"><i class="fa fa-edit"></i> Edit</a>';
+                $table .= '<a href="' . site_url('admin/akademik/kompetensi/update/' . rawurlencode($row->nim) . '/' . rawurlencode($row->kode_program_studi)) . '" class=" btn-primary btn-xs flat"><i class="fa fa-edit"></i> Edit</a>';
                 $table .= '</td>';
                 $table .= '</tr>';
             }
@@ -88,7 +88,7 @@ class Kompetensi extends CI_Controller
             $table .= '</div>';
             $data['table'] = $table;
         } else {
-            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . $kata_kunci . '</b> !</div>');
+            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci NIM <b>' . e($kata_kunci) . '</b> !</div>');
         }
         $this->load->view('admin/template/V_main', $data);
 

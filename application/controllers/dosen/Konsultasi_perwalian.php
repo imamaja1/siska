@@ -112,7 +112,7 @@ class Konsultasi_perwalian extends CI_Controller {
 //        $kode_jenjang = substr($nim, 4, 1);
         $semester = $this->semester_saat_ini($nim);
         $tahun_akademik = $this->m_tahun_akademik->get_semester();
-        $kode_krs = $this->Krs_model->get_kode_krs($nim, $tahun_akademik->kode_tahun_akademik);
+        $kode_krs = $this->Krs_model->get_kode_krs($nim, $tahun_akademik ? $tahun_akademik->kode_tahun_akademik : null);
 //        $ps = $this->db->select('kode_program_studi')
 //            ->from('program_studi as ps')
 //            ->join('jurusan as jur', 'jur.id_jurusan=ps.id_jurusan')
@@ -130,7 +130,7 @@ class Konsultasi_perwalian extends CI_Controller {
             'tahun_akademik' => $tahun_akademik,
 //            'prodi' => $this->Nama_jurusan_model->get_kode_nama_jurusan($kode_jurusan, $kode_jenjang),
             'prodi' => get_kode_prodi($nim),
-            'beban_sks' => $this->maksimum_sks($nim, $semester, $ps->kode_program_studi, $sp->status_pendaftaran),
+            'beban_sks' => $this->maksimum_sks($nim, $semester, $ps ? $ps->kode_program_studi : null, $sp ? $sp->status_pendaftaran : null),
         );
 
         $this->load->view('dosen/template/V_open_window', $data);
@@ -214,7 +214,7 @@ class Konsultasi_perwalian extends CI_Controller {
     function exis_krs($nim) {
         $semeter = $this->semester_saat_ini($nim);
         $tahun_akademik = $this->m_tahun_akademik->get_semester();
-        $kode_krs = $this->Krs_model->get_kode_krs($nim, $tahun_akademik->kode_tahun_akademik);
+        $kode_krs = $this->Krs_model->get_kode_krs($nim, $tahun_akademik ? $tahun_akademik->kode_tahun_akademik : null);
         if (count($this->Krs_detail_model->get_data_krs($kode_krs)) > 0) {
             return true;
         } else {
@@ -461,7 +461,7 @@ class Konsultasi_perwalian extends CI_Controller {
 
         $row = $this->Perwalian_model->cek_status_konsultasi_krs($kode_konsultasi_perwalian)->row();
 
-        if (empty($row->isi_konsultasi) or empty($row->tanggapan)) {
+        if (!$row || empty($row->isi_konsultasi) or empty($row->tanggapan)) {
             $this->session->set_flashdata('message', '<script>swal("Gagal!","Data Konsultasi pengaktifan KRS belum diupdate atau KRS mahasiswa belum diisi!","error")</script>');
 //            redirect('dosen/konsultasi_perwalian/change_status');
             redirect('dosen/konsultasi_perwalian');
@@ -479,10 +479,10 @@ class Konsultasi_perwalian extends CI_Controller {
 //          tanbahan
                 if ($num_rows > 0) {
                     $konsultasi = $konsultasi_perwalian->row();
-                    $nim = $konsultasi->nim;
+                    $nim = $konsultasi ? $konsultasi->nim : null;
                     $perwalian = $this->Perwalian_model->get_perwalian_by_nim($nim);
-                    $kode_dosen = $perwalian->kode_dosen;
-                    $kode_dosen_perwakilan = $perwalian->kode_dosen_perwakilan;
+                    $kode_dosen = $perwalian ? $perwalian->kode_dosen : null;
+                    $kode_dosen_perwakilan = $perwalian ? $perwalian->kode_dosen_perwakilan : null;
 
                     if ($this->session->userdata('kode_dosen') == $kode_dosen || $this->session->userdata('kode_dosen') == $kode_dosen_perwakilan) {
                         $aktif = $this->Perwalian_model->aktif($kode_konsultasi_perwalian);
@@ -522,10 +522,10 @@ class Konsultasi_perwalian extends CI_Controller {
 
             if ($num_rows > 0) {
                 $konsultasi = $konsultasi_perwalian->row();
-                $nim = $konsultasi->nim;
+                $nim = $konsultasi ? $konsultasi->nim : null;
                 $perwalian = $this->Perwalian_model->get_perwalian_by_nim($nim);
-                $kode_dosen = $perwalian->kode_dosen;
-                $kode_dosen_perwakilan = $perwalian->kode_dosen_perwakilan;
+                $kode_dosen = $perwalian ? $perwalian->kode_dosen : null;
+                $kode_dosen_perwakilan = $perwalian ? $perwalian->kode_dosen_perwakilan : null;
                 if ($this->session->userdata('kode_dosen') == $kode_dosen || $this->session->userdata('kode_dosen') == $kode_dosen_perwakilan) {
                     $nonaktif = $this->Perwalian_model->nonaktif($kode_konsultasi_perwalian);
                     if ($nonaktif == TRUE) {
@@ -562,10 +562,10 @@ class Konsultasi_perwalian extends CI_Controller {
 
             if ($num_rows > 0) {
                 $konsultasi = $konsultasi_perwalian->row();
-                $nim = $konsultasi->nim;
+                $nim = $konsultasi ? $konsultasi->nim : null;
                 $perwalian = $this->Perwalian_model->get_perwalian_by_nim($nim);
-                $kode_dosen = $perwalian->kode_dosen;
-                $kode_dosen_perwakilan = $perwalian->kode_dosen_perwakilan;
+                $kode_dosen = $perwalian ? $perwalian->kode_dosen : null;
+                $kode_dosen_perwakilan = $perwalian ? $perwalian->kode_dosen_perwakilan : null;
 
                 if ($this->session->userdata('kode_dosen') == $kode_dosen || $this->session->userdata('kode_dosen') == $kode_dosen_perwakilan) {
                     $aktif = $this->Perwalian_model->aktif($kode_konsultasi_perwalian);
@@ -594,10 +594,10 @@ class Konsultasi_perwalian extends CI_Controller {
 
             if ($num_rows > 0) {
                 $konsultasi = $konsultasi_perwalian->row();
-                $nim = $konsultasi->nim;
+                $nim = $konsultasi ? $konsultasi->nim : null;
                 $perwalian = $this->Perwalian_model->get_perwalian_by_nim($nim);
-                $kode_dosen = $perwalian->kode_dosen;
-                $kode_dosen_perwakilan = $perwalian->kode_dosen_perwakilan;
+                $kode_dosen = $perwalian ? $perwalian->kode_dosen : null;
+                $kode_dosen_perwakilan = $perwalian ? $perwalian->kode_dosen_perwakilan : null;
                 if ($this->session->userdata('kode_dosen') == $kode_dosen || $this->session->userdata('kode_dosen') == $kode_dosen_perwakilan) {
                     $nonaktif = $this->Perwalian_model->nonaktif($kode_konsultasi_perwalian);
                     if ($nonaktif == TRUE) {
@@ -626,10 +626,10 @@ class Konsultasi_perwalian extends CI_Controller {
 
             if ($num_rows > 0) {
                 $konsultasi = $konsultasi_perwalian->row();
-                $nim = $konsultasi->nim;
+                $nim = $konsultasi ? $konsultasi->nim : null;
                 $perwalian = $this->Perwalian_model->get_perwalian_by_nim($nim);
-                $kode_dosen = $perwalian->kode_dosen;
-                $kode_dosen_perwakilan = $perwalian->kode_dosen_perwakilan;
+                $kode_dosen = $perwalian ? $perwalian->kode_dosen : null;
+                $kode_dosen_perwakilan = $perwalian ? $perwalian->kode_dosen_perwakilan : null;
 
                 if ($this->session->userdata('kode_dosen') == $kode_dosen || $this->session->userdata('kode_dosen') == $kode_dosen_perwakilan) {
                     $aktif = $this->Perwalian_model->aktif($kode_konsultasi_perwalian);
@@ -659,10 +659,10 @@ class Konsultasi_perwalian extends CI_Controller {
 
             if ($num_rows > 0) {
                 $konsultasi = $konsultasi_perwalian->row();
-                $nim = $konsultasi->nim;
+                $nim = $konsultasi ? $konsultasi->nim : null;
                 $perwalian = $this->Perwalian_model->get_perwalian_by_nim($nim);
-                $kode_dosen = $perwalian->kode_dosen;
-                $kode_dosen_perwakilan = $perwalian->kode_dosen_perwakilan;
+                $kode_dosen = $perwalian ? $perwalian->kode_dosen : null;
+                $kode_dosen_perwakilan = $perwalian ? $perwalian->kode_dosen_perwakilan : null;
                 if ($this->session->userdata('kode_dosen') == $kode_dosen || $this->session->userdata('kode_dosen') == $kode_dosen_perwakilan) {
                     $nonaktif = $this->Perwalian_model->nonaktif($kode_konsultasi_perwalian);
                     if ($nonaktif == TRUE) {

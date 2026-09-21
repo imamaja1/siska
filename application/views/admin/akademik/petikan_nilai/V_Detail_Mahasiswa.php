@@ -1,0 +1,119 @@
+<div class="box box-primary flat">
+    <div class="box-header">
+        <div class="pull-right">
+            <?php $ta_param = ($tahun_akademik && isset($tahun_akademik->kode_tahun_akademik)) ? '?ta=' . rawurlencode($tahun_akademik->kode_tahun_akademik) : ''; ?>
+            <a href="<?= e(site_url('admin/akademik/Petikan_nilai/cetak/'.rawurlencode($mahasiswa->nim)) . $ta_param) ?>" class="btn btn-warning btn-sm flat"><i class="fa fa-download"></i> Download</a>
+            <a href="<?= e(site_url('admin/akademik/Petikan_nilai/print_view/'.rawurlencode($mahasiswa->nim)) . $ta_param) ?>" target="_blank" class="btn btn-danger btn-sm flat"><i class="fa fa-print"></i> Print</a>
+        </div>
+    </div>
+    <div class="box-body">
+        <p><center><strong>PETIKAN NILAI MAHASISWA</strong></center></p>
+        <P><center><strong>SEMESTER <?= $tahun_akademik ? ($tahun_akademik->semester % 2 == 0 ? "GENAP" : "GANJIL") : '-' ?> TA. <?= e($tahun_akademik ? $tahun_akademik->ta : '-') ?></strong></center></P>
+        <P><center><strong>ANGKATAN  20<?= substr($mahasiswa->nim, 0,2) ?> </strong></center></P>
+        <br>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <table class="table">
+                <tr>
+                    <td><strong>NAMA</strong></td>
+                    <td><strong>:</strong></td>
+                    <td><?= e($mahasiswa->nama_mahasiswa) ?></td>
+                </tr>
+                <tr>
+                    <td><strong>NIM</strong></td>
+                    <td><strong>:</strong></td>
+                    <td><?= e($mahasiswa->nim) ?></td>
+                </tr>
+                <tr>
+                    <td><strong>NPM</strong></td>
+                    <td><strong>:</strong></td>
+                    <td><?= e($mahasiswa->npm) ?></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 ">
+            <table class="table">
+                <tr>
+                    <td><strong>JURUSAN</strong></td>
+                    <td><strong>:</strong></td>
+                    <td><?= e($prodi ? $prodi->nama_program_studi : '-') ?></td>
+                </tr>
+                <tr>
+                    <td><strong>FAKULTAS</strong></td>
+                    <td><strong>:</strong></td>
+                    <td><?= e($prodi ? $prodi->nama_fakultas : '-') ?></td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <?php foreach ((array) $data as $key) : ?>
+                <p><strong>SEMESTER  <?= $key['semester'] ?></strong></p>
+                <div class="table-responsive">
+                <table class="table demo-table">
+                    <thead>
+                    <tr>
+                        <th id="color" width="20"><center>No.</center></th>
+                        <th id="color" width="200"><center>KODE MK</center></th>
+                        <th id="color"><center>MATAKULIAH</center></th>
+                        <th id="color" width="100"><center>SKS</center></th>
+                        <th id="color" width="100"><center>GRADE</center></th>
+                        <th id="color" width="100"><center>SKSN</center></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    if (isset($key['data_nilai'])) :
+                    $j=1; foreach ($key['data_nilai'] as $row) :
+                        $belum = (!isset($row['jumlah_data']) || $row['jumlah_data'] == 0);
+                        $n_sks = $belum ? '-' : (isset($row['sks']) ? $row['sks'] : 0);
+                        $n_grade = $belum ? '-' : ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : 'E');
+                        $n_sksn = $belum ? '-' : (isset($row['sksn']) ? $row['sksn'] : 0);
+                        ?>
+                        <tr>
+                            <td><center><?= $j++?>.</center></td>
+                            <td><center><?= e($row['kode_matakuliah']) ?></center></td>
+                            <td><?= e($row['nama_matakuliah']) ?></td>
+                            <td><center><?= e($n_sks) ?></center></td>
+                            <td><center><?= e($n_grade) ?></center></td>
+                            <td><center><?= e($n_sksn) ?></center></td>
+                        </tr>
+                    <?php endforeach;
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                </div>
+                <br>
+            <?php endforeach; ?>
+        </div>
+        <!-- end.col-12 -->
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <table class="table demo-table" >
+                <tbody>
+                <tr>
+                    <td id="color" ><center><strong>JUMLAH</strong></center></td>
+                    <td id="color" width="100"><center><strong><?= $total_sks ?></strong></center></td>
+                    <td id="color" width="100"><center></center></td>
+                    <td id="color" width="100"><center><strong><?= $total_sksn ?></strong></center></td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <center>
+                <table class="table " style="width:220px;">
+                    <tr>
+                        <td rowspan="2"><center><strong>IPK = </strong></center></td>
+                        <td style="border-bottom:1px solid black;"><strong>SKSN</strong></td>
+                        <td rowspan="2">=</td>
+                        <td style="border-bottom:1px solid black;"><strong><?= $total_sksn ?></strong></td>
+                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($ipk, 2) ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td ><strong>SKS</strong></td>
+                        <td ><strong><?= $total_sks ?></strong></td>
+                    </tr>
+                </table>
+            </center>
+        </div>
+    </div>
+</div>

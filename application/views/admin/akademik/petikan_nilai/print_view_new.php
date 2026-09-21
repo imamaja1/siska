@@ -86,7 +86,7 @@
             <tr>
                 <td style="text-align: center; vertical-align: bottom; font-family:serif; font-size: 8pt;">
                     <!--<img style="height: 120px;" src="<?= base_url('assets/gambar/kop/' . $prodi->kode_fakultas . '.png') ?>" />-->
-                    <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/' . bodo_kop($mahasiswa->nim)['kop']); ?>">
+                    <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
                 </td>
             </tr>
         </table>
@@ -148,8 +148,6 @@
                 </thead>
                 <tbody>
                     <?php
-                    $total_sks = 0;
-                    $total_sksn = 0;
                     for ($i = 0; $i <= 4; $i++) :
                         if (isset($data[$i]['data_nilai'])) :
                             ?>
@@ -157,26 +155,14 @@
                             $j = 1;
                             foreach ($data[$i]['data_nilai'] as $row) :
                                 ?>
-                                <tr 
-                                    style="<?php if (isset($row['semester']) && isset($semester_jalan) && $row['semester'] == $semester_jalan && isset($semester) && $row['semester'] <= $semester ) {
-                                      if($row['nama_matakuliah'] == 'Skripsi' && isset($row['nilai_akhir']) && $row['nilai_akhir'] > 0){}else{echo "background-color:orange;"; }
-                                    }
-                                    if (isset($row['mk_pilihan']) && $row['mk_pilihan']) {
-                                        echo "font-style: italic;";
-                                    } 
-									if(isset($row['semester']) && isset($semester_jalan) && $row['semester'] == $semester_jalan){
-                                      	echo "background-color:orange;";
-                                    }
-                                    ?> ">
-                                    <td align="center"  >
-                                        <?= $j++ ?>.
-                                    </td>
+                                <tr>
+                                    <td align="center"><?= $j++ ?>.</td>
                                     <td align="center"><?= e($row['kode_matakuliah']) ?></td>
                                     <td><?= e($row['nama_matakuliah']) ?></td>
                                     <td align="center">
                                         <?php
-                                  if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                             echo e($row['sks']);
+                                        if ($row['semester'] <= $semester || $row['semester'] == 'K') {
+                                            echo e($row['sks']);
                                         } else {
                                             echo '0';
                                         }
@@ -184,7 +170,7 @@
                                     </td>
                                     <td align="center">
                                         <?php
-                                        if ($row['semester'] <= $semester || $row['semester'] =='K') {
+                                        if ($row['semester'] <= $semester || $row['semester'] == 'K') {
                                             echo e($row['grade']);
                                         } else {
                                             echo "-";
@@ -192,21 +178,15 @@
                                         ?>
                                     </td>
                                     <td align="center">
-                                      <?php
-                                        if ($row['semester'] <= $semester || $row['semester'] =='K') {
+                                        <?php
+                                        if ($row['semester'] <= $semester || $row['semester'] == 'K') {
                                             echo e($row['sksn']);
                                         } else {
                                             echo "0";
                                         }
                                         ?>
-                                  </td>
+                                    </td>
                                 </tr>
-                                <?php
-                               	 if ($row['semester'] <= $semester && $row['semester'] != null || $row['semester'] =='K'){
-                                    	$total_sks = $total_sks + ($row['sks_teori'] + $row['sks_praktek'] + $row['sks_praktikum']);
-                                    	$total_sksn = $total_sksn + $row['sksn'];
-                                	}
-                                ?>
                                 <?php
                             endforeach;
                             ?>
@@ -241,64 +221,44 @@
                                 $j = 1;
                                 foreach ($data[$k]['data_nilai'] as $row) :
                                     ?>
-                                    <tr style="<?php if (isset($row['semester']) && isset($semester_jalan) && $row['semester'] == $semester_jalan && isset($semester) && $row['semester'] <= $semester) {
-                                         if($row['nama_matakuliah'] == 'Skripsi' && isset($row['nilai_akhir']) && $row['nilai_akhir'] > 0){
-
-                                      }else{
-                                          echo "background-color:orange;"; 
-                                      }
-                                    }
-                                    if (isset($row['mk_pilihan']) && $row['mk_pilihan']) {
-                                        echo "font-style: italic;";
-                                    } 
-                                    ?> ">
+                                    <tr>
                                         <td align="center"><?= $j++ ?>.</td>
                                         <td align="center"><?= e($row['kode_matakuliah']) ?></td>
                                         <td><?= e($row['nama_matakuliah']) ?></td>
-                                        <!--<td align="center"><?= substr($row['kode_matakuliah'], 4, 1) ?></td>-->
                                         <td align="center">
                                             <?php
-                                            if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                               echo e($row['sks']);
-                                             } else {
-                                                  echo "0";
-                                             }
-                                             ?>
-                                         </td>
-                                         <td align="center">
-                                             <?php
-                                             if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                               	echo e($row['grade']);
-                                             } else {
-                                                 echo "-";
-                                             }
-                                             ?>
-                                         </td>
-                                         <td align="center">
-                                           <?php
-                                             if ($row['semester'] <= $semester || $row['semester'] =='K') {
-                                                 echo e($row['sksn']);
+                                            if ($row['semester'] <= $semester || $row['semester'] == 'K') {
+                                                echo e($row['sks']);
                                             } else {
                                                 echo "0";
                                             }
                                             ?>
-                                      </td>
+                                        </td>
+                                        <td align="center">
+                                            <?php
+                                            if ($row['semester'] <= $semester || $row['semester'] == 'K') {
+                                                echo e($row['grade']);
+                                            } else {
+                                                echo "-";
+                                            }
+                                            ?>
+                                        </td>
+                                        <td align="center">
+                                            <?php
+                                            if ($row['semester'] <= $semester || $row['semester'] == 'K') {
+                                                echo e($row['sksn']);
+                                            } else {
+                                                echo "0";
+                                            }
+                                            ?>
+                                        </td>
                                     </tr>
-                                    <?php
-                                    if ($row['semester'] <= $semester && $row['semester']  != null || $row['semester'] =='K') {
-                                        $total_sks = $total_sks + ($row['sks_teori'] + $row['sks_praktek'] + $row['sks_praktikum']);
-                                        $total_sksn = $total_sksn + $row['sksn'];
-                                    }
-                                 ?>
                                 <?php endforeach; ?>
                                 <tr>
                                     <td colspan="6"> </td>
                                 </tr>
                                 <?php
-                                ?>
-                                <?php
                             endif;
-                            $total_sks !== 0 ? $ipk = $total_sksn/$total_sks : $ipk = 0;
                         endfor;
                         ?>
                     </tbody>
@@ -316,7 +276,7 @@
                         <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($total_sksn); ?></td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="15%" rowspan="2" valign="middle"
-                            align="center"><?php echo e(sprintf("%.2f",$ipk)); ?></td>
+                            align="center"><?php echo e(number_format($ipk, 2, '.', '')); ?></td>
                     </tr>
                     <tr>
                         <td align="center">&#931; SKS</td>
@@ -334,7 +294,7 @@
                         <td>Dekan,</td>
                     </tr>
                     <tr>
-                        <td><img style="height: 50px;" src="<?= !empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.$ttd) : base_url('assets/gambar/notfound.png') ?>">	</td>
+                        <td><img style="height: 50px;" src="<?= e(!empty($ttd) && file_exists(FCPATH . 'assets/signature-dosen/' . $ttd) ? base_url('assets/signature-dosen/'.rawurlencode($ttd)) : base_url('assets/gambar/notfound.png')) ?>">	</td>
                     </tr>
                     <tr>
                         <td>

@@ -16,9 +16,9 @@ class Validasikhusus extends CI_Controller {
             redirect('login/dosen');
         }
 
-//        if (!isDekan($this->session->userdata('kode_dosen'))) {
-//            redirect('denied');
-//        }
+        if (!isDekan($this->session->userdata('kode_dosen'))) {
+            redirect('denied');
+        }
         $this->load->library('pagination');
         $this->load->service('DosenService');
     }
@@ -31,7 +31,7 @@ class Validasikhusus extends CI_Controller {
 
         $prodi = $this->Fakultas_model->getProdiFromDekan($kode_fkk['dekan']);
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         $kelas = $this->dosenservice->getKelasForValidasi($kode_prodi, $kode_tahun_akademik);
 
         $data['content'] = 'dosen/V_validasi_khusus';
@@ -51,7 +51,7 @@ class Validasikhusus extends CI_Controller {
 
         $prodi = $this->Fakultas_model->getProdiFromDekan($kode_fakultas);
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         $kelas = $this->dosenservice->getKelasForValidasi($kode_prodi, $kode_tahun_akademik);
 
         $data['content'] = 'dosen/V_validasi_khusus';

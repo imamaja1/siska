@@ -5,7 +5,7 @@
     <tr>
         <td style="text-align: center; vertical-align: bottom; font-family:serif; font-size: 8pt;">
             <!--<img style="height: 120px" src="<?= base_url('assets/gambar/kop/'.$prodi->kode_fakultas.'.png') ?>" />-->
-              <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.bodo_kop($mahasiswa->nim)['kop']); ?>">
+              <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/'.rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
         </td>
     </tr>
 </table>

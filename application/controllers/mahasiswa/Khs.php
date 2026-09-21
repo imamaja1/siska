@@ -169,6 +169,9 @@ class Khs extends CI_Controller
     }
 
     public function cetak($kode_krs, $nim) {
+        if ($nim != $this->session->userdata('nim')) {
+            redirect('home/access_denied');
+        }
         $get_semester = $this->mahasiswaservice->getSemesterByKodeKrs($kode_krs);
         if (!$get_semester) { redirect('home/access_denied'); }
       	$ta = $this->mahasiswaservice->getTahunAkademikById($get_semester->kode_tahun_akademik);
@@ -178,6 +181,7 @@ class Khs extends CI_Controller
 //        $kode_nama_kurikulum = kode_nama_kurikulum($nim);
 //        $kode_program_studi = $this->Nama_jurusan_model->get_id($kode_jurusan, $kode_jenjang);
         $program_studi = get_kode_prodi($nim);
+        if (!$program_studi) { redirect('home/access_denied'); }
 //        $data_penilaian = $this->Khs_model->kurikulum_penilaian($angkatan, $kode_program_studi);
         $data_krs = $this->Khs_model->khs($kode_krs);
         $data_penilaian = data_penilaian($nim, $semester);
@@ -332,12 +336,17 @@ class Khs extends CI_Controller
         return $jumlah_maksimum_sks;
     }
     public function print_view($kode_krs, $nim) {
+        if ($nim != $this->session->userdata('nim')) {
+            redirect('home/access_denied');
+        }
 
         $get_semester = $this->mahasiswaservice->getSemesterByKodeKrs($kode_krs);
         if (!$get_semester) { redirect('home/access_denied'); }
       	$ta = $this->mahasiswaservice->getTahunAkademikById($get_semester->kode_tahun_akademik);
+        if (!$ta) { redirect('home/access_denied'); }
         $semester = $get_semester->semester;
         $program_studi = get_kode_prodi($nim);
+        if (!$program_studi) { redirect('home/access_denied'); }
 
         $data_krs = $this->Khs_model->khs($kode_krs);
         $data_penilaian = data_penilaian($nim, $semester);

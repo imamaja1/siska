@@ -182,8 +182,8 @@ class nilai extends CI_Controller {
             foreach ($nilai as $row) {
                 $table .= '<tr>';
                 $table .= '<td align="center">' . ++$i . '</td>';
-                $table .= '<td align="center">' . $row->nim . '</td>';
-                $table .= '<td>' . $row->nama_mahasiswa . '</td>';
+                $table .= '<td align="center">' . e($row->nim) . '</td>';
+                $table .= '<td>' . e($row->nama_mahasiswa) . '</td>';
                 $table .= '<td align="center">' . $row->nilai_harian . '</td>';
                 $table .= '<td align="center">' . $row->nilai_uts . '</td>';
                 $table .= '<td align="center">' . $row->nilai_uas . '</td>';
@@ -211,15 +211,15 @@ class nilai extends CI_Controller {
 //                echo $kode_nama_kurikulum;
 //                die();
                 $grade_data = $this->nilaiservice->get_grade($row->nim, $row->semester, $row->nilai_akhir);
-                $table .= '<td align="center">' . $grade_data['grade'] . '</td>';
-                $table .= '<td align="center">' . $grade_data['keterangan'] . '</td>';
-                $table .= '<td align="center">' . $row->tidak_berhak . '</td>';
+                $table .= '<td align="center">' . e($grade_data['grade']) . '</td>';
+                $table .= '<td align="center">' . e($grade_data['keterangan']) . '</td>';
+                $table .= '<td align="center">' . e($row->tidak_berhak) . '</td>';
                 $table .= '</tr>';
             }
             $table .= '</table></div></div>';
             $data['table'] = $table;
         } else {
-            $data['message'] = "Tidak ditemukan satupun data nilai untuk Tahun Akademik " . $this->session->userdata('nama_tahun_akademik') . " dan Jurusan " . $this->session->userdata('nama_jurusan') . " serta Matakuliah " . $this->session->userdata('kode_matakuliah') . "-" . $this->session->userdata('nama_matakuliah') . "!";
+            $data['message'] = "Tidak ditemukan satupun data nilai untuk Tahun Akademik " . e($this->session->userdata('nama_tahun_akademik')) . " dan Jurusan " . e($this->session->userdata('nama_jurusan')) . " serta Matakuliah " . e($this->session->userdata('kode_matakuliah')) . "-" . e($this->session->userdata('nama_matakuliah')) . "!";
         }
         $this->load->view('admin/template/V_main', $data);
     }
@@ -232,7 +232,7 @@ class nilai extends CI_Controller {
         if (!empty($data)) {
             $tmp .= "<option value='' disabled selected>Pilih Jurusan</option>";
             foreach ($data as $row) {
-                $tmp .= "<option value='" . $row->kode_program_studi . "'>" . $row->nama_program_studi . "</option>";
+                $tmp .= "<option value='" . e($row->kode_program_studi) . "'>" . e($row->nama_program_studi) . "</option>";
             }
         } else {
             $tmp .= "<option value='' disabled selected>Pilih Jurusan</option>";
@@ -259,7 +259,7 @@ class nilai extends CI_Controller {
         if (!empty($data)) {
             $tmp .= "<option value='' disabled selected>Pilih Matakuliah</option>";
             foreach ($data as $row) {
-                $tmp .= "<option value='" . $row->id_matakuliah . "'>" . $row->kode_matakuliah . ' - ' . $row->nama_matakuliah . "</option>";
+                $tmp .= "<option value='" . $row->id_matakuliah . "'>" . e($row->kode_matakuliah) . ' - ' . e($row->nama_matakuliah) . "</option>";
             }
         } else {
             $tmp .= "<option value='' disabled selected>Pilih Matakuliah</option>";
@@ -297,8 +297,8 @@ class nilai extends CI_Controller {
         foreach ($nilai as $row) {
             $table .= '<tr>';
             $table .= '<td>' . ++$no . '.</td>';
-            $table .= '<td>' . $row->nim . '</td>';
-            $table .= '<td>' . $row->nama_mahasiswa . '</td>';
+            $table .= '<td>' . e($row->nim) . '</td>';
+            $table .= '<td>' . e($row->nama_mahasiswa) . '</td>';
             $table .= '<td>' . $nilai_harian = $row->nilai_harian . '</td>';
             $table .= '<td>' . $nilai_uts = $row->nilai_uts . '</td>';
             $table .= '<td>' . $nilai_uas = $row->nilai_uas . '</td>';
@@ -324,9 +324,9 @@ class nilai extends CI_Controller {
 //            $kode_kurikulum = $this->db->query("select kode_nama_kurikulum from nama_kurikulum where angkatan='$angkatan' and kode_program_studi='$kode_program_studi'")->row();
 //            $kode_nama_kurikulum = $kode_kurikulum->kode_nama_kurikulum;
             $grade_data = $this->nilaiservice->get_grade($row->nim, $row->semester, $row->nilai_akhir);
-            $table .= '<td align="center">' . $grade_data['grade'] . '</td>';
-            $table .= '<td align="center">' . $grade_data['keterangan'] . '</td>';
-            $table .= '<td align="center">' . $row->tidak_berhak . '</td>';
+            $table .= '<td align="center">' . e($grade_data['grade']) . '</td>';
+            $table .= '<td align="center">' . e($grade_data['keterangan']) . '</td>';
+            $table .= '<td align="center">' . e($row->tidak_berhak) . '</td>';
             $table .= '</tr>';
         }
         $table .= '</table>';

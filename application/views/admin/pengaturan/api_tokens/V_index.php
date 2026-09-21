@@ -38,7 +38,7 @@
                     <td><small><?= e($token->api_url) ?></small></td>
                     <td>
                         <code class="token-mask" id="token-<?= $token->id ?>">
-                            <?= substr($token->bearer_token, 0, 8) ?>...<?= substr($token->bearer_token, -4) ?>
+                            <?= e(substr($token->bearer_token, 0, 8)) ?>...<?= e(substr($token->bearer_token, -4)) ?>
                         </code>
                         <button type="button" class="btn btn-xs btn-default flat btn-toggle-token" data-id="<?= $token->id ?>" data-token="<?= e($token->bearer_token) ?>" title="Lihat Token">
                             <i class="fa fa-eye"></i>

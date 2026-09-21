@@ -28,7 +28,7 @@ class Update_penilaian extends CI_Controller {
         $prodi = $this->kaprodiservice->get_kaprodi_prodi_array($this->session->userdata('kode_dosen'));
 
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
 
         $kelas = $this->kaprodiservice->get_kelas_update_uts_index($kode_prodi, $kode_tahun_akademik);
 
@@ -46,11 +46,11 @@ class Update_penilaian extends CI_Controller {
         $prodi = $this->kaprodiservice->get_kaprodi_prodi_array($this->session->userdata('kode_dosen'));
 
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
 
         $data['content'] = 'dosen/kaprodi/validasi-nilai/V_index_uas';
         $data['judul'] = 'Validas Nilai UAS';
-        $data['kelas'] = $kelas;
+        $data['kelas'] = array();
        
         $data['a_validasi_nilai_kaprodi'] = 'active';
         $data['a_validasi_nilai_uas_prodi'] = 'active';
@@ -61,7 +61,7 @@ class Update_penilaian extends CI_Controller {
     public function kelas_uts() {
         $prodi = $this->kaprodiservice->get_kaprodi_prodi_array($this->session->userdata('kode_dosen'));
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
 
         $kelas = $this->kaprodiservice->get_kelas_update_uts($kode_prodi, $kode_tahun_akademik);
 
@@ -80,7 +80,7 @@ class Update_penilaian extends CI_Controller {
     public function kelas_uas() {
         $prodi = $this->kaprodiservice->get_kaprodi_prodi_array($this->session->userdata('kode_dosen'));
         $kode_prodi = array_column($prodi, 'kode_program_studi');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
 
         $kelas = $this->kaprodiservice->get_kelas_validasi_uas($kode_prodi, $kode_tahun_akademik);
       
@@ -98,9 +98,9 @@ class Update_penilaian extends CI_Controller {
 
     public function cari_kelas() {
         $prodi = $this->kaprodiservice->get_kaprodi_prodi_row($this->session->userdata('kode_dosen'));
-        $this->kode_program_studi = $prodi->kode_program_studi;
+        $this->kode_program_studi = $prodi ? $prodi->kode_program_studi : null;
         $keyword = $this->input->post('keyword');
-        $kode_tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $kode_tahun_akademik = ta_kode();
         if ($keyword == '') {
             $this->kelas_uas();
         } else {
@@ -116,6 +116,9 @@ class Update_penilaian extends CI_Controller {
         $kelas_mahasiswa = $this->kaprodiservice->get_mahasiswa_update_uts($kelas_id);
 
         $data_kelas = $this->kaprodiservice->get_data_kelas_update($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $data['data'] = $kelas_mahasiswa;
         $data['data_kelas'] = $data_kelas;
 
@@ -127,6 +130,9 @@ class Update_penilaian extends CI_Controller {
         $kelas_mahasiswa = $this->kaprodiservice->get_mahasiswa_uts_asc($kelas_id);
 
         $data_kelas = $this->kaprodiservice->get_data_kelas($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $data['data'] = $kelas_mahasiswa;
         $data['data_kelas'] = $data_kelas;
 
@@ -138,6 +144,9 @@ class Update_penilaian extends CI_Controller {
         $kelas_mahasiswa = $this->kaprodiservice->get_mahasiswa_uts_asc($kelas_id);
 
         $data_kelas = $this->kaprodiservice->get_data_kelas($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $data['data'] = $kelas_mahasiswa;
         $data['data_kelas'] = $data_kelas;
 
@@ -147,6 +156,9 @@ class Update_penilaian extends CI_Controller {
     public function data_mahasiswa($kelas_id) {
         $kelas_mahasiswa = $this->kaprodiservice->get_mahasiswa_uas($kelas_id);
         $data_kelas = $this->kaprodiservice->get_data_kelas($kelas_id);
+        if (!$data_kelas) {
+            show_error('Data kelas tidak ditemukan.');
+        }
         $data['data'] = $kelas_mahasiswa;
         $data['data_kelas'] = $data_kelas;
 
@@ -161,7 +173,7 @@ class Update_penilaian extends CI_Controller {
         $note = htmlspecialchars($this->input->post('catatan_prodi'));
         $kelas_id = htmlspecialchars($this->input->post('kelas_id'));
         $this->kaprodiservice->update('dummy_update_kelas', array('status_uts_prodi' => 'R','status_uts_dosen' => 'R'), array('id_kelas' => $kelas_id));
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function rev_uas() {
@@ -177,8 +189,6 @@ class Update_penilaian extends CI_Controller {
         $message_text = "*SISKA UBG* - Catatan " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " untuk nilai UAS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
-        kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
-
         $massage1 = array('kelas_id' => $kelas_id,
             'pesan_prodi' => $note,
             'param_prodi' => 1,
@@ -187,7 +197,7 @@ class Update_penilaian extends CI_Controller {
             'tgl_prodi' => date_create('now', timezone_open('Asia/Singapore'))->format('Y-m-d H:i:s'));
 
         $this->kaprodiservice->insert('catatan_revisi_uas', $massage1);
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function rev_uts() {
@@ -218,11 +228,13 @@ class Update_penilaian extends CI_Controller {
 
         $this->kaprodiservice->insert('catatan_revisi', $massage1);
 
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function validasi($kelas_id) {
         $nilai = $this->kaprodiservice->validasi_kelas_dummy($kelas_id);
+        $res = array('st' => array());
+        $re = array('status' => false);
         foreach ($nilai as $row) {
             $data_nilai = array(
                 'nilai_harian' => $row->dummy_harian,
@@ -239,12 +251,13 @@ class Update_penilaian extends CI_Controller {
             }
         }
 
-        if (count(array_unique($res['st'])) === 1) {
+        if (!empty($res['st']) && count(array_unique($res['st'])) === 1) {
             if (current($res['st']) == true) {
                 $re['status'] = true;
                 $this->kaprodiservice->update('kelas', array('validasi_nilai' => 'T'), array('kelas_id' => $kelas_id));
             }
         }
+        echo json_encode($re);
     }
 
     public function validasi_prodi($kelas_id) {
@@ -263,7 +276,7 @@ class Update_penilaian extends CI_Controller {
         $message_text2 = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", menunggu validasi dari" . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_fakultas['chatid'], $message_text2);
 
-        return redirect($_SERVER['HTTP_REFERER']);
+        return redirect(safe_referer(site_url('dosen')));
     }
 
     public function validasi_prodi_uts($kelas_id) {

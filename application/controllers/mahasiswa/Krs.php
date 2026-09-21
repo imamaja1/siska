@@ -451,7 +451,7 @@ class Krs extends CI_Controller
     {
         $this->starter();
         $nim = $this->session->userdata('nim');
-        $tahun_akademik = tahun_akademik()->kode_tahun_akademik;
+        $tahun_akademik = ta_kode();
         $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($this->session->userdata('nim'));
         $kode_tahun_akademik = $this->m_tahun_akademik->get_aktif();
         $status_cetak = $this->Perwalian_model->cek_status_cetak($this->session->userdata('nim'), $kode_tahun_akademik);
@@ -1383,9 +1383,10 @@ class Krs extends CI_Controller
         $data['kode_jenjang'] = $kode_jenjang;
         $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
 
+            $prodi = get_kode_prodi($nim);
             $data['beban_sks'] = $this->maksimum_sks();
-            $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi(get_kode_prodi($nim)->kode_program_studi);
-            $data['jurusan'] = get_kode_prodi($nim);
+            $data['kajur'] = $this->Ketua_jurusan_model->get_kaprodi($prodi ? $prodi->kode_program_studi : null);
+            $data['jurusan'] = $prodi;
             $semester = $this->semester;
             $data['semester'] = $semester;
             $data['krs_mahasiswa'] = $this->Krs_model->get_krs_mahasiswa_by_nim($nim, $semester);

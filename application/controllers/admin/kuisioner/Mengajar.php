@@ -44,6 +44,8 @@ class Mengajar extends CI_Controller{
             'kelas_id_sess' => $kelas_id,
         );
         $this->session->set_userdata($data_sess);
+
+        echo json_encode(array('status' => 1));
     }
 
     public function data_pengajar()
@@ -60,7 +62,7 @@ class Mengajar extends CI_Controller{
         $datas = $this->kelas_model->get_kelas_by_kode_makul($id_matakuliah, $kode_tahun_akademik);
         foreach ($datas as $data)
         {
-            echo "<option value='".$data->kelas_id."' >".$data->nama_kelas."</option><br>";
+            echo "<option value='".$data->kelas_id."' >".e($data->nama_kelas)."</option><br>";
         }
     }
 
@@ -70,8 +72,7 @@ class Mengajar extends CI_Controller{
         if (!empty($result)) {
             echo '<ul id="nim-list" class="list-group">';
             foreach ($result as $row) {
-                $nama_dosen = str_ireplace("'",'`',$row->nama_dosen);
-                echo '<li onClick="selectNim(' . $row->kode_dosen . ',\''.$nama_dosen.'\')" class="list-group-item">' . $row->nama_dosen . '</li>';
+                echo '<li onClick="selectNim(' . e($row->kode_dosen) . ',' . e(json_encode($row->nama_dosen)) . ')" class="list-group-item">' . e($row->nama_dosen) . '</li>';
             }
             echo '</ul>';
         } else {
@@ -85,8 +86,7 @@ class Mengajar extends CI_Controller{
         if (!empty($result)) {
             echo '<ul id="nim-list" class="list-group">';
             foreach ($result as $row) {
-                $nama_dosen = str_ireplace("'",'`',$row->nama_dosen);
-                echo '<li onClick="pilihNim(' . $row->kode_dosen . ',\''.$nama_dosen.'\')" class="list-group-item">' . $row->nama_dosen . '</li>';
+                echo '<li onClick="pilihNim(' . e($row->kode_dosen) . ',' . e(json_encode($row->nama_dosen)) . ')" class="list-group-item">' . e($row->nama_dosen) . '</li>';
             }
             echo '</ul>';
         } else {

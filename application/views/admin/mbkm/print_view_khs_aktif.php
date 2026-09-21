@@ -55,7 +55,7 @@
     <tr>
         <td style="vertical-align: bottom; font-family:serif; font-size: 8pt; text-align: center">
             <!--<img style="height: 120px" src="<?= base_url('assets/gambar/kop/'.$prodi->kode_fakultas.'.png') ?>" />-->
-               <img style="height: 120px;" src="<?= base_url('assets/gambar/kop/'.bodo_kop($data['nim'])['kop']); ?>">
+               <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($data['nim'])['kop'] ?? ''))) ?>">
         </td>
     </tr>
 </table>
@@ -89,12 +89,12 @@
                 <tr>
                     <td><b>Fakultas</b></td>
                     <td><b>:</b></td>
-                    <td><?= bodo_kop($data['nim'])['nama_fakultas'] ?></td>
+                    <td><?= e(bodo_kop($data['nim'])['nama_fakultas'] ?? '') ?></td>
                 </tr>
                 <tr>
                     <td><b>Semester</b></td>
                     <td><b>:</b></td>
-                    <td><?= $data['semester'] ?></td>
+                    <td><?= e($data['semester']) ?></td>
                 </tr>
             </table>
         </td>
@@ -186,12 +186,12 @@
     <tr>
         <td>&nbsp;</td>
         <td >&nbsp;</td>
-        <td><img style="height: 60px" src="<?php $sig = signatur_nik(bodo_kop($data['nim'])['nik']); echo !empty($sig) && file_exists(FCPATH . 'assets/signature-dosen/' . $sig) ? base_url('assets/signature-dosen/'.$sig) : base_url('assets/gambar/notfound.png') ?>"/></td>
+        <td><img style="height: 60px" src="<?php $sig = signatur_nik(bodo_kop($data['nim'])['nik'] ?? ''); echo e(!empty($sig) && file_exists(FCPATH . 'assets/signature-dosen/' . $sig) ? base_url('assets/signature-dosen/'.rawurlencode($sig)) : base_url('assets/gambar/notfound.png')) ?>"/></td>
     </tr>
     <tr>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-                        <td><div class="garis_bawah"><?= e(bodo_kop($data['nim'])['dekan']) ?></div>NIK: <?= e(bodo_kop($data['nim'])['nik']) ?></td>
+                        <td><div class="garis_bawah"><?= e(bodo_kop($data['nim'])['dekan'] ?? '') ?></div>NIK: <?= e(bodo_kop($data['nim'])['nik'] ?? '') ?></td>
     </tr>
 </table>
 <!-- End Footer KHS -->

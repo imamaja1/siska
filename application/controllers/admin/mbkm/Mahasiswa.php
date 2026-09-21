@@ -9,6 +9,11 @@ class Mahasiswa extends CI_Controller {
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
         }
+        $class = $this->router->fetch_class();
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
         $this->load->model('jurusan/m_tahun_akademik');
         $this->load->service('MbkmService');
     }
@@ -16,7 +21,8 @@ class Mahasiswa extends CI_Controller {
     public function index() {
         $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
         if (!$kode_tahun_akademik) {
-            $kode_tahun_akademik = $this->m_tahun_akademik->get_semester()->kode_tahun_akademik;
+            $semester = $this->m_tahun_akademik->get_semester();
+            $kode_tahun_akademik = $semester ? $semester->kode_tahun_akademik : null;
         }
         $data['ta'] = $kode_tahun_akademik;
         $data['mahasiswa'] = $this->mbkmservice->getMahasiswaMbkm($kode_tahun_akademik);

@@ -8,7 +8,7 @@
 </div>
 <div class="box box-primary flat">
     <div class="box-header with-border">
-        <h4 class="box-title"><i class="fa fa-calendar"></i><strong> TA. <?= e($tahun_akademik->tahun_akademik) ?> <?= $tahun_akademik->semester == 0 ? "GENAP" : "GANJIL" ?></strong> (<?= e($prodi->singkatan_program_studi) ?> - <?= strtoupper(e($prodi->nama_program_studi)) ?>)</h4>
+        <h4 class="box-title"><i class="fa fa-calendar"></i><strong> TA. <?= e(isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '') ?> <?= (isset($tahun_akademik->semester) && $tahun_akademik->semester == 0) ? "GENAP" : "GANJIL" ?></strong> (<?= e(isset($prodi->singkatan_program_studi) ? $prodi->singkatan_program_studi : '') ?> - <?= strtoupper(e(isset($prodi->nama_program_studi) ? $prodi->nama_program_studi : '')) ?>)</h4>
         <div class="box-tools pull-right">
           <!--            <a href="--><?//= site_url('admin/laporan/rekap_ipk/cetak') ?><!--" class="btn btn-danger btn-sm flat"><i class="fa fa-file-excel-o"></i> Export</a>-->
             <a href="<?= site_url('admin/laporan/rekap_ipk/cetak_baru') ?>" class="btn btn-danger btn-sm flat"><i class="fa fa-file-excel-o"></i> Export New</a>

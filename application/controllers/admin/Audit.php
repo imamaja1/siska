@@ -134,9 +134,9 @@ class Audit extends CI_Controller
         $this->load->view('admin/audit/V_feeder_hasil', $data);
     }
 
-    public function get_matakuliah($kode_program_studi)
+    public function get_matakuliah($kode_tahun_akademik, $kode_program_studi)
     {
-        $rows = $this->Audit_feeder_model->getMatakuliahByProdi($kode_program_studi);
+        $rows = $this->Audit_feeder_model->getMatakuliahByProdiTa($kode_tahun_akademik, $kode_program_studi);
         echo json_encode($rows);
     }
 

@@ -25,37 +25,52 @@ class Audit_feeder_model extends CI_Model {
 
     public function getNilaiSiskaByKelas($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $nama_kelas_id = NULL)
     {
-        $sql = "SELECT m.nim, m.nama_mahasiswa, mk.kode_matakuliah, mk.nama_matakuliah, nk.nama_kelas, kd.nilai_akhir
-                  FROM kelas kl
-                  JOIN kelas_mahasiswa km ON km.kelas_id = kl.kelas_id
-                  JOIN krs_detail krd ON krd.kode_krs_detail = km.kode_krs_detail
-                  JOIN krs k ON k.kode_krs = krd.kode_krs
+        $sql = "SELECT m.nim, m.nama_mahasiswa, mk.kode_matakuliah, mk.nama_matakuliah,
+                       (SELECT nk.nama_kelas
+                          FROM kelas_mahasiswa km
+                          JOIN kelas kl2 ON kl2.kelas_id = km.kelas_id
+                          JOIN nama_kelas nk ON nk.nama_kelas_id = kl2.nama_kelas_id
+                         WHERE km.kode_krs_detail = krd.kode_krs_detail
+                         LIMIT 1) AS nama_kelas,
+                       kd.nilai_akhir
+                  FROM krs k
+                  JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
                   JOIN mahasiswa m ON m.nim = k.nim
-                  JOIN matakuliah mk ON mk.id_matakuliah = kl.id_matakuliah
-                  JOIN nama_kelas nk ON nk.nama_kelas_id = kl.nama_kelas_id
+                  JOIN matakuliah mk ON mk.id_matakuliah = krd.id_matakuliah
                   LEFT JOIN khs_detail kd ON kd.kode_krs_detail = krd.kode_krs_detail
-                 WHERE kl.kode_tahun_akademik = ?
-                   AND kl.kode_program_studi = ?
-                   AND kl.id_matakuliah = ?";
+                 WHERE k.kode_tahun_akademik = ?
+                   AND m.program_studi_kode = ?
+                   AND krd.id_matakuliah = ?";
 
         $params = [$kode_tahun_akademik, $kode_program_studi, $id_matakuliah];
 
         if ($nama_kelas_id !== NULL && $nama_kelas_id !== '') {
-            $sql .= " AND kl.nama_kelas_id = ?";
+            $sql .= " AND EXISTS (
+                        SELECT 1
+                          FROM kelas_mahasiswa km2
+                          JOIN kelas kl3 ON kl3.kelas_id = km2.kelas_id
+                         WHERE km2.kode_krs_detail = krd.kode_krs_detail
+                           AND kl3.nama_kelas_id = ?
+                      )";
             $params[] = $nama_kelas_id;
         }
 
-        $sql .= " ORDER BY nk.nama_kelas, m.nim";
+        $sql .= " ORDER BY m.nim";
 
         return $this->db->query($sql, $params)->result_object();
     }
 
-    public function getMatakuliahByProdi($kode_program_studi)
+    public function getMatakuliahByProdiTa($kode_tahun_akademik, $kode_program_studi)
     {
-        return $this->db->select('id_matakuliah, kode_matakuliah, nama_matakuliah')
-            ->from('matakuliah')
-            ->where('kode_program_studi', $kode_program_studi)
-            ->order_by('nama_matakuliah', 'ASC')
+        return $this->db->distinct()
+            ->select('mk.id_matakuliah, mk.kode_matakuliah, mk.nama_matakuliah')
+            ->from('krs k')
+            ->join('krs_detail krd', 'krd.kode_krs = k.kode_krs')
+            ->join('mahasiswa m', 'm.nim = k.nim')
+            ->join('matakuliah mk', 'mk.id_matakuliah = krd.id_matakuliah')
+            ->where('k.kode_tahun_akademik', $kode_tahun_akademik)
+            ->where('m.program_studi_kode', $kode_program_studi)
+            ->order_by('mk.nama_matakuliah', 'ASC')
             ->get()->result_object();
     }
 

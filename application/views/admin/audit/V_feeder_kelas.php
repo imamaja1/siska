@@ -34,7 +34,7 @@
                         <label class="control-label col-sm-2">Matakuliah <span class="text-danger">*</span></label>
                         <div class="col-sm-4 col-xs-12">
                             <select required name="id_matakuliah" id="id-matakuliah" class="form-control select2">
-                                <option value="" selected disabled>Pilih Program Studi dahulu</option>
+                                <option value="" selected disabled>Pilih Tahun Akademik dan Program Studi dahulu</option>
                             </select>
                             <input type="hidden" name="kode_matakuliah" id="kode-matakuliah">
                         </div>
@@ -65,18 +65,19 @@
     var URL_KELAS = '<?= site_url("admin/audit/get_kelas/") ?>';
 
     function loadMatakuliah() {
+        var ta = $('#kode-tahun-akademik').val();
         var prodi = $('#kode-program-studi').val();
         var $mk = $('#id-matakuliah');
         $mk.html('<option value="">Memuat...</option>');
         $('#kode-matakuliah').val('');
         $('#nama-kelas-id').html('<option value="">Semua Kelas</option>');
 
-        if (!prodi) {
-            $mk.html('<option value="" selected disabled>Pilih Program Studi dahulu</option>');
+        if (!ta || !prodi) {
+            $mk.html('<option value="" selected disabled>Pilih Tahun Akademik dan Program Studi dahulu</option>');
             return;
         }
 
-        $.getJSON(URL_MATAKULIAH + encodeURIComponent(prodi), function (rows) {
+        $.getJSON(URL_MATAKULIAH + encodeURIComponent(ta) + '/' + encodeURIComponent(prodi), function (rows) {
             var html = '<option value="" selected disabled>Pilih Matakuliah</option>';
             for (var i = 0; i < rows.length; i++) {
                 html += '<option value="' + rows[i].id_matakuliah + '" data-kode="' + rows[i].kode_matakuliah + '">' + rows[i].kode_matakuliah + ' - ' + rows[i].nama_matakuliah + '</option>';
@@ -106,11 +107,11 @@
     }
 
     $('#kode-program-studi').on('change', loadMatakuliah);
+    $('#kode-tahun-akademik').on('change', loadMatakuliah);
     $('#id-matakuliah').on('change', function () {
         $('#kode-matakuliah').val($('#id-matakuliah option:selected').data('kode') || '');
         loadKelas();
     });
-    $('#kode-tahun-akademik').on('change', loadKelas);
 
     $("#form-filter").submit(function (e) {
         e.preventDefault();

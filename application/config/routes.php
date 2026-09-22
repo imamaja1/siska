@@ -87,6 +87,12 @@ $route['admin/pengaturan/api_tokens/tambah_prodi/(:num)/(:any)'] = 'admin/pengat
 $route['admin/pengaturan/api_tokens/get_log_detail/(:num)'] = 'admin/pengaturan/Api_tokens/get_log_detail/$1';
 $route['admin/pengaturan/api_tokens/get_logs'] = 'admin/pengaturan/Api_tokens/get_logs';
 $route['admin/pengaturan/api_tokens/get_logs/(:num)'] = 'admin/pengaturan/Api_tokens/get_logs/$1';
+
+// Feeder PDDIKTI
+$route['admin/pengaturan/feeder'] = 'admin/pengaturan/Feeder/index';
+$route['admin/pengaturan/feeder/simpan'] = 'admin/pengaturan/Feeder/simpan';
+$route['admin/pengaturan/feeder/test_koneksi'] = 'admin/pengaturan/Feeder/test_koneksi';
+
 $route['admin/pengaturan/distribusi_perwalian'] = 'admin/pengaturan/Distribusi_perwalian/index';
 $route['admin/pengaturan/distribusi_perwalian/proses'] = 'admin/pengaturan/Distribusi_perwalian/proses';
 $route['admin/pengaturan/distribusi_perwalian/preview'] = 'admin/pengaturan/Distribusi_perwalian/preview';

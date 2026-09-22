@@ -247,6 +247,8 @@ function has_access($acc, $controllers, $role = 0) {
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= site_url('admin/audit'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
+                    <li><a href="<?= site_url('admin/audit/feeder_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                    <li><a href="<?= site_url('admin/audit/feeder_kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
                 </ul>
             </li>
             <?php endif; ?>
@@ -310,7 +312,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Pengaturan -->
-            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens', 'Backup_database'])): ?>
+            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens', 'Backup_database', 'Feeder'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Pengaturan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-cog"></i>
@@ -327,6 +329,9 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Backup_database')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/backup_database'); ?>"><i class="fa fa-circle-o"></i> Export / Import Database</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Feeder')): ?>
+                    <li><a href="<?= site_url('admin/pengaturan/feeder'); ?>"><i class="fa fa-circle-o"></i> Konfig Feeder</a></li>
                     <?php endif; ?>
                 </ul>
             </li>

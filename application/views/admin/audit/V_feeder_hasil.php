@@ -47,7 +47,8 @@
                             <th>Nama</th>
                             <th>Matakuliah</th>
                             <th>Kelas</th>
-                            <th>Nilai SISKA</th>
+                            <th>Nilai SISKA (Angka)</th>
+                            <th>Nilai SISKA (Huruf)</th>
                             <th>Nilai Feeder (Angka)</th>
                             <th>Nilai Feeder (Huruf)</th>
                             <th>Status</th>
@@ -62,6 +63,7 @@
                             <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></td>
                             <td><?= !empty($row->nama_kelas) ? e($row->nama_kelas) : '-' ?></td>
                             <td align="center"><?= $row->nilai_siska !== NULL && $row->nilai_siska !== '' ? e($row->nilai_siska) : '-' ?></td>
+                            <td align="center"><?= !empty($row->nilai_huruf_siska) ? e($row->nilai_huruf_siska) : '-' ?></td>
                             <td align="center"><?= $row->nilai_angka !== NULL && $row->nilai_angka !== '' ? e($row->nilai_angka) : '-' ?></td>
                             <td align="center"><?= $row->nilai_huruf !== NULL && $row->nilai_huruf !== '' ? e($row->nilai_huruf) : '-' ?></td>
                             <td align="center">

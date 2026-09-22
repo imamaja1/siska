@@ -11,7 +11,7 @@ class Audit_feeder_model extends CI_Model {
                           JOIN nama_kelas nk ON nk.nama_kelas_id = kl.nama_kelas_id
                          WHERE km.kode_krs_detail = krd.kode_krs_detail
                          LIMIT 1) AS nama_kelas,
-                       kd.nilai_akhir
+                       k.semester, kd.nilai_akhir
                   FROM krs k
                   JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
                   LEFT JOIN khs_detail kd ON kd.kode_krs_detail = krd.kode_krs_detail
@@ -32,7 +32,7 @@ class Audit_feeder_model extends CI_Model {
                           JOIN nama_kelas nk ON nk.nama_kelas_id = kl2.nama_kelas_id
                          WHERE km.kode_krs_detail = krd.kode_krs_detail
                          LIMIT 1) AS nama_kelas,
-                       kd.nilai_akhir
+                       k.semester, kd.nilai_akhir
                   FROM krs k
                   JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
                   JOIN mahasiswa m ON m.nim = k.nim

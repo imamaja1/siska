@@ -161,6 +161,7 @@ class Audit extends CI_Controller
             $nilai_siska = $r->nilai_akhir;
             $angka = $f['angka'] ?? NULL;
             $huruf = $f['huruf'] ?? NULL;
+            $huruf_siska = $this->nilaiHurufSiska($nim, $r->semester ?? NULL, $nilai_siska);
 
             if ($nilai_siska === NULL || $nilai_siska === '') {
                 $status = 'Nilai SISKA kosong';
@@ -183,6 +184,7 @@ class Audit extends CI_Controller
                 'nama_matakuliah' => $r->nama_matakuliah,
                 'nama_kelas'      => $r->nama_kelas,
                 'nilai_siska'     => ($nilai_siska === NULL || $nilai_siska === '') ? NULL : number_format(round((float) $nilai_siska, 2), 2, '.', ''),
+                'nilai_huruf_siska' => $huruf_siska,
                 'nilai_angka'     => ($angka === NULL || $angka === '') ? NULL : number_format(round((float) $angka, 2), 2, '.', ''),
                 'nilai_huruf'     => $huruf,
                 'status'          => $status,
@@ -196,5 +198,21 @@ class Audit extends CI_Controller
             'feeder_total' => $feeder['total'] ?? 0,
             'feeder_error' => $feeder['error'] ?? '',
         ];
+    }
+
+    private function nilaiHurufSiska($nim, $semester, $nilai_akhir)
+    {
+        if ($nilai_akhir === NULL || $nilai_akhir === '') {
+            return NULL;
+        }
+
+        $na = (float) $nilai_akhir;
+        foreach (data_penilaian($nim, $semester) as $row) {
+            if ($row['nilai_minimum'] <= $na && $na <= $row['nilai_maksimum']) {
+                return $row['grade'];
+            }
+        }
+
+        return NULL;
     }
 }

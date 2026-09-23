@@ -182,7 +182,7 @@ $autoload['drivers'] = array();
 
  */
 
-$autoload['helper'] = array('url', 'form', 'security', 'coba_helper', 'date');
+$autoload['helper'] = array('url', 'form', 'security', 'coba_helper', 'date', 'laravel_crypt');
 
 
 

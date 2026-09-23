@@ -6,7 +6,7 @@
     </div>
     <div class="box-body"><br>
         <div class="alert alert-info">
-            <i class="fa fa-info-circle"></i> Konfigurasi Feeder dikelola melalui aplikasi <strong>Filament</strong> (baris <code>_feeder_config</code>).
+            <i class="fa fa-info-circle"></i> Konfigurasi Feeder dikelola melalui aplikasi <strong>Filament</strong> (tabel <code>feeder_credentials</code>).
             Halaman ini hanya menampilkan konfigurasi tersebut dan tidak dapat mengubahnya.
         </div>
         <form class="form-horizontal" id="form-feeder">

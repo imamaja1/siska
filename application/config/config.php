@@ -332,6 +332,20 @@ $config['encryption_key'] = 'dX7pQm2sL9vR5nK8wY1jF3cH6tA0bE4g';
 
 /*
 |--------------------------------------------------------------------------
+| Laravel APP_KEY (aplikasi Filament SISKA)
+|--------------------------------------------------------------------------
+|
+| APP_KEY aplikasi Laravel/Filament yang mengelola tabel feeder_credentials,
+| format "base64:...". Dipakai helper laravel_decrypt() untuk mendekripsi
+| nilai feeder_url/port/username/password/endpoint/token.
+|
+| Jika kosong, akan memakai encryption_key CodeIgniter di atas.
+|
+*/
+$config['laravel_app_key'] = '';
+
+/*
+|--------------------------------------------------------------------------
 | Session Variables
 |--------------------------------------------------------------------------
 |

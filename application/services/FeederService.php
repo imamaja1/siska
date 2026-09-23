@@ -10,153 +10,111 @@ class FeederService extends MY_Service {
         'feeder_endpoint' => 'Endpoint web service Feeder',
     ];
 
-    private $sensitive = ['feeder_password'];
-
     public function __construct()
     {
         parent::__construct();
         $this->load->model('Feeder_model');
-        $this->load->library('encryption');
-        $this->encryption->initialize([
-            'cipher' => 'aes-256',
-            'mode'   => 'cbc',
-        ]);
-
-        $this->config->load('feeder', TRUE);
-        $app_key = trim((string) $this->config->item('feeder_app_key', 'feeder'));
-        if ($app_key === '') {
-            $app_key = 'base64:' . base64_encode((string) $this->config->item('encryption_key'));
-        }
-        $this->load->library('laravel_crypt', [
-            'key'    => $app_key,
-            'cipher' => (string) $this->config->item('feeder_cipher', 'feeder'),
-        ]);
+        $this->load->helper('laravel_crypt');
     }
 
     public function getConfig()
     {
-        $unified = $this->getConfigUnified();
-        if ($unified !== NULL) {
-            return $unified;
-        }
-
-        return $this->getConfigLegacy();
-    }
-
-    /**
-     * Baca konfigurasi tunggal dari baris `_feeder_config` yang ditulis
-     * aplikasi Filament (payload terenkripsi format Laravel).
-     *
-     * @return array|NULL NULL jika baris tidak ada atau gagal didekripsi.
-     */
-    private function getConfigUnified()
-    {
-        $row = $this->feeder_model->get_credential('_feeder_config');
-        if (!$row || trim((string) $row->key_value) === '') {
-            return NULL;
-        }
-
-        $data = $this->laravel_crypt->decrypt($row->key_value);
-        if ($data === NULL) {
-            return NULL;
-        }
-
-        if (is_string($data)) {
-            $decoded = json_decode($data, TRUE);
-            if (is_array($decoded)) {
-                $data = $decoded;
-            }
-        }
-
-        if (!is_array($data)) {
-            return NULL;
-        }
-
-        return $this->normalizeConfig($data);
-    }
-
-    /**
-     * Fallback: konfigurasi lama yang tersimpan pada baris terpisah.
-     */
-    private function getConfigLegacy()
-    {
         $config = [];
         foreach (array_keys($this->fields) as $key) {
             $row = $this->feeder_model->get_credential($key);
-            $config[$key] = $row ? $this->decrypt($row->key_value) : '';
+            $config[$key] = $this->decryptValue($row ? $row->key_value : '');
         }
+
         if ($config['feeder_endpoint'] === '') {
             $config['feeder_endpoint'] = '/ws/live2.php';
         }
+
         return $config;
     }
 
-    /**
-     * Normalisasi struktur JSON `_feeder_config` agar toleran terhadap
-     * penamaan key yang berbeda dari aplikasi Filament.
-     */
-    private function normalizeConfig(array $data)
+    private function decryptValue($payload)
     {
-        $pick = function ($keys) use ($data) {
-            foreach ($keys as $k) {
-                if (array_key_exists($k, $data) && $data[$k] !== NULL) {
-                    return $data[$k];
-                }
-            }
+        if ($payload === NULL || trim((string) $payload) === '') {
             return '';
-        };
-
-        $config = [
-            'feeder_url'      => (string) $pick(['feeder_url', 'url', 'host', 'base_url', 'alamat']),
-            'feeder_port'     => (string) $pick(['feeder_port', 'port']),
-            'feeder_username' => (string) $pick(['feeder_username', 'username', 'user']),
-            'feeder_password' => (string) $pick(['feeder_password', 'password', 'pass']),
-            'feeder_endpoint' => (string) $pick(['feeder_endpoint', 'endpoint', 'path']),
-        ];
-
-        if ($config['feeder_endpoint'] === '') {
-            $config['feeder_endpoint'] = '/ws/live2.php';
         }
 
-        return $config;
+        $plain = laravel_decrypt($payload);
+        if ($plain === FALSE) {
+            return '';
+        }
+
+        $decoded = $this->decodePayload($plain);
+
+        if (is_array($decoded)) {
+            $scalar = $this->firstScalar($decoded);
+            return $scalar === NULL ? '' : (string) $scalar;
+        }
+
+        return is_scalar($decoded) ? (string) $decoded : '';
     }
 
-    public function saveConfig($data, $user_id)
+    private function decodePayload($plain)
     {
-        foreach ($this->fields as $key => $description) {
-            if (!array_key_exists($key, $data)) {
-                continue;
-            }
-
-            $value = (string) $data[$key];
-
-            if ($key === 'feeder_password' && $value === '') {
-                continue;
-            }
-
-            if ($key === 'feeder_endpoint' && $value === '') {
-                $value = '/ws/live2.php';
-            }
-
-            $encrypted = $this->encrypt($value);
-            if ($encrypted === FALSE) {
-                return FALSE;
-            }
-
-            $this->feeder_model->save_credential($key, $encrypted, $description, $user_id);
+        if (!is_string($plain)) {
+            return $plain;
         }
 
-        return TRUE;
+        $decoded = json_decode($plain, TRUE);
+        if (is_array($decoded) || (is_scalar($decoded) && $decoded !== NULL)) {
+            return $decoded;
+        }
+
+        if (preg_match('/^(a:\d+:|s:\d+:|i:\d+;|b:[01];|N;|d:)/', $plain)) {
+            $error = NULL;
+            set_error_handler(function () use (&$error) {
+                $error = TRUE;
+                return TRUE;
+            });
+            $unserialized = unserialize($plain);
+            restore_error_handler();
+
+            if (!$error && $unserialized !== FALSE) {
+                if (is_string($unserialized)) {
+                    $inner = json_decode($unserialized, TRUE);
+                    if (is_array($inner) || (is_scalar($inner) && $inner !== NULL)) {
+                        return $inner;
+                    }
+                }
+                return $unserialized;
+            }
+        }
+
+        return $plain;
+    }
+
+    private function firstScalar(array $data)
+    {
+        foreach (['value', 'url', 'host', 'base_url', 'port', 'username', 'user', 'password', 'pass', 'endpoint', 'path', 'data'] as $k) {
+            if (array_key_exists($k, $data) && is_scalar($data[$k])) {
+                return $data[$k];
+            }
+        }
+        return NULL;
+    }
+
+    private function hasCredentialRows()
+    {
+        foreach (array_keys($this->fields) as $key) {
+            $row = $this->feeder_model->get_credential($key);
+            if ($row && trim((string) $row->key_value) !== '') {
+                return TRUE;
+            }
+        }
+        return FALSE;
     }
 
     public function testConnection()
     {
-        $row = $this->feeder_model->get_credential('_feeder_config');
-        if ($row && trim((string) $row->key_value) !== '' && $this->getConfigUnified() === NULL) {
-            return ['status' => FALSE, 'message' => 'Konfigurasi `_feeder_config` tidak dapat didekripsi. Periksa APP_KEY Filament pada application/config/feeder.php.'];
-        }
-
         $config = $this->getConfig();
+
+        if (trim($config['feeder_url']) === '' && $this->hasCredentialRows()) {
+            return ['status' => FALSE, 'message' => 'Konfigurasi Feeder tidak dapat didekripsi. Pastikan APP_KEY Filament benar pada $config[\'laravel_app_key\'] di application/config/config.php.'];
+        }
 
         if (trim($config['feeder_url']) === '') {
             return ['status' => FALSE, 'message' => 'URL API Feeder belum diisi.'];
@@ -211,12 +169,9 @@ class FeederService extends MY_Service {
             return ['status' => FALSE, 'message' => 'Koneksi berhasil namun token tidak diterima.'];
         }
 
-        $user_id = (int) $this->session->userdata('id');
-        $this->feeder_model->save_credential('feeder_token', $this->encrypt($token), 'Token hasil GetToken', $user_id);
-
         return [
             'status'  => TRUE,
-            'message' => 'Koneksi ke Feeder berhasil. Token diperoleh dan disimpan.',
+            'message' => 'Koneksi ke Feeder berhasil.',
         ];
     }
 
@@ -225,7 +180,7 @@ class FeederService extends MY_Service {
         if (!$force) {
             $row = $this->feeder_model->get_credential('feeder_token');
             if ($row) {
-                $token = $this->decrypt($row->key_value);
+                $token = $this->parseToken($row->key_value);
                 if ($token !== '') {
                     return $token;
                 }
@@ -256,15 +211,52 @@ class FeederService extends MY_Service {
             return '';
         }
 
-        $token = $result['data']['token'] ?? ($result['token'] ?? '');
-        if ($token === '') {
+        return (string) ($result['data']['token'] ?? ($result['token'] ?? ''));
+    }
+
+    private function parseToken($payload)
+    {
+        if ($payload === NULL || trim((string) $payload) === '') {
             return '';
         }
 
-        $user_id = (int) $this->session->userdata('id');
-        $this->feeder_model->save_credential('feeder_token', $this->encrypt($token), 'Token hasil GetToken', $user_id);
+        $plain = laravel_decrypt($payload);
+        if ($plain === FALSE) {
+            return '';
+        }
 
-        return $token;
+        $data = $this->decodePayload($plain);
+
+        if (is_array($data)) {
+            $token   = $this->pick($data, ['token', 'access_token', 'bearer_token']);
+            $expired = $this->pick($data, ['expired_at', 'expires_at', 'expiry', 'exp', 'expired']);
+
+            if ($token === NULL || $this->isExpired($expired)) {
+                return '';
+            }
+
+            return trim((string) $token);
+        }
+
+        return trim((string) $plain);
+    }
+
+    private function isExpired($expired)
+    {
+        if ($expired === NULL || $expired === '') {
+            return FALSE;
+        }
+
+        if (is_numeric($expired)) {
+            $ts = (int) $expired;
+            if ($ts > 9999999999) {
+                $ts = (int) ($ts / 1000);
+            }
+            return $ts <= time();
+        }
+
+        $ts = strtotime((string) $expired);
+        return $ts !== FALSE && $ts <= time();
     }
 
     public function request($act, $params = [], $retry = TRUE)
@@ -522,19 +514,5 @@ class FeederService extends MY_Service {
         }
 
         return $url . $path;
-    }
-
-    private function encrypt($value)
-    {
-        return $this->encryption->encrypt($value);
-    }
-
-    private function decrypt($value)
-    {
-        if ($value === NULL || $value === '') {
-            return '';
-        }
-        $plain = $this->encryption->decrypt($value);
-        return ($plain === FALSE) ? '' : $plain;
     }
 }

@@ -32,6 +32,26 @@ class FeederService extends MY_Service {
         return $config;
     }
 
+    public function diagnostics()
+    {
+        $app_key = trim((string) $this->config->item('laravel_app_key'));
+
+        $has_rows = FALSE;
+        $decrypt_ok = FALSE;
+
+        $row = $this->feeder_model->get_credential('feeder_url');
+        if ($row && trim((string) $row->key_value) !== '') {
+            $has_rows = TRUE;
+            $decrypt_ok = laravel_decrypt($row->key_value) !== FALSE;
+        }
+
+        return [
+            'app_key_set' => $app_key !== '',
+            'has_rows'    => $has_rows,
+            'decrypt_ok'  => $decrypt_ok,
+        ];
+    }
+
     private function decryptValue($payload)
     {
         if ($payload === NULL || trim((string) $payload) === '') {

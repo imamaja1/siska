@@ -30,6 +30,7 @@ class Feeder extends CI_Controller {
             'title_h1'  => '<li>Pengaturan</li>',
             'title_h2'  => '<li>Konfigurasi Feeder</li>',
             'feeder'    => $config,
+            'diagnostik' => $this->feederservice->diagnostics(),
         ];
         $this->load->view('admin/template/V_main', $data);
     }

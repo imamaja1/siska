@@ -5,6 +5,18 @@
         <h3 class="box-title"><i class="fa fa-plug"></i> Konfigurasi API Feeder PDDIKTI</h3>
     </div>
     <div class="box-body"><br>
+        <?php if (isset($diagnostik) && !$diagnostik['app_key_set']): ?>
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i> <strong>APP_KEY Filament belum diset.</strong>
+                Isi <code>$config['laravel_app_key']</code> di <code>application/config/config.php</code> dengan APP_KEY server Filament
+                (<code>base64:...</code>) agar konfigurasi dapat didekripsi.
+            </div>
+        <?php elseif (isset($diagnostik) && $diagnostik['has_rows'] && !$diagnostik['decrypt_ok']): ?>
+            <div class="alert alert-danger">
+                <i class="fa fa-times-circle"></i> <strong>Dekripsi gagal.</strong>
+                APP_KEY Filament kemungkinan salah, atau data di <code>feeder_credentials</code> tidak terenkripsi format Laravel.
+            </div>
+        <?php endif; ?>
         <div class="alert alert-info">
             <i class="fa fa-info-circle"></i> Konfigurasi Feeder dikelola melalui aplikasi <strong>Filament</strong> (tabel <code>feeder_credentials</code>).
             Halaman ini hanya menampilkan konfigurasi tersebut dan tidak dapat mengubahnya.

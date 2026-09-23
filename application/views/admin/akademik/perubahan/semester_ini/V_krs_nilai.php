@@ -107,6 +107,7 @@
                 <h4><i class="fa fa-info-circle"></i> Informasi</h4>
                 <p>Belum ada data matakulaih dan nilai pada semester ini.</p>
             </div>
+            <script>swal("Data tidak ditemukan", "Belum ada data matakuliah dan nilai pada semester ini.", "error");</script>
         <?php endif; ?>
     </div>
     <!--    modal tambah matakuliah-->

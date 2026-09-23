@@ -6,7 +6,7 @@
             </div>
             <div class="box-body">
                 <form id="form-filter" class="form-horizontal" method="post"
-                      action="<?= site_url('admin/audit/hasil') ?>">
+                      action="<?= site_url('admin/audit/nilai_dosen_khs/hasil') ?>">
                     <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label class="control-label col-sm-2">Tahun Akademik <span class="text-danger">*</span></label>

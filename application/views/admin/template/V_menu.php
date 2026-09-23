@@ -238,7 +238,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Audit Nilai -->
-            <?php if (has_access($acc, 'Audit')): ?>
+            <?php if (has_access($acc, ['Audit', 'Audit_mahasiswa', 'Audit_kelas'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-check-square-o"></i>
@@ -246,9 +246,15 @@ function has_access($acc, $controllers, $role = 0) {
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?= site_url('admin/audit'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
-                    <li><a href="<?= site_url('admin/audit/feeder_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
-                    <li><a href="<?= site_url('admin/audit/feeder_kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
+                    <?php if (has_access($acc, 'Audit')): ?>
+                    <li><a href="<?= site_url('admin/audit/nilai_dosen_khs'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Audit_mahasiswa')): ?>
+                    <li><a href="<?= site_url('admin/audit/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Audit_kelas')): ?>
+                    <li><a href="<?= site_url('admin/audit/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
+                    <?php endif; ?>
                 </ul>
             </li>
             <?php endif; ?>

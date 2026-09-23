@@ -65,6 +65,7 @@ class Semester_lalu extends CI_Controller {
 //            $data_penilaian = $this->Krs_model->kurikulum_penilaian($angkatan, $kode_program_studi);
             $data_krs = $this->Krs_model->khs($kode_krs);
 
+            if (is_array($data_krs) && count($data_krs) > 0):
             $khs['sksn'] = 0;
             $khs['total_sks'] = 0;
             $khs['total_bobot'] = 0;
@@ -103,6 +104,7 @@ class Semester_lalu extends CI_Controller {
 
             $data['data'] = $khs;
             $data['matakuliah'] = $this->m_data_kurikulum->get_matakuliah_bynim($nim);
+            endif;
         endif;
         $data['judul'] = "Krs dan NIlai";
         $data['sub_judul'] = "Semester Lalu";

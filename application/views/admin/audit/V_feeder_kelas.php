@@ -6,7 +6,7 @@
             </div>
             <div class="box-body">
                 <form id="form-filter" class="form-horizontal" method="post"
-                      action="<?= site_url('admin/audit/feeder_kelas_hasil') ?>">
+                      action="<?= site_url('admin/audit/kelas/hasil') ?>">
                     <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                     <div class="form-group">
                         <label class="control-label col-sm-2">Tahun Akademik <span class="text-danger">*</span></label>
@@ -61,8 +61,8 @@
 
 <script>
     var loading = "<p style='text-align: center'><img src='<?= base_url("assets/siska/img/logo-ubg.gif") ?>' alt=''></p>";
-    var URL_MATAKULIAH = '<?= site_url("admin/audit/get_matakuliah/") ?>';
-    var URL_KELAS = '<?= site_url("admin/audit/get_kelas/") ?>';
+    var URL_MATAKULIAH = '<?= site_url("admin/audit/kelas/get_matakuliah/") ?>';
+    var URL_KELAS = '<?= site_url("admin/audit/kelas/get_kelas/") ?>';
 
     function loadMatakuliah() {
         var ta = $('#kode-tahun-akademik').val();

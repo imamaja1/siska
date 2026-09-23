@@ -4,7 +4,7 @@ class Audit_feeder_model extends CI_Model {
 
     public function getNilaiSiskaByNim($nim, $kode_tahun_akademik)
     {
-        $sql = "SELECT m.nim, m.nama_mahasiswa, mk.kode_matakuliah, mk.nama_matakuliah,
+        $sql = "SELECT k.nim, m.nama_mahasiswa, mk.kode_matakuliah, mk.nama_matakuliah,
                        (SELECT nk.nama_kelas
                           FROM kelas_mahasiswa km
                           JOIN kelas kl ON kl.kelas_id = km.kelas_id
@@ -15,7 +15,7 @@ class Audit_feeder_model extends CI_Model {
                   FROM krs k
                   JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
                   LEFT JOIN khs_detail kd ON kd.kode_krs_detail = krd.kode_krs_detail
-                  JOIN mahasiswa m ON m.nim = k.nim
+                  LEFT JOIN mahasiswa m ON m.nim = k.nim
                   JOIN matakuliah mk ON mk.id_matakuliah = krd.id_matakuliah
                  WHERE k.nim = ? AND k.kode_tahun_akademik = ?
                  ORDER BY mk.nama_matakuliah";
@@ -83,6 +83,15 @@ class Audit_feeder_model extends CI_Model {
             ->where('kl.kode_program_studi', $kode_program_studi)
             ->where('kl.id_matakuliah', $id_matakuliah)
             ->order_by('nk.nama_kelas', 'ASC')
+            ->get()->result_object();
+    }
+
+    public function getTahunAkademikFrom($start_tahun_akademik)
+    {
+        return $this->db->select('kode_tahun_akademik, tahun_akademik, semester')
+            ->from('tahun_akademik')
+            ->where('tahun_akademik >=', $start_tahun_akademik)
+            ->order_by('kode_tahun_akademik', 'ASC')
             ->get()->result_object();
     }
 }

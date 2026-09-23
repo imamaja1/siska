@@ -6,23 +6,25 @@
             </div>
             <div class="box-body">
                 <form id="form-filter" class="form-horizontal" method="post"
-                      action="<?= site_url('admin/audit/feeder_mahasiswa_hasil') ?>">
+                      action="<?= site_url('admin/audit/mahasiswa/hasil') ?>">
                     <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">NIM <span class="text-danger">*</span></label>
+                        <div class="col-sm-4 col-xs-12">
+                            <input required type="text" name="nim" class="form-control" placeholder="Masukkan NIM mahasiswa">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2">Tahun Akademik <span class="text-danger">*</span></label>
                         <div class="col-sm-4 col-xs-12">
                             <select required name="kode_tahun_akademik" class="form-control select2">
                                 <option value="" selected disabled>Pilih</option>
+                                <option value="all">Semua Tahun Akademik</option>
                                 <?php foreach ($tahun_akademik as $row) : ?>
                                     <option value="<?= e($row->kode_tahun_akademik) ?>"><?= e($row->tahun_akademik) ?> - <?= $row->semester == 1 ? 'Ganjil' : 'Genap' ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2">NIM <span class="text-danger">*</span></label>
-                        <div class="col-sm-4 col-xs-12">
-                            <input required type="text" name="nim" class="form-control" placeholder="Masukkan NIM mahasiswa">
+                            <small class="text-muted">Pilih "Semua Tahun Akademik" untuk audit dari TA angkatan mahasiswa sampai TA terbaru.</small>
                         </div>
                     </div>
                     <div class="form-group">

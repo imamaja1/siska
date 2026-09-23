@@ -2,7 +2,7 @@
     <div class="box box-primary">
         <div class="box-header">
             <h4><i class="fa fa-table"></i> <?= e($judul_hasil) ?></h4>
-            <small><?= e($sub_hasil) ?> | ID Semester Feeder: <?= e($id_semester) ?></small>
+            <small><?= e($sub_hasil) ?><?php if (empty($tampil_ta)) : ?> | ID Semester Feeder: <?= e($id_semester) ?><?php endif; ?></small>
         </div>
         <div class="box-body">
             <?php $summary = $hasil['summary']; ?>
@@ -27,7 +27,11 @@
                 </div>
             <?php elseif (empty($hasil['feeder_total'])) : ?>
                 <div class="callout callout-info flat">
-                    <p><i class="fa fa-info-circle"></i> Tidak ada data nilai pada Feeder untuk semester ini. Pastikan ID semester (<?= e($id_semester) ?>) tersedia di Feeder.</p>
+                    <?php if (empty($tampil_ta)) : ?>
+                        <p><i class="fa fa-info-circle"></i> Tidak ada data nilai pada Feeder untuk semester ini. Pastikan ID semester (<?= e($id_semester) ?>) tersedia di Feeder.</p>
+                    <?php else : ?>
+                        <p><i class="fa fa-info-circle"></i> Tidak ada data nilai pada Feeder untuk tahun akademik terkait.</p>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
 
@@ -45,6 +49,7 @@
                             <th>No</th>
                             <th>NIM</th>
                             <th>Nama</th>
+                            <?php if (!empty($tampil_ta)) : ?><th>Tahun Akademik</th><?php endif; ?>
                             <th>Matakuliah</th>
                             <th>Kelas</th>
                             <th>Nilai SISKA (Angka)</th>
@@ -60,6 +65,7 @@
                             <td align="center"><?= $no++ ?></td>
                             <td><?= e($row->nim) ?></td>
                             <td><?= e($row->nama_mahasiswa) ?></td>
+                            <?php if (!empty($tampil_ta)) : ?><td><?= e($row->tahun_akademik) ?> - <?= e($row->semester_label) ?></td><?php endif; ?>
                             <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></td>
                             <td><?= !empty($row->nama_kelas) ? e($row->nama_kelas) : '-' ?></td>
                             <td align="center"><?= $row->nilai_siska !== NULL && $row->nilai_siska !== '' ? e($row->nilai_siska) : '-' ?></td>

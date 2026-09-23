@@ -1,3 +1,4 @@
+<?= $this->session->flashdata('info') ?>
 <br>
 <div class="box box-solid flat">
 	<div class="box-body" style="padding-top:10px;">

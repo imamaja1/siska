@@ -92,6 +92,7 @@
                     <h4><i class="fa fa-info-circle"></i> Informasi!</h4>
                     <p>Mahasiswa ini tidak memiliki matakuliah yang diambil.</p>
                 </div>
+                <script>swal("Data tidak ditemukan", "Mahasiswa ini tidak memiliki matakuliah yang diambil.", "error");</script>
                 <?php endif; ?>
             </div>
         </div>

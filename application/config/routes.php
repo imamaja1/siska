@@ -114,3 +114,14 @@ $route['admin/pengaturan/distribusi_perwalian/(:any)'] = 'admin/pengaturan/Distr
 $route['admin/pengaturan/backup_database'] = 'admin/pengaturan/Backup_database/index';
 $route['admin/pengaturan/backup_database/export'] = 'admin/pengaturan/Backup_database/export';
 $route['admin/pengaturan/backup_database/import'] = 'admin/pengaturan/Backup_database/import';
+
+// Audit Nilai
+$route['admin/audit'] = 'admin/Audit/index';
+$route['admin/audit/nilai_dosen_khs'] = 'admin/Audit/nilai_dosen_khs';
+$route['admin/audit/nilai_dosen_khs/hasil'] = 'admin/Audit/hasil';
+$route['admin/audit/mahasiswa'] = 'admin/Audit_mahasiswa/index';
+$route['admin/audit/mahasiswa/hasil'] = 'admin/Audit_mahasiswa/hasil';
+$route['admin/audit/kelas'] = 'admin/Audit_kelas/index';
+$route['admin/audit/kelas/hasil'] = 'admin/Audit_kelas/hasil';
+$route['admin/audit/kelas/get_matakuliah/(:any)/(:any)'] = 'admin/Audit_kelas/get_matakuliah/$1/$2';
+$route['admin/audit/kelas/get_kelas/(:any)/(:any)/(:any)'] = 'admin/Audit_kelas/get_kelas/$1/$2/$3';

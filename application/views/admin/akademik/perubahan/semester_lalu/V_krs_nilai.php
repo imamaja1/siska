@@ -1,4 +1,4 @@
-<?php if (isset($data)) : ?>
+<?php if (isset($data['data_nilai'])) : ?>
 <div class="box box-solid flat">
     <div class="box-body">
         <a class="btn btn-primary btn-sm pull-right flat" onclick="$('#tambah-matakuliah').modal('toggle');"><i
@@ -153,6 +153,7 @@
 
         <p>Data KRS dan Nilai semester lalu tidak ditemukan untuk nim mahasiswa bersangkutan.</p>
     </div>
+    <script>swal("Data tidak ditemukan", "Data KRS dan Nilai semester lalu tidak ditemukan untuk NIM tersebut.", "error");</script>
 <?php endif; ?>
 
 <script type="text/javascript">

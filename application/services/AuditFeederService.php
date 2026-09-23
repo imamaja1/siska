@@ -123,6 +123,136 @@ class AuditFeederService extends MY_Service {
         ];
     }
 
+    public function petikanFeeder($nim)
+    {
+        $nim = trim((string) $nim);
+        if ($nim === '') {
+            return ['error' => 'NIM wajib diisi.'];
+        }
+
+        $result = $this->feederservice->getNilaiMahasiswa($nim);
+        if (!empty($result['error'])) {
+            return ['error' => $result['error']];
+        }
+
+        $rows = $result['rows'] ?? [];
+        if (empty($rows)) {
+            return ['error' => 'Data nilai Feeder tidak ditemukan untuk NIM tersebut.'];
+        }
+
+        $header = [
+            'nim'                => $rows[0]['nim'] !== '' ? $rows[0]['nim'] : $nim,
+            'nama_mahasiswa'     => $rows[0]['nama_mahasiswa'],
+            'nama_program_studi' => $rows[0]['nama_program_studi'],
+            'angkatan'           => $rows[0]['angkatan'],
+        ];
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            $key = $row['id_semester'] !== '' ? $row['id_semester'] : $row['nama_semester'];
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'id_semester'   => $row['id_semester'],
+                    'nama_semester' => $row['nama_semester'],
+                    'items'         => [],
+                    'total_sks'     => 0,
+                    'total_sksn'    => 0,
+                    'ips'           => 0,
+                ];
+            }
+
+            $sks = is_numeric($row['sks']) ? (float) $row['sks'] : 0;
+            $indeks = is_numeric($row['nilai_indeks']) ? (float) $row['nilai_indeks'] : NULL;
+
+            $grouped[$key]['items'][] = [
+                'kode_mata_kuliah'    => $row['kode_mata_kuliah'],
+                'nama_mata_kuliah'    => $row['nama_mata_kuliah'],
+                'sks'                 => $sks,
+                'sks_tampil'          => number_format($sks, 2, '.', ''),
+                'nilai_angka'         => $row['nilai_angka'],
+                'nilai_angka_tampil'  => $this->formatNilaiTampil($row['nilai_angka']),
+                'nilai_huruf'         => $row['nilai_huruf'],
+                'nilai_huruf_tampil'  => ($row['nilai_huruf'] === NULL || $row['nilai_huruf'] === '') ? 'null' : $row['nilai_huruf'],
+                'nilai_indeks'        => $row['nilai_indeks'],
+                'nilai_indeks_tampil' => $this->formatNilaiTampil($row['nilai_indeks']),
+            ];
+
+            if ($indeks !== NULL) {
+                $grouped[$key]['total_sks']  += $sks;
+                $grouped[$key]['total_sksn'] += $indeks * $sks;
+            }
+        }
+
+        ksort($grouped);
+
+        foreach ($grouped as $key => $g) {
+            $grouped[$key]['ips'] = $g['total_sks'] > 0 ? $g['total_sksn'] / $g['total_sks'] : 0;
+        }
+
+        // Konsolidasi: satu baris per kode matakuliah, ambil nilai terbaik (indeks tertinggi, lalu angka tertinggi)
+        $best = [];
+        foreach ($rows as $row) {
+            $kode = $row['kode_mata_kuliah'];
+            if ($kode === '') {
+                continue;
+            }
+
+            $indeks = is_numeric($row['nilai_indeks']) ? (float) $row['nilai_indeks'] : -1;
+            $angka  = is_numeric($row['nilai_angka']) ? (float) $row['nilai_angka'] : -1;
+
+            if (!isset($best[$kode])
+                || $indeks > $best[$kode]['_indeks']
+                || ($indeks == $best[$kode]['_indeks'] && $angka > $best[$kode]['_angka'])) {
+                $best[$kode] = [
+                    '_indeks'          => $indeks,
+                    '_angka'           => $angka,
+                    'kode_mata_kuliah' => $row['kode_mata_kuliah'],
+                    'nama_mata_kuliah' => $row['nama_mata_kuliah'],
+                    'nama_semester'    => $row['nama_semester'] !== '' ? $row['nama_semester'] : $row['id_semester'],
+                    'sks'              => is_numeric($row['sks']) ? (float) $row['sks'] : 0,
+                    'nilai_angka'      => $row['nilai_angka'],
+                    'nilai_huruf'      => $row['nilai_huruf'],
+                    'nilai_indeks'     => $row['nilai_indeks'],
+                ];
+            }
+        }
+
+        ksort($best);
+
+        $konsolidasi = [];
+        $grand_sks = 0;
+        $grand_sksn = 0;
+        foreach ($best as $b) {
+            $sks = $b['sks'];
+            $indeks = $b['_indeks'] >= 0 ? $b['_indeks'] : NULL;
+
+            $konsolidasi[] = [
+                'kode_mata_kuliah'    => $b['kode_mata_kuliah'],
+                'nama_mata_kuliah'    => $b['nama_mata_kuliah'],
+                'nama_semester'       => $b['nama_semester'],
+                'sks'                 => $sks,
+                'sks_tampil'          => number_format($sks, 2, '.', ''),
+                'nilai_angka_tampil'  => $this->formatNilaiTampil($b['nilai_angka']),
+                'nilai_huruf_tampil'  => ($b['nilai_huruf'] === NULL || $b['nilai_huruf'] === '') ? 'null' : $b['nilai_huruf'],
+                'nilai_indeks_tampil' => $this->formatNilaiTampil($b['nilai_indeks']),
+            ];
+
+            if ($indeks !== NULL) {
+                $grand_sks  += $sks;
+                $grand_sksn += $indeks * $sks;
+            }
+        }
+
+        return [
+            'header'      => $header,
+            'semester'    => array_values($grouped),
+            'konsolidasi' => $konsolidasi,
+            'total_sks'   => $grand_sks,
+            'total_sksn'  => $grand_sksn,
+            'ipk'         => $grand_sks > 0 ? $grand_sksn / $grand_sks : 0,
+        ];
+    }
+
     private function susunHasil($siska_rows, $feeder)
     {
         $map = $feeder['map'] ?? [];

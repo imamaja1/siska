@@ -297,6 +297,71 @@ class FeederService extends MY_Service {
         ];
     }
 
+    public function getNilaiMahasiswa($nim)
+    {
+        $nim = trim((string) $nim);
+        if ($nim === '') {
+            return ['rows' => [], 'total' => 0, 'error' => 'NIM kosong.'];
+        }
+
+        $filter = "nim='" . str_replace("'", "\\'", $nim) . "'";
+
+        $rows_out = [];
+        $offset = 0;
+        $limit = 500;
+        $guard = 0;
+
+        while (TRUE) {
+            $guard++;
+            if ($guard > 100) {
+                break;
+            }
+
+            $res = $this->request('GetDetailNilaiPerkuliahanKelas', [
+                'filter' => $filter,
+                'order'  => '',
+                'limit'  => (string) $limit,
+                'offset' => (string) $offset,
+            ]);
+
+            if (isset($res['error'])) {
+                return ['rows' => [], 'total' => 0, 'error' => $res['error']];
+            }
+
+            $rows = $res['data'] ?? [];
+            if (!is_array($rows) || empty($rows)) {
+                break;
+            }
+
+            foreach ($rows as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $rows_out[] = [
+                    'id_semester'        => (string) $this->pick($row, ['id_semester', 'id_smt']),
+                    'nama_semester'      => (string) $this->pick($row, ['nama_semester', 'nm_smt']),
+                    'kode_mata_kuliah'   => (string) $this->pick($row, ['kode_mata_kuliah', 'kode_matakuliah']),
+                    'nama_mata_kuliah'   => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
+                    'sks'                => $this->pick($row, ['sks_mata_kuliah', 'sks']),
+                    'nilai_angka'        => $this->pick($row, ['nilai_angka', 'nilai']),
+                    'nilai_huruf'        => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
+                    'nilai_indeks'       => $this->pick($row, ['nilai_indeks', 'indeks']),
+                    'nim'                => (string) $this->pick($row, ['nim', 'NIM']),
+                    'nama_mahasiswa'     => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
+                    'nama_program_studi' => (string) $this->pick($row, ['nama_program_studi', 'jurusan']),
+                    'angkatan'           => (string) $this->pick($row, ['angkatan']),
+                ];
+            }
+
+            if (count($rows) < $limit) {
+                break;
+            }
+            $offset += $limit;
+        }
+
+        return ['rows' => $rows_out, 'total' => count($rows_out), 'error' => ''];
+    }
+
     public function idSemester($tahun_akademik, $semester)
     {
         $year = (int) substr(trim((string) $tahun_akademik), 0, 4);

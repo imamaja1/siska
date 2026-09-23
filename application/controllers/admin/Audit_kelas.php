@@ -27,7 +27,7 @@ class Audit_kelas extends CI_Controller {
     public function index()
     {
         $data['judul'] = 'Audit Nilai';
-        $data['sub_judul'] = 'Nilai SISKA vs Feeder - Kelas';
+        $data['sub_judul'] = 'Feeder & SISKA Kelas';
         $data['content'] = 'admin/audit/V_feeder_kelas';
         $data['tahun_akademik'] = $this->m_tahun_akademik->get();
         $data['prodi'] = $this->Nama_jurusan_model->get();

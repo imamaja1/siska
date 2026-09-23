@@ -160,10 +160,10 @@ class AuditFeederService extends MY_Service {
                 'kode_matakuliah' => $kode,
                 'nama_matakuliah' => $r->nama_matakuliah,
                 'nama_kelas'      => $r->nama_kelas,
-                'nilai_siska'     => ($nilai_siska === NULL || $nilai_siska === '') ? NULL : number_format(round((float) $nilai_siska, 2), 2, '.', ''),
-                'nilai_huruf_siska' => $huruf_siska,
-                'nilai_angka'     => ($angka === NULL || $angka === '') ? NULL : number_format(round((float) $angka, 2), 2, '.', ''),
-                'nilai_huruf'     => $huruf,
+                'nilai_siska'     => $this->formatNilaiTampil($nilai_siska),
+                'nilai_huruf_siska' => ($huruf_siska === NULL || $huruf_siska === '') ? 'null' : $huruf_siska,
+                'nilai_angka'     => $this->formatNilaiTampil($angka),
+                'nilai_huruf'     => ($huruf === NULL || $huruf === '') ? 'null' : $huruf,
                 'status'          => $status,
             ];
         }
@@ -175,6 +175,17 @@ class AuditFeederService extends MY_Service {
             'feeder_total' => $feeder['total'] ?? 0,
             'feeder_error' => $feeder['error'] ?? '',
         ];
+    }
+
+    private function formatNilaiTampil($v)
+    {
+        if ($v === NULL || $v === '') {
+            return 'null';
+        }
+        if (!is_numeric($v)) {
+            return 'NaN';
+        }
+        return number_format(round((float) $v, 2), 2, '.', '');
     }
 
     private function nilaiHurufSiska($nim, $semester, $nilai_akhir)

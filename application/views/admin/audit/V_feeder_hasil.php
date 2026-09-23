@@ -68,10 +68,10 @@
                             <?php if (!empty($tampil_ta)) : ?><td><?= e($row->tahun_akademik) ?> - <?= e($row->semester_label) ?></td><?php endif; ?>
                             <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></td>
                             <td><?= !empty($row->nama_kelas) ? e($row->nama_kelas) : '-' ?></td>
-                            <td align="center"><?= $row->nilai_siska !== NULL && $row->nilai_siska !== '' ? e($row->nilai_siska) : '-' ?></td>
-                            <td align="center"><?= !empty($row->nilai_huruf_siska) ? e($row->nilai_huruf_siska) : '-' ?></td>
-                            <td align="center"><?= $row->nilai_angka !== NULL && $row->nilai_angka !== '' ? e($row->nilai_angka) : '-' ?></td>
-                            <td align="center"><?= $row->nilai_huruf !== NULL && $row->nilai_huruf !== '' ? e($row->nilai_huruf) : '-' ?></td>
+                            <td align="center"><?= e($row->nilai_siska) ?></td>
+                            <td align="center"><?= e($row->nilai_huruf_siska) ?></td>
+                            <td align="center"><?= e($row->nilai_angka) ?></td>
+                            <td align="center"><?= e($row->nilai_huruf) ?></td>
                             <td align="center">
                                 <?php if ($row->status == 'Sesuai') : ?>
                                     <span class="label label-success">Sesuai</span>

@@ -5,42 +5,48 @@
         <h3 class="box-title"><i class="fa fa-plug"></i> Konfigurasi API Feeder PDDIKTI</h3>
     </div>
     <div class="box-body"><br>
-        <form action="<?= site_url('admin/pengaturan/feeder/simpan'); ?>" method="POST" class="form-horizontal" id="form-feeder">
-            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+        <div class="alert alert-info">
+            <i class="fa fa-info-circle"></i> Konfigurasi Feeder dikelola melalui aplikasi <strong>Filament</strong> (baris <code>_feeder_config</code>).
+            Halaman ini hanya menampilkan konfigurasi tersebut dan tidak dapat mengubahnya.
+        </div>
+        <form class="form-horizontal" id="form-feeder">
             <div class="form-group">
                 <label class="control-label col-sm-3">URL API Feeder :</label>
                 <div class="col-sm-5">
-                    <input class="form-control" type="text" name="feeder_url" placeholder="http://localhost" value="<?= set_value('feeder_url', e($feeder['feeder_url'])) ?>">
+                    <input class="form-control" type="text" value="<?= e($feeder['feeder_url']) ?>" readonly disabled>
                     <small class="text-muted">Alamat host Neo Feeder, tanpa port dan tanpa path.</small>
-                    <small style="color: red"><?= form_error('feeder_url') ?></small>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3">Port API Feeder :</label>
                 <div class="col-sm-5">
-                    <input class="form-control" type="text" name="feeder_port" placeholder="3003" value="<?= set_value('feeder_port', e($feeder['feeder_port'])) ?>">
+                    <input class="form-control" type="text" value="<?= e($feeder['feeder_port']) ?>" readonly disabled>
                     <small class="text-muted">Port web service Neo Feeder (default 3003).</small>
-                    <small style="color: red"><?= form_error('feeder_port') ?></small>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3">Username Feeder :</label>
                 <div class="col-sm-5">
-                    <input class="form-control" type="text" name="feeder_username" placeholder="username feeder" value="<?= set_value('feeder_username', e($feeder['feeder_username'])) ?>">
-                    <small style="color: red"><?= form_error('feeder_username') ?></small>
+                    <input class="form-control" type="text" value="<?= e($feeder['feeder_username']) ?>" readonly disabled>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3">Password Feeder :</label>
                 <div class="col-sm-5">
-                    <input class="form-control" type="password" name="feeder_password" placeholder="Kosongkan jika tidak diubah" autocomplete="new-password">
-                    <small class="text-muted">Password disimpan terenkripsi. Biarkan kosong untuk mempertahankan password yang tersimpan.</small>
+                    <input class="form-control" type="password" value="<?= $feeder['feeder_password'] !== '' ? '********' : '' ?>" readonly disabled>
+                    <small class="text-muted">Password disimpan terenkripsi oleh aplikasi Filament.</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Endpoint Feeder :</label>
+                <div class="col-sm-5">
+                    <input class="form-control" type="text" value="<?= e($feeder['feeder_endpoint']) ?>" readonly disabled>
+                    <small class="text-muted">Endpoint web service Feeder (default /ws/live2.php).</small>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3"></label>
                 <div class="col-sm-5">
-                    <button type="submit" class="btn btn-primary flat"><i class="fa fa-check-circle"></i> Simpan</button>
                     <button type="button" class="btn btn-warning flat" id="btn-test-koneksi"><i class="fa fa-wifi"></i> Test Koneksi</button>
                     <button type="reset" class="btn btn-default flat"><i class="fa fa-refresh"></i> Reset</button>
                 </div>

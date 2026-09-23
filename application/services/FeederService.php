@@ -21,9 +21,64 @@ class FeederService extends MY_Service {
             'cipher' => 'aes-256',
             'mode'   => 'cbc',
         ]);
+
+        $this->config->load('feeder', TRUE);
+        $app_key = trim((string) $this->config->item('feeder_app_key', 'feeder'));
+        if ($app_key === '') {
+            $app_key = 'base64:' . base64_encode((string) $this->config->item('encryption_key'));
+        }
+        $this->load->library('laravel_crypt', [
+            'key'    => $app_key,
+            'cipher' => (string) $this->config->item('feeder_cipher', 'feeder'),
+        ]);
     }
 
     public function getConfig()
+    {
+        $unified = $this->getConfigUnified();
+        if ($unified !== NULL) {
+            return $unified;
+        }
+
+        return $this->getConfigLegacy();
+    }
+
+    /**
+     * Baca konfigurasi tunggal dari baris `_feeder_config` yang ditulis
+     * aplikasi Filament (payload terenkripsi format Laravel).
+     *
+     * @return array|NULL NULL jika baris tidak ada atau gagal didekripsi.
+     */
+    private function getConfigUnified()
+    {
+        $row = $this->feeder_model->get_credential('_feeder_config');
+        if (!$row || trim((string) $row->key_value) === '') {
+            return NULL;
+        }
+
+        $data = $this->laravel_crypt->decrypt($row->key_value);
+        if ($data === NULL) {
+            return NULL;
+        }
+
+        if (is_string($data)) {
+            $decoded = json_decode($data, TRUE);
+            if (is_array($decoded)) {
+                $data = $decoded;
+            }
+        }
+
+        if (!is_array($data)) {
+            return NULL;
+        }
+
+        return $this->normalizeConfig($data);
+    }
+
+    /**
+     * Fallback: konfigurasi lama yang tersimpan pada baris terpisah.
+     */
+    private function getConfigLegacy()
     {
         $config = [];
         foreach (array_keys($this->fields) as $key) {
@@ -33,6 +88,36 @@ class FeederService extends MY_Service {
         if ($config['feeder_endpoint'] === '') {
             $config['feeder_endpoint'] = '/ws/live2.php';
         }
+        return $config;
+    }
+
+    /**
+     * Normalisasi struktur JSON `_feeder_config` agar toleran terhadap
+     * penamaan key yang berbeda dari aplikasi Filament.
+     */
+    private function normalizeConfig(array $data)
+    {
+        $pick = function ($keys) use ($data) {
+            foreach ($keys as $k) {
+                if (array_key_exists($k, $data) && $data[$k] !== NULL) {
+                    return $data[$k];
+                }
+            }
+            return '';
+        };
+
+        $config = [
+            'feeder_url'      => (string) $pick(['feeder_url', 'url', 'host', 'base_url', 'alamat']),
+            'feeder_port'     => (string) $pick(['feeder_port', 'port']),
+            'feeder_username' => (string) $pick(['feeder_username', 'username', 'user']),
+            'feeder_password' => (string) $pick(['feeder_password', 'password', 'pass']),
+            'feeder_endpoint' => (string) $pick(['feeder_endpoint', 'endpoint', 'path']),
+        ];
+
+        if ($config['feeder_endpoint'] === '') {
+            $config['feeder_endpoint'] = '/ws/live2.php';
+        }
+
         return $config;
     }
 
@@ -66,6 +151,11 @@ class FeederService extends MY_Service {
 
     public function testConnection()
     {
+        $row = $this->feeder_model->get_credential('_feeder_config');
+        if ($row && trim((string) $row->key_value) !== '' && $this->getConfigUnified() === NULL) {
+            return ['status' => FALSE, 'message' => 'Konfigurasi `_feeder_config` tidak dapat didekripsi. Periksa APP_KEY Filament pada application/config/feeder.php.'];
+        }
+
         $config = $this->getConfig();
 
         if (trim($config['feeder_url']) === '') {
@@ -123,7 +213,6 @@ class FeederService extends MY_Service {
 
         $user_id = (int) $this->session->userdata('id');
         $this->feeder_model->save_credential('feeder_token', $this->encrypt($token), 'Token hasil GetToken', $user_id);
-        $this->feeder_model->save_credential('feeder_endpoint', $this->encrypt($config['feeder_endpoint']), $this->fields['feeder_endpoint'], $user_id);
 
         return [
             'status'  => TRUE,

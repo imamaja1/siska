@@ -48,7 +48,7 @@ class Khs_model extends CI_Model {
             ->from('krs')
             ->join('mahasiswa as mah', 'mah.nim=krs.nim')
             ->join('krs_detail as krd', 'krd.kode_krs=krs.kode_krs')
-            ->join('khs_detail as khd', 'khd.kode_krs_detail=krd.kode_krs_detail','right')
+            ->join('khs_detail as khd', 'khd.kode_krs_detail=krd.kode_krs_detail', 'left')
             ->join('matakuliah as mk', 'mk.id_matakuliah=krd.id_matakuliah')
             ->where('krs.kode_krs', $kode_krs)
             //->where_not_in('mk.kode_matakuliah', array('MDKB240123','MDBB340015','TSBB360039','TSBB370068','TDBB340127','TDBB350020','DSPB470401','TSKB670084','MDKB460139','MDPB650016','TSKB670052', 'TSKB670084', 'TSKB670054', 'TDKB650134', 'TDPB650021','DSKB680522','GSKB470049', 'TSBB260102', 'ITBB260102'))

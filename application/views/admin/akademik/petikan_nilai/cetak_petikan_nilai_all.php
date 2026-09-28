@@ -76,7 +76,7 @@
             </tr>
             <tr>
                 <td style="text-align: center; vertical-align: bottom; font-family:serif; font-size: 8pt;">
-                    <img style="height: 120px;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
+                    <img style="max-width: 100%; max-height: 110px;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
                 </td>
             </tr>
         </table>

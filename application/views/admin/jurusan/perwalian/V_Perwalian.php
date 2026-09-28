@@ -29,7 +29,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">Jurusan</label>
-                        <select required class="form-control" name="kode_program_studi">
+                        <select required class="form-control select2" name="kode_program_studi">
                             <option value="" selected disabled>Pilih</option>
                             <?php foreach ($nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></option>
@@ -98,7 +98,7 @@
                     <br>
                     <div class="form-group">
                         <div class="col-sm-6" style="padding: 0;">
-                            <select required name="nama_jurusan" id="nama-program-studi" class="form-control">
+                            <select required name="nama_jurusan" id="nama-program-studi" class="form-control select2">
                                 <option value="" selected disabled>Program Studi</option>
                                 <?php foreach ($nama_jurusan as $row) : ?>
                                     <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> - <?= e($row->nama_program_studi) ?></option>

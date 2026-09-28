@@ -67,6 +67,13 @@
                             <td><?= nilai_validasi($row->validasi_nilai); ?></td>
                             <td><?= nilai_validasi($row->validasi_dekan); ?></td>
                             <td>
+                                <a class="btn btn-info btn-xs btn-flat btn-nilai-khusus"
+                                   href="#"
+                                   data-toggle="modal" data-target="#modal-nilai-khusus"
+                                   data-kelas="<?= e($row->kelas_id) ?>"
+                                   data-info="<?= e($row->kode_matakuliah . ' - ' . $row->nama_matakuliah . ' - Kelas ' . $row->nama_kelas) ?>">
+                                    <i class="fa fa-file-text-o"></i> Nilai
+                                </a>
                                 <?php
                                 if (($row->validasi_nilai == "T")) {
                                     ?>
@@ -87,11 +94,51 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-nilai-khusus" tabindex="-1" role="dialog" aria-labelledby="modal-nilai-khusus-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-nilai-khusus-label">
+                    Data Nilai Mahasiswa <small class="modal-info-khusus"></small>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="data-nilai-khusus"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         $('.data-table').DataTable({
             columnDefs: [{targets: 'no-sort', orderable: false}],
             order: [[4, 'desc'], [5, 'desc'], [6, 'asc']]
+        });
+    });
+
+    $(document).on('click', '.btn-nilai-khusus', function () {
+        var id = $(this).data('kelas');
+        var info = $(this).data('info');
+
+        $('#modal-nilai-khusus .modal-info-khusus').text(info ? '(' + info + ')' : '');
+
+        var loading = "<p style='text-align: center'><img src='<?= base_url("assets/siska/img/logo-ubg.gif") ?>' alt=''></p>";
+        $('#data-nilai-khusus').html(loading);
+
+        $.ajax({
+            url: "<?= site_url('admin/akademik/validasikhusus/nilai_kelas/') ?>/" + id,
+            success: function (res) {
+                $('#data-nilai-khusus').html(res);
+            },
+            error: function () {
+                $('#data-nilai-khusus').html("<div class='callout callout-danger flat'><p>Gagal memuat data nilai.</p></div>");
+            }
         });
     });
 </script>

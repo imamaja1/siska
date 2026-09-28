@@ -18,11 +18,16 @@ class Home extends CI_Controller {
             redirect('login');
         }
 
+        $nim = $this->session->userdata('nim');
         $data = array(
-            'conten' => 'mahasiswa/template/V_conten',
-            'judul' => 'Dashbord'
+            'conten' => 'mahasiswa/V_dashbord',
+            'judul' => 'Dashboard',
+            'hide_page_header' => true,
+            'prodi' => get_kode_prodi($nim),
+            'tahun_akademik' => tahun_akademik(),
+            'angkatan' => '20' . substr($nim, 0, 2),
         );
-        $this->load->view('mahasiswa/template/V_main', $data);
+        $this->load->view('mahasiswa/V_dashbord', $data);
     }
 
     function admin() {
@@ -30,6 +35,9 @@ class Home extends CI_Controller {
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
         }
+
+        $this->load->service('DashboardService');
+        $ta_aktif = $this->dashboardservice->getTahunAkademikAktif();
 
         $data = array(
             'content' => 'admin/template/V_dashboard',
@@ -39,6 +47,8 @@ class Home extends CI_Controller {
             'title_h1' => '<i class="fa fa-home"></i> <li>Dashboard</li>',
             'title_h2' => '',
             'title_h3' => '',
+            'stat' => $this->dashboardservice->getStatistikDashboard($ta_aktif ? $ta_aktif->kode_tahun_akademik : null),
+            'stat_prodi' => $this->dashboardservice->getMahasiswaTanpaKelasPerProdi($ta_aktif ? $ta_aktif->kode_tahun_akademik : null),
         );
 
         $this->load->view('admin/template/V_main', $data);
@@ -81,8 +91,17 @@ class Home extends CI_Controller {
             'judul' => 'Akses Ditolak',
             'sub_judul' => 'Akses Ditolak',
         );
+        $nim = $this->session->userdata('nim');
         $tahun_akademik = $this->m_tahun_akademik->get_aktif();
-        $data['krs_mhs'] = $this->mahasiswaservice->getKrsMhsHistorySimple($this->session->userdata('nim'), $tahun_akademik);
+        $data['krs_mhs'] = $this->mahasiswaservice->getKrsMhsHistorySimple($nim, $tahun_akademik);
+        $data['ta'] = $tahun_akademik;
+        $tahun = $this->m_tahun_akademik->get_semester();
+        $sem = $tahun->semester;
+        $tahun_akademik_2 = $tahun->tahun_akademik;
+        $tahun_angkatan = substr($nim, 0, 2);
+        $data['semester_aktif'] = ($sem == 0)
+            ? ($tahun_akademik_2 - $tahun_angkatan) * 2 + 2
+            : ($tahun_akademik_2 - $tahun_angkatan) * 2 + 1;
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 }

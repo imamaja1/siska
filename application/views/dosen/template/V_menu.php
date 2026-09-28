@@ -1,7 +1,14 @@
 <aside class="main-sidebar">
     <section class="sidebar">
+        <div class="sidebar-brand">
+            <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora">
+            <div class="sidebar-brand-meta">
+                <span class="sidebar-brand-title">SISKA</span>
+                <span class="sidebar-brand-sub">Universitas Bumigora</span>
+            </div>
+        </div>
         <ul class="sidebar-menu">
-            <li class="header" style="color: white;">MENU DOSEN</li>
+            <li class="header">MENU DOSEN</li>
             <li class="<?php echo (isset($judul) && $judul == 'Home') ? 'active' : ''; ?> treeview">
                 <a href="<?php echo site_url('home/dosen'); ?>">
                     <i class="glyphicon glyphicon-home"></i> <span>Dashboard</span>
@@ -31,7 +38,7 @@
                 <a href="#">
                     <i class="fa fa-money"></i>
                     <span>Konsultasi Perwalian</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Belum Diaktifkan</a></li>
@@ -45,7 +52,7 @@
                 <a href="#">
                     <i class="glyphicon glyphicon-sort-by-order"></i>
                     <span>Penilaian</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li class="<?= isset($a_presentasi_penilaian) ? $a_presentasi_penilaian : ''; ?>"><a href="<?php echo site_url('dosen/penilaian/presentasi_penilaian'); ?>"><i class="fa fa-circle-o"></i> Persentase Penilaian</a></li>
@@ -60,7 +67,7 @@
                 <a href="#">
                     <i class="glyphicon glyphicon-sort-by-order"></i>
                     <span>Penilaian KPAT</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li class="<?= isset($a_presentasi_penilaian_kpat) ? $a_presentasi_penilaian_kpat : ''; ?>"><a href="<?php echo site_url('dosen/penilaian_kpat/presentasi_penilaian'); ?>"><i class="fa fa-circle-o"></i> Presentasi Penilaian</a></li>
@@ -72,7 +79,7 @@
                 <a href="#">
                     <i class="glyphicon glyphicon-sort-by-order"></i>
                     <span>Update Penilaian</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li class="<?= isset($a_update_penilaian_uts) ? $a_update_penilaian_uts : ''; ?>"><a href="<?php echo site_url('dosen/update_nilai/update_uts'); ?>"><i class="fa fa-circle-o"></i> UTS</a></li>
@@ -82,13 +89,13 @@
 
 
             <?php if (isKaprodi($this->session->userdata('kode_dosen'))) : ?>
-                <li class="header" style="color: white;">MENU KAPRODI</li>
+                <li class="header">MENU KAPRODI</li>
                 
                 <li hidden class="<?= isset($a_mahasiswa_prodi) ? $a_mahasiswa_prodi: ''; ?> treeview">
                     <a href="#">
                         <i class="fa fa-users"></i>
                         <span>Data Mahasiswa</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li class="<?= isset($a_data_semua_mahasiswa) ? $a_data_semua_mahasiswa: ''; ?>"><a href="<?php echo site_url('dosen/kaprodi/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Semua</a></li>
@@ -114,7 +121,7 @@
                     <a href="#">
                         <i class="fa fa-question"></i>
                         <span>Status Perkuliahan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Aktif</a></li>
@@ -127,7 +134,7 @@
                     <a href="#">
                         <i class="fa fa-sort-numeric-asc"></i>
                         <span>Validasi Nilai</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <!-- <li class="<?= isset($a_validasi_nilai_uts_prodi) ? $a_validasi_nilai_uts_prodi : ''; ?>"><a href="<?php echo site_url('dosen/kaprodi/validasinilai/validasi_nilai_uts'); ?>"><i class="fa fa-circle-o"></i> UTS</a></li>
@@ -139,7 +146,7 @@
                     <a href="#">
                         <i class="fa fa-sort-numeric-asc"></i>
                         <span>Validasi Nilai KPAT</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li class="<?= isset($a_validasi_nilai_prodi_kpat) ? $a_validasi_nilai_prodi_kpat : ''; ?>"><a href="<?php echo site_url('dosen/kaprodi/validasinilai_kpat/validasi_nilai_revisi'); ?>"><i class="fa fa-circle-o"></i>Penilaian Mahasiswa</a></li>
@@ -149,7 +156,7 @@
                     <a href="#">
                         <i class="fa fa-sort-numeric-asc"></i>
                         <span>Update Nilai</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li class="<?= isset($a_update_nilai_uts_prodi) ? $a_update_nilai_uts_prodi : ''; ?>"><a href="<?php echo site_url('dosen/kaprodi/update_penilaian/validasi_nilai_uts'); ?>"><i class="fa fa-circle-o"></i> UTS</a></li>
@@ -161,7 +168,7 @@
                     <a href="#">
                         <i class="fa fa-trophy"></i>
                         <span>Indeks Prestasi</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> IP</a></li>
@@ -173,7 +180,7 @@
                     <a href="#">
                         <i class="fa fa-graduation-cap"></i>
                         <span>Kelulusan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Tepat Waktu</a></li>
@@ -183,7 +190,7 @@
             <?php endif; ?>
 
             <?php if (isDekan($this->session->userdata('kode_dosen'))) : ?>
-                <li class="header" style="color: white;">MENU DEKAN</li>
+                <li class="header">MENU DEKAN</li>
 
                 <li class="<?= isset($a_bidang_ilmu_dekan) ? $a_bidang_ilmu_dekan : '' ?>"><a href="<?= site_url('dosen/bidang_ilmu/info_bidang_ilmu_for_dekan') ?>"><i class="fa fa-user"></i> <span>Data Bidang Ilmu Dosen</span></a></li>
 
@@ -193,7 +200,7 @@
                     <a href="#">
                         <i class="fa fa-question"></i>
                         <span>Status Perkuliahan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Aktif</a></li>
@@ -208,7 +215,7 @@
                     <a href="#">
                         <i class="fa fa-sort-numeric-asc"></i>
                         <span>Validasi Nilai</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <!-- <li class="<?= isset($a_validasi_nilai_uts_dekan) ? $a_validasi_nilai_uts_dekan : ''; ?>"><a href="<?php echo site_url('dosen/dekan/validasinilai/validasi_nilai_uts'); ?>"><i class="fa fa-circle-o"></i> UTS</a></li>
@@ -220,7 +227,7 @@
                     <a href="#">
                         <i class="fa fa-sort-numeric-asc"></i>
                         <span>Update Nilai</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li class="<?= isset($a_update_nilai_uts_dekan) ? $a_update_nilai_uts_dekan : ''; ?>"><a href="<?php echo site_url('dosen/dekan/update_penilaian/validasi_nilai_uts'); ?>"><i class="fa fa-circle-o"></i> UTS</a></li>
@@ -232,7 +239,7 @@
                     <a href="#">
                         <i class="fa fa-trophy"></i>
                         <span>Indeks Prestasi</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> IP</a></li>
@@ -244,7 +251,7 @@
                     <a href="#">
                         <i class="fa fa-graduation-cap"></i>
                         <span>Kelulusan</span>
-                        <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-down pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="<?php echo site_url('dosen/konsultasi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Tepat Waktu</a></li>

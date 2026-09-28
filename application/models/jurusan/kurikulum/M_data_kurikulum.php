@@ -51,6 +51,9 @@ class m_data_kurikulum extends CI_Model
             ->join('program_studi as ps', 'nk.kode_program_studi=ps.kode_program_studi')
             ->where('nk.kode_nama_kurikulum', $kode_nama_kurikulum)
             ->get()->row_object();
+        if (!$cek_paket) {
+            return array();
+        }
         $i = 1;
         //        $kompetensi = $this->db->select("GROUP_CONCAT(matakuliah_pilihan) as matakuliah_pilihan")
 //                ->from('kompetensi')
@@ -403,7 +406,10 @@ class m_data_kurikulum extends CI_Model
 //
 //        $query = $this->db->query(" SELECT * from (SELECT nama_kurikulum.kode_nama_kurikulum, mid(angkatan,3,2) as angkatan, kode_program_studi from nama_kurikulum) as mah where angkatan='{$angkatan}' and kode_program_studi='{$prodi->kode_program_studi}' ")->row_object();
 
-        $kode_nama_kurikulum = $query->kode_nama_kurikulum;
+        $kode_nama_kurikulum = $query ? $query->kode_nama_kurikulum : null;
+        if ($kode_nama_kurikulum === null) {
+            return array();
+        }
 
         return $this->db->query("SELECT * from kurikulum, matakuliah WHERE kurikulum.id_matakuliah=matakuliah.id_matakuliah and kurikulum.kode_nama_kurikulum=? order by matakuliah.kode_matakuliah ASC ", array($kode_nama_kurikulum))->result();
     }
@@ -412,7 +418,10 @@ class m_data_kurikulum extends CI_Model
     public function get_matakuliah_by_nim_semester($nim, $semester)
     {
         $query = $this->get_nama_kurikulum($nim);
-        $kode_nama_kurikulum = $query->kode_nama_kurikulum;
+        $kode_nama_kurikulum = $query ? $query->kode_nama_kurikulum : null;
+        if ($kode_nama_kurikulum === null) {
+            return array();
+        }
         if ($semester == 1) {
             $semester = [1, 3, 5, 7];
         } else {

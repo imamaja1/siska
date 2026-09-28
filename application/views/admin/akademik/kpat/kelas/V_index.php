@@ -14,7 +14,7 @@
             </select>
         </div>
         <div class="col-md-4" >
-            <select class ="form-control" onchange="kelas_kpat()" id="program_studi">
+            <select class="form-control select2" class ="form-control" onchange="kelas_kpat()" id="program_studi">
                 <option value="">
                     -- Pilih Program Studi --
                 </option>

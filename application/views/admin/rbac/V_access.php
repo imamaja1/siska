@@ -14,7 +14,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-xs-8" style="border-left: 2pt solid #3c8dbc">
+                <div class="col-xs-8" style="border-left: 2pt solid #578EF5">
                     <div id="tampil">
                         <?php
                         foreach (scanDirectories('./application/controllers') as $row => $value) :

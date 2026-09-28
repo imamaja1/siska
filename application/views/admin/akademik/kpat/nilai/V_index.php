@@ -20,7 +20,7 @@
             <div class="form-group">
                 <label class=" control-label col-sm-2">Program Studi : </label>
                 <div class="col-sm-4">
-                    <select required class="form-control" name="prodi" id="prodi">
+                    <select required class="form-control select2" name="prodi" id="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($prodi as $row) : ?>
                             <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?> </option>

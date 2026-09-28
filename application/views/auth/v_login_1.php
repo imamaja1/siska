@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="icon" type="image/png" sizes="96x96" href="<?= base_url('assets/gambar') ?>/favicon-96x96.png">
+        <link rel="icon" href="<?= app_favicon() ?>">
         <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css') ?>">
         <link rel="stylesheet" href="<?= base_url('assets/dist/css/AdminLTE.min.css') ?>">
         <link rel="stylesheet" href="<?= base_url('assets/animate.css/animate.min.css') ?>">

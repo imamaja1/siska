@@ -8,7 +8,7 @@
         <div class="form-group">
             <label>Nama Program Studi</label>
             <input type="hidden" name="param" id="param" value="<?= e($data->kode_kaprodi) ?>">
-            <select class="form-control" name="kode_nama_jurusan">
+            <select class="form-control select2" name="kode_nama_jurusan">
                 <option value="">Pilih Program Studi</option>
                 <?php foreach ($nama_jurusan as $row) { ?>
                     <option <?= $row->kode_program_studi == $data->kode_program_studi ? 'selected' : '' ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>

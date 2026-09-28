@@ -1,6 +1,6 @@
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="<?= site_url('admin/akademik/nilai'); ?>" class="btn-sm btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>
+        <a href="<?= site_url('admin/akademik/nilai'); ?>" class="btn btn-sm btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>
     </div>
 </div>
 
@@ -15,7 +15,7 @@
                   <input type="hidden" name="kode-tahun-akademik" id="kode-tahun-akademik"
                            value="<?= e(tahun_akademik()->kode_tahun_akademik) ?>">
                   
-                    <select required class="form-control" name="jurusan" id="jurusan">
+                    <select required class="form-control select2" name="jurusan" id="jurusan">
                         <option value="" selected disabled>Pilih Jurusan</option>
                         <?php foreach ($program_studi as $data) { ?>
                             <option value="<?= e($data->kode_program_studi) ?>"><?= e($data->nama_program_studi) ?></option>
@@ -53,7 +53,7 @@
     $(document).ready(function () {
         $('#jurusan').change(function () {
             $.post("<?= site_url(); ?>admin/akademik/nilai/get_matakuliah/" + $('#jurusan').val(), {}, function (obj) {
-                $('#matakuliah').html(obj);
+                $('#matakuliah').html(obj).trigger('change');
             });
         });
       

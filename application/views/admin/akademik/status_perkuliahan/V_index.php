@@ -3,7 +3,7 @@
         <div class="box box-solid">
             <div class="box-body">
                <div class="form-group col-md-5 col-xs-12" style="margin-bottom: 0px">
-                   <select class="form-control" name="kode_prodi" id="kode-prodi">
+                   <select class="form-control select2" name="kode_prodi" id="kode-prodi">
                        <option value="" selected disabled>Program Studi</option>
                        <?php foreach ($prodi as $row): ?>
                            <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>
@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="col-md-12" id="landing">
-        <div class="box box-solid" style="height: 300px; border-radius: 20px; border: 2px solid #3c8dbc">
+        <div class="box box-solid" style="height: 300px; border-radius: 20px; border: 2px solid #578EF5">
             <div class="box-body">
                 <p style="text-align: center; font-weight: bold; font-size: 24pt"><i>"Landing..."</i></p>
             </div>

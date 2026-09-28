@@ -24,7 +24,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">Jurusan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-3">
-                    <select class="form-control" name="jurusan" id="jurusan">
+                    <select class="form-control select2" name="jurusan" id="jurusan">
                         <option value="" disabled selected>Pilih Program Studi</option>
                         <?php foreach ($program_studi as $row) { ?>
                             <option <?= set_select('jurusan', $row->kode_jurusan . $row->kode_jenjang) ?> value="<?= e($row->kode_jurusan) ?><?= e($row->kode_jenjang) ?>"><?= e($row->singkatan_program_studi) ?></option>

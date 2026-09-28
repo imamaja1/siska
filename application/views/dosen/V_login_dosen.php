@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Dosen | Log in</title>
-        <link rel="icon" href="<?php echo base_url('assets/siska/img/logo_kampus.png') ?>" />
+        <link rel="icon" href="<?= app_favicon() ?>" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="stylesheet" href="<?= site_url('assets/bootstrap/css/bootstrap.min.css') ?>">
         <link rel="stylesheet" href="<?= site_url('assets/font-awesome/css/font-awesome.min.css') ?>">

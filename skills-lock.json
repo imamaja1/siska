@@ -5,7 +5,25 @@
       "source": "yasserstudio/codeigniter-skills",
       "sourceType": "github",
       "skillPath": "skills/codeigniter/SKILL.md",
-      "computedHash": "c60b113b458b55a1e36f6173cc4855c882028e9d2f2ba36f4802c13fa92701a5"
+      "computedHash": "bb9848450212d9150df90faa19dcfbb87527340aa6ae09610e9ebdb566e46a84"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "install-anti-slop": {
+      "source": "dmmulroy/anti-slop",
+      "sourceType": "github",
+      "skillPath": "skills/install-anti-slop/SKILL.md",
+      "computedHash": "4031728fbe75bdcad6ee3208fd52b5d66e167b056fefee1fa9758e9a6cb9c0c8"
+    },
+    "minimalist-ui": {
+      "source": "leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/minimalist-skill/SKILL.md",
+      "computedHash": "08873a3131d3be27bef9bf3304b310b16b44ca6e3561aebe532797be3443f6bd"
     },
     "php-codeigniter-audit": {
       "source": "0xshe/php-code-audit-skill",

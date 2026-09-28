@@ -3,7 +3,7 @@
         font-size: 16pt;
         font-weight: bold;
         padding: 5px 15px 5px 15px;
-        background-color: #3c8dbc;
+        background-color: #578EF5;
         color: white;
         margin-bottom: 5px;
         border-radius: 15px;
@@ -92,7 +92,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Jurusan</label>
                 <div class="col-sm-3">
-                    <select required class="form-control" name="prodi">
+                    <select required class="form-control select2" name="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
                             <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> -
@@ -133,7 +133,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Jurusan</label>
                 <div class="col-sm-3">
-                    <select required class="form-control" name="prodi">
+                    <select required class="form-control select2" name="prodi">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($nama_jurusan as $row) { ?>
                             <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?>

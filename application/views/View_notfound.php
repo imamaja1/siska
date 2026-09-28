@@ -9,7 +9,7 @@
             <title>SISKA STMIK BG</title>
         <?php endif; ?>
 
-        <link rel="icon" href="<?php echo base_url('assets/siska/img/logo_kampus.png') ?>" />
+        <link rel="icon" href="<?= app_favicon() ?>" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
         <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css'); ?>">

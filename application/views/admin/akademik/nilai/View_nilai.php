@@ -71,7 +71,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3"> Jurusan <label style="color: red;">*</label> :</label>
                 <div class="col-sm-3">
-                    <select required class="form-control" name="jurusan" id="jurusan">
+                    <select required class="form-control select2" name="jurusan" id="jurusan">
                         <option value="" selected disabled>Pilih Jurusan</option>
                     </select>
                 </div>
@@ -99,12 +99,12 @@
     $(document).ready(function () {
         $('#tahun_akademik').change(function () {
             $.post("<?= site_url(); ?>admin/akademik/nilai/get_jurusan/" + $('#tahun_akademik').val(), {}, function (obj) {
-                $('#jurusan').html(obj);
+                $('#jurusan').html(obj).trigger('change');
             });
         });
         $('#jurusan').change(function () {
             $.post("<?= site_url(); ?>admin/akademik/nilai/get_matakuliah/" + $('#jurusan').val() + "/" + $('#tahun_akademik').val(), {}, function (obj) {
-                $('#matakuliah').html(obj);
+                $('#matakuliah').html(obj).trigger('change');
             });
         });
     });

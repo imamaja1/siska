@@ -11,6 +11,13 @@ function has_access($acc, $controllers, $role = 0) {
 ?>
 <aside class="main-sidebar">
     <section class="sidebar">
+        <div class="sidebar-brand">
+            <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora">
+            <div class="sidebar-brand-meta">
+                <span class="sidebar-brand-title">SISKA</span>
+                <span class="sidebar-brand-sub">Universitas Bumigora</span>
+            </div>
+        </div>
         <ul class="sidebar-menu">
             <li class="header">MENU PILIHAN</li>
 
@@ -29,7 +36,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-map-o"></i>
                     <span>Jurusan</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Institusi')): ?>
@@ -41,23 +48,23 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php if (has_access($acc, ['Jenjang', 'Kode_jurusan', 'Nama_jurusan', 'Kompetensi', 'Ketua_jurusan'])): ?>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Program Studi') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> Program Studi
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             <?php if (has_access($acc, 'Jenjang')): ?>
-                            <li><a href="<?= site_url('admin/jurusan/program_studi/jenjang'); ?>"><i class="fa fa-circle-o"></i> Jenjang</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'Jenjang') ? 'active' : '' ?>"><a href="<?= site_url('admin/jurusan/program_studi/jenjang'); ?>"><i class="fa fa-circle-o"></i> Jenjang</a></li>
                             <?php endif; ?>
                             <?php if (has_access($acc, 'Kode_jurusan')): ?>
-                            <li><a href="<?= site_url('admin/jurusan/program_studi/kode_jurusan'); ?>"><i class="fa fa-circle-o"></i> Kode Jurusan</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'Kode Jurusan') ? 'active' : '' ?>"><a href="<?= site_url('admin/jurusan/program_studi/kode_jurusan'); ?>"><i class="fa fa-circle-o"></i> Kode Jurusan</a></li>
                             <?php endif; ?>
                             <?php if (has_access($acc, 'Nama_jurusan')): ?>
-                            <li><a href="<?= site_url('admin/jurusan/program_studi/nama_jurusan'); ?>"><i class="fa fa-circle-o"></i> Nama Jurusan</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'Nama Jurusan') ? 'active' : '' ?>"><a href="<?= site_url('admin/jurusan/program_studi/nama_jurusan'); ?>"><i class="fa fa-circle-o"></i> Nama Jurusan</a></li>
                             <?php endif; ?>
                             <?php if (has_access($acc, 'Kompetensi')): ?>
-                            <li><a href="<?= site_url('admin/jurusan/program_studi/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'Kompetensi') ? 'active' : '' ?>"><a href="<?= site_url('admin/jurusan/program_studi/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi</a></li>
                             <?php endif; ?>
                             <?php if (has_access($acc, 'Ketua_jurusan')): ?>
-                            <li><a href="<?= site_url('admin/jurusan/program_studi/ketua_jurusan'); ?>"><i class="fa fa-circle-o"></i> Ketua Jurusan</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'Ketua Jurusan') ? 'active' : '' ?>"><a href="<?= site_url('admin/jurusan/program_studi/ketua_jurusan'); ?>"><i class="fa fa-circle-o"></i> Ketua Jurusan</a></li>
                             <?php endif; ?>
                         </ul>
                     </li>
@@ -65,7 +72,7 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php if (has_access($acc, ['Matakuliah', 'Nama_kurikulum', 'Data_kurikulum', 'Kurikulum_angkatan', 'Matakuliah_prasyarat'])): ?>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Kurikulum') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> Kurikulum
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             <?php if (has_access($acc, 'Matakuliah')): ?>
@@ -114,7 +121,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-money"></i>
                     <span>Keuangan</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Status_perkuliahan')): ?>
@@ -139,7 +146,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-sticky-note"></i>
                     <span>Akademik</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
@@ -152,7 +159,7 @@ function has_access($acc, $controllers, $role = 0) {
                     <li><a href="<?= site_url('admin/akademik/kkp'); ?>"><i class="fa fa-circle-o"></i> KKP</a></li>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Petikan Nilai') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> Petikan Nilai
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="<?= site_url('admin/akademik/petikan_nilai/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
@@ -165,7 +172,7 @@ function has_access($acc, $controllers, $role = 0) {
                     <li><a href="<?= site_url('admin/akademik/status_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Status Perkuliahan</a></li>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Perubahan') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> Perubahan
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="<?= site_url('admin/akademik/perubahan/semester_ini'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Ini</a></li>
@@ -177,7 +184,7 @@ function has_access($acc, $controllers, $role = 0) {
                     </li>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'KPAT') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> KPAT
-                            <i class="fa fa-angle-left pull-right"></i>
+                            <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="<?= site_url('admin/akademik/kpat/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
@@ -196,7 +203,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-globe"></i>
                     <span>MBKM</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Daftar')): ?>
@@ -215,7 +222,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
                     <span>Kuisioner</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Kelas')): ?>
@@ -243,7 +250,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-check-square-o"></i>
                     <span>Audit Nilai</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Audit')): ?>
@@ -268,7 +275,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-print"></i>
                     <span>Laporan</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Rekap_ipk')): ?>
@@ -295,7 +302,7 @@ function has_access($acc, $controllers, $role = 0) {
             <li class="<?= (isset($judul) && ($judul == 'Impersonasi' || $judul == 'Pengguna')) ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="glyphicon glyphicon-user"></i> <span>Pengguna</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Pengguna')): ?>
@@ -326,7 +333,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <a href="#">
                     <i class="fa fa-cog"></i>
                     <span>Pengaturan</span>
-                    <i class="fa fa-angle-left pull-right"></i>
+                    <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Pengaturan')): ?>

@@ -1,7 +1,10 @@
 <?php $this->load->view('admin/mbkm/partial/V_header'); ?>
 <div class="box box-primary flat">
-    <div class="box-header">
+    <div class="box-header with-border">
         <h4 class="box-title"><i class="fa fa-users"></i> Data Mahasiswa MBKM</h4>
+        <div class="box-tools pull-right">
+            <a href="<?= site_url('admin/mbkm/daftar/log') ?>" class="btn btn-default btn-xs"><i class="fa fa-history"></i> Log Aktivitas MBKM</a>
+        </div>
     </div>
     <div class="box-body">
         <form action="<?= site_url('admin/mbkm/daftar') ?>" method="get">
@@ -15,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label for="kode_program_studi">Program Studi</label>
-                <select name="prodi" id="kode_program_studi" class="form-control">
+                <select name="prodi" id="kode_program_studi" class="form-control select2">
                     <option value="">Semua</option>
                     <?php foreach ($prodi as $value): ?>
                         <option value="<?= e($value->kode_program_studi) ?>" <?= ($kode_program_studi_filter == $value->kode_program_studi) ? 'selected' : '' ?>><?= e($value->singkatan_program_studi) ?></option>

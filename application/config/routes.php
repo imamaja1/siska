@@ -125,5 +125,7 @@ $route['admin/audit/kelas'] = 'admin/Audit_kelas/index';
 $route['admin/audit/kelas/hasil'] = 'admin/Audit_kelas/hasil';
 $route['admin/audit/kelas/get_matakuliah/(:any)/(:any)'] = 'admin/Audit_kelas/get_matakuliah/$1/$2';
 $route['admin/audit/kelas/get_kelas/(:any)/(:any)/(:any)'] = 'admin/Audit_kelas/get_kelas/$1/$2/$3';
+$route['admin/audit/kelas/kandidat_null_feeder'] = 'admin/Audit_kelas/kandidat_null_feeder';
+$route['admin/audit/kelas/cek_null_siska'] = 'admin/Audit_kelas/cek_null_siska';
 $route['admin/audit/petikan'] = 'admin/Audit_petikan/index';
 $route['admin/audit/petikan/hasil'] = 'admin/Audit_petikan/hasil';

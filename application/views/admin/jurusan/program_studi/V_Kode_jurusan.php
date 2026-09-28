@@ -1,7 +1,7 @@
 <?= $this->session->flashdata('info') ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="#" onclick="$('#tambah-kode-jurusan').modal('toggle')" class="btn-sm btn-primary flat"><i class="fa fa-plus-circle"></i> Tambah</a>
+        <a href="#" onclick="$('#tambah-kode-jurusan').modal('toggle')" class="btn btn-sm btn-primary flat"><i class="fa fa-plus-circle"></i> Tambah</a>
     </div>
 </div>
 

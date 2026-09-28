@@ -28,7 +28,7 @@
              <div class="form-group">
                 <label class="control-label col-sm-3">Program Studi :</label>
                 <div class="col-sm-4">
-                     <select name="prodi" id="" class="form-control">
+                     <select name="prodi" id="" class="form-control select2">
                         <?php foreach ($data_prodi as $key => $value) : ?>
                             <option value="<?= e($value->kode_program_studi) ?>" <?= ($value->kode_program_studi == $prodi ? 'selected' :'')  ?>><?= e($value->nama_program_studi) ?></option>
                         <?php endforeach; ?>

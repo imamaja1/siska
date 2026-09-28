@@ -71,4 +71,11 @@ class validasikhusus extends CI_Controller {
         $this->load->view('admin/template/V_main', $data);
     }
 
+    public function nilai_kelas($kelas_id) {
+        $data['nilai'] = $this->validasiservice->get_nilai_revisi_by_kelas($kelas_id);
+        $data['kelas'] = $this->validasiservice->get_kelas_row_by_id($kelas_id);
+
+        $this->load->view('admin/akademik/nilai/V_validasi_khusus_nilai', $data);
+    }
+
 }

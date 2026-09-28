@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group" style="margin: 0px">
-                                <select name="kode_program_studi" onchange="makul(this.value)" class="form-control">
+                                <select name="kode_program_studi" onchange="makul(this.value)" class="form-control select2">
                                     <option value="" selected disabled>Pilih Program Studi</option>
                                     <?php foreach ($nama_jurusan as $row): ?>
                                         <option value="<?= e($row->kode_program_studi) ?>">

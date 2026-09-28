@@ -77,6 +77,7 @@ class Petikan_nilai_model extends CI_Model {
     }
 
     public function petikan_nilai($nim, $kode_nama_kurikulum) {
+        $data = array();
         $n = 0;
         $t_sks = 0;
         $t_sksn = 0;
@@ -252,6 +253,7 @@ class Petikan_nilai_model extends CI_Model {
     }
 
     public function petikan_nilai_new($nim, $kode_nama_kurikulum, $mhs_semester = null, $kode_tahun_akademik = null) {
+        $data = array();
         $n = 0;
         $t_sks = 0;
         $t_sksn = 0;

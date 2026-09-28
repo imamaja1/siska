@@ -30,7 +30,15 @@ class UniversitasService extends MY_Service {
                 'nama_institusi' => $post_data['nama'],
                 'singkatan' => $post_data['singkatan']
             );
-            
+
+            if (!empty($_FILES['logo']['name'])) {
+                $upload = $this->uploadInstitusiLogo('logo-' . $kode_institusi);
+                if (!$upload['status']) {
+                    return $upload;
+                }
+                $data['logo'] = $upload['file'];
+            }
+
             if ($this->institusi_model->add($data)) {
                 return array('status' => true, 'msg' => 'Tambah Data Institusi Berhasil.');
             }
@@ -44,12 +52,50 @@ class UniversitasService extends MY_Service {
             'nama_institusi' => $post_data['nama-edit'],
             'singkatan' => $post_data['singkatan-edit']
         );
-        
+
+        if (!empty($_FILES['logo']['name'])) {
+            $upload = $this->uploadInstitusiLogo('logo-' . $kode);
+            if (!$upload['status']) {
+                return $upload;
+            }
+            $data['logo'] = $upload['file'];
+            $old = $this->institusi_model->get_by_kode($kode);
+            if ($old && !empty($old->logo) && $old->logo !== $upload['file']) {
+                $old_path = FCPATH . 'assets/institusi/' . $old->logo;
+                if (is_file($old_path)) {
+                    @unlink($old_path);
+                }
+            }
+        }
+
         if ($this->institusi_model->edit($kode, $data)) {
             return array('status' => true, 'msg' => 'Ubah Data Institusi Berhasil.');
         } else {
             return array('status' => false, 'msg' => 'Ubah Data Institusi Gagal.');
         }
+    }
+
+    /**
+     * Upload logo institusi ke assets/institusi/.
+     */
+    private function uploadInstitusiLogo($file_name) {
+        $config = array(
+            'upload_path'   => './assets/institusi/',
+            'allowed_types' => 'jpg|jpeg|png|gif|svg|webp',
+            'file_name'     => $file_name,
+            'overwrite'     => true,
+            'max_size'      => 2048,
+        );
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload('logo')) {
+            return array('status' => false, 'msg' => 'Upload logo gagal: ' . strip_tags($this->upload->display_errors('', '')));
+        }
+
+        $image = $this->upload->data();
+        return array('status' => true, 'file' => $image['file_name']);
     }
 
     public function hapusInstitusi($kode) {

@@ -4,6 +4,7 @@ class Petikan_mahasiswa_model extends CI_Model{
 
     public function petikan_nilai($nim, $kode_nama_kurikulum)
     {
+        $data = array();
         $j=1;
         $n=0;
         $t_sks = 0;

@@ -33,7 +33,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label"> Jurusan</label>
-                        <select required name="prodi" id="" class="form-control">
+                        <select required name="prodi" id="" class="form-control select2">
                             <option value="" selected disabled>Pilih</option>
                             <?php foreach ($nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?>

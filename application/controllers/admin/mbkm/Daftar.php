@@ -52,10 +52,13 @@ class Daftar extends CI_Controller {
         $data['content'] = 'admin/mbkm/V_log_mbkm';
         $data['judul'] = 'mbkm';
         $data['sub_judul'] = 'Log Aktivitas MBKM';
-        $this->db->select('l.*, mak.nama_matakuliah, mak.kode_matakuliah, mhs.nama_mahasiswa');
+        $data['title_h1'] = '<li><a href="' . site_url('admin/mbkm/daftar') . '"><i class="fa fa-globe"></i> MBKM</a></li>';
+        $data['title_h2'] = '<li class="active">Log Aktivitas MBKM</li>';
+        $this->db->select('l.*, mak.nama_matakuliah, mak.kode_matakuliah, mhs.nama_mahasiswa, ta.tahun_akademik as nama_tahun_akademik, ta.semester as semester_ta');
         $this->db->from('log_aktivitas_nilai as l');
         $this->db->join('matakuliah as mak', 'mak.id_matakuliah=l.id_matakuliah', 'left');
         $this->db->join('mahasiswa as mhs', 'mhs.nim=l.nim', 'left');
+        $this->db->join('tahun_akademik as ta', 'ta.kode_tahun_akademik=l.kode_tahun_akademik', 'left');
         $this->db->where('l.sumber', 'mbkm');
         $this->db->order_by('l.id', 'DESC');
         $data['log'] = $this->db->get()->result();

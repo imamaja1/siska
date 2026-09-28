@@ -31,6 +31,7 @@ class Profil extends CI_Controller {
         }
         $data['conten'] = "mahasiswa/V_profil";
         $data['judul'] = 'Profil Mahasiswa';
+        $data['hide_page_header'] = true;
         //$data['dosen_wali'] = count($dosen_wali) > 0 ? $dosen_wali->nama_dosen."&nbsp;(<i class='fa fa-phone'></i>&nbsp;".$dosen_wali->no_telp.")" : '-';
         $data['dosen_wali'] = !empty($dosen_wali) ? $dosen_wali->nama_dosen : '-';
         $data['nama_mahasiswa'] = '<p style="font-size: 20px;">Profil <b>' . $this->session->userdata('nama_mahasiswa') . '</b></p>';
@@ -43,6 +44,7 @@ class Profil extends CI_Controller {
         $nim = $this->session->userdata('nim');
         $data['conten'] = "mahasiswa/V_mahasiswa_update";
         $data['judul'] = 'Ubah Profil Mahasiswa';
+        $data['hide_page_header'] = true;
 
         $data['data_mahasiswa'] = $this->Mahasiswa_model->get($nim);
         $data['provinsi'] = $this->Mahasiswa_model->get_provinsi();

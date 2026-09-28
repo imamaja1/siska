@@ -11,7 +11,7 @@ class Maintance extends CI_Controller {
     function notfound()
     {
         $this->output->set_status_header('404');
-        $this->load->view('View_notfound');
+        $this->load->view('errors/404');
     }
 
 }

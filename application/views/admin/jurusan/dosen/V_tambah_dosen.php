@@ -1,6 +1,6 @@
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="<?= site_url('admin/jurusan/dosen'); ?>" class="btn-sm btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>
+        <a href="<?= site_url('admin/jurusan/dosen'); ?>" class="btn btn-sm btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>
     </div>
 </div>
 <div class="box box-primary flat">

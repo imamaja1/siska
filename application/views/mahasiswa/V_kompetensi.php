@@ -1,20 +1,25 @@
 <?php if (!empty($kompetensi_mahasiswa)) : ?>
     <div class="box box-primary flat">
+        <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-certificate"></i> Kompetensi</h3>
+        </div>
         <div class="box-body">
-            <table class="table demo-table">
-                <thead>
-                <tr>
-                    <th id="th">NIM</th>
-                    <th id="th">Kompetensi</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td align="center"><?= e($kompetensi_mahasiswa->nim) ?></td>
-                    <td align="center"><?= e($kompetensi_mahasiswa->nama_kompetensi) ?></td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive mhs-table-wrap">
+                <table class="table mhs-table">
+                    <thead>
+                    <tr>
+                        <th>NIM</th>
+                        <th>Kompetensi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="mhs-num"><?= e($kompetensi_mahasiswa->nim) ?></td>
+                        <td class="text-center"><?= e($kompetensi_mahasiswa->nama_kompetensi) ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 <?php else: ?>

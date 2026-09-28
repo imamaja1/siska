@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>SISKA STMIK BG</title>
-    <link rel="icon" href="<?php echo base_url('assets/siska/img/logo_kampus.png') ?>"/>
+    <link rel="icon" href="<?= app_favicon() ?>"/>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css'); ?>">
@@ -128,16 +128,46 @@
             "autoWidth": false
         });
     });
-    var selec2init = function () {
-        $(".select2").select2();
-    }
+    var selec2init = function (context) {
+        if (!$.fn.select2) return;
+        var $scope = context ? $(context) : $(document);
+        var $targets = $scope.is('select') ? $scope : $scope.find('select');
+        $targets.each(function () {
+            var $this = $(this);
+            if ($this.hasClass('select2-hidden-accessible') ||
+                $this.closest('.dataTables_length').length ||
+                $this.is('[name$="_length"]') ||
+                $this.closest('.daterangepicker').length ||
+                $this.hasClass('swal2-select') ||
+                $this.hasClass('no-select2')) {
+                return;
+            }
+            var width = '100%';
+            if ($this.closest('.form-inline').length) {
+                width = ($this.attr('style') && $this.attr('style').indexOf('width') !== -1) ? 'resolve' : 'auto';
+            }
+            var opts = { width: width };
+            var $modal = $this.closest('.modal');
+            if ($modal.length) {
+                opts.dropdownParent = $modal;
+            }
+            $this.addClass('select2').select2(opts);
+        });
+    };
 </script>
 
 <script type="text/javascript">
     $(document).ready(function () {
         $.widget.bridge('uibutton', $.ui.button);
         selec2init();
+    });
 
+    $(document).on('shown.bs.modal', function (e) {
+        selec2init(e.target);
+    });
+
+    $(document).ajaxComplete(function () {
+        selec2init();
     });
 </script>
 <script src="<?= base_url('assets/bootstrap/js/bootstrap.min.js'); ?>"></script>

@@ -39,7 +39,12 @@
         </div>
         <br>
         <div class="col-sm-12 col-md-12 col-lg-12">
-            <?php $total_sks = 0; $total_sksn = 0; foreach ($data as $key) : ?>
+            <?php 
+            $total_sks = 0; 
+            $total_sksn = 0; 
+            $data = (isset($data) && is_iterable($data)) ? $data : [];
+            if (!empty($data)) :
+                foreach ($data as $key) : ?>
                 <p><strong>SEMESTER  <?= e($key['semester']) ?></strong></p>
                 <table class="table demo-table">
                     <thead>
@@ -74,6 +79,11 @@
                 </table>
                 <br>
             <?php endforeach; ?>
+            <?php else : ?>
+                <div class="alert alert-info text-center" style="margin: 20px 0;">
+                    <i class="fa fa-info-circle"></i> Data petikan nilai mahasiswa belum tersedia.
+                </div>
+            <?php endif; ?>
         </div>
         <!-- end.col-12 -->
         <div class="col-sm-12 col-md-12 col-lg-12">

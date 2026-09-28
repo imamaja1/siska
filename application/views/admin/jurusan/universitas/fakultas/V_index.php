@@ -1,7 +1,7 @@
 <?= $this->session->flashdata('info'); ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="#" class="btn-primary btn-sm flat" onclick="$('#modal-add').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
+        <a href="#" class="btn btn-primary btn-sm flat" onclick="$('#modal-add').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
     </div>
 </div>
 <div class="box box-info flat">
@@ -26,8 +26,8 @@
                             <td><?= e($row->nama_fakultas) ?></td>
                             <td><?= !empty($row->dekan) ? e($row->dekan) : '<span class="text-muted">-</span>' ?></td>
                             <td align="center">
-                                <a href="#!" class="btn-xs btn-info flat" onclick="editFakultas('<?= e($row->kode_fakultas) ?>', '<?= e($row->nama_fakultas) ?>', '<?= e($row->dekan_kode) ?>')"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
-                                <a href="#!" class="btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/universitas/fakultas/delete/' . $row->kode_fakultas) ?>')"><i class="fa fa-trash"></i> Hapus</a>
+                                <a href="#!" class="btn btn-xs btn-info flat" onclick="editFakultas('<?= e($row->kode_fakultas) ?>', '<?= e($row->nama_fakultas) ?>', '<?= e($row->dekan_kode) ?>')"><i class="fa fa-edit"></i> Ubah</a>&nbsp;
+                                <a href="#!" class="btn btn-xs btn-danger flat" onclick="hapus('<?= site_url('admin/jurusan/universitas/fakultas/delete/' . $row->kode_fakultas) ?>')"><i class="fa fa-trash"></i> Hapus</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

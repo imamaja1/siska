@@ -1,6 +1,6 @@
 <div class="box box-primary">
-    <div class="box-header">
-        <h4><i class="fa fa-pie-chart"></i> Kuisioner</h4>
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-pie-chart"></i> Kuisioner</h3>
     </div>
     <div class="box-body">
         <?php if ($this->session->flashdata('info')) : ?>
@@ -9,14 +9,14 @@
         <?php if ($status_kuisioner == 'A') :
             if (count($data) > 0) : ?>
                 <h4><i class="fa fa-television"></i> Kuisioner Proses Belajar Mengajar (PBM)</h4>
-                <div class="table-responsive">
-                    <table class="table demo-table">
+                <div class="table-responsive mhs-table-wrap">
+                    <table class="table mhs-table">
                         <thead>
                         <tr>
-                            <th id="th">NO.</th>
-                            <th id="th">KODE MATAKULIAH</th>
-                            <th id="th">MATAKULIAH</th>
-                            <th id="th">aksi</th>
+                            <th class="mhs-c-no">No.</th>
+                            <th>Kode Matakuliah</th>
+                            <th>Matakuliah</th>
+                            <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -46,7 +46,7 @@
                     </table>
                 </div>
             <?php else: ?>
-                <p align="center" style="font-size: 20pt; color: #2ca02c"><strong>Terimakasih.</strong></p>
+                <p align="center" style="font-size: 20pt; color: #047857"><strong>Terimakasih.</strong></p>
                 <p align="center" style="font-size: large;"><strong>Anda sudah selesai melakukan pengisian
                         kuisioner Proses Belajar Mengajar (PBM).</strong></p>
                 <p align="center"><img class="img-responsive img-circle" style="width: 50px"
@@ -73,16 +73,16 @@
             <form id="form-kuisioner-layanan" action="<?= site_url('mahasiswa/kuisioner/simpan_layanan') ?>"
                   method="post">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-                <div class="table-responsive">
-                    <table class="table demo-table">
+                <div class="table-responsive mhs-table-wrap">
+                    <table class="table mhs-table">
                         <thead>
                         <tr>
-                            <th id="th" width="20%">BAGIAN</th>
-                            <th id="th">PERTANYAAN</th>
-                            <th id="th" width="5%">1</th>
-                            <th id="th" width="5%">2</th>
-                            <th id="th" width="5%">3</th>
-                            <th id="th" width="5%">4</th>
+                            <th>Bagian</th>
+                            <th>Pertanyaan</th>
+                            <th class="mhs-c-num">1</th>
+                            <th class="mhs-c-num">2</th>
+                            <th class="mhs-c-num">3</th>
+                            <th class="mhs-c-num">4</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -129,7 +129,7 @@
                 </div>
             </form>
         <?php else : ?>
-            <p align="center" style="font-size: 20pt; color: #2ca02c"><strong>Terimakasih.</strong></p>
+            <p align="center" style="font-size: 20pt; color: #047857"><strong>Terimakasih.</strong></p>
             <p align="center" style="font-size: large;"><strong>Anda sudah selesai melakukan pengisian
                     kuisioner kepuasan pelayanan.</strong></p>
             <p align="center"><img class="img-responsive img-circle" style="width: 50px"
@@ -140,7 +140,7 @@
         <?php endif; ?>
 <!--        end untuk angkatan baru-->
         <?php else: ?>
-            <p align="center" style="font-size: xx-large;color: #A70000"><strong>Nonaktif.</strong></p>
+            <p align="center" style="font-size: xx-large;color: #B91C1C"><strong>Nonaktif.</strong></p>
             <p align="center" style="font-size: large;">Pengisian kuisioner belum <strong>Aktif</strong>,
                 pengisian
                 kuisioner akan <strong>diaktifkan</strong> setelah <strong>UAS</strong> selesai</p>

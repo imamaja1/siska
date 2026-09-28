@@ -1,4 +1,4 @@
-<div class="box" style="border: 2px solid #3c8dbc; border-radius: 10px">
+<div class="box" style="border: 2px solid #578EF5; border-radius: 10px">
     <button class="btn btn-flat btn-danger" data-dismiss="modal" style="position: absolute; top: -10px; right: -10px"><i class="fa fa-times"></i></button>
     <div class="box-body" >
         <p style="margin-top: 20px; text-align: center"><b> GRAFIK NILAI MAHASISWA </b></p>

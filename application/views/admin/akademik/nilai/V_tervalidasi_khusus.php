@@ -120,11 +120,11 @@
                                 <?php endforeach; ?>
                             </td>
                           	<td> 
-                                <div class=" btn-goup" style="display: flex;" >
+                                <div class="btn-group" style="display: flex;" >
                                     <a class="btn btn-primary btn-xs btn-flat mr-1" href="#" onclick='mhs("<?= e($row->kelas_id) ?>")' data-toggle="modal" data-target="#mhs"> 
                                         <i class="fa fa-users" aria-hidden="true"></i> View
                                     </a>
-                                    <a class=" btn btn-success btn-xs btn-flat" href="#" onclick='show_nilai_validasi("<?= e($row->kelas_id) ?>")' data-toggle="modal" data-target="#ModalNilaiValidasi">
+                                    <a class="btn btn-success btn-xs btn-flat" href="#" onclick='show_nilai_validasi("<?= e($row->kelas_id) ?>")' data-toggle="modal" data-target="#ModalNilaiValidasi">
                                         <i class="fa fa-file-text-o" aria-hidden="true"></i> Nilai
                                     </a>
                                 </div>

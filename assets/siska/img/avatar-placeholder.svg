@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" width="240" height="320" role="img" aria-label="Foto belum tersedia">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F4F8FE"/>
+      <stop offset="1" stop-color="#E6EFFA"/>
+    </linearGradient>
+    <linearGradient id="person" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B9CDE8"/>
+      <stop offset="1" stop-color="#9DB8DC"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="320" fill="url(#bg)"/>
+  <circle cx="120" cy="300" r="118" fill="#DCE8F7" opacity="0.55"/>
+  <circle cx="120" cy="116" r="44" fill="url(#person)"/>
+  <path d="M120 172c-46.5 0-84 30.6-84 68.4V320h168v-79.6C204 202.6 166.5 172 120 172z" fill="url(#person)"/>
+</svg>

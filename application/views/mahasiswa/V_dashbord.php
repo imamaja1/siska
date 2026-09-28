@@ -1,65 +1,142 @@
+<?php
+$nim = $this->session->userdata('nim');
+$nama = $this->session->userdata('nama_mahasiswa');
 
-<div class="row">
-    <div class="col-md-12">
-        <ul class="timeline">
-            <li>
-                <i class="fa fa-user bg-blue"></i>
+$prodi_nama = isset($prodi->nama_program_studi) ? $prodi->nama_program_studi : '';
 
-                <div class="timeline-item">
-                    <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+$semester_label = (isset($tahun_akademik->semester) && $tahun_akademik->semester % 2 == 0) ? 'Genap' : 'Ganjil';
+$ta_label = isset($tahun_akademik->tahun_akademik) ? $tahun_akademik->tahun_akademik : '';
 
-                    <h3 class="timeline-header"><a href="#">PROFIL</a></h3>
+$spp_ok = !empty($pembayaran) && $pembayaran->pembayaran_spp == 1;
+$sks_ok = !empty($pembayaran) && $pembayaran->pembayaran_sks == 1;
+$lab_ok = !empty($pembayaran) && $pembayaran->pembayaran_lab == 1;
 
-                    <div class="timeline-body">
-                        Pilih menu <b>Profil</b> untuk mengubah biodata pribadi Anda, apabila terdapat kesalahan pengetikan nama, alamat,
-                        atau informasi pribadi lainnya. <b>Pastikan alamat orang tua Anda valid, karena salinan KRS akan dikirimkan via
-                            POS ke rumah Anda.</b>
-                    </div>
+$angkatan_num = (int) (isset($angkatan) ? $angkatan : 0);
+$pakai_ukt = $angkatan_num >= 2025;
+?>
 
+<div class="mhs-dash">
+
+    <!-- BEGIN: Hero -->
+    <section class="dash-hero">
+        <div class="dash-hero-main">
+
+            <div class="dash-hero-text">
+                <span class="dash-greeting-lead">Selamat datang,</span>
+                <h1 class="dash-greeting-name"><?= e($nama) ?></h1>
+                <div class="dash-meta">
+                    <span class="dash-meta-item"><i class="fa fa-id-card-o"></i> <?= e($nim) ?></span>
+                    <?php if ($prodi_nama !== ''): ?>
+                        <span class="dash-meta-item"><i class="fa fa-graduation-cap"></i> <?= e($prodi_nama) ?></span>
+                    <?php endif; ?>
+                    <?php if ($ta_label !== ''): ?>
+                        <span class="dash-meta-item"><i class="fa fa-calendar-check-o"></i> Semester <?= e($semester_label) ?> &ndash; TA <?= e($ta_label) ?></span>
+                    <?php endif; ?>
                 </div>
-            </li>
+            </div>
+        </div>
 
-            <li>
-                <i class="fa fa-file bg-aqua"></i>
+    </section>
+    <!-- END: Hero -->
 
-                <div class="timeline-item">
-
-                    <h3 class="timeline-header"><a href="#">KRS</a></h3>
-                    <div class="timeline-body">
-                        Pilih menu <b>KRS</b> untuk mengisi Kartu Rencana Studi pada semester aktif. Silakan melakukan konsultasi terkait
-                        matakuliah yang diambil pada KRS ke dosen wali. Pencetakan KRS dilakukan oleh bagian Akademik. <b>KRS tidak akan
-                            dapat dicetak oleh bagian Akademik, sebelum dosen wali mengaktifkan status konsultasi KRS Anda..</b>
+    <!-- BEGIN: Status Mahasiswa -->
+    <section class="dash-panel dash-pay">
+        <div class="dash-panel-head">
+            <h2 class="dash-panel-title">Status Mahasiswa</h2>
+            <?php if ($ta_label !== ''): ?>
+                <span class="dash-panel-hint">TA <?= e($ta_label) ?> <?= e($semester_label) ?></span>
+            <?php endif; ?>
+        </div>
+        <div class="dash-pay-body">
+            <div class="dash-pay-grid">
+                <?php if ($pakai_ukt): ?>
+                    <div class="dash-stat">
+                        <span class="dash-stat-label">UKT</span>
+                        <span class="dash-stat-value <?= $spp_ok ? 'is-ok' : 'is-warn' ?>"><?= $spp_ok ? 'Lunas' : 'Belum' ?></span>
                     </div>
-
-                </div>
-
-            </li>
-            <li>
-                <i class="fa fa-commenting bg-green"></i>
-
-                <div class="timeline-item">
-
-                    <h3 class="timeline-header"><a href="#">KUISIONER</a></h3>
-                    <div class="timeline-body">
-                        Pilih menu <b>Kuisioner</b> untuk melakukan pengisian kuisioner pada matakuliah yang diambil.
+                <?php else: ?>
+                    <div class="dash-stat">
+                        <span class="dash-stat-label">SPP</span>
+                        <span class="dash-stat-value <?= $spp_ok ? 'is-ok' : 'is-warn' ?>"><?= $spp_ok ? 'Lunas' : 'Belum' ?></span>
                     </div>
-
-                </div>
-
-            </li>
-            <li>
-                <i class="fa fa-lock bg-yellow"></i>
-
-                <div class="timeline-item">
-                    <h3 class="timeline-header"><a href="#">LOGOUT</a></h3>
-
-                    <div class="timeline-body">
-                        Pilih nama anda di samping kanan atas kemudian pilih <b>Logout</b> untuk keluar dari aplikasi Sistem Informasi Akademik ini.
+                    <div class="dash-stat">
+                        <span class="dash-stat-label">SKS</span>
+                        <span class="dash-stat-value <?= $sks_ok ? 'is-ok' : 'is-warn' ?>"><?= $sks_ok ? 'Lunas' : 'Belum' ?></span>
                     </div>
+                    <div class="dash-stat">
+                        <span class="dash-stat-label">Praktikum</span>
+                        <span class="dash-stat-value <?= $lab_ok ? 'is-ok' : 'is-warn' ?>"><?= $lab_ok ? 'Lunas' : 'Belum' ?></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <div class="dash-hero-actions">
+                <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn dash-btn-solid">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <span>Susun KRS</span>
+                </a>
+                <a href="<?= site_url('mahasiswa/khs') ?>" class="dash-btn dash-btn-line">
+                    <i class="fa fa-bar-chart"></i>
+                    <span>Lihat KHS</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- END: Status Mahasiswa -->
 
-                </div>
-            </li>
+    <div class="dash-grid">
 
-        </ul>
+        <!-- BEGIN: Quick Access -->
+        <section class="dash-panel">
+            <div class="dash-panel-head">
+                <h2 class="dash-panel-title">Akses cepat</h2>
+                <span class="dash-panel-hint">Menu akademik <i class="fa fa-angle-right"></i></span>
+            </div>
+
+            <ul>
+                <li class="dash-list-item">
+                    <a href="<?= site_url('mahasiswa/krs') ?>">
+                        <span class="dash-list-icon"><i class="fa fa-pencil-square-o"></i></span>
+                        <span class="dash-list-text">
+                            <span class="dash-list-label">Kartu Rencana Studi</span>
+                            <span class="dash-list-desc">Susun dan ajukan matakuliah semester berjalan.</span>
+                        </span>
+                        <i class="fa fa-angle-right dash-list-arrow"></i>
+                    </a>
+                </li>
+                <li class="dash-list-item">
+                    <a href="<?= site_url('mahasiswa/khs') ?>">
+                        <span class="dash-list-icon"><i class="fa fa-bar-chart"></i></span>
+                        <span class="dash-list-text">
+                            <span class="dash-list-label">Kartu Hasil Studi</span>
+                            <span class="dash-list-desc">Lihat nilai final tiap semester yang dipublikasikan.</span>
+                        </span>
+                        <i class="fa fa-angle-right dash-list-arrow"></i>
+                    </a>
+                </li>
+                <li class="dash-list-item">
+                    <a href="<?= site_url('mahasiswa/petikan_nilai') ?>">
+                        <span class="dash-list-icon"><i class="fa fa-file-text-o"></i></span>
+                        <span class="dash-list-text">
+                            <span class="dash-list-label">Petikan Nilai</span>
+                            <span class="dash-list-desc">Transkrip nilai sementara seluruh semester.</span>
+                        </span>
+                        <i class="fa fa-angle-right dash-list-arrow"></i>
+                    </a>
+                </li>
+                <li class="dash-list-item">
+                    <a href="<?= site_url('mahasiswa/kuisioner') ?>">
+                        <span class="dash-list-icon"><i class="fa fa-comments-o"></i></span>
+                        <span class="dash-list-text">
+                            <span class="dash-list-label">Kuisioner Evaluasi</span>
+                            <span class="dash-list-desc">Beri penilaian proses kuliah dan dosen pengampu.</span>
+                        </span>
+                        <i class="fa fa-angle-right dash-list-arrow"></i>
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <!-- END: Quick Access -->
+
     </div>
+
 </div>

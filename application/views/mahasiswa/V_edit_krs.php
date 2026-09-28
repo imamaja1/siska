@@ -1,29 +1,30 @@
 <?= $this->session->flashdata('info') ? $this->session->flashdata('info') : '' ?>
 <div class="box box-primary flat">
-    <div class="box-body table-responsive">
-        <p style="text-align: center"><strong>KARTU RENCANA STUDI (KRS) JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?> (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
-        <p style="text-align: center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL" ?></strong></p>
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-file-text-o"></i> Kartu Rencana Studi</h3>
+    </div>
+    <div class="box-body">
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/simpan_ubah') ?>" method="post" name="krs_form">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <input type="hidden" name="total_sks_dipilih" id="total-sks-dipilih">
             <?php foreach ($data_matakuliah as $row): ?>
 
-                <p><strong>SEMESTER <?= $row['semester'] ?></strong></p>
+                <div class="mhs-semester-label">Semester <?= $row['semester'] ?></div>
                 <?php if (count($row['data']) > 0) : ?>
-                    <table class="table demo-table">
+                    <div class="table-responsive mhs-table-wrap"><table class="table mhs-table">
                         <thead>
                         <tr>
-                            <th id="th" width="20" rowspan="2" style="padding-bottom: 25px;">NO.</th>
-                            <th id="th" width="200" rowspan="2" style="padding-bottom: 25px;">KODE MK</th>
-                            <th id="th" rowspan="2" style="padding-bottom: 25px;">MATAKULIAH</th>
-                            <th id="th" colspan="3">SKS</th>
-                            <th id="th" rowspan="2" style="padding-bottom: 25px;">B</th>
-                            <th id="th" rowspan="2" style="padding-bottom: 25px;">U</th>
+                            <th  width="20" rowspan="2" style="padding-bottom: 25px;">NO.</th>
+                            <th  width="200" rowspan="2" style="padding-bottom: 25px;">KODE MK</th>
+                            <th  rowspan="2" style="padding-bottom: 25px;">MATAKULIAH</th>
+                            <th  colspan="3">SKS</th>
+                            <th  rowspan="2" style="padding-bottom: 25px;">B</th>
+                            <th  rowspan="2" style="padding-bottom: 25px;">U</th>
                         </tr>
                         <tr>
-                            <th id="th">T</th>
-                            <th id="th">PK</th>
-                            <th id="th">PT</th>
+                            <th >T</th>
+                            <th >PK</th>
+                            <th >PT</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -86,19 +87,19 @@
                         ?>
 
                         </tbody>
-                    </table>
+                    </table></div>
                 <?php else : ?>
                     <p class="alert alert-info"><strong><i class="fa fa-info-circle"></i> Data belum ada, silahkan lakukan pengisian data</strong>
                     </p>
                 <?php endif; ?>
-                <hr>
+                
             <?php endforeach; ?>
             <div id="loading">
                 <a href="<?= site_url('mahasiswa/krs') ?>" class="btn btn-danger flat"><i class="fa fa-times"></i> Batal</a>
                 <button type="submit" name="submit" id="submit" class="btn btn-primary flat"><i class="fa fa-check-square-o"></i> Simpan</button>
             </div>
         </form>
-        <hr>
+        
         <h4>Keterangan</h4>
         <p><b>Status Pengambilan Matakuliah</b><br />
             <b>B</b> : Baru &nbsp;&nbsp;&nbsp; <b>U</b> : Ulang<br />
@@ -118,12 +119,10 @@
 <script type='text/javascript'>
     function batal() {
         $('.check-kpat').attr('checked',false);
-        $('#kotak-pesan').html('Daftar Maatakuliah');
+        $('#kotak-pesan').removeClass('is-ok is-over').html('Daftar Matakuliah');
     }
 
-    $(window).bind("load", function() {
-        $('#kotak-pesan').animate({bottom:"50px"}, 1000);
-    });
+    
 </script>
 <script type="text/javascript">
     var calculate;
@@ -212,17 +211,20 @@
 
                     if (total > jumlah_maksimum_sks)
                     {
-                        $('#kotak-pesan').html('<font color=red>Jumlah SKS matakuliah yang telah Anda pilih adalah <b>'+ total +' SKS</b>, melebihi jumlah maksimum <b>'+ jumlah_maksimum_sks +' SKS</b> yang dapat diambil.</font>');
+                        $('#kotak-pesan').addClass('is-over').removeClass('is-ok');
+                        $('#kotak-pesan').html('Jumlah SKS matakuliah yang telah Anda pilih adalah <b>'+ total +' SKS</b><br>melebihi jumlah maksimum <b>'+ jumlah_maksimum_sks +' SKS</b> yang dapat diambil.');
                         $('#submit').prop('disabled',true);
                     }
                     else if (total == jumlah_maksimum_sks)
                     {
-                        $('#kotak-pesan').html('<font color=green>Jumlah SKS matakuliah yang Anda pilih telah sesuai dengan jumlah maksimum <b>'+ total +' SKS</b> yang dapat diambil.</font>');
+                        $('#kotak-pesan').addClass('is-ok').removeClass('is-over');
+                        $('#kotak-pesan').html('Jumlah SKS matakuliah yang Anda pilih telah sesuai<br>dengan jumlah maksimum <b>'+ total +' SKS</b> yang dapat diambil.');
                         $('#submit').prop('disabled',false);
                     }
                     else
                     {
-                        $('#kotak-pesan').html('Jumlah SKS matakuliah yang telah Anda pilih adalah <b>'+ total +' SKS</b>, masih tersisa <b>'+ sisa +' SKS</b> yang dapat diambil.');
+                        $('#kotak-pesan').removeClass('is-over is-ok');
+                        $('#kotak-pesan').html('Jumlah SKS matakuliah yang telah Anda pilih adalah <b>'+ total +' SKS</b><br>masih tersisa <b>'+ sisa +' SKS</b> yang dapat diambil.');
                         $('#submit').prop('disabled',false);
                     }
                 }

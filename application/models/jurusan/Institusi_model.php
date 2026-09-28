@@ -10,6 +10,10 @@ class institusi_model extends CI_Model {
         return $this->db->get($this->table)->result();
     }
 
+    public function get_by_kode($kode) {
+        return $this->db->get_where($this->table, array('kode_institusi' => $kode))->row();
+    }
+
     public function add($data = []) {
         return $this->db->insert($this->table, $data);
     }

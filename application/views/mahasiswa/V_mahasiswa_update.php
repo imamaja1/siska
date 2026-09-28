@@ -1,15 +1,26 @@
-<div class="box box-primary flat">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-edit"></i> <b>Ubah Profil Mahasiswa</b></h3>
-    </div>
-    <div class="box-body">
-        <?php if ($this->session->flashdata('info')) echo $this->session->flashdata('info'); ?>
-        <div class="callout callout-warning">
-            <p><i class="fa fa-exclamation-triangle"></i> Perhatian! Form pengisian yang mengandung tanda bintang (<b>*</b>) wajib diisi.</p>
+<div class="mhs-profile">
+
+    <!-- Banner -->
+    <div class="pf-banner">
+        <div class="pf-banner-left">
+            <span class="pf-banner-icon"><i class="fa fa-edit"></i></span>
+            <h1>Ubah Profil Mahasiswa</h1>
         </div>
-        <h4 class="page-header"><i class="fa fa-user"></i> I. Identitas Mahasiswa</h4>
-        <form id="myform" class="form-horizontal" action="<?= site_url('mahasiswa/profil/simpan_update') ?>" method="POST"  enctype="multipart/form-data">
-            <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+        <a href="<?= site_url('mahasiswa/profil'); ?>" class="btn btn-default"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
+    </div>
+
+    <?php if ($this->session->flashdata('info')) echo $this->session->flashdata('info'); ?>
+
+    <div class="callout callout-warning">
+        <p><i class="fa fa-exclamation-triangle"></i> Perhatian! Form pengisian yang mengandung tanda bintang (<b>*</b>) wajib diisi.</p>
+    </div>
+
+    <form id="myform" class="form-horizontal" action="<?= site_url('mahasiswa/profil/simpan_update') ?>" method="POST"  enctype="multipart/form-data">
+        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+
+        <div class="pf-card">
+            <div class="pf-card-head"><h2><i class="fa fa-user"></i> I. Identitas Mahasiswa</h2></div>
+            <div class="pf-card-body">
 
             <div class="form-group">
                 <label class="control-label col-sm-3">Nomor Induk Mahasiswa <span class="text-danger">*</span> :</label>
@@ -199,7 +210,12 @@
                     <small class="text-danger"><?= form_error('email'); ?></small>
                 </div>
             </div>
-            <h4 class="page-header" style="margin-top:10px;"><i class="fa fa-users"></i> II. Data Orang Tua</h4>
+            </div><!-- /.pf-card-body -->
+        </div><!-- /.pf-card -->
+
+        <div class="pf-card">
+            <div class="pf-card-head"><h2><i class="fa fa-users"></i> II. Data Orang Tua</h2></div>
+            <div class="pf-card-body">
             <div class="form-group">
                 <label class="control-label col-sm-3">Nama Ayah <span class="text-danger">*</span> :</label>
                 <div class="col-sm-3">
@@ -446,13 +462,14 @@
                     <input type="text" class="form-control" value="<?= set_value('telepon_orangtua', $data_mahasiswa->telepon_orangtua) ?>" placeholder="No. Telpon Orang Tua" name="telepon_orangtua">
                 </div>
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3"></label>
-                <div class="col-sm-3">
-                    <a href="<?= site_url('mahasiswa/profil'); ?>" class="btn btn-default flat"><i class="fa fa-remove"></i> Batal</a>
-                    <button type="submit" class="btn btn-primary flat"><i class="fa fa-check-circle"></i> Simpan</button>
-                </div>
+            </div><!-- /.pf-card-body -->
+        </div><!-- /.pf-card -->
+
+        <div class="pf-card">
+            <div class="pf-card-body" style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
+                <a href="<?= site_url('mahasiswa/profil'); ?>" class="btn btn-default"><i class="fa fa-remove"></i> Batal</a>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i> Simpan</button>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+    </form>
+</div><!-- /.mhs-profile -->

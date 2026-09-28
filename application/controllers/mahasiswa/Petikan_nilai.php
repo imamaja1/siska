@@ -3,6 +3,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Petikan_nilai extends CI_Controller
 {
+    private const PETIKAN_FONT_SIZES = array(8, 7.5, 7, 6.5, 6, 5.5);
+
+    private const PETIKAN_PDF_MARGINS = array(
+        'mode'          => 'win-1252',
+        'format'        => 'Legal',
+        'margin_left'   => 15,
+        'margin_right'  => 15,
+        'margin_top'    => 25,
+        'margin_bottom' => 10,
+        'margin_header' => 5,
+        'margin_footer' => 5,
+    );
 
     public function __construct()
     {
@@ -52,9 +64,12 @@ class Petikan_nilai extends CI_Controller
     {
         $nim = $this->session->userdata('nim');
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
+        if (empty($kode_nama_kurikulum)) {
+            $kode_nama_kurikulum = kode_nama_kurikulum($nim);
+        }
         $data['conten'] = "mahasiswa/V_Petikan_nilai";
-        $data['judul'] = "Petikan Nilai - " . $nim;
-        $data['data'] = $this->Petikan_nilai_model->petikan_nilai($nim, $kode_nama_kurikulum);
+        $data['judul'] = "Petikan Nilai";
+        $data['data'] = $this->Petikan_nilai_model->petikan_nilai($nim, $kode_nama_kurikulum) ?: [];
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         $data['tahun_akademik'] = $this->m_tahun_akademik->get_semester();
         $data['prodi'] = $this->Nama_jurusan_model->get_prodi_by_nim($nim);
@@ -68,9 +83,12 @@ class Petikan_nilai extends CI_Controller
     {
         $nim = $this->session->userdata('nim');
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
+        if (empty($kode_nama_kurikulum)) {
+            $kode_nama_kurikulum = kode_nama_kurikulum($nim);
+        }
         $data['conten'] = "mahasiswa/V_Petikan_nilai";
         $data['judul'] = "Petikan Nilai";
-        $data['data'] = $this->Petikan_mahasiswa_model->petikan_nilai($nim, $kode_nama_kurikulum);
+        $data['data'] = $this->Petikan_mahasiswa_model->petikan_nilai($nim, $kode_nama_kurikulum) ?: [];
 
         $data['jenjang'] = $this->Jenjang_model->get_nama_bykode(substr($nim, 4, 1));
         $data['jurusan'] = $this->Kode_jurusan_model->get_nama_bykode(substr($nim, 2, 2));
@@ -117,68 +135,88 @@ class Petikan_nilai extends CI_Controller
             }
         }
     }
-    public function cetak(){
-        $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
-        $ta = tahun_akademik();
-        $tahun_akademik = $ta ? $ta->kode_tahun_akademik - 1 : null;
-        $nim = $this->session->userdata('nim');
-        $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
-        // echo json_encode($data['mahasiswa']);break;
-        $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
-        $data['prodi'] = get_kode_prodi($nim);
-        $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
-        $data['semester'] = ($sem && isset($sem->semester) && is_numeric($sem->semester)) ? $sem->semester - 1 : 0;
-        $data['semester_jalan'] = substr($ta ? $ta->tahun_akademik : '', -2) - substr($nim, 0,2);
-        $data['data'] = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum,$data['semester']+1);
-        $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
-        $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
-        $data['prodi'] = get_kode_prodi($nim);
-      	$nik = bodo_kop($nim)['nik'];
-        $nik = bodo_kop($nim)['nik'];
-        $ttd = $this->mahasiswaservice->getSignatureDosen($nik);
-        $data['ttd'] = $ttd;
-        // $this->load->view('admin/akademik/petikan_nilai/cetak_petikan_nilai', $data);
-        $content = $this->load->view('admin/akademik/petikan_nilai/cetak_petikan_nilai', $data, true);
-        $header = $this->load->view('admin/akademik/petikan_nilai/header_petikan_nilai',$data, true);
-        $namafile = $nim . "-Petikan_nilai.pdf";
 
-        $this->load->library('pdf');
-        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
-        $mpdf = $this->pdf;
-        $mpdf->SetHTMLHeader($header);
-        $mpdf->WriteHTML($content);
-        $mpdf->Output($namafile, "D");
+    public function cetak()
+    {
+        $this->render_petikan_pdf($this->build_petikan_data(-1), $this->petikan_filename());
     }
-   	public function Cetak_now(){
-        $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
-        $ta = tahun_akademik();
-        $tahun_akademik = $ta ? $ta->kode_tahun_akademik - 1 : null;
-        $nim = $this->session->userdata('nim');
-        $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
-        // echo json_encode($data['mahasiswa']);break;
-        $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
-        $data['prodi'] = get_kode_prodi($nim);
-        $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
-        $data['semester'] = ($sem && isset($sem->semester) && is_numeric($sem->semester)) ? $sem->semester : 0;
-        $data['semester_jalan'] = substr($ta ? $ta->tahun_akademik : '', -2) - substr($nim, 0,2);
-        $data['data'] = $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum,$data['semester']+1);
-        $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
-        $data['tahun_akademik'] = $this->mahasiswaservice->getTahunAkademikById($tahun_akademik);
-        $data['prodi'] = get_kode_prodi($nim);
-        
-        $nik = bodo_kop($nim)['nik'];
-        $ttd = $this->mahasiswaservice->getSignatureDosen($nik);
-        $data['ttd'] = $ttd;
-        // $this->load->view('admin/akademik/petikan_nilai/cetak_petikan_nilai', $data);
-        $content = $this->load->view('admin/akademik/petikan_nilai/cetak_petikan_nilai', $data, true);
-        $header = $this->load->view('admin/akademik/petikan_nilai/header_petikan_nilai',$data, true);
-        $namafile = $nim . "-Petikan_nilai.pdf";
 
+    /**
+     * Menyusun data untuk view cetak petikan nilai.
+     *
+     * @param int $semester_offset -1 = semester yang sudah berjalan (cetak),
+     *                              0  = semester berjalan saat ini (Cetak_now).
+     * @return array
+     */
+    private function build_petikan_data($semester_offset)
+    {
+        $nim = $this->session->userdata('nim');
+        $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
+        if (empty($kode_nama_kurikulum)) {
+            $kode_nama_kurikulum = kode_nama_kurikulum($nim);
+        }
+
+        $ta = tahun_akademik();
+        $kode_tahun_akademik = $ta ? $ta->kode_tahun_akademik - 1 : null;
+
+        $sem = $this->mahasiswaservice->getLastSemesterKrs($nim);
+        $semester = ($sem && isset($sem->semester) && is_numeric($sem->semester))
+            ? $sem->semester + $semester_offset
+            : 0;
+
+        return array(
+            'mahasiswa'      => $this->mahasiswa_model->get($nim),
+            'tahun_akademik' => $this->mahasiswaservice->getTahunAkademikById($kode_tahun_akademik),
+            'prodi'          => get_kode_prodi($nim),
+            'semester'       => $semester,
+            'semester_jalan' => substr($ta ? $ta->tahun_akademik : '', -2) - substr($nim, 0, 2),
+            'data'           => $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum, $semester + 1) ?: [],
+            'ttd'            => $this->mahasiswaservice->getSignatureDosen(bodo_kop($nim)['nik']),
+        );
+    }
+
+    public function Cetak_now()
+    {
+        $this->render_petikan_pdf($this->build_petikan_data(0), $this->petikan_filename());
+    }
+
+    private function petikan_filename()
+    {
+        return $this->session->userdata('nim') . "-Petikan_nilai.pdf";
+    }
+
+    /**
+     * Render PDF petikan nilai lalu kirim sebagai unduhan.
+     *
+     * Ukuran font diturunkan bertahap sampai isi + header (kop) muat
+     * dalam satu halaman.
+     *
+     * @param array  $data
+     * @param string $namafile
+     * @return void
+     */
+    private function render_petikan_pdf(array $data, $namafile)
+    {
         $this->load->library('pdf');
-        $this->pdf->reinitialize(['mode' => 'win-1252', 'format' => 'Legal', 'margin_left' => 15, 'margin_right' => 15, 'margin_top' => 37, 'margin_bottom' => 10, 'margin_header' => 5, 'margin_footer' => 5]);
-        $mpdf = $this->pdf;
-        $mpdf->SetHTMLHeader($header);
-        $mpdf->WriteHTML($content);
-        $mpdf->Output($namafile, "D");
+
+        $content_view = 'admin/akademik/petikan_nilai/cetak_petikan_nilai';
+        $header_view  = 'admin/akademik/petikan_nilai/header_petikan_nilai';
+        $header = $this->load->view($header_view, $data, true);
+
+        foreach (self::PETIKAN_FONT_SIZES as $font_size) {
+            $data['font_size'] = $font_size;
+
+            $this->pdf = new Pdf();
+            $this->pdf->reinitialize(self::PETIKAN_PDF_MARGINS);
+            $this->pdf->SetHTMLHeader($header);
+            $this->pdf->WriteHTML($this->load->view($content_view, $data, true));
+            $this->pdf->Output('', 'S'); // render untuk menghitung jumlah halaman
+
+            if ($this->pdf->getDompdf()->getCanvas()->get_page_count() <= 1) {
+                break;
+            }
+        }
+
+        $this->pdf->Output($namafile, 'D');
     }
 }

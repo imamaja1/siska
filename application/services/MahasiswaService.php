@@ -340,7 +340,6 @@ class MahasiswaService extends MY_Service {
         return $this->db->select('*')->from('krs')
             ->join('krs_detail', 'krs_detail.kode_krs = krs.kode_krs', 'left')
             ->where('krs_detail.status != ', 'k')
-            ->where('semester !=', 'k')
             ->where("nim", $nim)
             ->where('krs.kode_tahun_akademik <', $ta)
             ->group_by('krs.semester')
@@ -350,7 +349,8 @@ class MahasiswaService extends MY_Service {
     public function getKrsMhsHistorySimple($nim, $ta) {
         return $this->db->select('*')->from('krs')
             ->where("nim", $nim)
-            ->where("kode_tahun_akademik < ", $ta)
+            ->where("kode_tahun_akademik <=", $ta)
+            ->order_by('kode_tahun_akademik', 'ASC')
             ->get()->result_object();
     }
 
@@ -358,7 +358,6 @@ class MahasiswaService extends MY_Service {
         return $this->db->select('*')->from('krs')
             ->join('krs_detail', 'krs_detail.kode_krs = krs.kode_krs', 'left')
             ->where('krs_detail.status != ', 'k')
-            ->where('semester !=', 'k')
             ->where("nim", $nim)
             ->where('krs.kode_tahun_akademik <', $ta)
             ->group_by('krs.Semester')
@@ -506,14 +505,82 @@ class MahasiswaService extends MY_Service {
             ->join('krs_detail as krd', 'krs.kode_krs=krd.kode_krs')
             ->where('nim', $nim)
             ->where_not_in('kode_tahun_akademik', $kode_tahun_akademik)
-            ->where_not_in('semester', 'K')
             ->where_not_in('krd.status', 'K')
-            ->group_by('kode_tahun_akademik')
+            ->group_by('kode_tahun_akademik, semester')
             ->get()->result_object();
     }
 
     public function getSemesterByKodeKrs($kode_krs) {
         return $this->db->where('kode_krs', $kode_krs)->get('krs')->row_object();
+    }
+
+    /**
+     * Kode KRS terakhir (paling baru) milik mahasiswa.
+     * $hanya_ada_nilai = true -> hanya KRS yang sudah memiliki nilai (KHS).
+     * Mengembalikan kode_krs, atau null bila tidak ada.
+     */
+    public function getKodeKrsTerakhir($nim, $kode_tahun_akademik_aktif = null, $hanya_ada_nilai = true) {
+        $this->db->select('krs.kode_krs')
+            ->from('krs')
+            ->join('krs_detail as krd', 'krd.kode_krs=krs.kode_krs')
+            ->where('krs.nim', $nim)
+            ->where('krs.semester !=', 'K')
+            ->where('krd.status !=', 'K');
+
+        if (!empty($kode_tahun_akademik_aktif)) {
+            $this->db->where('krs.kode_tahun_akademik !=', $kode_tahun_akademik_aktif);
+        }
+        if ($hanya_ada_nilai) {
+            $this->db->join('khs_detail as khd', 'khd.kode_krs_detail=krd.kode_krs_detail', 'left')
+                ->where('khd.nilai_akhir IS NOT NULL', null, false);
+        }
+
+        $row = $this->db->group_by('krs.kode_krs')
+            ->order_by('krs.kode_tahun_akademik', 'DESC')
+            ->order_by('krs.semester', 'DESC')
+            ->limit(1)
+            ->get()->row_object();
+
+        return $row ? $row->kode_krs : null;
+    }
+
+    /**
+     * Kode KRS mahasiswa berdasarkan nomor semester (untuk URL yang bersih).
+     */
+    public function getKodeKrsBySemester($nim, $semester, $kode_tahun_akademik_aktif = null) {
+        $this->db->select('krs.kode_krs')
+            ->from('krs')
+            ->join('krs_detail as krd', 'krd.kode_krs=krs.kode_krs')
+            ->where('krs.nim', $nim)
+            ->where('krs.semester', $semester)
+            ->where('krd.status !=', 'K');
+
+        if (!empty($kode_tahun_akademik_aktif)) {
+            $this->db->where('krs.kode_tahun_akademik !=', $kode_tahun_akademik_aktif);
+        }
+
+        $row = $this->db->order_by('krs.kode_tahun_akademik', 'DESC')
+            ->limit(1)
+            ->get()->row_object();
+
+        return $row ? $row->kode_krs : null;
+    }
+
+    /**
+     * Kode tahun akademik dari KRS mahasiswa berdasarkan nomor semester.
+     */
+    public function getKodeTahunAkademikBySemester($nim, $semester) {
+        $this->db->select('kode_tahun_akademik')
+            ->from('krs')
+            ->where('nim', $nim)
+            ->where('semester', $semester);
+        if ($semester !== 'K') {
+            $this->db->where('semester !=', 'K');
+        }
+        $row = $this->db->order_by('kode_tahun_akademik', 'DESC')
+            ->limit(1)
+            ->get()->row_object();
+        return $row ? $row->kode_tahun_akademik : null;
     }
 
     public function getNamaMahasiswa($nim) {

@@ -1,8 +1,8 @@
 <?= $this->session->flashdata('info') ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="#" class="btn-sm btn-primary flat" onclick="$('#tambah-kompetensi').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
-        <a href="<?=site_url('admin/jurusan/konsentrasi')?>" class="btn-sm btn-success flat" ><i class="fa fa-check-circle"></i> Data MK Komptetensi</a>
+        <a href="#" class="btn btn-sm btn-primary flat" onclick="$('#tambah-kompetensi').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
+        <a href="<?=site_url('admin/jurusan/konsentrasi')?>" class="btn btn-sm btn-success flat" ><i class="fa fa-check-circle"></i> Data MK Komptetensi</a>
     </div>
 </div>
 <div class="box box-primary flat">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="form-group">
                         <label>Nama Program Studi</label>
-                        <select name="kode_nama_jurusan" class="form-control" required>
+                        <select name="kode_nama_jurusan" class="form-control select2" required>
                             <option value="" disabled selected >Pilih Program Studi</option>
                             <?php foreach ($kode_nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?> </option>
@@ -103,7 +103,7 @@
                     </div>
                     <div class="form-group">
                         <label>Nama Program Studi</label>
-                        <select name="kode_nama_jurusan" class="form-control" id="edit-kode-nama-jurusan" required>
+                        <select name="kode_nama_jurusan" class="form-control select2" id="edit-kode-nama-jurusan" required>
                             <option value="" selected disabled>Pilih Program Studi</option>
                             <?php foreach ($kode_nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->singkatan_program_studi) ?></option>

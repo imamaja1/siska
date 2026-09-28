@@ -7,17 +7,23 @@
     </div>
 </div>
 <div class="box box-solid flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-calendar-check-o"></i> Pilih Semester</h3>
+    </div>
     <div class="box-body">
-        <?php $i=1; foreach ($krs_mhs as $row) : ?>
-            <a href="<?= site_url('mahasiswa/krs/old/'.$row->kode_tahun_akademik.'/'.$row->semester) ?>" class="btn bg-navy flat btn-xs"><i class="fa fa-arrow-circle-right"></i> | SEMESTER <?= $i++ ?></a>
-        <?php endforeach; ?>
-        <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn bg-navy flat btn-xs"><i class="fa fa-arrow-circle-right"></i> | SEMESTER <?= $i++ ?></a>
+        <div class="krs-pick">
+            <?php $i=1; foreach ($krs_mhs as $row) : ?>
+                <a href="<?= site_url('mahasiswa/krs/old/'.$row->semester) ?>" class="btn bg-navy flat btn-sm"><i class="fa fa-arrow-circle-right"></i> Semester <?= $i++ ?></a>
+            <?php endforeach; ?>
+            <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn bg-navy flat btn-sm"><i class="fa fa-arrow-circle-right"></i> Semester <?= $i++ ?></a>
+        </div>
     </div>
 </div>
 <div class="box box-primary flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-file-text-o"></i> Kartu Rencana Studi</h3>
+    </div>
     <div class="box-body table-responsive">
-        <p style="text-align: center"><strong>KARTU RENCANA STUDI (KRS) JENJANG <?= strtoupper(e($prodi->nama_program_studi)) ?> (<?= strtoupper(e($prodi->singkatan_program_studi)) ?>)</strong></p>
-        <p style="text-align: center"><strong>SEMESTER <?= $tahun_akademik->semester % 2 == (0)? "GENAP" : "GANJIL" ?></strong></p>
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/simpan_krs') ?>" method="post" name="krs_form">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <?php foreach ($data_matakuliah as $row): ?>

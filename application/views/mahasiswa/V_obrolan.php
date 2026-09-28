@@ -1,7 +1,7 @@
 
 <div class="box box-warning direct-chat direct-chat-warning">
     <div class="box-header with-border">
-        <h3 class="box-title">Direct Chat</h3>
+        <h3 class="box-title"><i class="fa fa-comments"></i> Direct Chat</h3>
 
         <div class="box-tools pull-right">
             <span data-toggle="tooltip" title="" class="badge bg-blue" data-original-title="3 New Messages">3</span>

@@ -13,8 +13,14 @@ class Home extends CI_Controller {
     }
 
     public function index() {
+        $nim = $this->session->userdata('nim');
         $data['conten'] = "mahasiswa/V_dashbord";
-        $data['judul'] = "Dashbord";
+        $data['judul'] = "Dashboard";
+        $data['hide_page_header'] = true;
+        $data['prodi'] = get_kode_prodi($nim);
+        $data['tahun_akademik'] = tahun_akademik();
+        $data['angkatan'] = '20' . substr($nim, 0, 2);
+        $data['pembayaran'] = pembayaran_mahasiswa($nim);
 
         $this->load->view('mahasiswa/template/V_main', $data);
     }

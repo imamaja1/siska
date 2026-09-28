@@ -41,21 +41,27 @@ class Krs extends CI_Controller
         $this->cek_kuisioner();
     }
 
-    public function old($tahun_akademik,$semester){
+    public function old($semester){
         $ta = $this->m_tahun_akademik->get_aktif();
         $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($this->session->userdata('nim'));
         $nim = $this->session->userdata('nim');
         $kode_jejang = substr($nim, 4, 1);
         $gelombang = substr($nim, 5, 1);
         $kode_jurusan = substr($nim, 2, 2);
+        $tahun_akademik = $this->mahasiswaservice->getKodeTahunAkademikBySemester($nim, $semester);
+        if (empty($tahun_akademik)) {
+            redirect('mahasiswa/krs');
+        }
         $data['krs_mhs'] = $this->mahasiswaservice->getKrsMhsHistory($nim, $ta);
         $data['aktif_dosen'] = $this->mahasiswaservice->getKonsultasiPerwalianAktif($nim, $tahun_akademik);
         $data['bayar_sks'] = $this->mahasiswaservice->getBayarSks($nim, $tahun_akademik);
-        $kode_krs = $this->Krs_model->get_kode_krs($this->session->userdata('nim'), $tahun_akademik);
+        $kode_krs = ($semester === 'K')
+            ? $this->Krs_model->get_kode_krs_konversi($this->session->userdata('nim'), $tahun_akademik)
+            : $this->Krs_model->get_kode_krs($this->session->userdata('nim'), $tahun_akademik);
         $data['conten'] = "mahasiswa/V_Krs";
         $data['beban_sks'] = $this->maksimum_sks_lalu($tahun_akademik,$semester);
         $data['data'] = $this->Krs_detail_model->get_data_krs($kode_krs);
-        $data['judul'] = "KRS | Semester " . $semester;
+        $data['judul'] = ($semester === 'K') ? "KRS | Konversi" : "KRS | Semester " . $semester;
         $data['prodi'] = $this->Nama_jurusan_model->get_all_byid($this->session->userdata('kode_program_studi'));
         if (!empty($data['prodi'])) {
             $data['jenjang'] = $this->Jenjang_model->get_nama($data['prodi']->id_jenjang);
@@ -66,9 +72,12 @@ class Krs extends CI_Controller
         $data['dosen_wali'] = !empty($dosen_wali) && is_object($dosen_wali) ? $dosen_wali->nama_dosen : '-';
         $data['nim'] = $this->session->userdata('nim');
         $data['semester'] = $semester;
+        $data['semester_aktif'] = $this->semester;
         $data['data_mahasiswa'] = $this->Mahasiswa_model->get($this->session->userdata('nim'));
         $data['tahun_akademik'] = $this->m_tahun_akademik->get_all_byid($tahun_akademik);
         $data['ta'] = $ta;
+        $data['ta_selected'] = $tahun_akademik;
+        $data['is_old_krs'] = true;
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 
@@ -77,6 +86,8 @@ class Krs extends CI_Controller
         $this->starter();
         $tahun_akademik = $this->m_tahun_akademik->get_aktif();
         $data['ta'] = $this->m_tahun_akademik->get_aktif();
+        $data['ta_selected'] = $data['ta'];
+        $data['is_old_krs'] = false;
         $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($this->session->userdata('nim'));
         $cek_exis = $this->Krs_model->cek_krs_exis($this->session->userdata('nim'), $tahun_akademik);
         $nim = $this->session->userdata('nim');
@@ -194,6 +205,7 @@ class Krs extends CI_Controller
         $data['dosen_wali'] = !empty($dosen_wali) && is_object($dosen_wali) ? $dosen_wali->nama_dosen : '-';
         $data['nim'] = $this->session->userdata('nim');
         $data['semester'] = $this->semester;
+        $data['semester_aktif'] = $this->semester;
         $data['data_mahasiswa'] = $this->Mahasiswa_model->get($this->session->userdata('nim'));
         $data['tahun_akademik'] = $this->m_tahun_akademik->get_all_byid($tahun_akademik);
         // echo json_encode($data['tahun_akademik']);break;
@@ -210,7 +222,7 @@ class Krs extends CI_Controller
         $this->status_pendaftaran = $mahasiswa->status_pendaftaran;
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
         $cek_paket = $this->m_data_kurikulum->get_nama_kurikulum($nim);
-        $this->paket = $cek_paket->paket;
+        $this->paket = $cek_paket ? $cek_paket->paket : null;
         $tahun_akademik = $this->m_tahun_akademik->get_semester();
         $semester = $tahun_akademik->semester;
         $status_perkuliahan = $this->status_perkuliahan();
@@ -316,6 +328,25 @@ class Krs extends CI_Controller
             redirect('home/Access_krs_denied');
         }
     }
+    /**
+     * Hitung total SKS dari daftar id_matakuliah (diambil dari tabel matakuliah,
+     * bukan dari nilai SKS yang dikirim client).
+     */
+    private function hitungTotalSksServer($ids)
+    {
+        $ids = array_values(array_unique(array_filter((array) $ids)));
+        if (empty($ids)) return 0;
+        $rows = $this->db->select('id_matakuliah, (sks_teori+sks_praktek+sks_praktikum) as sks')
+            ->from('matakuliah')
+            ->where_in('id_matakuliah', $ids)
+            ->get()->result();
+        $map = array();
+        foreach ($rows as $r) $map[$r->id_matakuliah] = (int) $r->sks;
+        $total = 0;
+        foreach ($ids as $id) $total += isset($map[$id]) ? $map[$id] : 0;
+        return $total;
+    }
+
     public function simpan_krs()
     {
         $krs_lalu = $this->Krs_model->get_kodemk_krs($this->session->userdata('nim'));
@@ -323,25 +354,26 @@ class Krs extends CI_Controller
         $data_ulang = $this->input->post('ulang');
         $total_sks_dipilih = $this->input->post('total_sks_dipilih');
         $beban = $this->maksimum_sks();
-        $beban_sekarang = $beban['beban_sks'];
+        $beban_sekarang = isset($beban['beban_sks']) ? $beban['beban_sks'] : 0;
         $nim = $this->session->userdata('nim');
 
-        // Server-side recalculation of total SKS from submitted checkboxes
-        $total_sks_server = 0;
+        // Server-side recalculation of total SKS (dari DB, bukan dari client)
+        $ids_mk = array();
         $data_baru = $this->input->post('baru');
         $data_ulang = $this->input->post('ulang');
         if (is_array($data_baru)) {
             foreach ($data_baru as $kode_mk) {
                 $mak = explode(",", $kode_mk);
-                if (isset($mak[1])) $total_sks_server += (int)$mak[1];
+                if (isset($mak[0])) $ids_mk[] = $mak[0];
             }
         }
         if (is_array($data_ulang)) {
             foreach ($data_ulang as $kode_mk) {
                 $mak = explode(",", $kode_mk);
-                if (isset($mak[1])) $total_sks_server += (int)$mak[1];
+                if (isset($mak[0])) $ids_mk[] = $mak[0];
             }
         }
+        $total_sks_server = $this->hitungTotalSksServer($ids_mk);
 
         if ($total_sks_server > $beban_sekarang) {
             $this->session->set_flashdata(
@@ -1138,24 +1170,26 @@ class Krs extends CI_Controller
 
         $total_sks_dipilih = $this->input->post('total_sks_dipilih');
         $beban = $this->maksimum_sks();
-        $beban_sekarang = $beban['beban_sks'];
+        $beban_sekarang = isset($beban['beban_sks']) ? $beban['beban_sks'] : 0;
         $nim = $this->session->userdata('nim');
 
-        $total_sks_server = 0;
+        // Server-side recalculation of total SKS (dari DB, bukan dari client)
+        $ids_mk = array();
         $data_baru = $this->input->post('baru');
         $data_ulang = $this->input->post('ulang');
         if (is_array($data_baru)) {
             foreach ($data_baru as $kode_mk) {
                 $mak = explode(",", $kode_mk);
-                if (isset($mak[2])) $total_sks_server += (int)$mak[2];
+                if (isset($mak[0])) $ids_mk[] = $mak[0];
             }
         }
         if (is_array($data_ulang)) {
             foreach ($data_ulang as $kode_mk) {
                 $mak = explode(",", $kode_mk);
-                if (isset($mak[2])) $total_sks_server += (int)$mak[2];
+                if (isset($mak[0])) $ids_mk[] = $mak[0];
             }
         }
+        $total_sks_server = $this->hitungTotalSksServer($ids_mk);
 
         $tahun_angkatan = substr($nim, 0, 2);
         $tahun = $this->m_tahun_akademik->get_semester();
@@ -1276,6 +1310,19 @@ class Krs extends CI_Controller
     {
         $nim = $this->session->userdata('nim');
         $matakuiah_awal = $this->input->post('id_matakuliah');
+
+        // Validasi batas SKS (dari DB)
+        $beban = $this->maksimum_sks();
+        $beban_sekarang = isset($beban['beban_sks']) ? $beban['beban_sks'] : 0;
+        $total_sks_server = $this->hitungTotalSksServer($matakuiah_awal);
+        if ($total_sks_server > $beban_sekarang) {
+            $this->session->set_flashdata(
+                'info',
+                '<script>swal("Gagal","Jumlah SKS Matakuliah melebihi beban yang diberikan","error")</script>'
+            );
+            redirect('mahasiswa/krs');
+        }
+
         $semester = $this->semester;
         $tahun = $this->m_tahun_akademik->get_semester();
         $kode_tahun_akademik = $tahun->kode_tahun_akademik;
@@ -1474,6 +1521,10 @@ class Krs extends CI_Controller
     {
         // return $tahun_akademik;
         $nim = $this->session->userdata('nim');
+
+        if ($semester === 'K') {
+            return array('ip_semester_lalu' => 0, 'beban_sks' => 0);
+        }
 
         $kode_jenjang = substr($nim, 4, 1);
         $kode_jurusan = substr($nim, 2, 2);

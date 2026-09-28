@@ -269,6 +269,9 @@ if (!function_exists('validasi_nilai')) {
 if (!function_exists('e')) {
     function e($str)
     {
+        if ($str === null) {
+            return '';
+        }
         return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
     }
 }
@@ -381,5 +384,45 @@ if (!function_exists('log_aktivitas_nilai')) {
             'id_user' => $CI->session->userdata('id'),
             'nama_login' => $CI->session->userdata('nama_login'),
         ));
+    }
+}
+
+if (!function_exists('app_logo')) {
+    /**
+     * URL logo aplikasi yang diambil dari logo Institusi (menu Jurusan > Institusi).
+     * Fallback ke logo kampus bawaan bila belum ada logo institusi.
+     */
+    function app_logo()
+    {
+        static $logo = null;
+        if ($logo !== null) {
+            return $logo;
+        }
+
+        $logo = base_url('assets/siska/img/logo_kampus.png');
+
+        $CI = get_instance();
+        if (!isset($CI->institusi_model)) {
+            $CI->load->model('jurusan/institusi_model');
+        }
+
+        foreach ($CI->institusi_model->get() as $row) {
+            if (!empty($row->logo) && is_file(FCPATH . 'assets/institusi/' . $row->logo)) {
+                $logo = base_url('assets/institusi/' . $row->logo);
+                break;
+            }
+        }
+
+        return $logo;
+    }
+}
+
+if (!function_exists('app_favicon')) {
+    /**
+     * URL favicon aplikasi, memakai logo institusi bila tersedia.
+     */
+    function app_favicon()
+    {
+        return app_logo();
     }
 }

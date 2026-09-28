@@ -1,6 +1,6 @@
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="<?= site_url('admin/akademik/mahasiswa'); ?>" class="btn-success btn-sm flat"><i
+        <a href="<?= site_url('admin/akademik/mahasiswa'); ?>" class="btn btn-success btn-sm flat"><i
                     class="fa fa-arrow-left"></i> Kembali</a>
     </div>
 </div>

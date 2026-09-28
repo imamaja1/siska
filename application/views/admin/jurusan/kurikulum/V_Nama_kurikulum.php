@@ -26,7 +26,7 @@
                     </div>
                     <div>
                         <label>Nama Jurusan</label>
-                        <select name="jurusan" class="form-control" required>
+                        <select name="jurusan" class="form-control select2" required>
                             <option value="">Pilih</option>
                             <?php foreach ($prodi as $j) { ?>
                                 <option value="<?= e($j->kode_program_studi) ?>"><?= e($j->singkatan_program_studi) ?> - <?= e($j->nama_program_studi) ?></option>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label>Nama Jurusan</label>
-                        <select name="jurusan" class="form-control" id="edit-jurusan" required>
+                        <select name="jurusan" class="form-control select2" id="edit-jurusan" required>
                             <option value="">Pilih</option>
                             <?php foreach ($prodi as $j) { ?>
                                 <option value="<?= e($j->kode_program_studi) ?>"><?= e($j->singkatan_program_studi) ?> - <?= e($j->nama_program_studi) ?></option>

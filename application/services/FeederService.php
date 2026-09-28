@@ -43,6 +43,9 @@ class FeederService extends MY_Service {
         if ($row && trim((string) $row->key_value) !== '') {
             $has_rows = TRUE;
             $decrypt_ok = laravel_decrypt($row->key_value) !== FALSE;
+            if (!$decrypt_ok) {
+                $decrypt_ok = $this->legacyDecrypt($row->key_value) !== '';
+            }
         }
 
         return [
@@ -60,6 +63,9 @@ class FeederService extends MY_Service {
 
         $plain = laravel_decrypt($payload);
         if ($plain === FALSE) {
+            $plain = $this->legacyDecrypt($payload);
+        }
+        if ($plain === FALSE) {
             return '';
         }
 
@@ -71,6 +77,28 @@ class FeederService extends MY_Service {
         }
 
         return is_scalar($decoded) ? (string) $decoded : '';
+    }
+
+    /**
+     * Fallback dekripsi kredensial format lama (ditulis library Encryption
+     * CodeIgniter oleh versi SISKA sebelumnya): base64(iv . ciphertext),
+     * cipher aes-256-cbc, key dari config `encryption_key`.
+     */
+    private function legacyDecrypt($payload)
+    {
+        if ($payload === NULL || trim((string) $payload) === '') {
+            return '';
+        }
+
+        $CI =& get_instance();
+        $CI->load->library('encryption', NULL, 'legacy_encryption');
+        $CI->legacy_encryption->initialize([
+            'cipher' => 'aes-256',
+            'mode'   => 'cbc',
+        ]);
+
+        $plain = $CI->legacy_encryption->decrypt($payload);
+        return ($plain === FALSE) ? '' : $plain;
     }
 
     private function decodePayload($plain)
@@ -195,8 +223,16 @@ class FeederService extends MY_Service {
         ];
     }
 
+    private $cached_token = '';
+
     public function getToken($force = FALSE)
     {
+        if ($force) {
+            $this->cached_token = '';
+        } elseif ($this->cached_token !== '') {
+            return $this->cached_token;
+        }
+
         if (!$force) {
             $row = $this->feeder_model->get_credential('feeder_token');
             if ($row) {
@@ -231,7 +267,12 @@ class FeederService extends MY_Service {
             return '';
         }
 
-        return (string) ($result['data']['token'] ?? ($result['token'] ?? ''));
+        $token = (string) ($result['data']['token'] ?? ($result['token'] ?? ''));
+        if ($token !== '') {
+            $this->cached_token = $token;
+        }
+
+        return $token;
     }
 
     private function parseToken($payload)
@@ -242,6 +283,9 @@ class FeederService extends MY_Service {
 
         $plain = laravel_decrypt($payload);
         if ($plain === FALSE) {
+            $plain = $this->legacyDecrypt($payload);
+        }
+        if ($plain === FALSE || trim((string) $plain) === '') {
             return '';
         }
 
@@ -321,9 +365,15 @@ class FeederService extends MY_Service {
         return ['data' => $result['data'] ?? $result];
     }
 
-    public function getNilaiFeederMap($id_semester, $extraFilter = [])
+    public function getNilaiFeederMap($id_semester, $extraFilter = [], $namaLike = '')
     {
         $filter = $this->buildFilter($id_semester, $extraFilter);
+
+        $namaLike = trim((string) $namaLike);
+        if ($namaLike !== '') {
+            $safe = str_replace(array('\\', "'", '%', '_'), array('\\\\', "\\'", '\\%', '\\_'), $namaLike);
+            $filter .= " and nama_mata_kuliah like '%" . $safe . "%'";
+        }
 
         $map      = [];
         $keysSeen = [];
@@ -375,11 +425,15 @@ class FeederService extends MY_Service {
 
                 $key = strtoupper(trim((string) $nim)) . '|' . strtoupper(trim((string) $kode));
                 $map[$key] = [
-                    'nim'   => trim((string) $nim),
-                    'nama'  => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
-                    'kode'  => trim((string) $kode),
-                    'angka' => $this->pick($row, ['nilai_angka', 'nilai', 'NA']),
-                    'huruf' => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
+                    'nim'        => trim((string) $nim),
+                    'nama'       => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
+                    'kode'       => trim((string) $kode),
+                    'nama_mk'    => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
+                    'nama_kelas' => (string) $this->pick($row, ['nama_kelas_kuliah', 'nama_kelas', 'nm_kelas', 'kelas']),
+                    'prodi'      => (string) $this->pick($row, ['nama_program_studi', 'nama_jurusan', 'jurusan', 'prodi']),
+                    'sks'        => $this->pick($row, ['sks_mata_kuliah', 'sks']),
+                    'angka'      => $this->pick($row, ['nilai_angka', 'nilai', 'NA']),
+                    'huruf'      => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
                 ];
                 $total++;
             }
@@ -443,6 +497,7 @@ class FeederService extends MY_Service {
                     'nama_semester'      => (string) $this->pick($row, ['nama_semester', 'nm_smt']),
                     'kode_mata_kuliah'   => (string) $this->pick($row, ['kode_mata_kuliah', 'kode_matakuliah']),
                     'nama_mata_kuliah'   => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
+                    'nama_kelas'         => (string) $this->pick($row, ['nama_kelas_kuliah', 'nama_kelas', 'nm_kelas', 'kelas']),
                     'sks'                => $this->pick($row, ['sks_mata_kuliah', 'sks']),
                     'nilai_angka'        => $this->pick($row, ['nilai_angka', 'nilai']),
                     'nilai_huruf'        => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),

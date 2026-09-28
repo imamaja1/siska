@@ -9,7 +9,7 @@
                     <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
                 <div class="form-group">
                     <label for="">Program Studi <span class="text-danger">*</span></label>
-                    <select name="kode_program_studi" required class="form-control">
+                    <select name="kode_program_studi" required class="form-control select2">
                         <option value="" selected disabled>Pilih</option>
                         <?php foreach ($program_studi as $row) : ?>
                             <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?></option>

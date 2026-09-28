@@ -1,6 +1,6 @@
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="<?= site_url('admin/akademik/kkp'); ?>" class="btn-success btn-sm flat"><i class="fa fa-arrow-left"></i> Kembali</a>
+        <a href="<?= site_url('admin/akademik/kkp'); ?>" class="btn btn-success btn-sm flat"><i class="fa fa-arrow-left"></i> Kembali</a>
         <div class="pull-right">
         <?= $halaman ?>
         </div>

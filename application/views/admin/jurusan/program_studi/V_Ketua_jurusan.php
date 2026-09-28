@@ -1,7 +1,7 @@
 <?= $this->session->flashdata('info') ?>
 <div class="box box-solid flat">
     <div class="box-body">
-        <a href="#" class="btn-sm btn-primary flat" onclick="$('#tambah-kaprodi').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
+        <a href="#" class="btn btn-sm btn-primary flat" onclick="$('#tambah-kaprodi').modal('toggle')"><i class="fa fa-plus-circle"></i> Tambah</a>
     </div>
 </div>
 <div class="box box-primary flat">
@@ -67,7 +67,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Program Studi</label>
-                        <select required class="form-control" name="kode_nama_jurusan">
+                        <select required class="form-control select2" name="kode_nama_jurusan">
                             <option value="" disabled selected>Pilih Program Studi</option>
                             <?php foreach ($nama_jurusan as $row) { ?>
                                 <option value="<?= e($row->kode_program_studi) ?>"> <?= e($row->singkatan_program_studi) ?></option>

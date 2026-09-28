@@ -1,18 +1,24 @@
-<div class="box box-success flat">
+<div class="box box-solid flat">
+    <div class="box-body">
+        <a href="<?= site_url('admin/mbkm/daftar') ?>" class="btn btn-default btn-sm"><i class="fa fa-arrow-left"></i> Kembali ke Daftar MBKM</a>
+    </div>
+</div>
+
+<div class="box box-primary flat">
     <div class="box-header with-border">
         <h4 class="box-title"><i class="fa fa-history"></i> Log Aktivitas MBKM</h4>
     </div>
     <div class="box-body table-responsive">
         <?php if (!empty($log)) : ?>
-            <table id="tabel-log-mbkm" class="table table-bordered table-striped data-table">
+            <table id="tabel-log-mbkm" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Waktu</th>
+                        <th style="width: 140px;">Waktu</th>
                         <th>NIM</th>
                         <th>Nama</th>
                         <th>Matakuliah</th>
                         <th>Tahun Akademik</th>
-                        <th>Aksi</th>
+                        <th style="width: 90px; text-align: center;">Aksi</th>
                         <th>Nilai (Lama &rarr; Baru)</th>
                         <th>Oleh</th>
                     </tr>
@@ -28,8 +34,14 @@
                             <td><?= e($row->nim) ?></td>
                             <td><?= e($row->nama_mahasiswa) ?></td>
                             <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></td>
-                            <td><?= e($row->kode_tahun_akademik) ?></td>
                             <td>
+                                <?php if (!empty($row->nama_tahun_akademik)): ?>
+                                    <?= e($row->nama_tahun_akademik) ?> (<?= $row->semester_ta == '1' ? 'Ganjil' : ($row->semester_ta == '2' ? 'Genap' : 'Pendek') ?>)
+                                <?php else: ?>
+                                    <?= e($row->kode_tahun_akademik) ?>
+                                <?php endif; ?>
+                            </td>
+                            <td align="center">
                                 <?php if ($row->aksi == 'update') : ?>
                                     <span class="label label-info">Update</span>
                                 <?php elseif ($row->aksi == 'delete') : ?>
@@ -44,15 +56,15 @@
                             </td>
                             <td>
                                 <?php if (is_array($lama_json) && is_array($baru_json)) : ?>
-                                    <?php $multi = count($lama_json) > 1; ?>
                                     <?php foreach ($lama_json as $field => $v) : ?>
                                         <?php $b = array_key_exists($field, $baru_json) ? $baru_json[$field] : null; ?>
-                                        <?= $multi ? e($field) . ': ' : '' ?><?= $v === null ? '-' : e($v) ?> &rarr; <?= $b === null ? '-' : e($b) ?><br>
+                                        <?php $label = ucwords(str_replace(['nilai_', '_'], ['', ' '], $field)); ?>
+                                        <span class="text-muted"><?= e($label) ?>:</span> <?= $v === null ? '-' : e($v) ?> &rarr; <strong><?= $b === null ? '-' : e($b) ?></strong><br>
                                     <?php endforeach; ?>
                                 <?php elseif (is_array($lama_json)) : ?>
-                                    <?php $multi = count($lama_json) > 1; ?>
                                     <?php foreach ($lama_json as $field => $v) : ?>
-                                        <?= $multi ? e($field) . ': ' : '' ?><?= $v === null ? '-' : e($v) ?> &rarr; -<br>
+                                        <?php $label = ucwords(str_replace(['nilai_', '_'], ['', ' '], $field)); ?>
+                                        <span class="text-muted"><?= e($label) ?>:</span> <?= $v === null ? '-' : e($v) ?> &rarr; -<br>
                                     <?php endforeach; ?>
                                 <?php else : ?>
                                     <?= $row->nilai_lama === null ? '-' : e($row->nilai_lama) ?> &rarr; <?= $row->nilai_baru === null ? '-' : e($row->nilai_baru) ?>

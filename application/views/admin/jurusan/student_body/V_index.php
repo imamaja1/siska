@@ -5,7 +5,7 @@
             <div class="form-group">
                 <label for="jurusan" class="col-sm-2 control-label text-right">Jurusan<span class="text-danger">*</span></label>
                 <div class="col-sm-5">
-                    <select name="kode_program_studi" required class="form-control" id="jurusan">
+                    <select name="kode_program_studi" required class="form-control select2" id="jurusan">
                         <option value="">Pilih</option>
                         <?php foreach ($prodi as $row) : ?>
                             <option value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi) ?> (<?= e($row->singkatan_program_studi) ?>)</option>

@@ -237,6 +237,21 @@ class ValidasiService extends MY_Service {
             ->get()->result_object();
     }
 
+    public function get_nilai_revisi_by_kelas($kelas_id) {
+        return $this->db->select('mah.nim, mah.nama_mahasiswa, dun.level, dun.harian, dun.uts, dun.uas, dun.na, dun.ket, spd.grade')
+            ->from('dummy_update_nilai as dun')
+            ->join('khs_detail as khd', 'khd.kode_khs_detail = dun.kode_khs_detail')
+            ->join('krs_detail as kd', 'kd.kode_krs_detail = khd.kode_krs_detail')
+            ->join('krs', 'krs.kode_krs = kd.kode_krs')
+            ->join('mahasiswa as mah', 'mah.nim = krs.nim')
+            ->join('sistem_penilaian_detail as spd', 'dun.na BETWEEN spd.nilai_minimum AND spd.nilai_maksimum AND spd.kode_sistem_penilaian = 1', 'left')
+            ->where('dun.kelas_id', $kelas_id)
+            ->group_by(array('dun.kode_khs_detail', 'dun.level'))
+            ->order_by('dun.level', 'ASC')
+            ->order_by('mah.nim', 'ASC')
+            ->get()->result_object();
+    }
+
     public function get_cetak_kelas_info($id) {
         return $this->db->select('*,kl.semester as kls, ta.semester as tas, mt.kode_matakuliah as mtkm')
             ->from('kelas as kl')

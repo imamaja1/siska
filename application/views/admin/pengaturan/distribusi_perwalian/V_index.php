@@ -343,7 +343,7 @@
     max-width: 360px;
     min-width: 280px;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-    border-left: 5px solid #3c8dbc;
+    border-left: 5px solid #578EF5;
     cursor: pointer;
 }
 .siska-toast.alert-success { border-left-color: #00a65a; }

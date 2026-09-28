@@ -1,7 +1,7 @@
 <div class="box box-solid flat">
     <div class="box-body">
         <!--<a href="#" class="btn btn-success flat"><i class="fa fa-arrow-left"></i> Kembali</a>-->    
-        <a href="<?= site_url('admin/akademik/kkp/search'); ?>" class="btn-success btn-sm flat"><i class="fa fa-search"></i> &nbsp;Pencarian/Update Nilai KKP Mahasiswa</a>
+        <a href="<?= site_url('admin/akademik/kkp/search'); ?>" class="btn btn-success btn-sm flat"><i class="fa fa-search"></i> &nbsp;Pencarian/Update Nilai KKP Mahasiswa</a>
     </div>
 </div>
 <div class="box box-primary flat">
@@ -27,7 +27,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">Jurusan <label class="text-danger">*</label> :</label>
                 <div class="col-sm-3">
-                    <select class="form-control" name="kode_program_studi" id="kode_program_studi">
+                    <select class="form-control select2" name="kode_program_studi" id="kode_program_studi">
                         <option value="" disabled selected>Pilih Program Studi</option>
                         <?php foreach ($program_studi as $row) { ?>
                             <option <?= set_select('kode_program_studi', $row->kode_program_studi) ?> value="<?= e($row->kode_program_studi) ?>"><?= e($row->nama_program_studi)?></option>

@@ -56,7 +56,7 @@ class Khs extends CI_Controller
         }
   		
     }
-    function index($kode_krs = null)
+    function index($semester = null)
     {
         $nim = $this->session->userdata('nim');
         $kode_jenjang = substr($nim, 4, 1);
@@ -67,7 +67,15 @@ class Khs extends CI_Controller
         $kode_tahun_akademik = $this->m_tahun_akademik->get_aktif();
         $data['kode_krs'] = $this->mahasiswaservice->getKrsListForKhs($nim, $kode_tahun_akademik);
         $kode_program_studi = $this->session->userdata('kode_program_studi');
-        if ($kode_krs == null) {
+
+        if ($semester !== null && $semester !== '') {
+            // Pilih berdasarkan nomor semester (URL bersih: /mahasiswa/khs/index/{semester})
+            $kode_krs = $this->mahasiswaservice->getKodeKrsBySemester($nim, $semester, $kode_tahun_akademik);
+        } else {
+            // Default: semester terakhir yang sudah mengisi KRS (nilai null tetap dihitung sebagai E)
+            $kode_krs = $this->mahasiswaservice->getKodeKrsTerakhir($nim, $kode_tahun_akademik, false);
+        }
+        if (empty($kode_krs)) {
             $kode_krs = $this->Krs_model->get_kode_krs($nim, $tahun_akademik);
         }
 

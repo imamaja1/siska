@@ -5,7 +5,7 @@
     <div class="box-body">
         <form method="get" class="form-inline">
             <div class="form-group">
-                <select name="prodi" class="form-control">
+                <select name="prodi" class="form-control select2">
                     <option value="">Semua Prodi</option>
                     <?php foreach ($list_prodi as $p): ?>
                         <option value="<?= e($p->kode_program_studi) ?>" <?= $prodi_filter == $p->kode_program_studi ? 'selected' : '' ?>><?= e($p->nama_program_studi) ?></option>

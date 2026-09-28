@@ -1,11 +1,14 @@
 <div class="box box-primary flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-calendar"></i> Kalender Akademik</h3>
+    </div>
     <div class="box-body">
         <div class="table-responsive">
         <table class="table demo-table">
             <tbody>
             <tr class="c6">
                 <td class="c16" colspan="2" rowspan="1">
-                    <p class="c0" style="text-align: left;"><span color="#a22531" style="color: #a22531; font-weight: 900;" class="gt3_font-weight" mce-data-marked="1"><span style="font-size: 48px;" mce-data-marked="1"><b>SEMESTER GANJIL</b></span></span></p>
+                    <p class="c0" style="text-align: left;"><span color="#002d5b" style="color: #002d5b; font-weight: 900;" class="gt3_font-weight" mce-data-marked="1"><span style="font-size: 48px;" mce-data-marked="1"><b>SEMESTER GANJIL</b></span></span></p>
                 </td>
             </tr>
             <tr class="c6">
@@ -271,7 +274,7 @@
             <tbody>
             <tr class="c6">
                 <td class="c16" colspan="2" rowspan="1">
-                    <p class="c0" style="text-align: left;"><span style="font-size: 3em; line-height: inherit; color: #a22531; font-weight: 900;" class="dropcap gt3_font-weight"><strong><span class="c5 c17">SEMESTER GENAP</span></strong></span></p>
+                    <p class="c0" style="text-align: left;"><span style="font-size: 3em; line-height: inherit; color: #002d5b; font-weight: 900;" class="dropcap gt3_font-weight"><strong><span class="c5 c17">SEMESTER GENAP</span></strong></span></p>
                 </td>
             </tr>
             <tr class="c6">

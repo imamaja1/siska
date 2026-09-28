@@ -63,4 +63,30 @@ class Audit_kelas extends CI_Controller {
         $rows = $this->Audit_feeder_model->getKelasByMatakuliah($kode_tahun_akademik, $kode_program_studi, $id_matakuliah);
         echo json_encode($rows);
     }
+
+    public function kandidat_null_feeder()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $nama_matakuliah     = $this->input->post('nama_matakuliah');
+        $nims                = $this->input->post('nims');
+
+        $data = $this->auditfeederservice->kandidatNullFeeder($kode_tahun_akademik, $nama_matakuliah, $nims);
+        echo json_encode($data);
+    }
+
+    public function cek_null_siska()
+    {
+        $nim                 = $this->input->post('nim');
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_matakuliah     = $this->input->post('kode_matakuliah');
+
+        $data = $this->Audit_feeder_model->getKhsDanDummyByNimMatakuliah($nim, $kode_tahun_akademik, $kode_matakuliah);
+
+        echo json_encode([
+            'khs'         => $data['khs'],
+            'dummy'       => $data['dummy'],
+            'dummy_nilai' => $data['dummy_nilai'],
+            'hanya_khs'   => !empty($data['hanya_khs']),
+        ]);
+    }
 }

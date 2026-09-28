@@ -43,10 +43,10 @@
                             <td align="center" width="190">
 
                                    <!--<a href="#!" class="btn-sm btn-danger flat"><i class="fa fa-refresh"></i> Reset Sandi</a>-->
-                                <a href="<?= site_url('admin/akademik/mahasiswa/update/' . $row->nim) ?>" class="btn-primary btn-xs flat"><i class="fa fa-edit"></i> Edit</a>&nbsp;
-                                <a href="#!"  onclick="halaman('<?= site_url('admin/akademik/mahasiswa/biodata_mahasiswa/' . $row->nim) ?>');" class="btn-warning btn-xs flat"><i class="fa fa-eye"></i> Detail</a>&nbsp;
+                                <a href="<?= site_url('admin/akademik/mahasiswa/update/' . $row->nim) ?>" class="btn btn-primary btn-xs flat"><i class="fa fa-edit"></i> Edit</a>&nbsp;
+                                <a href="#!"  onclick="halaman('<?= site_url('admin/akademik/mahasiswa/biodata_mahasiswa/' . $row->nim) ?>');" class="btn btn-warning btn-xs flat"><i class="fa fa-eye"></i> Detail</a>&nbsp;
 
-                                <a href="<?= site_url('admin/akademik/mahasiswa/cetak/' . $row->nim); ?>" class="btn-info btn-xs flat"><i class="fa fa-print"></i> Cetak</a>
+                                <a href="<?= site_url('admin/akademik/mahasiswa/cetak/' . $row->nim); ?>" class="btn btn-info btn-xs flat"><i class="fa fa-print"></i> Cetak</a>
                             </td>
                         </tr>
 

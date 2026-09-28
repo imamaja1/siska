@@ -10,7 +10,7 @@
             <title>SISKA UBG</title>
         <?php endif; ?>
 
-        <link rel="icon" type="image/png" sizes="96x96" href="<?= base_url('assets/gambar') ?>/favicon-96x96.png">
+        <link rel="icon" href="<?= app_favicon() ?>">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
         <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css'); ?>">
@@ -64,166 +64,46 @@
 
         <div class="wrapper">
             <header class="main-header">
-                <a href="#" class="logo">
-                    <span class="logo-mini"><b>S</b>IS</span>
-                    <span class="logo-lg" style="font-size: 20px; font-family: calibri;"><b>SISKA DOSEN</b></span>
+                <a href="<?php echo site_url('dosen/home'); ?>" class="logo">
+                    <span class="logo-mini"><i class="fa fa-graduation-cap"></i></span>
+                    <span class="logo-lg" style="font-size: 16px; font-weight: 700; letter-spacing: 0.5px;">
+                        <i class="fa fa-graduation-cap" style="margin-right: 6px;"></i>SISKA DOSEN
+                    </span>
                 </a>
-                <nav class="navbar navbar-static-top">
+                <nav class="navbar navbar-static-top" role="navigation">
                     <!-- Sidebar toggle button-->
                     <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">Toggle navigation</span>
                     </a>
+                    <?php if ($this->session->userdata('sekarang')): ?>
+                        <span class="navbar-academic-badge hidden-xs"><i class="fa fa-calendar-check-o"></i> <?= e($this->session->userdata('sekarang')) ?></span>
+                    <?php endif; ?>
 
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            
-<!--                            <li class="dropdown messages-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-envelope-o"></i>
-                                    <span class="label label-success">4</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="header">You have 4 messages</li>
-                                    <li>
-                                         inner menu: contains the actual data 
-                                        <ul class="menu">
-                                            <li> start message 
-                                                <a href="#">
-                                                    <div class="pull-left">
-                                                        <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                                    </div>
-                                                    <h4>
-                                                        Support Team
-                                                        <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                                    </h4>
-                                                    <p>Why not buy a new awesome theme?</p>
-                                                </a>
-                                            </li>
-                                             end message 
-                                            <li>
-                                                <a href="#">
-                                                    <div class="pull-left">
-                                                        <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                                    </div>
-                                                    <h4>
-                                                        AdminLTE Design Team
-                                                        <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                                                    </h4>
-                                                    <p>Why not buy a new awesome theme?</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <div class="pull-left">
-                                                        <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                                    </div>
-                                                    <h4>
-                                                        Developers
-                                                        <small><i class="fa fa-clock-o"></i> Today</small>
-                                                    </h4>
-                                                    <p>Why not buy a new awesome theme?</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <div class="pull-left">
-                                                        <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
-                                                    </div>
-                                                    <h4>
-                                                        Sales Department
-                                                        <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                                                    </h4>
-                                                    <p>Why not buy a new awesome theme?</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <div class="pull-left">
-                                                        <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
-                                                    </div>
-                                                    <h4>
-                                                        Reviewers
-                                                        <small><i class="fa fa-clock-o"></i> 2 days</small>
-                                                    </h4>
-                                                    <p>Why not buy a new awesome theme?</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="footer"><a href="#">See All Messages</a></li>
-                                </ul>
-                            </li>
-                        
-                            <li class="dropdown notifications-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-bell-o"></i>
-                                    <span class="label label-warning">10</span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="header">You have 10 notifications</li>
-                                    <li>
-                                         inner menu: contains the actual data 
-                                        <ul class="menu">
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                                    page and may cause design problems
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-users text-red"></i> 5 new members joined
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-user text-red"></i> You changed your username
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="footer"><a href="#">View all</a></li>
-                                </ul>
-                            </li>-->
-
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="<?= base_url('assets/gambar/dosen.png'); ?>" class="user-image" alt="User Image">
-                                    <span class="hidden-xs">&nbsp;<?= e(substr($this->session->userdata('nama_dosen'), 0, 10)) ?>... <i class="fa fa-angle-down"></i></span>
-
+                                    <i class="fa fa-user admin-user-icon" aria-hidden="true"></i>
+                                    <span class="hidden-xs"><?= e($this->session->userdata('nama_dosen')) ?> <i class="fa fa-angle-down" style="font-size: 11px; margin-left: 4px;"></i></span>
                                 </a>
                                 <ul class="dropdown-menu">
-
-                                    <li class="user-header" style="height: 100px;">
-
-                                        <p style="color: white;">
-                                            Login Sebagai:<br>
+                                    <li class="user-header">
+                                        <i class="fa fa-user admin-user-header-icon" aria-hidden="true"></i>
+                                        <p>
                                             <?= e($this->session->userdata('nama_dosen')) ?>
+                                            <small>Dosen</small>
                                         </p>
                                     </li>
-
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="<?= site_url('dosen/ganti_sandi'); ?>" class="btn-default flat btn"><i class="fa fa-key"></i> Ganti Sandi</a>
+                                            <a href="<?= site_url('dosen/ganti_sandi'); ?>" class="btn btn-default btn-sm"><i class="fa fa-key"></i> Ganti Sandi</a>
                                         </div>
                                         <div class="pull-right">
-                                            <a href="#!" onclick="konfirmasiKeluar('<?= site_url('dosen/login_dosen/logout') ?>')" class="btn btn-default flat"><i class="glyphicon glyphicon-off"></i> Logout</a>
+                                            <a href="#!" onclick="konfirmasiKeluar('<?= site_url('dosen/login_dosen/logout') ?>')" class="btn btn-danger btn-sm"><i class="fa fa-sign-out"></i> Logout</a>
                                         </div>
-
                                     </li>
                                 </ul>
                             </li>
-
                         </ul>
                     </div>
                 </nav>
@@ -321,6 +201,13 @@
                         targets: "no-sort"
                     }],
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua Data"]]
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                if (typeof selec2init === 'function') {
+                    selec2init();
+                }
             });
         </script>
 

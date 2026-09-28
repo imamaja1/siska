@@ -1,80 +1,78 @@
 <div class="box box-solid flat">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-calendar-check-o"></i> Pilih Semester</h3>
+    </div>
     <div class="box-body">
-        <?php $i=1; foreach ($kode_krs as $row) : ?>
-            <a href="<?= site_url('mahasiswa/khs/index/'.$row->kode_krs) ?>" class="btn bg-navy flat btn-xs"><i class="fa fa-arrow-circle-right"></i> | SEMESTER <?= $i++ ?></a>
-        <?php endforeach; ?>
+        <div class="krs-pick">
+            <?php foreach ($kode_krs as $row) : ?>
+                <?php $isActive = isset($data['krs']) && $data['krs'] == $row->kode_krs; ?>
+                <a href="<?= site_url('mahasiswa/khs/index/'.$row->semester) ?>" class="btn <?= $isActive ? 'btn-primary' : 'btn-default' ?> btn-sm"><i class="fa fa-calendar-check-o"></i> <?= ($row->semester == 'K') ? 'Konversi' : 'Semester '.$row->semester ?></a>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 
 <?php if (isset($data['data_nilai'])) :?>
 <div class="box box-primary flat">
-    <div class="box-body table-responsive">
-        <p align="right"><a href="<?= site_url('mahasiswa/khs/cetak/'.$data['krs'].'/'.$data['nim']) ?>" class="btn btn-danger btn-xs" ><i class="fa fa-download"></i> Download</a></p>    
-        
-        <p align="center"><strong>KARTU HASIL STUDI (KHS)</strong></p>
-        <p align="center"><strong>SEMESTER <?= $data['semester'] % 2 == (0) ? "GENAP" : "GANJIL" ; ?> TA. <?= e($data['tahun_akademik']) ?></strong></p>
-        <br>
-        <div class="row">
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                            <tr><th width="40%">Nama Mahasiswa</th><td><?= e($data['nama_mahasiswa']) ?></td></tr>
-                            <tr><th>NIM</th><td><?= e($data['nim']) ?></td></tr>
-                            <tr><th>Semester</th><td><?= $data['semester'] ?></td></tr>
-                        </tbody>
-                    </table>
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-bar-chart"></i> Kartu Hasil Studi</h3>
+        <div class="box-tools">
+            <a href="<?= site_url('mahasiswa/khs/cetak/'.$data['krs'].'/'.$data['nim']) ?>" class="btn btn-danger btn-sm"><i class="fa fa-download"></i> Unduh KHS</a>
+        </div>
+    </div>
+    <div class="box-body">
+        <p class="mhs-subtitle"><?= ($data['semester'] == 'K') ? 'KONVERSI' : 'SEMESTER '.($data['semester'] % 2 == (0) ? "GENAP" : "GANJIL") ; ?> TA. <?= e($data['tahun_akademik']) ?></p>
+        <div class="row mhs-info">
+            <div class="col-sm-6">
+                <div class="mhs-info-card">
+                    <div class="mhs-info-row"><span class="mhs-info-label">Nama Mahasiswa</span><span class="mhs-info-value"><?= e($data['nama_mahasiswa']) ?></span></div>
+                    <div class="mhs-info-row"><span class="mhs-info-label">NIM</span><span class="mhs-info-value"><?= e($data['nim']) ?></span></div>
+                    <div class="mhs-info-row"><span class="mhs-info-label">Semester</span><span class="mhs-info-value"><?= ($data['semester'] == 'K') ? 'Konversi' : $data['semester'] ?></span></div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                            <tr><th width="40%">Program Studi</th><td><?= e($prodi->nama_program_studi) ?></td></tr>
-                            <tr><th>Fakultas</th><td><?= e($prodi->nama_fakultas) ?></td></tr>
-                            <tr><th>Kurikulum</th><td><?= e($data['kurikulum']) ?></td></tr>
-                        </tbody>
-                    </table>
+            <div class="col-sm-6">
+                <div class="mhs-info-card">
+                    <div class="mhs-info-row"><span class="mhs-info-label">Program Studi</span><span class="mhs-info-value"><?= e($prodi->nama_program_studi) ?></span></div>
+                    <div class="mhs-info-row"><span class="mhs-info-label">Fakultas</span><span class="mhs-info-value"><?= e($prodi->nama_fakultas) ?></span></div>
+                    <div class="mhs-info-row"><span class="mhs-info-label">Kurikulum</span><span class="mhs-info-value"><?= e($data['kurikulum']) ?></span></div>
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-        <table class="table table-bordered table-striped demo-table khs-table">
-            <thead>
-            <tr>
-                <th class="th-center" width="40">No.</th>
-                <th class="th-center">Kode</th>
-                <th class="th-center">Matakuliah</th>
-                <th class="th-center">SKS</th>
-                <th class="th-center">Grade</th>
-                <th class="th-center">SKSN</th>
-                <th class="th-center">Ket</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
+        <div class="table-responsive mhs-table-wrap">
+            <table class="table mhs-table">
+                <thead>
                 <tr>
-                    <td align="center"><?= $i++ ?>.</td>
-                    <td align="center"><?= e($row['kode_matakuliah']) ?></td>
-                    <td><?= e($row['nama_matakuliah']) ?></td>
-                    <td align="center"><?= $row['sks'] ?></td>
-                    <td align="center"><?= e($row['grade']) ?></td>
-                    <td align="center"><?= $row['sksn'] ?></td>
-                    <td align="center">-</td>
+                    <th class="mhs-c-no">No.</th>
+                    <th class="mhs-c-kode">Kode</th>
+                    <th class="mhs-c-mk">Matakuliah</th>
+                    <th class="mhs-c-num">SKS</th>
+                    <th class="mhs-c-num">Grade</th>
+                    <th class="mhs-c-num">SKSN</th>
                 </tr>
-                <?php
-                $sksn = $sksn + $row['sksn'];
-                $sks = $sks + $row['sks'];
-
-                ?>
-            <?php endforeach; ?>
-            <tr class="th-center">
-                <td colspan="5"><strong>Jumlah</strong></td>
-                <td><strong><?= $sksn ?></strong></td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <?php $i=1; $sksn=0; $sks=0; foreach ($data['data_nilai'] as $row) : ?>
+                    <tr>
+                        <td class="mhs-num"><?= $i++ ?>.</td>
+                        <td class="mhs-kode"><?= e($row['kode_matakuliah']) ?></td>
+                        <td><?= e($row['nama_matakuliah']) ?></td>
+                        <td class="mhs-num"><?= $row['sks'] ?></td>
+                        <td class="mhs-num"><?= e($row['grade']) ?></td>
+                        <td class="mhs-num"><?= $row['sksn'] ?></td>
+                    </tr>
+                    <?php
+                    $sksn = $sksn + $row['sksn'];
+                    $sks = $sks + $row['sks'];
+                    ?>
+                <?php endforeach; ?>
+                <tr class="mhs-total">
+                    <td colspan="3"><strong>Jumlah</strong></td>
+                    <td class="mhs-num"><strong><?= $sks ?></strong></td>
+                    <td></td>
+                    <td class="mhs-num"><strong><?= $sksn ?></strong></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <br>
         <?php
@@ -122,27 +120,15 @@
         }
         ?>
 
-        <div class="row" style="margin-top:15px;">
+        <div class="row mhs-bottom">
             <div class="col-md-6 col-sm-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                            <tr><th width="55%">Jumlah SKS yang ditempuh</th><td><?= $sks ?></td></tr>
-                            <tr><th>IP Semester ini</th><td><?= number_format($ipk, 2) ?></td></tr>
-                            <?php if (substr($data['nim'], 4, 1) != 3) : ?>
-                                <tr><th>Maksimum SKS Semester Depan</th><td><?= $jumlah_maksimum_sks ?></td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                <div class="mhs-summary">
+                    <div class="mhs-summary-row"><span>Jumlah SKS yang ditempuh</span><strong><?= $sks ?></strong></div>
+                    <div class="mhs-summary-row"><span>IP Semester ini</span><strong><?= number_format($ipk, 2) ?></strong></div>
+                    <?php if (substr($data['nim'], 4, 1) != 3) : ?>
+                        <div class="mhs-summary-row"><span>Maksimum SKS Semester Depan</span><strong><?= $jumlah_maksimum_sks ?></strong></div>
+                    <?php endif; ?>
                 </div>
-            </div>
-            <div class="col-md-6 col-sm-12 text-right">
-                <p>Mataram, <?= date("d M Y") ?></p>
-                <p>Wakil Rektor I,</p>
-                <br>
-                <br>
-                <p><u>Dr. Khasnur Hidjah, S.Kom, M.Cs</u></p>
-                <p>NIP : 197202072005012001</p>
             </div>
         </div>
     </div>

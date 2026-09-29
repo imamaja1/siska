@@ -129,3 +129,5 @@ $route['admin/audit/kelas/kandidat_null_feeder'] = 'admin/Audit_kelas/kandidat_n
 $route['admin/audit/kelas/cek_null_siska'] = 'admin/Audit_kelas/cek_null_siska';
 $route['admin/audit/petikan'] = 'admin/Audit_petikan/index';
 $route['admin/audit/petikan/hasil'] = 'admin/Audit_petikan/hasil';
+$route['admin/audit/pure_feeder'] = 'admin/Pure_feeder/index';
+$route['admin/audit/pure_feeder/hasil'] = 'admin/Pure_feeder/hasil';

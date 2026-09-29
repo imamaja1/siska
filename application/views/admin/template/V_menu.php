@@ -245,7 +245,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Audit Nilai -->
-            <?php if (has_access($acc, ['Audit', 'Audit_mahasiswa', 'Audit_kelas', 'Audit_petikan'])): ?>
+            <?php if (has_access($acc, ['Audit', 'Audit_mahasiswa', 'Audit_kelas', 'Audit_petikan', 'Pure_feeder'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-check-square-o"></i>
@@ -264,6 +264,9 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Audit_petikan')): ?>
                     <li><a href="<?= site_url('admin/audit/petikan'); ?>"><i class="fa fa-circle-o"></i> Feeder Petikan Nilai</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Pure_feeder')): ?>
+                    <li><a href="<?= site_url('admin/audit/pure_feeder'); ?>"><i class="fa fa-circle-o"></i> Pure Feeder</a></li>
                     <?php endif; ?>
                 </ul>
             </li>
@@ -338,6 +341,7 @@ function has_access($acc, $controllers, $role = 0) {
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Pengaturan')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan'); ?>"><i class="fa fa-circle-o"></i> SMTP Email</a></li>
+                    <li><a href="<?= site_url('admin/pengaturan/pengaturan/krs_kpat'); ?>"><i class="fa fa-circle-o"></i> KRS KPAT</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Api_tokens')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>

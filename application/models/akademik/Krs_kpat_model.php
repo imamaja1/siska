@@ -14,25 +14,27 @@ class Krs_kpat_model extends CI_Model {
 	{
 
             if ($angkatan) {
-			$query = $this->db->select('krs.kode_krs, kode_tahun_akademik, nama_mahasiswa, krs.nim')
+			$query = $this->db->select('krs.kode_krs, krs.kode_tahun_akademik, ta.tahun_akademik, ta.semester, nama_mahasiswa, krs.nim')
                 ->from('krs')
                 ->join('krs_detail as kd','krs.kode_krs=kd.kode_krs')
                 ->join('mahasiswa as mah','krs.nim=mah.nim')
+                ->join('tahun_akademik as ta','krs.kode_tahun_akademik=ta.kode_tahun_akademik')
                 ->where('kd.status','K')
                 ->where('mah.program_studi_kode', $kode_program_studi)
                 ->where('substr(krs.nim,1,2)', $angkatan)
-                ->where('kode_tahun_akademik', $kode_tahun_akademik)
+                ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                 ->group_by('krs.nim')
                 ->get()->result_object();
 		}else{
-			$query = $this->db->select('krs.kode_krs, kode_tahun_akademik, nama_mahasiswa, krs.nim')
+			$query = $this->db->select('krs.kode_krs, krs.kode_tahun_akademik, ta.tahun_akademik, ta.semester, nama_mahasiswa, krs.nim')
                 ->from('krs')
                 ->join('krs_detail as kd','krs.kode_krs=kd.kode_krs')
                 ->join('mahasiswa as mah','krs.nim=mah.nim')
+                ->join('tahun_akademik as ta','krs.kode_tahun_akademik=ta.kode_tahun_akademik')
                 ->where('kd.status','K')
                 ->where('mah.program_studi_kode', $kode_program_studi)
                 // ->where('substr(krs.nim,1,2)', $angkatan)
-                ->where('kode_tahun_akademik', $kode_tahun_akademik)
+                ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                 ->group_by('krs.nim')
                 ->get()->result_object();
 		}

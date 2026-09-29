@@ -33,6 +33,108 @@ class Pengaturan extends CI_Controller
         ]);
     }
 
+    public function krs_kpat()
+    {
+        $this->load->model(array(
+            'akademik/Krs_kpat_model',
+            'jurusan/m_tahun_akademik',
+            'jurusan/program_studi/Nama_jurusan_model',
+        ));
+
+        $tahun_akademik = $this->input->post('tahun_akademik');
+        $semester = $this->input->post('semester');
+        $kode_program_studi = $this->input->post('prodi');
+
+        $kode_tahun_akademik = null;
+        $data_krs = null;
+
+        if ($this->input->post('proses') !== null) {
+            if ($tahun_akademik !== null && $tahun_akademik !== '' && $semester !== null && $semester !== '') {
+                $kode_tahun_akademik = $this->m_tahun_akademik->get_kode_by_tahun_semester($tahun_akademik, $semester);
+            }
+
+            if ($kode_tahun_akademik) {
+                $data_krs = $this->Krs_kpat_model->filter($kode_tahun_akademik, null, $kode_program_studi);
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Tahun Akademik dan Semester yang dipilih tidak ditemukan.</h6></div>');
+            }
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'    => 'admin/pengaturan/V_krs_kpat',
+            'judul'      => 'Pengaturan',
+            'sub_judul'  => 'KRS KPAT',
+            'title_h1'   => '<i class="fa fa-list-alt"></i> <li>Pengaturan</li>',
+            'title_h2'   => '<li>KRS KPAT</li>',
+            'tahun'      => $this->m_tahun_akademik->get_tahun(),
+            'tahun_akademik_list' => $this->m_tahun_akademik->get(),
+            'nama_jurusan' => $this->Nama_jurusan_model->get(),
+            'data'       => $data_krs,
+            'kode_tahun_akademik' => $kode_tahun_akademik,
+            'filter'     => [
+                'tahun_akademik' => $tahun_akademik,
+                'semester'       => $semester,
+                'prodi'          => $kode_program_studi,
+            ],
+        ]);
+    }
+
+    public function pindah_tahun_akademik()
+    {
+        $this->load->model(array(
+            'akademik/Krs_kpat_model',
+            'jurusan/m_tahun_akademik',
+        ));
+
+        $kode_krs = $this->input->post('kode_krs');
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+
+        if (!$kode_krs || !$kode_tahun_akademik) {
+            echo json_encode(['status' => false, 'message' => 'Data tidak lengkap.']);
+            return;
+        }
+
+        $krs = $this->db->select('kode_krs, nim, kode_tahun_akademik')
+            ->where('kode_krs', $kode_krs)
+            ->get('krs')->row_object();
+
+        if (!$krs) {
+            echo json_encode(['status' => false, 'message' => 'Data KRS tidak ditemukan.']);
+            return;
+        }
+
+        if ($krs->kode_tahun_akademik == $kode_tahun_akademik) {
+            echo json_encode(['status' => false, 'message' => 'Tahun akademik tujuan sama dengan tahun akademik saat ini.']);
+            return;
+        }
+
+        $tahun = $this->m_tahun_akademik->get_all_byid($kode_tahun_akademik);
+        if (!$tahun) {
+            echo json_encode(['status' => false, 'message' => 'Tahun akademik tujuan tidak ditemukan.']);
+            return;
+        }
+
+        $existing = $this->Krs_kpat_model->get_kode_krs_kpat($krs->nim, $kode_tahun_akademik);
+        if ($existing && $existing != $kode_krs) {
+            echo json_encode(['status' => false, 'message' => 'Mahasiswa sudah memiliki KRS KPAT pada tahun akademik tujuan.']);
+            return;
+        }
+
+        $tahun_angkatan = substr($krs->nim, 0, 2);
+        if ($tahun->semester == 0) {
+            $semester = ($tahun->tahun - $tahun_angkatan) * 2 + 2;
+        } else {
+            $semester = ($tahun->tahun - $tahun_angkatan) * 2 + 1;
+        }
+
+        $this->db->where('kode_krs', $kode_krs)->update('krs', [
+            'kode_tahun_akademik' => $kode_tahun_akademik,
+            'semester' => $semester,
+        ]);
+
+        echo json_encode(['status' => true, 'message' => 'KRS berhasil dipindahkan ke tahun akademik ' . $tahun->tahun_akademik . '.']);
+    }
+
     public function simpan()
     {
         $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'trim|required');

@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Audit_petikan extends CI_Controller {
+class Pure_feeder extends CI_Controller {
 
     public function __construct()
     {
@@ -22,8 +22,8 @@ class Audit_petikan extends CI_Controller {
     public function index()
     {
         $data['judul'] = 'Audit Nilai';
-        $data['sub_judul'] = 'Feeder Petikan Nilai';
-        $data['content'] = 'admin/audit/V_feeder_petikan_index';
+        $data['sub_judul'] = 'Pure Feeder';
+        $data['content'] = 'admin/audit/V_pure_feeder_index';
 
         $this->load->view('admin/template/V_main', $data);
     }
@@ -32,13 +32,13 @@ class Audit_petikan extends CI_Controller {
     {
         $nim = $this->input->post('nim');
 
-        $data = $this->auditfeederservice->petikanFeeder($nim);
+        $data = $this->auditfeederservice->rawFeederData($nim);
         $data['nim'] = $nim;
         if (isset($data['error'])) {
             echo '<div class="col-md-12"><div class="callout callout-danger flat"><p>' . html_escape($data['error']) . '</p></div></div>';
             return;
         }
 
-        $this->load->view('admin/audit/V_feeder_petikan', $data);
+        $this->load->view('admin/audit/V_pure_feeder_hasil', $data);
     }
 }

@@ -351,6 +351,69 @@ class AuditFeederService extends MY_Service {
         ];
     }
 
+    /**
+     * Data mentah Feeder untuk satu NIM (tanpa perhitungan petikan/SISKA).
+     * Menggabungkan respons GetDetailNilaiPerkuliahanKelas + GetTranskripMahasiswa.
+     */
+    public function rawFeederData($nim)
+    {
+        $nim = trim((string) $nim);
+        if ($nim === '') {
+            return ['error' => 'NIM wajib diisi.'];
+        }
+
+        $result = $this->feederservice->getNilaiMahasiswa($nim);
+        if (!empty($result['error'])) {
+            return ['error' => $result['error']];
+        }
+
+        $rows = $result['rows'] ?? [];
+        if (empty($rows)) {
+            return ['error' => 'Data nilai Feeder tidak ditemukan untuk NIM tersebut.'];
+        }
+
+        $header = [
+            'nim'                     => $rows[0]['nim'] !== '' ? $rows[0]['nim'] : $nim,
+            'nama_mahasiswa'          => $rows[0]['nama_mahasiswa'],
+            'nama_program_studi'      => $rows[0]['nama_program_studi'],
+            'id_prodi'                => $rows[0]['id_prodi'],
+            'jurusan'                 => $rows[0]['jurusan'],
+            'angkatan'                => $rows[0]['angkatan'],
+            'id_mahasiswa'            => $rows[0]['id_mahasiswa'],
+            'id_registrasi_mahasiswa' => $rows[0]['id_registrasi_mahasiswa'],
+        ];
+
+        $raw_rows = [];
+        $id_regs  = [];
+        foreach ($rows as $row) {
+            $raw_rows[] = isset($row['raw']) ? $row['raw'] : $row;
+            $idr = trim((string) $row['id_registrasi_mahasiswa']);
+            if ($idr !== '') {
+                $id_regs[$idr] = TRUE;
+            }
+        }
+
+        $transkrip_raw   = [];
+        $transkrip_error = '';
+        foreach (array_keys($id_regs) as $idr) {
+            $tr = $this->feederservice->getTranskripMahasiswa($idr);
+            if (!empty($tr['error'])) {
+                $transkrip_error = $tr['error'];
+                continue;
+            }
+            foreach ($tr['rows'] as $t) {
+                $transkrip_raw[] = isset($t['raw']) ? $t['raw'] : $t;
+            }
+        }
+
+        return [
+            'header'          => $header,
+            'raw_rows'        => $raw_rows,
+            'transkrip_raw'   => $transkrip_raw,
+            'transkrip_error' => $transkrip_error,
+        ];
+    }
+
     public function petikanFeeder($nim, $id_semester = NULL, $highlight_name = '')
     {
         $nim = trim((string) $nim);
@@ -379,10 +442,14 @@ class AuditFeederService extends MY_Service {
         $clean_highlight = $this->normalizeName($highlight_name);
 
         $header = [
-            'nim'                => $rows[0]['nim'] !== '' ? $rows[0]['nim'] : $nim,
-            'nama_mahasiswa'     => $rows[0]['nama_mahasiswa'],
-            'nama_program_studi' => $rows[0]['nama_program_studi'],
-            'angkatan'           => $rows[0]['angkatan'],
+            'nim'                     => $rows[0]['nim'] !== '' ? $rows[0]['nim'] : $nim,
+            'nama_mahasiswa'          => $rows[0]['nama_mahasiswa'],
+            'nama_program_studi'      => $rows[0]['nama_program_studi'],
+            'id_prodi'                => $rows[0]['id_prodi'],
+            'jurusan'                 => $rows[0]['jurusan'],
+            'angkatan'                => $rows[0]['angkatan'],
+            'id_mahasiswa'            => $rows[0]['id_mahasiswa'],
+            'id_registrasi_mahasiswa' => $rows[0]['id_registrasi_mahasiswa'],
         ];
 
         $grouped = [];
@@ -403,17 +470,31 @@ class AuditFeederService extends MY_Service {
             $indeks = is_numeric($row['nilai_indeks']) ? (float) $row['nilai_indeks'] : NULL;
 
             $grouped[$key]['items'][] = [
-                'kode_mata_kuliah'    => $row['kode_mata_kuliah'],
-                'nama_mata_kuliah'    => $row['nama_mata_kuliah'],
-                'sks'                 => $sks,
-                'sks_tampil'          => number_format($sks, 2, '.', ''),
-                'nilai_angka'         => $row['nilai_angka'],
-                'nilai_angka_tampil'  => $this->formatNilaiTampil($row['nilai_angka']),
-                'nilai_huruf'         => $row['nilai_huruf'],
-                'nilai_huruf_tampil'  => ($row['nilai_huruf'] === NULL || $row['nilai_huruf'] === '') ? 'null' : $row['nilai_huruf'],
-                'nilai_indeks'        => $row['nilai_indeks'],
-                'nilai_indeks_tampil' => $this->formatNilaiTampil($row['nilai_indeks']),
-                'highlight'           => ($clean_highlight !== '' && $this->normalizeName($row['nama_mata_kuliah']) === $clean_highlight),
+                'id_prodi'                => $row['id_prodi'],
+                'nama_program_studi'      => $row['nama_program_studi'],
+                'id_semester'             => $row['id_semester'],
+                'nama_semester'           => $row['nama_semester'],
+                'id_matkul'               => $row['id_matkul'],
+                'kode_mata_kuliah'        => $row['kode_mata_kuliah'],
+                'nama_mata_kuliah'        => $row['nama_mata_kuliah'],
+                'sks'                     => $sks,
+                'sks_tampil'              => number_format($sks, 2, '.', ''),
+                'id_kelas_kuliah'         => $row['id_kelas_kuliah'],
+                'nama_kelas'              => $row['nama_kelas'],
+                'id_registrasi_mahasiswa' => $row['id_registrasi_mahasiswa'],
+                'id_mahasiswa'            => $row['id_mahasiswa'],
+                'nim'                     => $row['nim'],
+                'nama_mahasiswa'          => $row['nama_mahasiswa'],
+                'jurusan'                 => $row['jurusan'],
+                'angkatan'                => $row['angkatan'],
+                'nilai_angka'             => $row['nilai_angka'],
+                'nilai_angka_tampil'      => $this->formatNilaiTampil($row['nilai_angka']),
+                'nilai_huruf'             => $row['nilai_huruf'],
+                'nilai_huruf_tampil'      => ($row['nilai_huruf'] === NULL || $row['nilai_huruf'] === '') ? 'null' : $row['nilai_huruf'],
+                'nilai_indeks'            => $row['nilai_indeks'],
+                'nilai_indeks_tampil'     => $this->formatNilaiTampil($row['nilai_indeks']),
+                'raw'                     => $row['raw'],
+                'highlight'               => ($clean_highlight !== '' && $this->normalizeName($row['nama_mata_kuliah']) === $clean_highlight),
             ];
 
             if ($indeks !== NULL) {
@@ -445,8 +526,14 @@ class AuditFeederService extends MY_Service {
                 $best[$kode] = [
                     '_indeks'          => $indeks,
                     '_angka'           => $angka,
+                    'id_prodi'         => $row['id_prodi'],
+                    'id_semester'      => $row['id_semester'],
+                    'id_matkul'        => $row['id_matkul'],
                     'kode_mata_kuliah' => $row['kode_mata_kuliah'],
                     'nama_mata_kuliah' => $row['nama_mata_kuliah'],
+                    'nama_kelas'       => $row['nama_kelas'],
+                    'id_kelas_kuliah'  => $row['id_kelas_kuliah'],
+                    'jurusan'          => $row['jurusan'],
                     'nama_semester'    => $row['nama_semester'] !== '' ? $row['nama_semester'] : $row['id_semester'],
                     'sks'              => is_numeric($row['sks']) ? (float) $row['sks'] : 0,
                     'nilai_angka'      => $row['nilai_angka'],
@@ -466,13 +553,22 @@ class AuditFeederService extends MY_Service {
             $indeks = $b['_indeks'] >= 0 ? $b['_indeks'] : NULL;
 
             $konsolidasi[] = [
+                'id_prodi'            => $b['id_prodi'],
+                'id_semester'         => $b['id_semester'],
+                'id_matkul'           => $b['id_matkul'],
                 'kode_mata_kuliah'    => $b['kode_mata_kuliah'],
                 'nama_mata_kuliah'    => $b['nama_mata_kuliah'],
+                'nama_kelas'          => $b['nama_kelas'],
+                'id_kelas_kuliah'     => $b['id_kelas_kuliah'],
+                'jurusan'             => $b['jurusan'],
                 'nama_semester'       => $b['nama_semester'],
                 'sks'                 => $sks,
                 'sks_tampil'          => number_format($sks, 2, '.', ''),
+                'nilai_angka'         => $b['nilai_angka'],
                 'nilai_angka_tampil'  => $this->formatNilaiTampil($b['nilai_angka']),
+                'nilai_huruf'         => $b['nilai_huruf'],
                 'nilai_huruf_tampil'  => ($b['nilai_huruf'] === NULL || $b['nilai_huruf'] === '') ? 'null' : $b['nilai_huruf'],
+                'nilai_indeks'        => $b['nilai_indeks'],
                 'nilai_indeks_tampil' => $this->formatNilaiTampil($b['nilai_indeks']),
                 'highlight'           => ($clean_highlight !== '' && $this->normalizeName($b['nama_mata_kuliah']) === $clean_highlight),
             ];
@@ -483,13 +579,369 @@ class AuditFeederService extends MY_Service {
             }
         }
 
+        // Data mentah Feeder apa adanya (untuk tab Data Mentah).
+        $raw_rows = [];
+        foreach ($rows as $row) {
+            $raw_rows[] = isset($row['raw']) ? $row['raw'] : $row;
+        }
+
+        // Peta bantu dari detail: id_matkul => semester & kelas.
+        $smt_by_matkul   = [];
+        $kelas_by_matkul = [];
+        $id_regs         = [];
+        foreach ($rows as $row) {
+            $mid = strtolower(trim((string) $row['id_matkul']));
+            if ($mid !== '') {
+                $smt_by_matkul[$mid]   = $row['nama_semester'] !== '' ? $row['nama_semester'] : $row['id_semester'];
+                $kelas_by_matkul[$mid] = $row['nama_kelas'];
+            }
+            $idr = trim((string) $row['id_registrasi_mahasiswa']);
+            if ($idr !== '') {
+                $id_regs[$idr] = TRUE;
+            }
+        }
+
+        // ===== Petikan Nilai dari GetTranskripMahasiswa (memuat nilai konversi/transfer) =====
+        $transkrip_rows = [];
+        $transkrip_error = '';
+        foreach (array_keys($id_regs) as $idr) {
+            $tr = $this->feederservice->getTranskripMahasiswa($idr);
+            if (!empty($tr['error'])) {
+                $transkrip_error = $tr['error'];
+                continue;
+            }
+            foreach ($tr['rows'] as $t) {
+                $transkrip_rows[] = $t;
+            }
+        }
+
+        $transkrip_raw = [];
+        foreach ($transkrip_rows as $t) {
+            $transkrip_raw[] = isset($t['raw']) ? $t['raw'] : $t;
+        }
+
+        $petikan = [];
+        $p_sks   = 0;
+        $p_sksn  = 0;
+        foreach ($transkrip_rows as $t) {
+            $sks = is_numeric($t['sks']) ? (float) $t['sks'] : 0;
+            $indeks = is_numeric($t['nilai_indeks']) ? (float) $t['nilai_indeks'] : NULL;
+            $is_transfer = ($t['id_nilai_transfer'] !== '' || $t['id_konversi_aktivitas'] !== '');
+            $mid = strtolower(trim((string) $t['id_matkul']));
+            $semester = isset($smt_by_matkul[$mid]) ? $smt_by_matkul[$mid] : ($is_transfer ? 'Konversi' : '');
+
+            $petikan[] = [
+                'kode_mata_kuliah'       => $t['kode_mata_kuliah'],
+                'nama_mata_kuliah'       => $t['nama_mata_kuliah'],
+                'sks'                    => $sks,
+                'sks_tampil'             => number_format($sks, 2, '.', ''),
+                'nama_semester'          => $semester,
+                'smt_diambil'            => $t['smt_diambil'],
+                'nama_kelas'             => isset($kelas_by_matkul[$mid]) ? $kelas_by_matkul[$mid] : '',
+                'nilai_angka'            => $t['nilai_angka'],
+                'nilai_angka_tampil'     => $this->formatNilaiTampil($t['nilai_angka']),
+                'nilai_huruf'            => $t['nilai_huruf'],
+                'nilai_huruf_tampil'     => ($t['nilai_huruf'] === NULL || $t['nilai_huruf'] === '') ? 'null' : $t['nilai_huruf'],
+                'nilai_indeks'           => $t['nilai_indeks'],
+                'nilai_indeks_tampil'    => $this->formatNilaiTampil($t['nilai_indeks']),
+                'is_transfer'            => $is_transfer,
+                'id_matkul'              => $t['id_matkul'],
+                'id_kelas_kuliah'        => $t['id_kelas_kuliah'],
+                'id_nilai_transfer'      => $t['id_nilai_transfer'],
+                'id_konversi_aktivitas'  => $t['id_konversi_aktivitas'],
+                'id_registrasi_mahasiswa' => $t['id_registrasi_mahasiswa'],
+                'raw'                    => $t['raw'],
+            ];
+
+            if ($indeks !== NULL) {
+                $p_sks  += $sks;
+                $p_sksn += $indeks * $sks;
+            }
+        }
+
+        usort($petikan, function ($a, $b) {
+            $c = strcmp((string) $a['kode_mata_kuliah'], (string) $b['kode_mata_kuliah']);
+            if ($c !== 0) {
+                return $c;
+            }
+            return strcmp((string) $a['nama_mata_kuliah'], (string) $b['nama_mata_kuliah']);
+        });
+
+        // ===== Grup Konversi untuk tab Detail Nilai =====
+        // Baris transkrip tanpa kelas (id_kelas_kuliah kosong) dianggap konversi.
+        $konversi_items = [];
+        $k_sks  = 0;
+        $k_sksn = 0;
+        foreach ($petikan as $p) {
+            if ($p['id_kelas_kuliah'] !== '') {
+                continue;
+            }
+
+            $indeks = is_numeric($p['nilai_indeks']) ? (float) $p['nilai_indeks'] : NULL;
+
+            $konversi_items[] = [
+                'id_prodi'                => $header['id_prodi'],
+                'nama_program_studi'      => $header['nama_program_studi'],
+                'id_semester'             => '',
+                'nama_semester'           => 'Konversi',
+                'id_matkul'               => $p['id_matkul'],
+                'kode_mata_kuliah'        => $p['kode_mata_kuliah'],
+                'nama_mata_kuliah'        => $p['nama_mata_kuliah'],
+                'sks'                     => $p['sks'],
+                'sks_tampil'              => $p['sks_tampil'],
+                'id_kelas_kuliah'         => $p['id_kelas_kuliah'],
+                'nama_kelas'              => $p['nama_kelas'],
+                'id_registrasi_mahasiswa' => $p['id_registrasi_mahasiswa'],
+                'id_mahasiswa'            => $header['id_mahasiswa'],
+                'nim'                     => $header['nim'],
+                'nama_mahasiswa'          => $header['nama_mahasiswa'],
+                'jurusan'                 => $header['jurusan'],
+                'angkatan'                => $header['angkatan'],
+                'nilai_angka'             => $p['nilai_angka'],
+                'nilai_angka_tampil'      => $p['nilai_angka_tampil'],
+                'nilai_huruf'             => $p['nilai_huruf'],
+                'nilai_huruf_tampil'      => $p['nilai_huruf_tampil'],
+                'nilai_indeks'            => $p['nilai_indeks'],
+                'nilai_indeks_tampil'     => $p['nilai_indeks_tampil'],
+                'id_nilai_transfer'       => $p['id_nilai_transfer'],
+                'id_konversi_aktivitas'   => $p['id_konversi_aktivitas'],
+                'smt_diambil'             => $p['smt_diambil'],
+                'status'                  => 'Konversi',
+                'highlight'               => FALSE,
+                'raw'                     => $p['raw'],
+            ];
+
+            if ($indeks !== NULL) {
+                $k_sks  += $p['sks'];
+                $k_sksn += $indeks * $p['sks'];
+            }
+        }
+
+        $semester_out = array_values($grouped);
+        if (!empty($konversi_items)) {
+            array_unshift($semester_out, [
+                'id_semester'   => 'KONVERSI',
+                'nama_semester' => 'Konversi',
+                'items'         => $konversi_items,
+                'total_sks'     => $k_sks,
+                'total_sksn'    => $k_sksn,
+                'ips'           => $k_sks > 0 ? $k_sksn / $k_sks : 0,
+            ]);
+        }
+
+        // ===== Perbandingan SISKA vs Feeder (transkrip, termasuk konversi semester 'K') =====
+        $siska_rows = $this->audit_feeder_model->getNilaiSiskaAllByNim($nim);
+
+        $siska_map = [];
+        foreach ($siska_rows as $s) {
+            $kode_s = strtoupper(trim((string) $s['kode_matakuliah']));
+            if ($kode_s === '') {
+                continue;
+            }
+            $siska_map[$kode_s][] = $s;
+        }
+
+        // Ambil nilai terbaik per kode dari transkrip.
+        $best_tr = [];
+        foreach ($petikan as $p) {
+            $kode_p = strtoupper(trim((string) $p['kode_mata_kuliah']));
+            if ($kode_p === '') {
+                continue;
+            }
+            $indeks_p = is_numeric($p['nilai_indeks']) ? (float) $p['nilai_indeks'] : -1;
+            $angka_p  = is_numeric($p['nilai_angka']) ? (float) $p['nilai_angka'] : -1;
+            if (!isset($best_tr[$kode_p])
+                || $indeks_p > $best_tr[$kode_p]['_indeks']
+                || ($indeks_p == $best_tr[$kode_p]['_indeks'] && $angka_p > $best_tr[$kode_p]['_angka'])) {
+                $best_tr[$kode_p] = ['_indeks' => $indeks_p, '_angka' => $angka_p, 'row' => $p];
+            }
+        }
+
+        $perbandingan = [];
+        $summary_banding = [
+            'sesuai'           => 0,
+            'berbeda'          => 0,
+            'siska_kosong'     => 0,
+            'feeder_kosong'    => 0,
+            'tidak_ada_siska'  => 0,
+            'tidak_ada_feeder' => 0,
+        ];
+        // ===== Susun pasangan Feeder vs SISKA =====
+        // Tahap 1: cocok berdasarkan Kode MK.
+        $pairs          = [];
+        $terpakai_siska = [];
+        foreach (array_keys($best_tr) as $kode_f) {
+            if (isset($siska_map[$kode_f])) {
+                $pairs[] = ['feeder' => $kode_f, 'siska' => $kode_f, 'matched_by' => 'kode'];
+                $terpakai_siska[$kode_f] = TRUE;
+            } else {
+                $pairs[] = ['feeder' => $kode_f, 'siska' => NULL, 'matched_by' => NULL];
+            }
+        }
+
+        // Tahap 2: cocok berdasarkan Nama Matakuliah (normalisasi: buang '*' dll).
+        $index_nama_siska = [];
+        foreach (array_keys($siska_map) as $kode_s) {
+            if (isset($terpakai_siska[$kode_s])) {
+                continue;
+            }
+            $nama_s = $this->normalizeName($siska_map[$kode_s][0]['nama_matakuliah']);
+            if ($nama_s !== '' && !isset($index_nama_siska[$nama_s])) {
+                $index_nama_siska[$nama_s] = $kode_s;
+            }
+        }
+        foreach ($pairs as $i => $pair) {
+            if ($pair['feeder'] === NULL || $pair['siska'] !== NULL) {
+                continue;
+            }
+            $nama_f = $this->normalizeName($best_tr[$pair['feeder']]['row']['nama_mata_kuliah']);
+            if ($nama_f === '' || !isset($index_nama_siska[$nama_f])) {
+                continue;
+            }
+            $kode_s = $index_nama_siska[$nama_f];
+            if (isset($terpakai_siska[$kode_s])) {
+                continue;
+            }
+            $pairs[$i]['siska']      = $kode_s;
+            $pairs[$i]['matched_by'] = 'nama';
+            $terpakai_siska[$kode_s] = TRUE;
+        }
+
+        // Sisa SISKA yang belum punya pasangan.
+        foreach (array_keys($siska_map) as $kode_s) {
+            if (!isset($terpakai_siska[$kode_s])) {
+                $pairs[] = ['feeder' => NULL, 'siska' => $kode_s, 'matched_by' => NULL];
+                $terpakai_siska[$kode_s] = TRUE;
+            }
+        }
+
+        foreach ($pairs as $pair) {
+            $f      = ($pair['feeder'] !== NULL) ? $best_tr[$pair['feeder']]['row'] : NULL;
+            $s_list = ($pair['siska'] !== NULL) ? $siska_map[$pair['siska']] : [];
+
+            $s_best     = NULL;
+            $s_semester = [];
+            $s_konversi = FALSE;
+            foreach ($s_list as $s) {
+                if ($s_best === NULL
+                    || (is_numeric($s['nilai_akhir']) && (float) $s['nilai_akhir'] > (float) ($s_best['nilai_akhir'] ?? -1))) {
+                    $s_best = $s;
+                }
+                if ((string) $s['semester'] === 'K') {
+                    $s_konversi   = TRUE;
+                    $s_semester[] = 'Konversi';
+                } else {
+                    $label = !empty($s['tahun_akademik']) ? $s['tahun_akademik'] : $s['kode_tahun_akademik'];
+                    $smt   = (int) $s['semester'];
+                    $s_semester[] = $label . ' ' . (($smt % 2 === 0) ? 'Genap' : 'Ganjil');
+                }
+            }
+            $s_semester = array_values(array_unique($s_semester));
+
+            $f_angka = ($f && is_numeric($f['nilai_angka'])) ? (float) $f['nilai_angka'] : NULL;
+            $f_huruf = ($f && $f['nilai_huruf'] !== NULL && $f['nilai_huruf'] !== '') ? strtoupper(trim((string) $f['nilai_huruf'])) : '';
+            $s_angka = ($s_best && is_numeric($s_best['nilai_akhir'])) ? (float) $s_best['nilai_akhir'] : NULL;
+            $s_huruf = ($s_best && $s_best['nilai_huruf'] !== NULL && $s_best['nilai_huruf'] !== '') ? strtoupper(trim((string) $s_best['nilai_huruf'])) : '';
+
+            if ($f !== NULL && $s_best !== NULL) {
+                if ($s_angka === NULL && $s_huruf === '') {
+                    $status = 'SISKA belum ada nilai';
+                    $summary_banding['siska_kosong']++;
+                } elseif ($f_angka === NULL && $f_huruf === '') {
+                    $status = 'Feeder belum ada nilai';
+                    $summary_banding['feeder_kosong']++;
+                } elseif ($f_angka !== NULL && $s_angka !== NULL) {
+                    if (abs(round($f_angka, 2) - round($s_angka, 2)) <= 0.001) {
+                        $status = 'Sesuai';
+                        $summary_banding['sesuai']++;
+                    } else {
+                        $status = 'Berbeda';
+                        $summary_banding['berbeda']++;
+                    }
+                } elseif ($f_huruf !== '' && $s_huruf !== '') {
+                    if ($f_huruf === $s_huruf) {
+                        $status = 'Sesuai';
+                        $summary_banding['sesuai']++;
+                    } else {
+                        $status = 'Berbeda';
+                        $summary_banding['berbeda']++;
+                    }
+                } else {
+                    $status = 'Berbeda';
+                    $summary_banding['berbeda']++;
+                }
+            } elseif ($f !== NULL) {
+                $status = 'Tidak ada di SISKA';
+                $summary_banding['tidak_ada_siska']++;
+            } else {
+                $status = 'Tidak ada di Feeder';
+                $summary_banding['tidak_ada_feeder']++;
+            }
+
+            $perbandingan[] = [
+                'kode_mata_kuliah' => $f ? $f['kode_mata_kuliah'] : ($s_best['kode_matakuliah'] ?? ''),
+                'feeder_kode'      => $f ? $f['kode_mata_kuliah'] : '',
+                'siska_kode'       => ($s_best && !empty($s_best['kode_matakuliah'])) ? $s_best['kode_matakuliah'] : '',
+                'nama_mata_kuliah' => $f ? $f['nama_mata_kuliah'] : ($s_best['nama_matakuliah'] ?? ''),
+                'sks'              => $f ? $f['sks'] : (isset($s_best['sks']) && is_numeric($s_best['sks']) ? (float) $s_best['sks'] : 0),
+                'feeder_sks'       => $f ? $f['sks'] : NULL,
+                'siska_sks'        => ($s_best && isset($s_best['sks']) && is_numeric($s_best['sks'])) ? (float) $s_best['sks'] : NULL,
+                'feeder_semester'  => $f ? $f['nama_semester'] : '',
+                'feeder_kelas'     => $f ? $f['nama_kelas'] : '',
+                'feeder_angka'     => $f ? $this->formatNilaiTampil($f['nilai_angka']) : 'null',
+                'feeder_huruf'     => ($f && $f['nilai_huruf'] !== NULL && $f['nilai_huruf'] !== '') ? $f['nilai_huruf'] : 'null',
+                'feeder_indeks'    => $f ? $this->formatNilaiTampil($f['nilai_indeks']) : 'null',
+                'feeder_transfer'  => ($f && !empty($f['is_transfer'])),
+                'siska_semester'   => implode(', ', $s_semester),
+                'siska_kelas'      => $s_best['nama_kelas'] ?? '',
+                'siska_harian'     => $s_best ? $this->formatNilaiTampil($s_best['nilai_harian']) : 'null',
+                'siska_uts'        => $s_best ? $this->formatNilaiTampil($s_best['nilai_uts']) : 'null',
+                'siska_uas'        => $s_best ? $this->formatNilaiTampil($s_best['nilai_uas']) : 'null',
+                'siska_angka'      => $s_best ? $this->formatNilaiTampil($s_best['nilai_akhir']) : 'null',
+                'siska_huruf'      => ($s_best && $s_best['nilai_huruf'] !== NULL && $s_best['nilai_huruf'] !== '') ? $s_best['nilai_huruf'] : 'null',
+                'siska_konversi'   => $s_konversi,
+                'matched_by'       => $pair['matched_by'],
+                'status'           => $status,
+            ];
+        }
+
+        // Urutkan: Berbeda → SISKA belum ada nilai → Tidak ada di Feeder →
+        // Tidak ada di SISKA → Feeder belum ada nilai → Sesuai (paling bawah).
+        $urutan_status = [
+            'Berbeda'                => 1,
+            'SISKA belum ada nilai'  => 2,
+            'Tidak ada di Feeder'    => 3,
+            'Tidak ada di SISKA'     => 4,
+            'Feeder belum ada nilai' => 5,
+            'Sesuai'                 => 6,
+        ];
+        usort($perbandingan, function ($a, $b) use ($urutan_status) {
+            $pa = isset($urutan_status[$a['status']]) ? $urutan_status[$a['status']] : 99;
+            $pb = isset($urutan_status[$b['status']]) ? $urutan_status[$b['status']] : 99;
+            if ($pa !== $pb) {
+                return $pa - $pb;
+            }
+            return strcmp((string) $a['kode_mata_kuliah'], (string) $b['kode_mata_kuliah']);
+        });
+
         return [
-            'header'      => $header,
-            'semester'    => array_values($grouped),
-            'konsolidasi' => $konsolidasi,
-            'total_sks'   => $grand_sks,
-            'total_sksn'  => $grand_sksn,
-            'ipk'         => $grand_sks > 0 ? $grand_sksn / $grand_sks : 0,
+            'nim'              => $header['nim'],
+            'header'           => $header,
+            'semester'         => $semester_out,
+            'konsolidasi'      => $konsolidasi,
+            'total_sks'        => $grand_sks,
+            'total_sksn'       => $grand_sksn,
+            'ipk'              => $grand_sks > 0 ? $grand_sksn / $grand_sks : 0,
+            'petikan'          => $petikan,
+            'petikan_total_sks'  => $p_sks,
+            'petikan_total_sksn' => $p_sksn,
+            'petikan_ipk'        => $p_sks > 0 ? $p_sksn / $p_sks : 0,
+            'transkrip_error'  => $transkrip_error,
+            'raw_rows'         => $raw_rows,
+            'transkrip_raw'    => $transkrip_raw,
+            'siska'            => $siska_rows,
+            'perbandingan'     => $perbandingan,
+            'summary_banding'  => $summary_banding,
         ];
     }
 

@@ -25,6 +25,42 @@ class Audit_feeder_model extends CI_Model {
         return $this->db->query($sql, [$nim, $kode_tahun_akademik])->result_object();
     }
 
+    /**
+     * Ambil SELURUH nilai SISKA milik seorang NIM (semua tahun akademik,
+     * termasuk KRS konversi dengan semester = 'K') lengkap dengan nilai
+     * harian/uts/uas/akhir, huruf, kelas, dan penanda konversi.
+     */
+    public function getNilaiSiskaAllByNim($nim)
+    {
+        $sql = "SELECT k.nim, m.nama_mahasiswa,
+                       k.kode_tahun_akademik, ta.tahun_akademik, k.semester,
+                       k.kode_krs, krd.kode_krs_detail, krd.id_matakuliah,
+                       mk.kode_matakuliah, mk.nama_matakuliah,
+                       (mk.sks_teori + mk.sks_praktek + mk.sks_praktikum) AS sks,
+                       (SELECT nk.nama_kelas
+                          FROM kelas_mahasiswa km
+                          JOIN kelas kl ON kl.kelas_id = km.kelas_id
+                          JOIN nama_kelas nk ON nk.nama_kelas_id = kl.nama_kelas_id
+                         WHERE km.kode_krs_detail = krd.kode_krs_detail
+                         LIMIT 1) AS nama_kelas,
+                       kd.nilai_harian, kd.nilai_uts, kd.nilai_uas,
+                       kd.nilai_akhir, kd.tidak_berhak,
+                       spd.grade AS nilai_huruf
+                  FROM krs k
+                  JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
+                  LEFT JOIN khs_detail kd ON kd.kode_krs_detail = krd.kode_krs_detail
+                  LEFT JOIN tahun_akademik ta ON ta.kode_tahun_akademik = k.kode_tahun_akademik
+                  LEFT JOIN mahasiswa m ON m.nim = k.nim
+                  JOIN matakuliah mk ON mk.id_matakuliah = krd.id_matakuliah
+                  LEFT JOIN sistem_penilaian_detail spd
+                         ON kd.nilai_akhir BETWEEN spd.nilai_minimum AND spd.nilai_maksimum
+                        AND spd.kode_sistem_penilaian = 1
+                 WHERE k.nim = ?
+                 ORDER BY k.kode_tahun_akademik, k.semester, mk.nama_matakuliah";
+
+        return $this->db->query($sql, [$nim])->result_array();
+    }
+
     public function getNilaiSiskaByKelas($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $nama_kelas_id = NULL)
     {
         $sql = "SELECT m.nim, m.nama_mahasiswa, mk.kode_matakuliah, mk.nama_matakuliah,

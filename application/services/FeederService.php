@@ -493,19 +493,99 @@ class FeederService extends MY_Service {
                     continue;
                 }
                 $rows_out[] = [
-                    'id_semester'        => (string) $this->pick($row, ['id_semester', 'id_smt']),
-                    'nama_semester'      => (string) $this->pick($row, ['nama_semester', 'nm_smt']),
-                    'kode_mata_kuliah'   => (string) $this->pick($row, ['kode_mata_kuliah', 'kode_matakuliah']),
-                    'nama_mata_kuliah'   => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
-                    'nama_kelas'         => (string) $this->pick($row, ['nama_kelas_kuliah', 'nama_kelas', 'nm_kelas', 'kelas']),
-                    'sks'                => $this->pick($row, ['sks_mata_kuliah', 'sks']),
-                    'nilai_angka'        => $this->pick($row, ['nilai_angka', 'nilai']),
-                    'nilai_huruf'        => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
-                    'nilai_indeks'       => $this->pick($row, ['nilai_indeks', 'indeks']),
-                    'nim'                => (string) $this->pick($row, ['nim', 'NIM']),
-                    'nama_mahasiswa'     => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
-                    'nama_program_studi' => (string) $this->pick($row, ['nama_program_studi', 'jurusan']),
-                    'angkatan'           => (string) $this->pick($row, ['angkatan']),
+                    'id_prodi'                => (string) $this->pick($row, ['id_prodi']),
+                    'nama_program_studi'      => (string) $this->pick($row, ['nama_program_studi', 'jurusan']),
+                    'id_semester'             => (string) $this->pick($row, ['id_semester', 'id_smt']),
+                    'nama_semester'           => (string) $this->pick($row, ['nama_semester', 'nm_smt']),
+                    'id_matkul'               => (string) $this->pick($row, ['id_matkul', 'id_mata_kuliah']),
+                    'kode_mata_kuliah'        => (string) $this->pick($row, ['kode_mata_kuliah', 'kode_matakuliah']),
+                    'nama_mata_kuliah'        => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
+                    'sks'                     => $this->pick($row, ['sks_mata_kuliah', 'sks']),
+                    'id_kelas_kuliah'         => (string) $this->pick($row, ['id_kelas_kuliah']),
+                    'nama_kelas'              => (string) $this->pick($row, ['nama_kelas_kuliah', 'nama_kelas', 'nm_kelas', 'kelas']),
+                    'id_registrasi_mahasiswa' => (string) $this->pick($row, ['id_registrasi_mahasiswa']),
+                    'id_mahasiswa'            => (string) $this->pick($row, ['id_mahasiswa']),
+                    'nim'                     => (string) $this->pick($row, ['nim', 'NIM']),
+                    'nama_mahasiswa'          => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
+                    'jurusan'                 => (string) $this->pick($row, ['jurusan', 'nama_jurusan']),
+                    'angkatan'                => (string) $this->pick($row, ['angkatan']),
+                    'nilai_angka'             => $this->pick($row, ['nilai_angka', 'nilai']),
+                    'nilai_indeks'            => $this->pick($row, ['nilai_indeks', 'indeks']),
+                    'nilai_huruf'             => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
+                    'raw'                     => $row,
+                ];
+            }
+
+            if (count($rows) < $limit) {
+                break;
+            }
+            $offset += $limit;
+        }
+
+        return ['rows' => $rows_out, 'total' => count($rows_out), 'error' => ''];
+    }
+
+    /**
+     * Transkrip mahasiswa dari Feeder (GetTranskripMahasiswa).
+     *
+     * Berbeda dengan GetDetailNilaiPerkuliahanKelas, transkrip memuat nilai
+     * hasil transfer/konversi (id_nilai_transfer / id_konversi_aktivitas).
+     * Filter wajib memakai kolom `id_registrasi_mahasiswa`.
+     */
+    public function getTranskripMahasiswa($id_registrasi_mahasiswa)
+    {
+        $id = trim((string) $id_registrasi_mahasiswa);
+        if ($id === '') {
+            return ['rows' => [], 'total' => 0, 'error' => 'ID registrasi mahasiswa kosong.'];
+        }
+
+        $filter = "id_registrasi_mahasiswa = '" . str_replace("'", "\\'", $id) . "'";
+
+        $rows_out = [];
+        $offset = 0;
+        $limit = 500;
+        $guard = 0;
+
+        while (TRUE) {
+            $guard++;
+            if ($guard > 100) {
+                break;
+            }
+
+            $res = $this->request('GetTranskripMahasiswa', [
+                'filter' => $filter,
+                'order'  => '',
+                'limit'  => (string) $limit,
+                'offset' => (string) $offset,
+            ]);
+
+            if (isset($res['error'])) {
+                return ['rows' => [], 'total' => 0, 'error' => $res['error']];
+            }
+
+            $rows = $res['data'] ?? [];
+            if (!is_array($rows) || empty($rows)) {
+                break;
+            }
+
+            foreach ($rows as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $rows_out[] = [
+                    'id_registrasi_mahasiswa' => (string) $this->pick($row, ['id_registrasi_mahasiswa']),
+                    'id_matkul'               => (string) $this->pick($row, ['id_matkul', 'id_mata_kuliah']),
+                    'id_kelas_kuliah'         => (string) $this->pick($row, ['id_kelas_kuliah']),
+                    'id_nilai_transfer'       => (string) $this->pick($row, ['id_nilai_transfer']),
+                    'id_konversi_aktivitas'   => (string) $this->pick($row, ['id_konversi_aktivitas']),
+                    'smt_diambil'             => (string) $this->pick($row, ['smt_diambil']),
+                    'kode_mata_kuliah'        => (string) $this->pick($row, ['kode_mata_kuliah', 'kode_matakuliah']),
+                    'nama_mata_kuliah'        => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
+                    'sks'                     => $this->pick($row, ['sks_mata_kuliah', 'sks']),
+                    'nilai_angka'             => $this->pick($row, ['nilai_angka', 'nilai']),
+                    'nilai_huruf'             => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
+                    'nilai_indeks'            => $this->pick($row, ['nilai_indeks', 'indeks']),
+                    'raw'                     => $row,
                 ];
             }
 

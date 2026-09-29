@@ -79,6 +79,32 @@ class Pengaturan extends CI_Controller
         ]);
     }
 
+    public function konversi()
+    {
+        $this->load->model(array(
+            'akademik/Krs_model',
+            'jurusan/m_tahun_akademik',
+        ));
+
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+
+        $data_konversi = null;
+        if ($this->input->post('proses') !== null) {
+            $data_konversi = $this->Krs_model->get_konversi_list($kode_tahun_akademik);
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'    => 'admin/pengaturan/V_konversi',
+            'judul'      => 'Pengaturan',
+            'sub_judul'  => 'Konversi',
+            'title_h1'   => '<i class="fa fa-exchange"></i> <li>Pengaturan</li>',
+            'title_h2'   => '<li>Konversi</li>',
+            'tahun_akademik_list' => $this->m_tahun_akademik->get(),
+            'data'       => $data_konversi,
+            'filter'     => ['kode_tahun_akademik' => $kode_tahun_akademik],
+        ]);
+    }
+
     public function pindah_tahun_akademik()
     {
         $this->load->model(array(

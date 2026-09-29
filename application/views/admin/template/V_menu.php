@@ -342,6 +342,7 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php if (has_access($acc, 'Pengaturan')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan'); ?>"><i class="fa fa-circle-o"></i> SMTP Email</a></li>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/krs_kpat'); ?>"><i class="fa fa-circle-o"></i> KRS KPAT</a></li>
+                    <li><a href="<?= site_url('admin/pengaturan/pengaturan/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Api_tokens')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>

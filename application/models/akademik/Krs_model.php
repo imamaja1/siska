@@ -456,6 +456,24 @@ class Krs_model extends CI_Model
         }
     }
 
+    public function get_konversi_list($kode_tahun_akademik = null)
+    {
+        $this->db->select('krs.kode_krs, krs.nim, mah.nama_mahasiswa, ps.nama_program_studi, ta.tahun_akademik, ta.semester')
+            ->from('krs')
+            ->join('mahasiswa as mah', 'krs.nim=mah.nim')
+            ->join('program_studi as ps', 'mah.program_studi_kode=ps.kode_program_studi', 'left')
+            ->join('tahun_akademik as ta', 'krs.kode_tahun_akademik=ta.kode_tahun_akademik', 'left')
+            ->where('krs.semester', 'K');
+
+        if ($kode_tahun_akademik) {
+            $this->db->where('krs.kode_tahun_akademik', $kode_tahun_akademik);
+        }
+
+        return $this->db->order_by('ta.tahun_akademik', 'DESC')
+            ->order_by('mah.nama_mahasiswa', 'ASC')
+            ->get()->result_object();
+    }
+
     function get_mahasiswa_by_mk()
     {
         $matakuliah = $this->db->get('matakuliah')->result();

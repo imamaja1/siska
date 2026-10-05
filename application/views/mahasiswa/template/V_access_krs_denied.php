@@ -5,10 +5,10 @@
     <div class="box-body">
         <div class="krs-pick">
             <?php $i = 1; $has_active = false; foreach ($krs_mhs as $row) : ?>
-                <?php if (isset($ta) && $row->kode_tahun_akademik == $ta) $has_active = true; ?>
-                <a href="<?= site_url(isset($ta) && $row->kode_tahun_akademik == $ta ? 'mahasiswa/krs/index/' : 'mahasiswa/krs/old/'.$row->semester) ?>" class="btn bg-navy flat btn-sm">
-                    <i class="fa fa-arrow-circle-right"></i>
-                    <?php if (isset($ta) && $row->kode_tahun_akademik == $ta) : ?>
+                <?php $is_act = (isset($ta) && $row->kode_tahun_akademik == $ta); if ($is_act) $has_active = true; ?>
+                <a href="<?= site_url($is_act ? 'mahasiswa/krs/index/' : 'mahasiswa/krs/old/'.$row->semester) ?>" class="btn <?= $is_act ? 'btn-primary' : 'btn-default' ?> btn-sm">
+                    <i class="fa fa-calendar-check-o"></i>
+                    <?php if ($is_act) : ?>
                         Semester <?= isset($semester_aktif) ? $semester_aktif : $row->semester ?> (Aktif)
                     <?php else : ?>
                         <?= ($row->semester == 'K') ? 'Konversi' : 'Semester '.$i++ ?>
@@ -16,8 +16,8 @@
                 </a>
             <?php endforeach; ?>
             <?php if (!$has_active) : ?>
-                <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn bg-navy flat btn-sm">
-                    <i class="fa fa-arrow-circle-right"></i> Semester <?= isset($semester_aktif) ? $semester_aktif : '' ?> (Aktif)
+                <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn btn-primary btn-sm">
+                    <i class="fa fa-calendar-check-o"></i> Semester <?= isset($semester_aktif) ? $semester_aktif : '' ?> (Aktif)
                 </a>
             <?php endif; ?>
         </div>

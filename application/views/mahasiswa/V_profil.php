@@ -86,7 +86,7 @@ $val = function ($v) {
                         <div class="pf-row">
                             <span class="pf-row-label">NIM</span>
                             <div class="pf-row-inline">
-                                <span class="pf-row-value" style="color:#1C6DD0;font-weight:700;letter-spacing:0.03em;"><?= e($data->nim) ?></span>
+                                <span class="pf-row-value" style="color:#303841;font-weight:700;letter-spacing:0.03em;"><?= e($data->nim) ?></span>
                                 <button type="button" class="pf-copy" title="Salin NIM" onclick="siskaCopy('<?= e($data->nim) ?>', this)"><i class="fa fa-copy"></i></button>
                             </div>
                         </div>

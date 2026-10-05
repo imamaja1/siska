@@ -10,99 +10,6 @@ class AuditFeederService extends MY_Service {
         $this->load->service('FeederService');
     }
 
-    public function hasilMahasiswa($nim, $kode_tahun_akademik)
-    {
-        $nim = trim((string) $nim);
-        if ($nim === '') {
-            return ['error' => 'NIM wajib diisi.'];
-        }
-
-        if ($kode_tahun_akademik === 'all') {
-            return $this->hasilMahasiswaSemuaTa($nim);
-        }
-
-        $ta = $this->m_tahun_akademik->get_tahun_akademik_by_kode($kode_tahun_akademik);
-        if (!$ta) {
-            return ['error' => 'Tahun akademik tidak valid.'];
-        }
-
-        $id_semester = $this->feederservice->idSemester($ta->tahun_akademik, $ta->semester);
-        $siska_rows = $this->audit_feeder_model->getNilaiSiskaByNim($nim, $kode_tahun_akademik);
-        $feeder = $this->feederservice->getNilaiFeederMap($id_semester, ['nim' => $nim]);
-
-        return [
-            'hasil'       => $this->susunHasil($siska_rows, $feeder, TRUE),
-            'judul_hasil' => 'Audit Nilai SISKA vs Feeder',
-            'sub_hasil'   => 'Mahasiswa: ' . $nim . ' | ' . $ta->tahun_akademik . ' - ' . ($ta->semester == '1' ? 'Ganjil' : 'Genap'),
-            'id_semester' => $id_semester,
-            'tampil_ta'   => FALSE,
-        ];
-    }
-
-    private function hasilMahasiswaSemuaTa($nim)
-    {
-        $angkatan = substr($nim, 0, 2);
-        $tahun = (int) $angkatan;
-        if ($tahun <= 0) {
-            return ['error' => 'NIM tidak valid untuk menentukan angkatan.'];
-        }
-
-        $start_tahun = 2000 + $tahun;
-        $start_ta = $start_tahun . '/' . ($start_tahun + 1);
-        $daftar_ta = $this->audit_feeder_model->getTahunAkademikFrom($start_ta);
-
-        $all_rows = [];
-        $summary = [
-            'sesuai'               => 0,
-            'berbeda'              => 0,
-            'sesuai_kode_berubah'  => 0,
-            'berbeda_kode_berubah' => 0,
-            'tidak_ada'            => 0,
-            'kosong'               => 0,
-            'tidak_ada_siska'      => 0,
-        ];
-        $feeder_error = '';
-        $feeder_total = 0;
-
-        foreach ($daftar_ta as $ta) {
-            $siska_rows = $this->audit_feeder_model->getNilaiSiskaByNim($nim, $ta->kode_tahun_akademik);
-            if (empty($siska_rows)) {
-                continue;
-            }
-
-            $id_semester = $this->feederservice->idSemester($ta->tahun_akademik, $ta->semester);
-            $feeder = $this->feederservice->getNilaiFeederMap($id_semester, ['nim' => $nim]);
-            if (!empty($feeder['error'])) {
-                $feeder_error = $feeder['error'];
-            }
-            $feeder_total += (int) ($feeder['total'] ?? 0);
-
-            $hasil = $this->susunHasil($siska_rows, $feeder, TRUE);
-            foreach ($hasil['rows'] as $row) {
-                $row->tahun_akademik = $ta->tahun_akademik;
-                $row->semester_label = ($ta->semester == '1' ? 'Ganjil' : 'Genap');
-                $all_rows[] = $row;
-            }
-            foreach ($summary as $k => $v) {
-                $summary[$k] += $hasil['summary'][$k];
-            }
-        }
-
-        return [
-            'hasil' => [
-                'rows'         => $all_rows,
-                'summary'      => $summary,
-                'feeder_keys'  => [],
-                'feeder_total' => $feeder_total,
-                'feeder_error' => $feeder_error,
-            ],
-            'judul_hasil' => 'Audit Nilai SISKA vs Feeder',
-            'sub_hasil'   => 'Mahasiswa: ' . $nim . ' | Semua Tahun Akademik (mulai ' . $start_ta . ')',
-            'id_semester' => '',
-            'tampil_ta'   => TRUE,
-        ];
-    }
-
     public function hasilKelas($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $kode_matakuliah, $nama_kelas_id)
     {
         $kode_matakuliah = trim((string) $kode_matakuliah);
@@ -172,7 +79,7 @@ class AuditFeederService extends MY_Service {
         }
 
         $id_semester  = $this->feederservice->idSemester($ta->tahun_akademik, $ta->semester);
-        $clean_target = $this->normalizeName($nama_matakuliah);
+        $clean_target = $this->normalizeMatakuliah($nama_matakuliah);
         if ($clean_target === '') {
             return ['error' => 'Nama matakuliah kosong.'];
         }
@@ -215,7 +122,7 @@ class AuditFeederService extends MY_Service {
             $best_skor = 0;
 
             foreach ($rows_ta as $row) {
-                $clean = $this->normalizeName($row['nama_mata_kuliah'] ?? '');
+                $clean = $this->normalizeMatakuliah($row['nama_mata_kuliah'] ?? '');
                 if ($clean === '') {
                     continue;
                 }
@@ -299,6 +206,18 @@ class AuditFeederService extends MY_Service {
     }
 
     /**
+     * Normalisasi nama matakuliah: buang spasi dan seluruh tanda baca,
+     * sehingga "COPYWRITING & ADVERTISING**" setara dengan
+     * "COPY WRITING & ADVERTISING".
+     */
+    private function normalizeMatakuliah($value)
+    {
+        $value = strtoupper((string) $value);
+        $value = preg_replace('/[^A-Z0-9]+/', '', $value);
+        return trim($value);
+    }
+
+    /**
      * Normalisasi nama kelas: buang awalan angka Romawi (mis. semester)
      * sehingga "IIIA" di Feeder setara dengan "A" di SISKA.
      */
@@ -349,6 +268,104 @@ class AuditFeederService extends MY_Service {
             'total' => count($baru),
             'error' => $feeder['error'] ?? '',
         ];
+    }
+
+    /**
+     * Tahun akademik (format "YYYY/YYYY") dari id_semester Feeder ("20231")
+     * atau dari nama_semester ("2022/2023 Ganjil").
+     */
+    private function tahunAkademikDariSemester($id_semester, $nama_semester = '')
+    {
+        $id = trim((string) $id_semester);
+        if (preg_match('/^(\d{4})([12])$/', $id, $m)) {
+            $tahun = (int) $m[1];
+            return $tahun . '/' . ($tahun + 1);
+        }
+
+        $nama = trim((string) $nama_semester);
+        if ($nama !== '' && preg_match('/(\d{4})\s*\/\s*(\d{4})/', $nama, $m2)) {
+            return $m2[1] . '/' . $m2[2];
+        }
+        if ($nama !== '' && preg_match('/^(\d{4})/', $nama, $m3)) {
+            $tahun = (int) $m3[1];
+            return $tahun . '/' . ($tahun + 1);
+        }
+
+        return '';
+    }
+
+    /**
+     * Label tahun akademik + semester, mis. "2023/2024 Ganjil".
+     * Semester diambil dari digit terakhir id_semester atau kata Ganjil/Genap
+     * pada nama_semester.
+     */
+    private function labelTahunAkademikSemester($id_semester, $nama_semester = '')
+    {
+        $ta = $this->tahunAkademikDariSemester($id_semester, $nama_semester);
+
+        $smt = '';
+        $id  = trim((string) $id_semester);
+        if (preg_match('/^(\d{4})([12])$/', $id, $m)) {
+            $smt = ($m[2] === '1') ? 'Ganjil' : 'Genap';
+        } else {
+            $nama = strtoupper(trim((string) $nama_semester));
+            if (strpos($nama, 'GANJIL') !== FALSE) {
+                $smt = 'Ganjil';
+            } elseif (strpos($nama, 'GENAP') !== FALSE) {
+                $smt = 'Genap';
+            }
+        }
+
+        if ($ta !== '' && $smt !== '') {
+            return $ta . ' ' . $smt;
+        }
+        if ($ta !== '') {
+            return $ta;
+        }
+
+        return trim((string) $nama_semester);
+    }
+
+    /**
+     * Kelompokkan baris perbandingan berdasarkan tahun akademik + semester Feeder.
+     * Baris tanpa sisi Feeder (Tidak ada di Feeder) masuk grup "Tanpa Tahun Akademik".
+     */
+    private function kelompokkanPerbandingan($perbandingan)
+    {
+        $grup = [];
+        foreach ($perbandingan as $row) {
+            $label = !empty($row['feeder_ta_smt']) ? $row['feeder_ta_smt'] : 'Tanpa Tahun Akademik';
+            if (!isset($grup[$label])) {
+                $grup[$label] = [];
+            }
+            $grup[$label][] = $row;
+        }
+
+        $rank = function ($v) {
+            if ($v === 'Tanpa Tahun Akademik') {
+                return 2;
+            }
+            if ($v === 'Konversi') {
+                return 1;
+            }
+            return 0;
+        };
+
+        uksort($grup, function ($a, $b) use ($rank) {
+            $ra = $rank($a);
+            $rb = $rank($b);
+            if ($ra !== $rb) {
+                return $ra - $rb;
+            }
+            return strcmp((string) $a, (string) $b);
+        });
+
+        $out = [];
+        foreach ($grup as $ta => $rows) {
+            $out[] = ['tahun_akademik' => $ta, 'rows' => $rows];
+        }
+
+        return $out;
     }
 
     /**
@@ -439,7 +456,7 @@ class AuditFeederService extends MY_Service {
             return ['error' => 'Data nilai Feeder tidak ditemukan untuk NIM tersebut.'];
         }
 
-        $clean_highlight = $this->normalizeName($highlight_name);
+        $clean_highlight = $this->normalizeMatakuliah($highlight_name);
 
         $header = [
             'nim'                     => $rows[0]['nim'] !== '' ? $rows[0]['nim'] : $nim,
@@ -494,7 +511,7 @@ class AuditFeederService extends MY_Service {
                 'nilai_indeks'            => $row['nilai_indeks'],
                 'nilai_indeks_tampil'     => $this->formatNilaiTampil($row['nilai_indeks']),
                 'raw'                     => $row['raw'],
-                'highlight'               => ($clean_highlight !== '' && $this->normalizeName($row['nama_mata_kuliah']) === $clean_highlight),
+                'highlight'               => ($clean_highlight !== '' && $this->normalizeMatakuliah($row['nama_mata_kuliah']) === $clean_highlight),
             ];
 
             if ($indeks !== NULL) {
@@ -570,7 +587,7 @@ class AuditFeederService extends MY_Service {
                 'nilai_huruf_tampil'  => ($b['nilai_huruf'] === NULL || $b['nilai_huruf'] === '') ? 'null' : $b['nilai_huruf'],
                 'nilai_indeks'        => $b['nilai_indeks'],
                 'nilai_indeks_tampil' => $this->formatNilaiTampil($b['nilai_indeks']),
-                'highlight'           => ($clean_highlight !== '' && $this->normalizeName($b['nama_mata_kuliah']) === $clean_highlight),
+                'highlight'           => ($clean_highlight !== '' && $this->normalizeMatakuliah($b['nama_mata_kuliah']) === $clean_highlight),
             ];
 
             if ($indeks !== NULL) {
@@ -585,15 +602,19 @@ class AuditFeederService extends MY_Service {
             $raw_rows[] = isset($row['raw']) ? $row['raw'] : $row;
         }
 
-        // Peta bantu dari detail: id_matkul => semester & kelas.
+        // Peta bantu dari detail: id_matkul => semester, kelas, tahun akademik.
         $smt_by_matkul   = [];
         $kelas_by_matkul = [];
+        $ta_by_matkul    = [];
+        $ta_smt_by_matkul = [];
         $id_regs         = [];
         foreach ($rows as $row) {
             $mid = strtolower(trim((string) $row['id_matkul']));
             if ($mid !== '') {
                 $smt_by_matkul[$mid]   = $row['nama_semester'] !== '' ? $row['nama_semester'] : $row['id_semester'];
                 $kelas_by_matkul[$mid] = $row['nama_kelas'];
+                $ta_by_matkul[$mid]    = $this->tahunAkademikDariSemester($row['id_semester'], $row['nama_semester']);
+                $ta_smt_by_matkul[$mid] = $this->labelTahunAkademikSemester($row['id_semester'], $row['nama_semester']);
             }
             $idr = trim((string) $row['id_registrasi_mahasiswa']);
             if ($idr !== '') {
@@ -785,7 +806,7 @@ class AuditFeederService extends MY_Service {
             if (isset($terpakai_siska[$kode_s])) {
                 continue;
             }
-            $nama_s = $this->normalizeName($siska_map[$kode_s][0]['nama_matakuliah']);
+            $nama_s = $this->normalizeMatakuliah($siska_map[$kode_s][0]['nama_matakuliah']);
             if ($nama_s !== '' && !isset($index_nama_siska[$nama_s])) {
                 $index_nama_siska[$nama_s] = $kode_s;
             }
@@ -794,7 +815,7 @@ class AuditFeederService extends MY_Service {
             if ($pair['feeder'] === NULL || $pair['siska'] !== NULL) {
                 continue;
             }
-            $nama_f = $this->normalizeName($best_tr[$pair['feeder']]['row']['nama_mata_kuliah']);
+            $nama_f = $this->normalizeMatakuliah($best_tr[$pair['feeder']]['row']['nama_mata_kuliah']);
             if ($nama_f === '' || !isset($index_nama_siska[$nama_f])) {
                 continue;
             }
@@ -821,6 +842,7 @@ class AuditFeederService extends MY_Service {
 
             $s_best     = NULL;
             $s_semester = [];
+            $s_ta       = [];
             $s_konversi = FALSE;
             foreach ($s_list as $s) {
                 if ($s_best === NULL
@@ -830,13 +852,38 @@ class AuditFeederService extends MY_Service {
                 if ((string) $s['semester'] === 'K') {
                     $s_konversi   = TRUE;
                     $s_semester[] = 'Konversi';
+                    $s_ta[]       = 'Konversi';
                 } else {
                     $label = !empty($s['tahun_akademik']) ? $s['tahun_akademik'] : $s['kode_tahun_akademik'];
                     $smt   = (int) $s['semester'];
                     $s_semester[] = $label . ' ' . (($smt % 2 === 0) ? 'Genap' : 'Ganjil');
+                    $s_ta[]       = $label;
                 }
             }
             $s_semester = array_values(array_unique($s_semester));
+            $s_ta       = array_values(array_unique(array_filter($s_ta, function ($v) {
+                return trim((string) $v) !== '';
+            })));
+
+            $f_ta = '';
+            if ($f !== NULL && !empty($f['id_matkul'])) {
+                $mid_f = strtolower(trim((string) $f['id_matkul']));
+                $f_ta  = isset($ta_by_matkul[$mid_f]) ? $ta_by_matkul[$mid_f] : '';
+            }
+            if ($f_ta === '' && $f !== NULL && !empty($f['nama_semester'])) {
+                $f_ta = $this->tahunAkademikDariSemester('', $f['nama_semester']);
+            }
+
+            $f_ta_smt = '';
+            if ($f !== NULL) {
+                if (!empty($f['id_matkul'])) {
+                    $mid_f_smt = strtolower(trim((string) $f['id_matkul']));
+                    $f_ta_smt  = isset($ta_smt_by_matkul[$mid_f_smt]) ? $ta_smt_by_matkul[$mid_f_smt] : '';
+                }
+                if ($f_ta_smt === '' && !empty($f['nama_semester'])) {
+                    $f_ta_smt = $this->labelTahunAkademikSemester('', $f['nama_semester']);
+                }
+            }
 
             $f_angka = ($f && is_numeric($f['nilai_angka'])) ? (float) $f['nilai_angka'] : NULL;
             $f_huruf = ($f && $f['nilai_huruf'] !== NULL && $f['nilai_huruf'] !== '') ? strtoupper(trim((string) $f['nilai_huruf'])) : '';
@@ -882,7 +929,10 @@ class AuditFeederService extends MY_Service {
                 'kode_mata_kuliah' => $f ? $f['kode_mata_kuliah'] : ($s_best['kode_matakuliah'] ?? ''),
                 'feeder_kode'      => $f ? $f['kode_mata_kuliah'] : '',
                 'siska_kode'       => ($s_best && !empty($s_best['kode_matakuliah'])) ? $s_best['kode_matakuliah'] : '',
+                'siska_kode_tahun_akademik' => ($s_best && !empty($s_best['kode_tahun_akademik'])) ? $s_best['kode_tahun_akademik'] : '',
                 'nama_mata_kuliah' => $f ? $f['nama_mata_kuliah'] : ($s_best['nama_matakuliah'] ?? ''),
+                'feeder_nama'      => $f ? $f['nama_mata_kuliah'] : '',
+                'siska_nama'       => ($s_best && !empty($s_best['nama_matakuliah'])) ? $s_best['nama_matakuliah'] : '',
                 'sks'              => $f ? $f['sks'] : (isset($s_best['sks']) && is_numeric($s_best['sks']) ? (float) $s_best['sks'] : 0),
                 'feeder_sks'       => $f ? $f['sks'] : NULL,
                 'siska_sks'        => ($s_best && isset($s_best['sks']) && is_numeric($s_best['sks'])) ? (float) $s_best['sks'] : NULL,
@@ -900,6 +950,9 @@ class AuditFeederService extends MY_Service {
                 'siska_angka'      => $s_best ? $this->formatNilaiTampil($s_best['nilai_akhir']) : 'null',
                 'siska_huruf'      => ($s_best && $s_best['nilai_huruf'] !== NULL && $s_best['nilai_huruf'] !== '') ? $s_best['nilai_huruf'] : 'null',
                 'siska_konversi'   => $s_konversi,
+                'feeder_ta'        => $f_ta,
+                'feeder_ta_smt'    => $f_ta_smt,
+                'siska_ta_list'    => $s_ta,
                 'matched_by'       => $pair['matched_by'],
                 'status'           => $status,
             ];
@@ -924,6 +977,8 @@ class AuditFeederService extends MY_Service {
             return strcmp((string) $a['kode_mata_kuliah'], (string) $b['kode_mata_kuliah']);
         });
 
+        $perbandingan_grup = $this->kelompokkanPerbandingan($perbandingan);
+
         return [
             'nim'              => $header['nim'],
             'header'           => $header,
@@ -941,6 +996,7 @@ class AuditFeederService extends MY_Service {
             'transkrip_raw'    => $transkrip_raw,
             'siska'            => $siska_rows,
             'perbandingan'     => $perbandingan,
+            'perbandingan_grup' => $perbandingan_grup,
             'summary_banding'  => $summary_banding,
         ];
     }

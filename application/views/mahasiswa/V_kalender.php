@@ -3,14 +3,16 @@
         <h3 class="box-title"><i class="fa fa-calendar"></i> Kalender Akademik</h3>
     </div>
     <div class="box-body">
-        <div class="table-responsive">
-        <table class="table demo-table">
+        <div class="mhs-semester-label">Semester Ganjil</div>
+        <div class="table-responsive mhs-table-wrap">
+        <table class="table mhs-table">
+            <thead>
+                <tr>
+                    <th>Kegiatan Akademik</th>
+                    <th width="320">Jadwal / Periode</th>
+                </tr>
+            </thead>
             <tbody>
-            <tr class="c6">
-                <td class="c16" colspan="2" rowspan="1">
-                    <p class="c0" style="text-align: left;"><span color="#002d5b" style="color: #002d5b; font-weight: 900;" class="gt3_font-weight" mce-data-marked="1"><span style="font-size: 48px;" mce-data-marked="1"><b>SEMESTER GANJIL</b></span></span></p>
-                </td>
-            </tr>
             <tr class="c6">
                 <td class="c4" colspan="1" rowspan="1">
                     <p class="c0" style="text-align: left;"><strong>Pengambilan Blangko &amp; Pembayaran SPP</strong></p>
@@ -269,14 +271,18 @@
             </tr>
             </tbody>
         </table>
-<!--        Table semeter Genap-->
-        <table class="table demo-table" style="font-family: 'arial'">
+        </div>
+
+        <div class="mhs-semester-label">Semester Genap</div>
+        <div class="table-responsive mhs-table-wrap">
+        <table class="table mhs-table">
+            <thead>
+                <tr>
+                    <th>Kegiatan Akademik</th>
+                    <th width="320">Jadwal / Periode</th>
+                </tr>
+            </thead>
             <tbody>
-            <tr class="c6">
-                <td class="c16" colspan="2" rowspan="1">
-                    <p class="c0" style="text-align: left;"><span style="font-size: 3em; line-height: inherit; color: #002d5b; font-weight: 900;" class="dropcap gt3_font-weight"><strong><span class="c5 c17">SEMESTER GENAP</span></strong></span></p>
-                </td>
-            </tr>
             <tr class="c6">
                 <td class="c4" colspan="1" rowspan="1">&nbsp;<strong>Pengambilan Blangko &amp; Pembayaran SPP</strong></td>
                 <td class="c3" colspan="1" rowspan="1">&nbsp;<strong>01 Januari – 23 Februari 2018</strong></td>

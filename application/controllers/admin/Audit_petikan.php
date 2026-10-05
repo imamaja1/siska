@@ -6,6 +6,7 @@ class Audit_petikan extends CI_Controller {
     {
         parent::__construct();
         $this->load->service('AuditFeederService');
+        $this->load->model('Audit_feeder_model');
 
         $class = $this->router->fetch_class();
         if (!$this->session->userdata('nama_login')) {
@@ -40,5 +41,21 @@ class Audit_petikan extends CI_Controller {
         }
 
         $this->load->view('admin/audit/V_feeder_petikan', $data);
+    }
+
+    public function cek_null_siska()
+    {
+        $nim                 = $this->input->post('nim');
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_matakuliah     = $this->input->post('kode_matakuliah');
+
+        $data = $this->Audit_feeder_model->getKhsDanDummyByNimMatakuliah($nim, $kode_tahun_akademik, $kode_matakuliah);
+
+        echo json_encode([
+            'khs'         => $data['khs'],
+            'dummy'       => $data['dummy'],
+            'dummy_nilai' => $data['dummy_nilai'],
+            'hanya_khs'   => !empty($data['hanya_khs']),
+        ]);
     }
 }

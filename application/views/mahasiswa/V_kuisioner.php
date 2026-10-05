@@ -46,12 +46,13 @@
                     </table>
                 </div>
             <?php else: ?>
-                <p align="center" style="font-size: 20pt; color: #047857"><strong>Terimakasih.</strong></p>
-                <p align="center" style="font-size: large;"><strong>Anda sudah selesai melakukan pengisian
-                        kuisioner Proses Belajar Mengajar (PBM).</strong></p>
-                <p align="center"><img class="img-responsive img-circle" style="width: 50px"
-                                       src="<?= base_url('assets/gambar/done.png') ?>"
-                                       alt=""></p>
+                <div class="callout callout-success text-center" style="padding: 24px 20px; border-radius: 12px; margin: 16px 0;">
+                    <div style="width: 48px; height: 48px; border-radius: 9999px; background: #ECFDF5; border: 2px solid #A7F3D0; color: #059669; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px;">
+                        <i class="fa fa-check"></i>
+                    </div>
+                    <h4 style="font-size: 16px; font-weight: 800; color: #065F46; margin: 0 0 4px;">Terima Kasih!</h4>
+                    <p style="font-size: 13px; color: #047857; margin: 0;">Anda sudah selesai melakukan pengisian kuisioner Proses Belajar Mengajar (PBM).</p>
+                </div>
             <?php endif; ?>
 <!--        untuk angkatan baru-->
 <?php //if ( substr($this->session->userdata('nim'),0,2) !== '24') : ?>
@@ -129,24 +130,25 @@
                 </div>
             </form>
         <?php else : ?>
-            <p align="center" style="font-size: 20pt; color: #047857"><strong>Terimakasih.</strong></p>
-            <p align="center" style="font-size: large;"><strong>Anda sudah selesai melakukan pengisian
-                    kuisioner kepuasan pelayanan.</strong></p>
-            <p align="center"><img class="img-responsive img-circle" style="width: 50px"
-                                   src="<?= base_url('assets/gambar/done.png') ?>"
-                                   alt=""></p>
+            <div class="callout callout-success text-center" style="padding: 24px 20px; border-radius: 12px; margin: 16px 0;">
+                <div style="width: 48px; height: 48px; border-radius: 9999px; background: #ECFDF5; border: 2px solid #A7F3D0; color: #059669; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px;">
+                    <i class="fa fa-check"></i>
+                </div>
+                <h4 style="font-size: 16px; font-weight: 800; color: #065F46; margin: 0 0 4px;">Terima Kasih!</h4>
+                <p style="font-size: 13px; color: #047857; margin: 0;">Anda sudah selesai melakukan pengisian kuisioner kepuasan pelayanan.</p>
+            </div>
         <?php endif; ?>
 <!--        untuk angkatan baru-->
         <?php endif; ?>
 <!--        end untuk angkatan baru-->
         <?php else: ?>
-            <p align="center" style="font-size: xx-large;color: #B91C1C"><strong>Nonaktif.</strong></p>
-            <p align="center" style="font-size: large;">Pengisian kuisioner belum <strong>Aktif</strong>,
-                pengisian
-                kuisioner akan <strong>diaktifkan</strong> setelah <strong>UAS</strong> selesai</p>
-            <p align="center"><img class="img-responsive img-circle"
-                                   src="<?= base_url('assets/gambar/nonaktif.png') ?>"
-                                   alt=""></p>
+            <div class="callout callout-warning text-center" style="padding: 30px 20px; border-radius: 12px; margin: 20px 0;">
+                <div style="width: 52px; height: 52px; border-radius: 9999px; background: #FFFBEB; border: 2px solid #FDE68A; color: #D97706; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px;">
+                    <i class="fa fa-clock-o"></i>
+                </div>
+                <h4 style="font-size: 17px; font-weight: 800; color: #92400E; margin: 0 0 6px;">Kuisioner Belum Aktif</h4>
+                <p style="font-size: 13px; color: #B45309; margin: 0;">Pengisian kuisioner evaluasi belum aktif. Pengisian akan diaktifkan setelah UAS selesai.</p>
+            </div>
         <?php endif; ?>
     </div>
 

@@ -177,38 +177,32 @@ class Audit_feeder_model extends CI_Model {
             ->order_by('khd.kode_khs_detail', 'ASC')
             ->get()->result_object();
 
-        // Angkatan di atas 24 hanya dicek pada KHS (tanpa dummy).
-        $angkatan  = (int) substr(trim((string) $nim), 0, 2);
-        $hanya_khs = ($angkatan > 24);
-
         $dummy = [];
         $dummy_nilai = [];
 
-        if (!$hanya_khs) {
-            foreach ($khs as $row) {
-                $rows = $this->db->select('dun.level, dun.harian, dun.uts, dun.uas, dun.na, dun.ket, spd.grade AS nilai_huruf')
-                    ->from('dummy_update_nilai as dun')
-                    ->join('sistem_penilaian_detail spd', 'dun.na BETWEEN spd.nilai_minimum AND spd.nilai_maksimum AND spd.kode_sistem_penilaian = 1', 'left')
-                    ->where('dun.kode_khs_detail', $row->kode_khs_detail)
-                    ->order_by('dun.level', 'ASC')
-                    ->get()->result_object();
+        foreach ($khs as $row) {
+            $rows = $this->db->select('dun.level, dun.harian, dun.uts, dun.uas, dun.na, dun.ket, spd.grade AS nilai_huruf')
+                ->from('dummy_update_nilai as dun')
+                ->join('sistem_penilaian_detail spd', 'dun.na BETWEEN spd.nilai_minimum AND spd.nilai_maksimum AND spd.kode_sistem_penilaian = 1', 'left')
+                ->where('dun.kode_khs_detail', $row->kode_khs_detail)
+                ->order_by('dun.level', 'ASC')
+                ->get()->result_object();
 
-                foreach ($rows as $d) {
-                    $dummy[] = $d;
-                }
+            foreach ($rows as $d) {
+                $dummy[] = $d;
+            }
 
-                $rows2 = $this->db->select('dn.dummy_harian, dn.dummy_uts, dn.dummy_uas, dn.dummy_na, spd.grade AS nilai_huruf')
-                    ->from('dummy_nilai as dn')
-                    ->join('sistem_penilaian_detail spd', 'dn.dummy_na BETWEEN spd.nilai_minimum AND spd.nilai_maksimum AND spd.kode_sistem_penilaian = 1', 'left')
-                    ->where('dn.kode_khs_detail', $row->kode_khs_detail)
-                    ->get()->result_object();
+            $rows2 = $this->db->select('dn.dummy_harian, dn.dummy_uts, dn.dummy_uas, dn.dummy_na, spd.grade AS nilai_huruf')
+                ->from('dummy_nilai as dn')
+                ->join('sistem_penilaian_detail spd', 'dn.dummy_na BETWEEN spd.nilai_minimum AND spd.nilai_maksimum AND spd.kode_sistem_penilaian = 1', 'left')
+                ->where('dn.kode_khs_detail', $row->kode_khs_detail)
+                ->get()->result_object();
 
-                foreach ($rows2 as $d2) {
-                    $dummy_nilai[] = $d2;
-                }
+            foreach ($rows2 as $d2) {
+                $dummy_nilai[] = $d2;
             }
         }
 
-        return ['khs' => $khs, 'dummy' => $dummy, 'dummy_nilai' => $dummy_nilai, 'hanya_khs' => $hanya_khs];
+        return ['khs' => $khs, 'dummy' => $dummy, 'dummy_nilai' => $dummy_nilai, 'hanya_khs' => false];
     }
 }

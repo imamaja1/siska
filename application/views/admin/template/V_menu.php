@@ -245,7 +245,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Audit Nilai -->
-            <?php if (has_access($acc, ['Audit', 'Audit_mahasiswa', 'Audit_kelas', 'Audit_petikan', 'Pure_feeder'])): ?>
+            <?php if (has_access($acc, ['Audit', 'Audit_kelas', 'Audit_petikan', 'Pure_feeder'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-check-square-o"></i>
@@ -255,9 +255,6 @@ function has_access($acc, $controllers, $role = 0) {
                 <ul class="treeview-menu">
                     <?php if (has_access($acc, 'Audit')): ?>
                     <li><a href="<?= site_url('admin/audit/nilai_dosen_khs'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
-                    <?php endif; ?>
-                    <?php if (has_access($acc, 'Audit_mahasiswa')): ?>
-                    <li><a href="<?= site_url('admin/audit/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SISKA Mahasiswa</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Audit_kelas')): ?>
                     <li><a href="<?= site_url('admin/audit/kelas'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SISKA Kelas</a></li>
@@ -273,7 +270,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Laporan -->
-            <?php if (has_access($acc, ['Rekap_ipk', 'Aktif_perkuliahan'])): ?>
+            <?php if (has_access($acc, ['Rekap_ipk', 'Aktif_perkuliahan', 'Kelulusan'])): ?>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-print"></i>
@@ -286,6 +283,9 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Aktif_perkuliahan')): ?>
                     <li><a href="<?= site_url('admin/laporan/aktif_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa Aktif Perkuliahan</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Kelulusan', 'Aktif_perkuliahan'])): ?>
+                    <li><a href="<?= site_url('admin/laporan/kelulusan'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa Kelulusan</a></li>
                     <?php endif; ?>
                 </ul>
             </li>
@@ -367,8 +367,29 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <li class="header">DUKUNGAN</li>
-            <li><a href="<?= site_url('maintance'); ?>"><i class="fa fa-book text-yellow"></i> <span>Panduan</span></a></li>
-            <li><a href="<?= site_url('maintance'); ?>"><i class="fa fa-envelope text-red"></i> <span>Laporkan Masalah</span></a></li>
+            <?php if ($role === 1): ?>
+            <li class="<?= ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'dukungan' && in_array($this->uri->segment(4), ['', 'data', 'detail'])) ? 'active' : ''; ?>">
+                <a href="<?= site_url('admin/dukungan/tiket/data'); ?>">
+                    <i class="fa fa-ticket text-aqua"></i> <span>Meja Kerja Tiket</span>
+                </a>
+            </li>
+            <li class="<?= ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == 'dukungan' && $this->uri->segment(4) == 'kategori') ? 'active' : ''; ?>">
+                <a href="<?= site_url('admin/dukungan/tiket/kategori'); ?>">
+                    <i class="fa fa-tags text-yellow"></i> <span>Kategori & Form Dinamis</span>
+                </a>
+            </li>
+            <?php endif; ?>
+
+            <li class="<?= ($this->uri->segment(1) == 'dukungan' && in_array($this->uri->segment(3), ['', 'data', 'detail'])) ? 'active' : ''; ?>">
+                <a href="<?= site_url('dukungan/tiket/data'); ?>">
+                    <i class="fa fa-envelope text-aqua"></i> <span>Tiket Bantuan Saya</span>
+                </a>
+            </li>
+            <li class="<?= ($this->uri->segment(1) == 'dukungan' && $this->uri->segment(3) == 'buat') ? 'active' : ''; ?>">
+                <a href="<?= site_url('dukungan/tiket/buat'); ?>">
+                    <i class="fa fa-plus-circle text-green"></i> <span>Buat Tiket Baru</span>
+                </a>
+            </li>
 
             <li class="header">AKUN</li>
             <li><a href="<?= site_url('admin/pengguna/ganti_sandi'); ?>"><i class="fa fa-key"></i> <span>Ganti Sandi</span></a></li>

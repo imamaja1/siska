@@ -43,25 +43,17 @@ $is_akademik_sub = in_array($seg2, array('kurikulum', 'matakuliah_prasyarat', 'k
             </a>
             <ul class="dropdown-menu" role="menu">
                 <li class="<?= ($seg2 == 'kurikulum') ? 'active' : '' ?>">
-                    <a href="<?= site_url('mahasiswa/kurikulum') ?>">
-                        Kurikulum Matakuliah
-                    </a>
+                    <a href="<?= site_url('mahasiswa/kurikulum') ?>">Kurikulum Matakuliah</a>
                 </li>
                 <li class="<?= ($seg2 == 'matakuliah_prasyarat') ? 'active' : '' ?>">
-                    <a href="<?= site_url('mahasiswa/matakuliah_prasyarat') ?>">
-                        Matakuliah Prasyarat
-                    </a>
+                    <a href="<?= site_url('mahasiswa/matakuliah_prasyarat') ?>">Matakuliah Prasyarat</a>
                 </li>
                 <li class="<?= ($seg2 == 'kompetensi') ? 'active' : '' ?>">
-                    <a href="<?= site_url('mahasiswa/kompetensi') ?>">
-                        Uji Kompetensi
-                    </a>
+                    <a href="<?= site_url('mahasiswa/kompetensi') ?>">Uji Kompetensi</a>
                 </li>
                 <li class="divider"></li>
                 <li class="<?= ($seg2 == 'kuisioner') ? 'active' : '' ?>">
-                    <a href="<?= site_url('mahasiswa/kuisioner') ?>">
-                        Kuisioner Evaluasi
-                    </a>
+                    <a href="<?= site_url('mahasiswa/kuisioner') ?>">Kuisioner Evaluasi</a>
                 </li>
             </ul>
         </li>

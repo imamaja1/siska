@@ -1,26 +1,32 @@
 <?= $this->session->flashdata('info') ? $this->session->flashdata('info') : '' ?>
-<div class="box box-solid flat">
-    <div class="box-body">
-        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= e($dosen_wali) ?></span>&nbsp;
-        <?php if (isset($dosen_perwakilan)) : ?>
-            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= e($dosen_perwakilan) ?></span>
-        <?php endif; ?>
-    </div>
-</div>
-<div class="box box-solid flat">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-calendar-check-o"></i> Pilih Semester</h3>
-    </div>
-    <div class="box-body">
-        <div class="krs-pick">
-            <?php $new_semester=0; foreach ($krs_mhs as $row) : ?>
-                <?php if($new_semester == 0) $new_semester = $row->kode_tahun_akademik   ?>
-                <a href="<?= site_url('mahasiswa/krs/old/'.$row->semester) ?>" class="btn bg-navy flat btn-sm"><i class="fa fa-arrow-circle-right"></i> <?= ($row->semester == 'K') ? 'Konversi' : 'Semester '.$row->semester ?></a>
-            <?php endforeach; ?>
-            <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn bg-navy flat btn-sm"><i class="fa fa-arrow-circle-right"></i> Semester <?= $semester ?></a>
+<div class="mhs-profile">
+    <!-- Dosen Wali -->
+    <div class="pf-card">
+        <div class="pf-card-body">
+            <div class="krs-advisor">
+                <span class="krs-advisor-label">Dosen Wali :</span>
+                <span class="pf-chip"><?= e($dosen_wali) ?></span>
+                <?php if (isset($dosen_perwakilan)) : ?>
+                    <span class="pf-chip is-alt">
+                        <i class="fa fa-phone"></i> <?= is_array($dosen_perwakilan) ? e($dosen_perwakilan['nama_dosen'] . ' (' . $dosen_perwakilan['no_telp'] . ')') : e($dosen_perwakilan) ?>
+                    </span>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Pilih Semester -->
+    <div class="pf-card">
+        <div class="pf-card-body">
+            <div class="krs-pick">
+                <?php $new_semester=0; foreach ($krs_mhs as $row) : ?>
+                    <?php if($new_semester == 0) $new_semester = $row->kode_tahun_akademik ?>
+                    <a href="<?= site_url('mahasiswa/krs/old/'.$row->semester) ?>" class="btn btn-default btn-sm"><i class="fa fa-calendar-check-o"></i> <?= ($row->semester == 'K') ? 'Konversi' : 'Semester '.$row->semester ?></a>
+                <?php endforeach; ?>
+                <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn btn-primary btn-sm"><i class="fa fa-calendar-check-o"></i> Semester <?= $semester ?> (Aktif)</a>
+            </div>
+        </div>
+    </div>
 <div class="box box-primary flat">
     <div class="box-header with-border">
         <h3 class="box-title"><i class="fa fa-file-text-o"></i> Kartu Rencana Studi</h3>
@@ -315,3 +321,4 @@
         }
     });
 </script>
+</div>

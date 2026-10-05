@@ -9,24 +9,23 @@
             <div class="form-group">
                 <label class="control-label col-sm-3 col-md-2">Sandi Lama <small class="text-danger">*</small> :</label>
                 <div class="col-sm-8 col-md-5">
-                    <input type="password" class="form-control" name="sandi_lama" value="<?= set_value('sandi_lama') ?>">
+                    <input type="password" class="form-control" name="sandi_lama" placeholder="Masukkan sandi saat ini" value="<?= set_value('sandi_lama') ?>">
                     <small class="text-danger"><?= form_error('sandi_lama'); ?></small>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3 col-md-2">Sandi Baru <small class="text-danger">*</small> :</label>
                 <div class="col-sm-8 col-md-5">
-                    <input type="password" class="form-control" name="sandi_pengguna" value="<?= set_value('sandi_pengguna') ?>">
+                    <input type="password" class="form-control" name="sandi_pengguna" placeholder="Masukkan sandi baru minimal 6 karakter" value="<?= set_value('sandi_pengguna') ?>">
                     <small class="text-danger"><?= form_error('sandi_pengguna'); ?></small>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3 col-md-2">Ulangi Sandi <small class="text-danger">*</small> :</label>
                 <div class="col-sm-8 col-md-5">
-                    <input type="password" class="form-control" name="ulangi_sandi_pengguna" value="<?= set_value('ulangi_sandi_pengguna') ?>">
+                    <input type="password" class="form-control" name="ulangi_sandi_pengguna" placeholder="Ketik ulang sandi baru" value="<?= set_value('ulangi_sandi_pengguna') ?>">
                     <small class="text-danger"><?= form_error('ulangi_sandi_pengguna'); ?></small>
                 </div>
-
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3 col-md-2"></label>

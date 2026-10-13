@@ -70,6 +70,9 @@
             },
             success : function (res) {
                 $("#landing").html(res);
+            },
+            error : function () {
+                $("#landing").html('<div class="alert alert-danger text-center">Gagal memuat data distribusi nilai. Silakan coba lagi.</div>');
             }
         })
     })

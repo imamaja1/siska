@@ -105,6 +105,47 @@ class Pengaturan extends CI_Controller
         ]);
     }
 
+    public function status_mahasiswa()
+    {
+        $nim = trim($this->input->post('nim') ?? $this->input->get('nim') ?? '');
+        $data_mhs = null;
+
+        if ($this->input->post('simpan') !== null) {
+            $status_pendaftaran = $this->input->post('status_pendaftaran');
+            if (in_array($status_pendaftaran, ['B', 'T', 'L'])) {
+                $this->db->where('nim', $nim)->update('mahasiswa', [
+                    'status_pendaftaran' => $status_pendaftaran
+                ]);
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>Status pendaftaran berhasil disimpan.</h6></div>');
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Status pendaftaran tidak valid.</h6></div>');
+            }
+        }
+
+        if ($nim !== '') {
+            $data_mhs = $this->db->select('m.nim, m.nama_mahasiswa, ps.nama_program_studi, m.status_pendaftaran')
+                ->from('mahasiswa m')
+                ->join('program_studi ps', 'm.program_studi_kode = ps.kode_program_studi', 'left')
+                ->where('m.nim', $nim)
+                ->get()
+                ->row();
+
+            if (!$data_mhs && $this->input->post('simpan') === null) {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Mahasiswa dengan NIM ' . e($nim) . ' tidak ditemukan.</h6></div>');
+            }
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'   => 'admin/pengaturan/V_status_mahasiswa',
+            'judul'     => 'Pengaturan',
+            'sub_judul' => 'Status Mahasiswa',
+            'title_h1'  => '<i class="fa fa-user"></i> <li>Pengaturan</li>',
+            'title_h2'  => '<li>Status Mahasiswa</li>',
+            'nim'       => $nim,
+            'data'      => $data_mhs,
+        ]);
+    }
+
     public function pindah_tahun_akademik()
     {
         $this->load->model(array(

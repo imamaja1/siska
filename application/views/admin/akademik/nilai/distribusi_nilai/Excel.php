@@ -43,6 +43,7 @@ header("Cache-Control: private", false);
     <thead>
     <tr>
         <th rowspan="3" style="text-align: center">NO.</th>
+        <th rowspan="3" style="text-align: center">KODE MATAKULIAH</th>
         <th rowspan="3" style="text-align: center">MATAKULIAH</th>
         <th rowspan="3" style="text-align: center">KELAS/SEMESTER</th>
         <th rowspan="3" style="text-align: center">NAMA DOSEN</th>
@@ -79,6 +80,7 @@ header("Cache-Control: private", false);
     <?php $no=1; foreach ($data as $row) : ?>
         <tr>
             <td><?= $no++ ?> </td>
+            <td style="text-align: center"><?= e($row['kode_matakuliah']) ?></td>
             <td><?= e($row['nama_matakuliah']) ?></td>
             <td style="text-align: center"><?= e($row['nama_kelas']) ?> / <?= e($row['semester']) ?></td>
             <td><?= e($row['nama_dosen']) ?></td>

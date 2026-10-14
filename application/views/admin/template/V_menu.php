@@ -344,6 +344,7 @@ function has_access($acc, $controllers, $role = 0) {
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/krs_kpat'); ?>"><i class="fa fa-circle-o"></i> KRS KPAT</a></li>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi</a></li>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/status_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Status Mahasiswa</a></li>
+                    <li><a href="<?= site_url('admin/pengaturan/pengaturan/hapus_krs'); ?>"><i class="fa fa-circle-o"></i> Penghapusan KRS</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Api_tokens')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>

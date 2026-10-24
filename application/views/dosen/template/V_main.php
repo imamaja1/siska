@@ -129,7 +129,7 @@
             </div>
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> 1.0 &mdash; Page rendered in <strong>{elapsed_time}</strong> seconds.
+            <b>Version</b> 2.0 &mdash; Page rendered in <strong>{elapsed_time}</strong> seconds.
         </div>
         <strong>Copyright &copy; <?= date('Y') ?> PusTIK Universitas Bumigora</strong>
     </footer>

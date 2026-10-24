@@ -290,7 +290,7 @@ class NilaiService extends MY_Service {
     }
 
     public function get_distribusi_nilai($kode_tahun_akademik, $kode_program_studi) {
-        $data_kelas = $this->db->select('kelas.kelas_id, nama_matakuliah, nama_kelas, semester, group_concat(nama_dosen) as nama_dosen')
+        $data_kelas = $this->db->select('kelas.kelas_id, mak.kode_matakuliah, nama_matakuliah, nama_kelas, semester, group_concat(nama_dosen) as nama_dosen')
             ->from('kelas')
             ->join('matakuliah as mak', 'mak.id_matakuliah=kelas.id_matakuliah')
             ->join('nama_kelas', 'nama_kelas.nama_kelas_id=kelas.nama_kelas_id')
@@ -302,41 +302,61 @@ class NilaiService extends MY_Service {
             ->group_by('kelas.kelas_id')
             ->get()->result_object();
 
+        $valid_kelas = array_filter($data_kelas, function($row) {
+            return !empty($row->nama_dosen);
+        });
+
+        if (empty($valid_kelas)) {
+            return array();
+        }
+
+        $sistem_penilaian = $this->db->where('kode_sistem_penilaian', '1')
+            ->order_by('kode_sistem_penilaian_detail', 'ASC')
+            ->get('sistem_penilaian_detail')
+            ->result();
+
+        $kelas_ids = array_column($valid_kelas, 'kelas_id');
+
+        $nilai_records = $this->db->select('km.kelas_id, khd.nilai_akhir')
+            ->from('kelas_mahasiswa as km')
+            ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
+            ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
+            ->where_in('km.kelas_id', $kelas_ids)
+            ->get()->result();
+
+        $grouped_nilai = array();
+        foreach ($nilai_records as $nr) {
+            $grouped_nilai[$nr->kelas_id][] = $nr->nilai_akhir;
+        }
+
         $data = array();
         $i = 0;
-        foreach ($data_kelas as $row) {
-            if (!$row->nama_dosen) continue;
-            
+        foreach ($valid_kelas as $row) {
+            $data[$i]['kode_matakuliah'] = $row->kode_matakuliah;
             $data[$i]['nama_kelas'] = $row->nama_kelas;
             $data[$i]['nama_matakuliah'] = $row->nama_matakuliah;
             $data[$i]['semester'] = $row->semester;
             $data[$i]['nama_dosen'] = $row->nama_dosen;
 
-            $total = $this->db->select('*')
-                ->from('kelas_mahasiswa as km')
-                ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
-                ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
-                ->where('kelas_id', $row->kelas_id)
-                ->get()->num_rows();
-
+            $class_nilai = isset($grouped_nilai[$row->kelas_id]) ? $grouped_nilai[$row->kelas_id] : array();
+            $total = count($class_nilai);
             $data[$i]['total'] = $total;
 
-            $sub_query = $this->db->select('grade, nilai_akhir, count(kd.kode_krs_detail) as jumlah')
-                ->from('kelas_mahasiswa as km, sistem_penilaian_detail as spd')
-                ->join('krs_detail as kd', 'kd.kode_krs_detail=km.kode_krs_detail', 'left')
-                ->join('khs_detail as khd', 'khd.kode_krs_detail=kd.kode_krs_detail', 'left')
-                ->where('kelas_id', $row->kelas_id)
-                ->where('spd.kode_sistem_penilaian', '1')
-                ->where('spd.nilai_minimum <= khd.nilai_akhir')
-                ->where('spd.nilai_maksimum >= khd.nilai_akhir')
-                ->group_by('grade')->get_compiled_select();
-
-            $data[$i]['data'] = $this->db->select("jumlah, (jumlah/$total)*100 as persen")
-                ->from("($sub_query) as m")
-                ->join('sistem_penilaian_detail as spd', 'spd.grade=m.grade', 'right')
-                ->where('spd.kode_sistem_penilaian', '1')
-                ->get()->result_object();
-            
+            $data[$i]['data'] = array();
+            foreach ($sistem_penilaian as $grade) {
+                $jumlah = 0;
+                foreach ($class_nilai as $na) {
+                    if ($na !== null && $na !== '' && (float)$na >= (float)$grade->nilai_minimum && (float)$na <= (float)$grade->nilai_maksimum) {
+                        $jumlah++;
+                    }
+                }
+                $persen = $total > 0 ? ($jumlah / $total) * 100 : 0;
+                $data[$i]['data'][] = (object) array(
+                    'grade' => $grade->grade,
+                    'jumlah' => $jumlah,
+                    'persen' => $persen
+                );
+            }
             $i++;
         }
         return $data;

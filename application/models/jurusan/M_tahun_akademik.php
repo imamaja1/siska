@@ -41,7 +41,7 @@ class m_tahun_akademik extends CI_Model {
     }
 
     function get_tahun() {
-        return $this->db->query("select distinct(tahun_akademik) from {$this->table}")->result();
+        return $this->db->query("select distinct(tahun_akademik) from {$this->table} order by tahun_akademik desc")->result();
     }
 
     function get_tahun_ganjil_genap() {
@@ -80,6 +80,14 @@ class m_tahun_akademik extends CI_Model {
 
     function get_tahun_akademik_by_kode_one($kode_tahun_akademik) {
         return $this->db->get_where($this->table, array('kode_tahun_akademik' => $kode_tahun_akademik), 1)->row_object();
+    }
+
+    function get_kode_by_tahun_semester($tahun_akademik, $semester) {
+        $row = $this->db->select('kode_tahun_akademik')
+            ->where('tahun_akademik', $tahun_akademik)
+            ->where('semester', $semester)
+            ->get($this->table)->row_object();
+        return $row ? $row->kode_tahun_akademik : null;
     }
 
     function get_kode_tahun_akademik_by_semester($semester, $nim)

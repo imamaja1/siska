@@ -1,48 +1,56 @@
-<div class="box box-solid flat">
-    <div class="box-body">
-        <strong>Dosen Wali :</strong> <span class="badge bg-navy"><?= e($dosen_wali) ?></span>&nbsp;
-        <?php if (isset($dosen_perwakilan)) : ?>
-            <strong>Dosen Perwakilan :</strong> <span class="badge bg-orange"><?= e($dosen_perwakilan) ?></span>
-        <?php endif; ?>
-    </div>
-</div>
-<div class="box box-solid flat">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-calendar-check-o"></i> Pilih Semester</h3>
-    </div>
-    <div class="box-body">
-        <div class="krs-pick">
-            <?php $i=1; foreach ($krs_mhs as $row) : ?>
-                <a href="<?= site_url('mahasiswa/krs/old/'.$row->semester) ?>" class="btn bg-navy flat btn-sm"><i class="fa fa-arrow-circle-right"></i> Semester <?= $i++ ?></a>
-            <?php endforeach; ?>
-            <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn bg-navy flat btn-sm"><i class="fa fa-arrow-circle-right"></i> Semester <?= $i++ ?></a>
+<div class="mhs-profile">
+    <!-- Dosen Wali -->
+    <div class="pf-card">
+        <div class="pf-card-body">
+            <div class="krs-advisor">
+                <span class="krs-advisor-label">Dosen Wali :</span>
+                <span class="pf-chip"><?= e($dosen_wali) ?></span>
+                <?php if (isset($dosen_perwakilan)) : ?>
+                    <span class="pf-chip is-alt">
+                        <i class="fa fa-phone"></i> <?= is_array($dosen_perwakilan) ? e($dosen_perwakilan['nama_dosen'] . ' (' . $dosen_perwakilan['no_telp'] . ')') : e($dosen_perwakilan) ?>
+                    </span>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
+
+    <!-- Pilih Semester -->
+    <div class="pf-card">
+        <div class="pf-card-body">
+            <div class="krs-pick">
+                <?php $i=1; foreach ($krs_mhs as $row) : ?>
+                    <a href="<?= site_url('mahasiswa/krs/old/'.$row->semester) ?>" class="btn btn-default btn-sm"><i class="fa fa-calendar-check-o"></i> Semester <?= $i++ ?></a>
+                <?php endforeach; ?>
+                <a href="<?= site_url('mahasiswa/krs/index/') ?>" class="btn btn-primary btn-sm"><i class="fa fa-calendar-check-o"></i> Semester <?= $i++ ?> (Aktif)</a>
+            </div>
+        </div>
+    </div>
+
 <div class="box box-primary flat">
     <div class="box-header with-border">
         <h3 class="box-title"><i class="fa fa-file-text-o"></i> Kartu Rencana Studi</h3>
     </div>
-    <div class="box-body table-responsive">
+    <div class="box-body">
         <form id="form-krs-mahasiswa" action="<?= site_url('mahasiswa/Krs/simpan_krs') ?>" method="post" name="krs_form">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
             <?php foreach ($data_matakuliah as $row): ?>
 
                 <?php if (count($row['data']) > 0) : ?>
-                    <p><strong>SEMESTER <?= $row['semester'] ?></strong></p>
-                    <table class="table demo-table">
+                    <div class="mhs-semester-label">SEMESTER <?= $row['semester'] ?></div>
+                    <div class="table-responsive mhs-table-wrap">
+                    <table class="table mhs-table">
                         <thead>
                         <tr>
-                            <th id="th" width="20" rowspan="2" style="padding-bottom: 25px;">NO.</th>
-                            <th id="th" width="200" rowspan="2" style="padding-bottom: 25px;">KODE MK</th>
-                            <th id="th" rowspan="2" style="padding-bottom: 25px;">MATAKULIAH</th>
-                            <th id="th" colspan="3">SKS</th>
-                            <th id="th" rowspan="2" style="padding-bottom: 25px;">B</th>
+                            <th class="mhs-c-no" rowspan="2">NO.</th>
+                            <th class="mhs-c-kode" rowspan="2">KODE MK</th>
+                            <th rowspan="2">MATAKULIAH</th>
+                            <th colspan="3">SKS</th>
+                            <th width="60" rowspan="2">B</th>
                         </tr>
                         <tr>
-                            <th id="th">T</th>
-                            <th id="th">PK</th>
-                            <th id="th">PT</th>
+                            <th width="50">T</th>
+                            <th width="50">PK</th>
+                            <th width="50">PT</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -82,6 +90,7 @@
 
                         </tbody>
                     </table>
+                    </div>
                 <?php endif; ?>
                 <hr>
             <?php endforeach; ?>
@@ -121,3 +130,4 @@
         }
     });
 </script>
+</div>

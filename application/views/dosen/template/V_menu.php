@@ -261,8 +261,16 @@
             <?php endif; ?>
 
             <li class="header">DUKUNGAN</li>
-            <li><a href="<?= site_url('maintance'); ?>"><i class="fa fa-book text-yellow"></i> <span>Panduan</span></a></li>
-            <li><a href="<?= site_url('maintance'); ?>"><i class="fa fa-envelope text-red"></i> <span>Laporkan Masalah</span> <i class="fa fa-external-link pull-right"></i></a></li>
+            <li class="<?= (isset($menu_dukungan) && $menu_dukungan == 'tiket') || ($this->uri->segment(1) == 'dukungan' && in_array($this->uri->segment(3), ['', 'data', 'detail'])) ? 'active' : ''; ?>">
+                <a href="<?= site_url('dukungan/tiket/data'); ?>">
+                    <i class="fa fa-ticket text-aqua"></i> <span>Tiket Bantuan Saya</span>
+                </a>
+            </li>
+            <li class="<?= (isset($menu_dukungan) && $menu_dukungan == 'buat') || ($this->uri->segment(1) == 'dukungan' && $this->uri->segment(3) == 'buat') ? 'active' : ''; ?>">
+                <a href="<?= site_url('dukungan/tiket/buat'); ?>">
+                    <i class="fa fa-plus-circle text-green"></i> <span>Buat Tiket Baru</span>
+                </a>
+            </li>
         </ul>
 
     </section>

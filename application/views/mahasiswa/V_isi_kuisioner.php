@@ -14,18 +14,20 @@
     <?php else: ?>
         <div class="badge bg-aqua">Dosen belum ada...!!!</div>
     <?php endif; ?>
-    <hr>
-    <p align="center"><strong>PETUNJUK:</strong> Pilihlah salah satu radio button pada kolom yang sesuai dimana (1 = Sangat tidak baik; 2 = Tidak baik; 3 = Moderat; 4 = baik; 5 = sangat baik)</p>
-        <table class="table demo-table">
+    <div class="alert alert-info flat" style="margin-bottom: 14px;">
+        <strong><i class="fa fa-info-circle"></i> Petunjuk:</strong> Pilihlah salah satu opsi pada kolom penilaian: <b>1</b> = Sangat tidak baik, <b>2</b> = Tidak baik, <b>3</b> = Cukup/Moderat, <b>4</b> = Baik, <b>5</b> = Sangat baik.
+    </div>
+        <div class="table-responsive mhs-table-wrap">
+        <table class="table mhs-table">
             <thead>
             <tr>
-                <th id="th">NO.</th>
-                <th id="th">Pertanyaan</th>
-                <th id="th">1</th>
-                <th id="th">2</th>
-                <th id="th">3</th>
-                <th id="th">4</th>
-                <th id="th">5</th>
+                <th class="mhs-c-no">NO.</th>
+                <th>Pertanyaan</th>
+                <th class="mhs-c-num">1</th>
+                <th class="mhs-c-num">2</th>
+                <th class="mhs-c-num">3</th>
+                <th class="mhs-c-num">4</th>
+                <th class="mhs-c-num">5</th>
             </tr>
             </thead>
             <tbody>
@@ -33,8 +35,8 @@
             <?php $kat=''; $i=1; foreach ($soal as $row) : ?>
             <?php $kategori = $row->kategori ?>
             <?php if ($kat != $kategori) : ?>
-                    <tr>
-                        <td colspan="7"><strong><?= e($kategori) ?></strong></td>
+                    <tr style="background:#EBF4FC;">
+                        <td colspan="7"><strong><i class="fa fa-bookmark text-primary"></i> <?= e($kategori) ?></strong></td>
                     </tr>
             <?php endif;?>
             <?php $kat = $kategori;?>
@@ -50,6 +52,7 @@
             <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
         <div class="form-group">
             <label>Sebutkan hal yang perlu dipertahankan (<i>Jika ada</i>) :</label>
             <textarea name="kritik" class="form-control" rows="4"></textarea>

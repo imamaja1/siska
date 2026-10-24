@@ -33,6 +33,288 @@ class Pengaturan extends CI_Controller
         ]);
     }
 
+    public function krs_kpat()
+    {
+        $this->load->model(array(
+            'akademik/Krs_kpat_model',
+            'jurusan/m_tahun_akademik',
+            'jurusan/program_studi/Nama_jurusan_model',
+        ));
+
+        $tahun_akademik = $this->input->post('tahun_akademik');
+        $semester = $this->input->post('semester');
+        $kode_program_studi = $this->input->post('prodi');
+
+        $kode_tahun_akademik = null;
+        $data_krs = null;
+
+        if ($this->input->post('proses') !== null) {
+            if ($tahun_akademik !== null && $tahun_akademik !== '' && $semester !== null && $semester !== '') {
+                $kode_tahun_akademik = $this->m_tahun_akademik->get_kode_by_tahun_semester($tahun_akademik, $semester);
+            }
+
+            if ($kode_tahun_akademik) {
+                $data_krs = $this->Krs_kpat_model->filter($kode_tahun_akademik, null, $kode_program_studi);
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Tahun Akademik dan Semester yang dipilih tidak ditemukan.</h6></div>');
+            }
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'    => 'admin/pengaturan/V_krs_kpat',
+            'judul'      => 'Pengaturan',
+            'sub_judul'  => 'KRS KPAT',
+            'title_h1'   => '<i class="fa fa-list-alt"></i> <li>Pengaturan</li>',
+            'title_h2'   => '<li>KRS KPAT</li>',
+            'tahun'      => $this->m_tahun_akademik->get_tahun(),
+            'tahun_akademik_list' => $this->m_tahun_akademik->get(),
+            'nama_jurusan' => $this->Nama_jurusan_model->get(),
+            'data'       => $data_krs,
+            'kode_tahun_akademik' => $kode_tahun_akademik,
+            'filter'     => [
+                'tahun_akademik' => $tahun_akademik,
+                'semester'       => $semester,
+                'prodi'          => $kode_program_studi,
+            ],
+        ]);
+    }
+
+    public function konversi()
+    {
+        $this->load->model(array(
+            'akademik/Krs_model',
+            'jurusan/m_tahun_akademik',
+        ));
+
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+
+        $data_konversi = null;
+        if ($this->input->post('proses') !== null) {
+            $data_konversi = $this->Krs_model->get_konversi_list($kode_tahun_akademik);
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'    => 'admin/pengaturan/V_konversi',
+            'judul'      => 'Pengaturan',
+            'sub_judul'  => 'Konversi',
+            'title_h1'   => '<i class="fa fa-exchange"></i> <li>Pengaturan</li>',
+            'title_h2'   => '<li>Konversi</li>',
+            'tahun_akademik_list' => $this->m_tahun_akademik->get(),
+            'data'       => $data_konversi,
+            'filter'     => ['kode_tahun_akademik' => $kode_tahun_akademik],
+        ]);
+    }
+
+    public function status_mahasiswa()
+    {
+        $nim = trim($this->input->post('nim') ?? $this->input->get('nim') ?? '');
+        $data_mhs = null;
+
+        if ($this->input->post('simpan') !== null) {
+            $status_pendaftaran = $this->input->post('status_pendaftaran');
+            if (in_array($status_pendaftaran, ['B', 'T', 'L'])) {
+                $this->db->where('nim', $nim)->update('mahasiswa', [
+                    'status_pendaftaran' => $status_pendaftaran
+                ]);
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>Status pendaftaran berhasil disimpan.</h6></div>');
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Status pendaftaran tidak valid.</h6></div>');
+            }
+        }
+
+        if ($nim !== '') {
+            $data_mhs = $this->db->select('m.nim, m.nama_mahasiswa, ps.nama_program_studi, m.status_pendaftaran')
+                ->from('mahasiswa m')
+                ->join('program_studi ps', 'm.program_studi_kode = ps.kode_program_studi', 'left')
+                ->where('m.nim', $nim)
+                ->get()
+                ->row();
+
+            if (!$data_mhs && $this->input->post('simpan') === null) {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Mahasiswa dengan NIM ' . e($nim) . ' tidak ditemukan.</h6></div>');
+            }
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'   => 'admin/pengaturan/V_status_mahasiswa',
+            'judul'     => 'Pengaturan',
+            'sub_judul' => 'Status Mahasiswa',
+            'title_h1'  => '<i class="fa fa-user"></i> <li>Pengaturan</li>',
+            'title_h2'  => '<li>Status Mahasiswa</li>',
+            'nim'       => $nim,
+            'data'      => $data_mhs,
+        ]);
+    }
+
+    public function hapus_krs()
+    {
+        $nim = trim($this->input->post('nim') ?? $this->input->get('nim') ?? '');
+        $data_mhs = null;
+        $data_krs = [];
+
+        if ($nim !== '') {
+            $data_mhs = $this->db->select('m.nim, m.nama_mahasiswa, ps.nama_program_studi, m.status_pendaftaran')
+                ->from('mahasiswa m')
+                ->join('program_studi ps', 'm.program_studi_kode = ps.kode_program_studi', 'left')
+                ->where('m.nim', $nim)
+                ->get()
+                ->row();
+
+            if (!$data_mhs) {
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Mahasiswa dengan NIM ' . e($nim) . ' tidak ditemukan.</h6></div>');
+            } else {
+                $data_krs = $this->db->select('k.kode_krs, k.nim, k.semester, k.kode_tahun_akademik, ta.tahun_akademik, ta.semester as ta_semester, COUNT(kd.kode_krs_detail) as total_mk, COALESCE(SUM(m.sks_teori + m.sks_praktek + m.sks_praktikum), 0) as total_sks')
+                    ->from('krs k')
+                    ->join('tahun_akademik ta', 'ta.kode_tahun_akademik = k.kode_tahun_akademik', 'left')
+                    ->join('krs_detail kd', 'kd.kode_krs = k.kode_krs', 'left')
+                    ->join('matakuliah m', 'm.id_matakuliah = kd.id_matakuliah', 'left')
+                    ->where('k.nim', $nim)
+                    ->group_by(['k.kode_krs', 'k.nim', 'k.semester', 'k.kode_tahun_akademik', 'ta.tahun_akademik', 'ta.semester'])
+                    ->order_by('k.kode_tahun_akademik', 'DESC')
+                    ->get()
+                    ->result();
+            }
+        }
+
+        $this->load->view('admin/template/V_main', [
+            'content'   => 'admin/pengaturan/V_hapus_krs',
+            'judul'     => 'Pengaturan',
+            'sub_judul' => 'Penghapusan KRS',
+            'title_h1'  => '<i class="fa fa-trash"></i> <li>Pengaturan</li>',
+            'title_h2'  => '<li>Penghapusan KRS</li>',
+            'nim'       => $nim,
+            'data_mhs'  => $data_mhs,
+            'data_krs'  => $data_krs,
+        ]);
+    }
+
+    public function detail_krs_ajax($kode_krs)
+    {
+        $details = $this->db->select('kd.kode_krs_detail, m.kode_matakuliah, m.nama_matakuliah, (m.sks_teori + m.sks_praktek + m.sks_praktikum) as sks, kd.status as status_mk, khd.nilai_akhir')
+            ->from('krs_detail kd')
+            ->join('matakuliah m', 'm.id_matakuliah = kd.id_matakuliah', 'inner')
+            ->join('khs_detail khd', 'khd.kode_krs_detail = kd.kode_krs_detail', 'left')
+            ->where('kd.kode_krs', $kode_krs)
+            ->get()
+            ->result();
+
+        echo json_encode(['status' => true, 'data' => $details]);
+    }
+
+    public function proses_hapus_krs()
+    {
+        $kode_krs = $this->input->post('kode_krs');
+        $nim = trim($this->input->post('nim') ?? '');
+
+        if (!$kode_krs) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Data KRS tidak valid.</h6></div>');
+            redirect(site_url('admin/pengaturan/pengaturan/hapus_krs' . ($nim ? '?nim=' . urlencode($nim) : '')));
+            return;
+        }
+
+        $krs = $this->db->select('k.kode_krs, k.nim, ta.tahun_akademik, ta.semester as ta_semester')
+            ->from('krs k')
+            ->join('tahun_akademik ta', 'ta.kode_tahun_akademik = k.kode_tahun_akademik', 'left')
+            ->where('k.kode_krs', $kode_krs)
+            ->get()->row();
+
+        if (!$krs) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Data KRS tidak ditemukan.</h6></div>');
+            redirect(site_url('admin/pengaturan/pengaturan/hapus_krs' . ($nim ? '?nim=' . urlencode($nim) : '')));
+            return;
+        }
+
+        $nim = $krs->nim;
+        $ta_label = ($krs->tahun_akademik ?? '-') . ' (' . ($krs->ta_semester == 0 ? 'Genap' : 'Ganjil') . ')';
+
+        $this->db->trans_start();
+
+        if (function_exists('log_aktivitas_nilai')) {
+            $krs_details = $this->db->select('kode_krs_detail')->where('kode_krs', $kode_krs)->get('krs_detail')->result();
+            foreach ($krs_details as $kd) {
+                $row = $this->db->where('kode_krs_detail', $kd->kode_krs_detail)->get('khs_detail')->row();
+                if ($row) {
+                    $json_nilai = json_encode([
+                        'nilai_harian' => $row->nilai_harian,
+                        'nilai_uts'    => $row->nilai_uts,
+                        'nilai_uas'    => $row->nilai_uas,
+                        'nilai_akhir'  => $row->nilai_akhir,
+                    ]);
+                    log_aktivitas_nilai('delete', 'nilai_harian,nilai_uts,nilai_uas,nilai_akhir', $json_nilai, null, 'pengaturan_hapus_krs', null, $kd->kode_krs_detail);
+                }
+            }
+            log_aktivitas_nilai('delete', 'kode_krs', (string) $kode_krs, null, 'pengaturan_hapus_krs', null, null, $kode_krs);
+        }
+
+        $this->db->where('kode_krs', $kode_krs)->delete('krs');
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Gagal menghapus KRS ' . e($ta_label) . '.</h6></div>');
+        } else {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>KRS ' . e($ta_label) . ' untuk NIM ' . e($nim) . ' berhasil dihapus.</h6></div>');
+        }
+
+        redirect(site_url('admin/pengaturan/pengaturan/hapus_krs?nim=' . urlencode($nim)));
+    }
+
+    public function pindah_tahun_akademik()
+    {
+        $this->load->model(array(
+            'akademik/Krs_kpat_model',
+            'jurusan/m_tahun_akademik',
+        ));
+
+        $kode_krs = $this->input->post('kode_krs');
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+
+        if (!$kode_krs || !$kode_tahun_akademik) {
+            echo json_encode(['status' => false, 'message' => 'Data tidak lengkap.']);
+            return;
+        }
+
+        $krs = $this->db->select('kode_krs, nim, kode_tahun_akademik')
+            ->where('kode_krs', $kode_krs)
+            ->get('krs')->row_object();
+
+        if (!$krs) {
+            echo json_encode(['status' => false, 'message' => 'Data KRS tidak ditemukan.']);
+            return;
+        }
+
+        if ($krs->kode_tahun_akademik == $kode_tahun_akademik) {
+            echo json_encode(['status' => false, 'message' => 'Tahun akademik tujuan sama dengan tahun akademik saat ini.']);
+            return;
+        }
+
+        $tahun = $this->m_tahun_akademik->get_all_byid($kode_tahun_akademik);
+        if (!$tahun) {
+            echo json_encode(['status' => false, 'message' => 'Tahun akademik tujuan tidak ditemukan.']);
+            return;
+        }
+
+        $existing = $this->Krs_kpat_model->get_kode_krs_kpat($krs->nim, $kode_tahun_akademik);
+        if ($existing && $existing != $kode_krs) {
+            echo json_encode(['status' => false, 'message' => 'Mahasiswa sudah memiliki KRS KPAT pada tahun akademik tujuan.']);
+            return;
+        }
+
+        $tahun_angkatan = substr($krs->nim, 0, 2);
+        if ($tahun->semester == 0) {
+            $semester = ($tahun->tahun - $tahun_angkatan) * 2 + 2;
+        } else {
+            $semester = ($tahun->tahun - $tahun_angkatan) * 2 + 1;
+        }
+
+        $this->db->where('kode_krs', $kode_krs)->update('krs', [
+            'kode_tahun_akademik' => $kode_tahun_akademik,
+            'semester' => $semester,
+        ]);
+
+        echo json_encode(['status' => true, 'message' => 'KRS berhasil dipindahkan ke tahun akademik ' . $tahun->tahun_akademik . '.']);
+    }
+
     public function simpan()
     {
         $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'trim|required');

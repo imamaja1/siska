@@ -11,10 +11,10 @@
     <!--        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.11/css/AdminLTE.min.css" />-->
     <link rel="stylesheet" href="<?= base_url('assets/bootstrap/css/bootstrap.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/dist/css/AdminLTE.min.css'); ?>">
-    <!-- Google Fonts: Roboto -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/datepicker/datepicker3.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/daterangepicker/daterangepicker-bs3.css'); ?>">
@@ -88,8 +88,28 @@
     <div class="content-wrapper">
         <div class="container">
             <?php if (empty($hide_page_header)): ?>
+            <?php
+                $page_header_icon = 'fa-file-text-o';
+                if (isset($judul)) {
+                    $j_lower = strtolower($judul);
+                    if (strpos($j_lower, 'ditolak') !== false || strpos($j_lower, 'denied') !== false) {
+                        $page_header_icon = 'fa-ban';
+                    } elseif (strpos($j_lower, 'sandi') !== false || strpos($j_lower, 'password') !== false) {
+                        $page_header_icon = 'fa-key';
+                    } elseif (strpos($j_lower, 'krs') !== false) {
+                        $page_header_icon = 'fa-calendar-check-o';
+                    } elseif (strpos($j_lower, 'khs') !== false || strpos($j_lower, 'nilai') !== false) {
+                        $page_header_icon = 'fa-bar-chart';
+                    } elseif (strpos($j_lower, 'kuisioner') !== false) {
+                        $page_header_icon = 'fa-pie-chart';
+                    } elseif (strpos($j_lower, 'profil') !== false) {
+                        $page_header_icon = 'fa-user';
+                    }
+                }
+            ?>
             <section class="content-header">
-                <div style="font-size: 16px;">
+                <div>
+                    <span class="content-header-icon"><i class="fa <?= $page_header_icon ?>"></i></span>
                     <b><?= isset($judul) ? e($judul) : "" ?></b>
                 </div>
             </section>

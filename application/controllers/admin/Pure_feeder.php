@@ -1,12 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Audit_mahasiswa extends CI_Controller {
+class Pure_feeder extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         $this->load->service('AuditFeederService');
-        $this->load->model('jurusan/m_tahun_akademik');
 
         $class = $this->router->fetch_class();
         if (!$this->session->userdata('nama_login')) {
@@ -23,24 +22,23 @@ class Audit_mahasiswa extends CI_Controller {
     public function index()
     {
         $data['judul'] = 'Audit Nilai';
-        $data['sub_judul'] = 'Feeder & SISKA Mahasiswa';
-        $data['content'] = 'admin/audit/V_feeder_mahasiswa';
-        $data['tahun_akademik'] = $this->m_tahun_akademik->get();
+        $data['sub_judul'] = 'Pure Feeder';
+        $data['content'] = 'admin/audit/V_pure_feeder_index';
 
         $this->load->view('admin/template/V_main', $data);
     }
 
     public function hasil()
     {
-        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
         $nim = $this->input->post('nim');
 
-        $data = $this->auditfeederservice->hasilMahasiswa($nim, $kode_tahun_akademik);
+        $data = $this->auditfeederservice->rawFeederData($nim);
+        $data['nim'] = $nim;
         if (isset($data['error'])) {
-            echo '<div class="callout callout-danger flat"><p>' . html_escape($data['error']) . '</p></div>';
+            echo '<div class="col-md-12"><div class="callout callout-danger flat"><p>' . html_escape($data['error']) . '</p></div></div>';
             return;
         }
 
-        $this->load->view('admin/audit/V_feeder_hasil', $data);
+        $this->load->view('admin/audit/V_pure_feeder_hasil', $data);
     }
 }

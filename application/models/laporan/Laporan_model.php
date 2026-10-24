@@ -943,4 +943,71 @@ class Laporan_model extends CI_Model
         }     
         return $data_new;
     }
+
+    public function mahasiswa_kelulusan($kode_tahun_akademik = null, $kode_program_studi = null, $angkatan = null)
+    {
+        $this->db->select('mah.nim, mah.nama_mahasiswa, ps.nama_program_studi, ps.singkatan_program_studi, ta.tahun_akademik as tahun_lulus, ta.semester as semester_lulus, substr(mah.nim, 1, 2) as angkatan')
+            ->from('mahasiswa as mah')
+            ->join('program_studi as ps', 'ps.kode_program_studi = mah.program_studi_kode', 'left')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik = mah.ta_lulus', 'left')
+            ->where('mah.ta_lulus IS NOT NULL', null, false)
+            ->where('mah.ta_lulus !=', '');
+
+        if (!empty($kode_tahun_akademik) && $kode_tahun_akademik !== 'all') {
+            $this->db->where('mah.ta_lulus', $kode_tahun_akademik);
+        }
+        if (!empty($kode_program_studi) && $kode_program_studi !== 'all') {
+            $this->db->where('mah.program_studi_kode', $kode_program_studi);
+        }
+        if (!empty($angkatan) && $angkatan !== 'all') {
+            $this->db->where('substr(mah.nim, 1, 2)', $angkatan);
+        }
+
+        $this->db->order_by('mah.nim', 'ASC');
+        return $this->db->get()->result_object();
+    }
+
+    public function tambah_kelulusan($nim, $kode_tahun_akademik)
+    {
+        return $this->db->where('nim', $nim)
+            ->update('mahasiswa', [
+                'ta_lulus' => $kode_tahun_akademik,
+                'status' => 'N',
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+    }
+
+    public function batal_kelulusan($nim)
+    {
+        return $this->db->where('nim', $nim)
+            ->update('mahasiswa', [
+                'ta_lulus' => null,
+                'status' => 'A',
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+    }
+
+    public function cari_mahasiswa($keyword, $limit = 15)
+    {
+        return $this->db->select('mah.nim, mah.nama_mahasiswa, ps.nama_program_studi, ps.singkatan_program_studi, mah.ta_lulus, mah.status, ta.tahun_akademik as tahun_lulus, ta.semester as semester_lulus')
+            ->from('mahasiswa as mah')
+            ->join('program_studi as ps', 'ps.kode_program_studi = mah.program_studi_kode', 'left')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik = mah.ta_lulus', 'left')
+            ->group_start()
+                ->like('mah.nim', $keyword)
+                ->or_like('mah.nama_mahasiswa', $keyword)
+            ->group_end()
+            ->limit($limit)
+            ->get()->result_object();
+    }
+
+    public function get_mahasiswa_by_nim($nim)
+    {
+        return $this->db->select('mah.nim, mah.nama_mahasiswa, ps.nama_program_studi, ps.singkatan_program_studi, mah.ta_lulus, mah.status, ta.tahun_akademik as tahun_lulus, ta.semester as semester_lulus')
+            ->from('mahasiswa as mah')
+            ->join('program_studi as ps', 'ps.kode_program_studi = mah.program_studi_kode', 'left')
+            ->join('tahun_akademik as ta', 'ta.kode_tahun_akademik = mah.ta_lulus', 'left')
+            ->where('mah.nim', $nim)
+            ->get()->row_object();
+    }
 }

@@ -55,15 +55,20 @@
                     <tbody>
                         <?php $j=1; foreach ((array) $data as $key) : ?>
                             <?php if (isset($key['data_nilai'])) :
-                                foreach ($key['data_nilai'] as $row) : ?>
+                                foreach ($key['data_nilai'] as $row) : 
+                                    $has_na = (isset($row['nilai_akhir']) && $row['nilai_akhir'] !== null && $row['nilai_akhir'] !== '');
+                                    $n_sks = $has_na ? (isset($row['sks']) ? $row['sks'] : 0) : '-';
+                                    $n_grade = $has_na ? ($row['grade'] ?? '-') : '-';
+                                    $n_sksn = $has_na ? ($row['sksn'] ?? 0) : '-';
+                                    ?>
                                 <tr>
                                     <td><center><?= $j++?>.</center></td>
                                     <td><center><?= e($row['kode_matakuliah']) ?></center></td>
                                     <td><center><?= $key['semester']?></center></td>
                                     <td><?= e($row['nama_matakuliah']) ?></td>
-                                    <td><center><?= e($row['sks']) ?></center></td>
-                                    <td><center><?= e($row['grade']) ?></center></td>
-                                    <td><center><?= e($row['sksn']) ?></center></td>
+                                    <td><center><?= e($n_sks) ?></center></td>
+                                    <td><center><?= e($n_grade) ?></center></td>
+                                    <td><center><?= e($n_sksn) ?></center></td>
                                 </tr>
                                 <?php endforeach;
                             endif; ?>

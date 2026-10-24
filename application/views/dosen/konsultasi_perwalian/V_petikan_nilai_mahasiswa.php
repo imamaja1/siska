@@ -60,19 +60,24 @@
                     <tbody>
                     <?php
                     if (isset($key['data_nilai'])) :
-                        $sks=0; $sksn=0; $j=1; foreach ($key['data_nilai'] as $row) : ?>
+                        $j=1; foreach ($key['data_nilai'] as $row) : 
+                            $has_na = (isset($row['nilai_akhir']) && $row['nilai_akhir'] !== null && $row['nilai_akhir'] !== '');
+                            $n_sks = $has_na ? (isset($row['sks']) ? $row['sks'] : 0) : '-';
+                            $n_grade = $has_na ? ($row['grade'] ?? '-') : '-';
+                            $n_sksn = $has_na ? ($row['sksn'] ?? 0) : '-';
+                            ?>
                         <tr>
                             <td><center><?= $j++ ?></center></td>
                             <td><center><?= e($row['kode_matakuliah']) ?></center></td>
                             <td><?= e($row['nama_matakuliah']) ?></td>
-                            <td><center><?= e(substr($row['kode_matakuliah'], 4,1)) ?></center></td>
-                            <td><center><?= e($row['grade']) ?></center></td>
-                            <td><center><?= e($row['sksn']) ?></center></td>
+                            <td><center><?= e($n_sks) ?></center></td>
+                            <td><center><?= e($n_grade) ?></center></td>
+                            <td><center><?= e($n_sksn) ?></center></td>
                         </tr>
 
                     <?php endforeach;
-                        $total_sks = $total_sks = $key['sks'];
-                        $total_sksn = $total_sksn = $key['sksn'];
+                        $total_sks += (isset($key['sks']) ? (float)$key['sks'] : 0);
+                        $total_sksn += (isset($key['sksn']) ? (float)$key['sksn'] : 0);
                     endif;
                     ?>
                     </tbody>

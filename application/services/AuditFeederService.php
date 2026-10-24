@@ -980,12 +980,24 @@ class AuditFeederService extends MY_Service {
         $perbandingan_grup = $this->kelompokkanPerbandingan($perbandingan);
 
         return [
-            'header'      => $header,
-            'semester'    => array_values($grouped),
-            'konsolidasi' => $konsolidasi,
-            'total_sks'   => $grand_sks,
-            'total_sksn'  => $grand_sksn,
-            'ipk'         => $grand_sks > 0 ? trunc($grand_sksn / $grand_sks, 2) : 0,
+            'nim'              => $header['nim'],
+            'header'           => $header,
+            'semester'         => $semester_out,
+            'konsolidasi'      => $konsolidasi,
+            'total_sks'        => $grand_sks,
+            'total_sksn'       => $grand_sksn,
+            'ipk'              => $grand_sks > 0 ? trunc($grand_sksn / $grand_sks, 2) : 0,
+            'petikan'          => $petikan,
+            'petikan_total_sks'  => $p_sks,
+            'petikan_total_sksn' => $p_sksn,
+            'petikan_ipk'        => $p_sks > 0 ? trunc($p_sksn / $p_sks, 2) : 0,
+            'transkrip_error'  => $transkrip_error,
+            'raw_rows'         => $raw_rows,
+            'transkrip_raw'    => $transkrip_raw,
+            'siska'            => $siska_rows,
+            'perbandingan'     => $perbandingan,
+            'perbandingan_grup' => $perbandingan_grup,
+            'summary_banding'  => $summary_banding,
         ];
     }
 

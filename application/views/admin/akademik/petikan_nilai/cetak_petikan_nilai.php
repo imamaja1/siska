@@ -14,7 +14,7 @@ if (!isset($total_sks) || !isset($total_sksn) || !isset($ipk)) {
             }
         }
     }
-    $ipk = $total_sks != 0 ? trunc($total_sksn / $total_sks, 2) : 0;
+    $ipk = $total_sks != 0 ? $total_sksn / $total_sks : 0;
 }
 
 // Nilai satu sel. Mata kuliah pada semester yang belum ditempuh memakai $fallback.

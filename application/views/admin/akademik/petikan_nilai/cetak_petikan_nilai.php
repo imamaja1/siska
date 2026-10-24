@@ -14,7 +14,7 @@ if (!isset($total_sks) || !isset($total_sksn) || !isset($ipk)) {
             }
         }
     }
-    $ipk = $total_sks != 0 ? $total_sksn / $total_sks : 0;
+    $ipk = $total_sks != 0 ? trunc($total_sksn / $total_sks, 2) : 0;
 }
 
 // Nilai satu sel. Mata kuliah pada semester yang belum ditempuh memakai $fallback.
@@ -146,7 +146,7 @@ $tabelSemester = function ($data, $dari, $sampai, $semester, $nilai) use ($fs) {
                                 <td width="30%" style="border-bottom:1px solid black;" align="center"><?= e($total_sksn) ?></td>
                                 <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                                 <td width="15%" rowspan="2" valign="middle"
-                                    align="center"><?= e(number_format($ipk, 2, '.', '')) ?></td>
+                                    align="center"><?= e(format_ipk($ipk)) ?></td>
                             </tr>
                             <tr>
                                 <td align="center">&#931; SKS</td>

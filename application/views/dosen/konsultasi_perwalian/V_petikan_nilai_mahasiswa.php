@@ -103,7 +103,7 @@
                         <td style="border-bottom:1px solid black;"><strong>SKSN</strong></td>
                         <td rowspan="2">=</td>
                         <td style="border-bottom:1px solid black;"><strong><?= e($total_sksn) ?></strong></td>
-                        <td rowspan="2"><strong>= <?= e($total_sks == 0 ? '0' : number_format($total_sksn/$total_sks, 2)) ?></strong></td>
+                        <td rowspan="2"><strong>= <?= e($total_sks == 0 ? '0.00' : format_ipk($total_sksn/$total_sks)) ?></strong></td>
                     </tr>
                     <tr>
                         <td ><strong>SKS</strong></td>

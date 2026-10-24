@@ -23,9 +23,33 @@ function kirim_ke_telegram($telegram_id, $message_text){
     curl_close($ch);
 }
 
-function trunc($angka, $desimal = 0) {
-    $faktor = pow(10, $desimal);
-    return floor($angka * $faktor) / $faktor;
+if (!function_exists('trunc')) {
+    function trunc($angka, $desimal = 0) {
+        if (!is_numeric($angka)) return 0;
+        $str = sprintf('%.8f', (float)$angka);
+        $parts = explode('.', $str);
+        if ($desimal <= 0) {
+            return (float)$parts[0];
+        }
+        $dec = isset($parts[1]) ? substr($parts[1], 0, $desimal) : '0';
+        return (float)($parts[0] . '.' . $dec);
+    }
+}
+
+if (!function_exists('format_ipk')) {
+    /**
+     * Format IPK / IPS dengan memotong 2 digit desimal (truncation) tanpa pembulatan ke atas.
+     * Contoh: 0.777 -> "0.77", 3.859 -> "3.85", 3.8 -> "3.80".
+     */
+    function format_ipk($angka) {
+        if (!is_numeric($angka) || (float)$angka == 0.0) {
+            return '0.00';
+        }
+        $str = sprintf('%.8f', (float)$angka);
+        $parts = explode('.', $str);
+        $dec = isset($parts[1]) ? substr(str_pad($parts[1], 2, '0'), 0, 2) : '00';
+        return $parts[0] . '.' . $dec;
+    }
 }
 
 function tgl_indo($tanggal)

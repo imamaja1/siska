@@ -143,7 +143,7 @@
                             </tr>
                             <tr>
                                 <th class="text-right">IPK</th>
-                                <td class="text-center"><strong><?= number_format($ipk, 2) ?></strong></td>
+                                <td class="text-center"><strong><?= format_ipk($ipk) ?></strong></td>
                             </tr>
                         </table>
                     </div>

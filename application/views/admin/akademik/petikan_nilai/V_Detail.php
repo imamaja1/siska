@@ -99,7 +99,7 @@
                         <td style="border-bottom:1px solid black;"><strong>SKSN</strong></td>
                         <td rowspan="2">=</td>
                         <td style="border-bottom:1px solid black;"><strong><?= $total_sksn ?></strong></td>
-                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0' : number_format($ipk, 2) ?></strong></td>
+                        <td rowspan="2"><strong>= <?= $total_sks == 0 ? '0.00' : format_ipk($ipk) ?></strong></td>
                     </tr>
                     <tr>
                         <td ><strong>SKS</strong></td>

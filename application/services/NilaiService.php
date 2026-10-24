@@ -172,10 +172,11 @@ class NilaiService extends MY_Service {
             }
         }
 
+        $raw_ipk = $total_sks != 0 ? ($total_sksn / $total_sks) : 0;
         return array(
             'total_sks' => $total_sks,
             'total_sksn' => $total_sksn,
-            'ipk' => $total_sks != 0 ? $total_sksn / $total_sks : 0,
+            'ipk' => trunc($raw_ipk, 2),
         );
     }
 

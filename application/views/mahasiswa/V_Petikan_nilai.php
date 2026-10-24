@@ -115,7 +115,7 @@
                 <div class="mhs-summary">
                     <div class="mhs-summary-row"><span>Jumlah SKS yang diambil</span><strong><?= $sks_final ?></strong></div>
                     <div class="mhs-summary-row"><span>Jumlah SKSN</span><strong><?= $sksn_final ?></strong></div>
-                    <div class="mhs-summary-row"><span>IPK</span><strong><?= $sks_final == 0 ? '0' : number_format($sksn_final / $sks_final, 2) ?></strong></div>
+                    <div class="mhs-summary-row"><span>IPK</span><strong><?= $sks_final == 0 ? '0.00' : format_ipk($sksn_final / $sks_final) ?></strong></div>
                 </div>
             </div>
         </div>

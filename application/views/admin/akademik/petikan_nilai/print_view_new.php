@@ -276,7 +276,7 @@
                         <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($total_sksn); ?></td>
                         <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                         <td width="15%" rowspan="2" valign="middle"
-                            align="center"><?php echo e(number_format($ipk, 2, '.', '')); ?></td>
+                            align="center"><?php echo e(format_ipk($ipk)); ?></td>
                     </tr>
                     <tr>
                         <td align="center">&#931; SKS</td>

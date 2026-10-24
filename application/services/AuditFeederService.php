@@ -489,7 +489,7 @@ class AuditFeederService extends MY_Service {
             'konsolidasi' => $konsolidasi,
             'total_sks'   => $grand_sks,
             'total_sksn'  => $grand_sksn,
-            'ipk'         => $grand_sks > 0 ? $grand_sksn / $grand_sks : 0,
+            'ipk'         => $grand_sks > 0 ? trunc($grand_sksn / $grand_sks, 2) : 0,
         ];
     }
 

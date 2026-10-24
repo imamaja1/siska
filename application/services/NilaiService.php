@@ -159,6 +159,10 @@ class NilaiService extends MY_Service {
                     continue;
                 }
                 foreach ($key['data_nilai'] as $row) {
+                    $has_nilai = isset($row['nilai_akhir']) && $row['nilai_akhir'] !== null && $row['nilai_akhir'] !== '';
+                    if (!$has_nilai) {
+                        continue;
+                    }
                     if ($type === 'all' || $type === 'snapshot') {
                         $total_sks = $total_sks + $row['sks'];
                         $total_sksn = $total_sksn + $row['sksn'];

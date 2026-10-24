@@ -123,15 +123,29 @@ class Petikan_nilai_model extends CI_Model {
                     $data[$n]['data_nilai'][$i]['sks_praktek'] = $row->sks_praktek;
                     $data[$n]['data_nilai'][$i]['sks_praktikum'] = $row->sks_praktikum;
                     if ($cek->jumlah == 1) {
-                        $data_penilaian = data_penilaian($nim, $cek->semester);
-                        $data[$n]['data_nilai'][$i]['sks'] = $sks;
-                        $nilai_akhir = $cek->nilai_akhir * 1;
-                        foreach ($data_penilaian as $key) {
-                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                                $data[$n]['data_nilai'][$i]['grade'] = $key['grade'];
-                                $data[$n]['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $sks;
-                                $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                        $has_nilai = ($cek->nilai_akhir !== null && $cek->nilai_akhir !== '');
+                        if ($has_nilai) {
+                            $data_penilaian = data_penilaian($nim, $cek->semester);
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                            $nilai_akhir = $cek->nilai_akhir * 1;
+                            $matched_grade = false;
+                            foreach ($data_penilaian as $key) {
+                                if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                    $data[$n]['data_nilai'][$i]['grade'] = $key['grade'];
+                                    $data[$n]['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $sks;
+                                    $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                                    $matched_grade = true;
+                                    break;
+                                }
                             }
+                            if (!$matched_grade) {
+                                $data[$n]['data_nilai'][$i]['grade'] = '-';
+                                $data[$n]['data_nilai'][$i]['sksn'] = 0;
+                            }
+                        } else {
+                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['sksn'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = 0;
                         }
                     } elseif ($cek->jumlah > 1) {
                         $semua = $this->db->select('*')
@@ -147,16 +161,26 @@ class Petikan_nilai_model extends CI_Model {
                         $max_nilai = 0;
                         $max_grade = '-';
                         $max_sksn = 0;
+                        $has_graded = false;
                         foreach ($semua as $s) {
-                            $penilaian = data_penilaian($nim, $s->semester);
-                            $na = $s->nilai_akhir * 1;
                             $grade = '-';
                             $sksn = 0;
-                            foreach ($penilaian as $key) {
-                                if (($key['nilai_minimum'] <= $na) && ($na <= $key['nilai_maksimum'])) {
-                                    $grade = $key['grade'];
-                                    $sksn = $key['bobot_nilai'] * $sks;
-                                    break;
+                            $na = null;
+                            if ($s->nilai_akhir !== null && $s->nilai_akhir !== '') {
+                                $na = $s->nilai_akhir * 1;
+                                $penilaian = data_penilaian($nim, $s->semester);
+                                foreach ($penilaian as $key) {
+                                    if (($key['nilai_minimum'] <= $na) && ($na <= $key['nilai_maksimum'])) {
+                                        $grade = $key['grade'];
+                                        $sksn = $key['bobot_nilai'] * $sks;
+                                        break;
+                                    }
+                                }
+                                if (!$has_graded || $na > $max_nilai) {
+                                    $max_nilai = $na;
+                                    $max_grade = $grade;
+                                    $max_sksn = $sksn;
+                                    $has_graded = true;
                                 }
                             }
                             $attempts[] = [
@@ -165,18 +189,20 @@ class Petikan_nilai_model extends CI_Model {
                                 'grade' => $grade,
                                 'sksn' => $sksn,
                             ];
-                            if ($na > $max_nilai) {
-                                $max_nilai = $na;
-                                $max_grade = $grade;
-                                $max_sksn = $sksn;
-                            }
                         }
                         $data[$n]['data_nilai'][$i]['attempts'] = $attempts;
                         $data[$n]['data_nilai'][$i]['semester'] = end($attempts)['semester'];
-                        $data[$n]['data_nilai'][$i]['nilai_akhir'] = $max_nilai;
-                        $data[$n]['data_nilai'][$i]['grade'] = $max_grade;
-                        $data[$n]['data_nilai'][$i]['sksn'] = $max_sksn;
-                        $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                        if ($has_graded) {
+                            $data[$n]['data_nilai'][$i]['nilai_akhir'] = $max_nilai;
+                            $data[$n]['data_nilai'][$i]['grade'] = $max_grade;
+                            $data[$n]['data_nilai'][$i]['sksn'] = $max_sksn;
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                        } else {
+                            $data[$n]['data_nilai'][$i]['nilai_akhir'] = null;
+                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['sksn'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = 0;
+                        }
                         $data[$n]['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                         $data[$n]['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                         $data[$n]['data_nilai'][$i]['param1'] = $row->param1;
@@ -317,15 +343,29 @@ class Petikan_nilai_model extends CI_Model {
                     $data[$n]['data_nilai'][$i]['sks_praktek'] = $row->sks_praktek;
                     $data[$n]['data_nilai'][$i]['sks_praktikum'] = $row->sks_praktikum;
                     if ($cek->jumlah == 1) {
-                        $data_penilaian = data_penilaian($nim, $cek->semester);
-                        $data[$n]['data_nilai'][$i]['sks'] = $sks;
-                        $nilai_akhir = $cek->nilai_akhir * 1;
-                        foreach ($data_penilaian as $key) {
-                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                                $data[$n]['data_nilai'][$i]['grade'] = $key['grade'];
-                                $data[$n]['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $sks;
-                                $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                        $has_nilai = ($cek->nilai_akhir !== null && $cek->nilai_akhir !== '');
+                        if ($has_nilai) {
+                            $data_penilaian = data_penilaian($nim, $cek->semester);
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                            $nilai_akhir = $cek->nilai_akhir * 1;
+                            $matched_grade = false;
+                            foreach ($data_penilaian as $key) {
+                                if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                    $data[$n]['data_nilai'][$i]['grade'] = $key['grade'];
+                                    $data[$n]['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $sks;
+                                    $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                                    $matched_grade = true;
+                                    break;
+                                }
                             }
+                            if (!$matched_grade) {
+                                $data[$n]['data_nilai'][$i]['grade'] = '-';
+                                $data[$n]['data_nilai'][$i]['sksn'] = 0;
+                            }
+                        } else {
+                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['sksn'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = 0;
                         }
                     } elseif ($cek->jumlah > 1) {
                         $this->db->select('*')
@@ -345,16 +385,26 @@ class Petikan_nilai_model extends CI_Model {
                         $max_nilai = 0;
                         $max_grade = '-';
                         $max_sksn = 0;
+                        $has_graded = false;
                         foreach ($semua as $s) {
-                            $penilaian = data_penilaian($nim, $s->semester);
-                            $na = $s->nilai_akhir * 1;
                             $grade = '-';
                             $sksn = 0;
-                            foreach ($penilaian as $key) {
-                                if (($key['nilai_minimum'] <= $na) && ($na <= $key['nilai_maksimum'])) {
-                                    $grade = $key['grade'];
-                                    $sksn = $key['bobot_nilai'] * $sks;
-                                    break;
+                            $na = null;
+                            if ($s->nilai_akhir !== null && $s->nilai_akhir !== '') {
+                                $na = $s->nilai_akhir * 1;
+                                $penilaian = data_penilaian($nim, $s->semester);
+                                foreach ($penilaian as $key) {
+                                    if (($key['nilai_minimum'] <= $na) && ($na <= $key['nilai_maksimum'])) {
+                                        $grade = $key['grade'];
+                                        $sksn = $key['bobot_nilai'] * $sks;
+                                        break;
+                                    }
+                                }
+                                if (!$has_graded || $na > $max_nilai) {
+                                    $max_nilai = $na;
+                                    $max_grade = $grade;
+                                    $max_sksn = $sksn;
+                                    $has_graded = true;
                                 }
                             }
                             $attempts[] = [
@@ -363,18 +413,20 @@ class Petikan_nilai_model extends CI_Model {
                                 'grade' => $grade,
                                 'sksn' => $sksn,
                             ];
-                            if ($na > $max_nilai) {
-                                $max_nilai = $na;
-                                $max_grade = $grade;
-                                $max_sksn = $sksn;
-                            }
                         }
                         $data[$n]['data_nilai'][$i]['attempts'] = $attempts;
                         $data[$n]['data_nilai'][$i]['semester'] = end($attempts)['semester'];
-                        $data[$n]['data_nilai'][$i]['nilai_akhir'] = $max_nilai;
-                        $data[$n]['data_nilai'][$i]['grade'] = $max_grade;
-                        $data[$n]['data_nilai'][$i]['sksn'] = $max_sksn;
-                        $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                        if ($has_graded) {
+                            $data[$n]['data_nilai'][$i]['nilai_akhir'] = $max_nilai;
+                            $data[$n]['data_nilai'][$i]['grade'] = $max_grade;
+                            $data[$n]['data_nilai'][$i]['sksn'] = $max_sksn;
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
+                        } else {
+                            $data[$n]['data_nilai'][$i]['nilai_akhir'] = null;
+                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['sksn'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = 0;
+                        }
                         $data[$n]['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                         $data[$n]['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                         $data[$n]['data_nilai'][$i]['param1'] = $row->param1;

@@ -64,9 +64,9 @@
                     <?php
                     if (isset($key['data_nilai'])) :
                     $j=1; foreach ($key['data_nilai'] as $row) :
-                        $belum = (!isset($row['jumlah_data']) || $row['jumlah_data'] == 0);
+                        $belum = (!isset($row['jumlah_data']) || $row['jumlah_data'] == 0 || !isset($row['nilai_akhir']) || $row['nilai_akhir'] === null || $row['nilai_akhir'] === '');
                         $n_sks = $belum ? '-' : (isset($row['sks']) ? $row['sks'] : 0);
-                        $n_grade = $belum ? '-' : ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : 'E');
+                        $n_grade = $belum ? '-' : ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : '-');
                         $n_sksn = $belum ? '-' : (isset($row['sksn']) ? $row['sksn'] : 0);
                         ?>
                         <tr>

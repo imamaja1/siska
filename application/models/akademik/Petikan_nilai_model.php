@@ -139,13 +139,13 @@ class Petikan_nilai_model extends CI_Model {
                                 }
                             }
                             if (!$matched_grade) {
-                                $data[$n]['data_nilai'][$i]['grade'] = '-';
+                                $data[$n]['data_nilai'][$i]['grade'] = 'E';
                                 $data[$n]['data_nilai'][$i]['sksn'] = 0;
                             }
                         } else {
-                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['grade'] = 'E';
                             $data[$n]['data_nilai'][$i]['sksn'] = 0;
-                            $data[$n]['data_nilai'][$i]['sks'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
                         }
                     } elseif ($cek->jumlah > 1) {
                         $semua = $this->db->select('*')
@@ -163,7 +163,7 @@ class Petikan_nilai_model extends CI_Model {
                         $max_sksn = 0;
                         $has_graded = false;
                         foreach ($semua as $s) {
-                            $grade = '-';
+                            $grade = 'E';
                             $sksn = 0;
                             $na = null;
                             if ($s->nilai_akhir !== null && $s->nilai_akhir !== '') {
@@ -199,9 +199,9 @@ class Petikan_nilai_model extends CI_Model {
                             $data[$n]['data_nilai'][$i]['sks'] = $sks;
                         } else {
                             $data[$n]['data_nilai'][$i]['nilai_akhir'] = null;
-                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['grade'] = 'E';
                             $data[$n]['data_nilai'][$i]['sksn'] = 0;
-                            $data[$n]['data_nilai'][$i]['sks'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
                         }
                         $data[$n]['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                         $data[$n]['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
@@ -359,13 +359,13 @@ class Petikan_nilai_model extends CI_Model {
                                 }
                             }
                             if (!$matched_grade) {
-                                $data[$n]['data_nilai'][$i]['grade'] = '-';
+                                $data[$n]['data_nilai'][$i]['grade'] = 'E';
                                 $data[$n]['data_nilai'][$i]['sksn'] = 0;
                             }
                         } else {
-                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['grade'] = 'E';
                             $data[$n]['data_nilai'][$i]['sksn'] = 0;
-                            $data[$n]['data_nilai'][$i]['sks'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
                         }
                     } elseif ($cek->jumlah > 1) {
                         $this->db->select('*')
@@ -387,7 +387,7 @@ class Petikan_nilai_model extends CI_Model {
                         $max_sksn = 0;
                         $has_graded = false;
                         foreach ($semua as $s) {
-                            $grade = '-';
+                            $grade = 'E';
                             $sksn = 0;
                             $na = null;
                             if ($s->nilai_akhir !== null && $s->nilai_akhir !== '') {
@@ -423,9 +423,9 @@ class Petikan_nilai_model extends CI_Model {
                             $data[$n]['data_nilai'][$i]['sks'] = $sks;
                         } else {
                             $data[$n]['data_nilai'][$i]['nilai_akhir'] = null;
-                            $data[$n]['data_nilai'][$i]['grade'] = '-';
+                            $data[$n]['data_nilai'][$i]['grade'] = 'E';
                             $data[$n]['data_nilai'][$i]['sksn'] = 0;
-                            $data[$n]['data_nilai'][$i]['sks'] = 0;
+                            $data[$n]['data_nilai'][$i]['sks'] = $sks;
                         }
                         $data[$n]['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                         $data[$n]['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;

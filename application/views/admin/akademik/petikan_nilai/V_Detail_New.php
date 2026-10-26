@@ -56,10 +56,10 @@
                         <?php $j=1; foreach ((array) $data as $key) : ?>
                             <?php if (isset($key['data_nilai'])) :
                                 foreach ($key['data_nilai'] as $row) : 
-                                    $has_na = (isset($row['nilai_akhir']) && $row['nilai_akhir'] !== null && $row['nilai_akhir'] !== '');
-                                    $n_sks = $has_na ? (isset($row['sks']) ? $row['sks'] : 0) : '-';
-                                    $n_grade = $has_na ? ($row['grade'] ?? '-') : '-';
-                                    $n_sksn = $has_na ? ($row['sksn'] ?? 0) : '-';
+                                    $is_taken = (isset($row['jumlah_data']) && $row['jumlah_data'] > 0);
+                                    $n_sks = $is_taken ? (isset($row['sks']) ? $row['sks'] : 0) : '-';
+                                    $n_grade = $is_taken ? ((isset($row['grade']) && $row['grade'] !== '-') ? $row['grade'] : 'E') : '-';
+                                    $n_sksn = $is_taken ? (isset($row['sksn']) ? $row['sksn'] : 0) : '-';
                                     ?>
                                 <tr>
                                     <td><center><?= $j++?>.</center></td>

@@ -437,4 +437,339 @@ class Pengaturan extends CI_Controller
 
         return file_put_contents($this->config_file, $new_content, LOCK_EX) !== false;
     }
+
+    public function pembuatan_nim_baru()
+    {
+        $this->load->service('MahasiswaService', 'mahasiswaservice');
+
+        $prodi = $this->mahasiswaservice->getProgramStudiLengkap();
+        $provinsi = $this->mahasiswaservice->getProvinsiLengkap();
+
+        $current_year = (int) date('Y');
+        $angkatan_list = [];
+        for ($y = $current_year + 1; $y >= $current_year - 4; $y--) {
+            $angkatan_list[] = [
+                'val'   => substr((string) $y, -2),
+                'label' => $y . ' (Angkatan ' . substr((string) $y, -2) . ')'
+            ];
+        }
+
+        $data = [
+            'content'          => 'admin/pengaturan/V_pembuatan_nim_baru',
+            'judul'            => 'Pengaturan',
+            'judul_sub_judul'  => 'Mahasiswa Baru',
+            'sub_judul'        => 'NIM Baru',
+            'title_h1'         => '<i class="fa fa-user-plus"></i> <li>Pengaturan</li>',
+            'title_h2'         => '<li>Mahasiswa Baru</li>',
+            'title_h3'         => '<li>NIM Baru</li>',
+            'prodi'            => $prodi,
+            'provinsi'         => $provinsi,
+            'angkatan_list'    => $angkatan_list,
+            'default_angkatan' => substr((string) $current_year, -2)
+        ];
+
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function pembuatan_nim_transfer()
+    {
+        $this->load->service('MahasiswaService', 'mahasiswaservice');
+
+        $prodi = $this->mahasiswaservice->getProgramStudiLengkap();
+        $provinsi = $this->mahasiswaservice->getProvinsiLengkap();
+
+        $current_year = (int) date('Y');
+        $angkatan_list = [];
+        for ($y = $current_year + 1; $y >= $current_year - 4; $y--) {
+            $angkatan_list[] = [
+                'val'   => substr((string) $y, -2),
+                'label' => $y . ' (Angkatan ' . substr((string) $y, -2) . ')'
+            ];
+        }
+
+        $data = [
+            'content'          => 'admin/pengaturan/V_pembuatan_nim_transfer',
+            'judul'            => 'Pengaturan',
+            'judul_sub_judul'  => 'Mahasiswa Baru',
+            'sub_judul'        => 'NIM Transfer',
+            'title_h1'         => '<i class="fa fa-exchange"></i> <li>Pengaturan</li>',
+            'title_h2'         => '<li>Mahasiswa Baru</li>',
+            'title_h3'         => '<li>NIM Transfer</li>',
+            'prodi'            => $prodi,
+            'provinsi'         => $provinsi,
+            'angkatan_list'    => $angkatan_list,
+            'default_angkatan' => substr((string) $current_year, -2)
+        ];
+
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function generate_nim_ajax()
+    {
+        $prodi_kode = (int) $this->input->post('program_studi_kode');
+        $angkatan   = trim($this->input->post('angkatan') ?? '');
+
+        if (!$prodi_kode || empty($angkatan)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => false, 'message' => 'Prodi dan Angkatan wajib dipilih/diisi.']));
+        }
+
+        $angkatan_2digit = substr($angkatan, -2);
+
+        // Ambil pola middle 5 digit dari mahasiswa 11 digit yang sudah ada pada prodi ini
+        $sample = $this->db->select('nim')
+            ->where('program_studi_kode', $prodi_kode)
+            ->where('LENGTH(nim)', 11)
+            ->order_by('nim', 'DESC')
+            ->limit(1)
+            ->get('mahasiswa')
+            ->row();
+
+        if ($sample) {
+            $middle = substr($sample->nim, 2, 5);
+        } else {
+            $prodi = $this->db->get_where('program_studi', ['kode_program_studi' => $prodi_kode])->row();
+            if ($prodi) {
+                $jenjang_code = '1';
+                if ($prodi->id_jenjang == 2) {
+                    $jenjang_code = '0';
+                } elseif ($prodi->id_jenjang == 3) {
+                    $jenjang_code = '2';
+                }
+                $middle = sprintf('%02d%02d%s', (int) $prodi->kode_fakultas, (int) $prodi->kode_prodi_univ, $jenjang_code);
+            } else {
+                $middle = '00000';
+            }
+        }
+
+        $prefix = $angkatan_2digit . $middle;
+
+        // Cari NIM tertinggi pada prodi dan prefix ini
+        $latest = $this->db->select('nim')
+            ->where('program_studi_kode', $prodi_kode)
+            ->where("nim LIKE '{$prefix}%'")
+            ->where('LENGTH(nim)', 11)
+            ->order_by('nim', 'DESC')
+            ->limit(1)
+            ->get('mahasiswa')
+            ->row();
+
+        if ($latest) {
+            $seq = intval(substr($latest->nim, 7, 4)) + 1;
+        } else {
+            $seq = 1;
+        }
+
+        $new_nim = $prefix . sprintf('%04d', $seq);
+        while ($this->db->where('nim', $new_nim)->count_all_results('mahasiswa') > 0) {
+            $seq++;
+            $new_nim = $prefix . sprintf('%04d', $seq);
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'status'  => true,
+                'nim'     => $new_nim,
+                'prefix'  => $prefix,
+                'seq'     => sprintf('%04d', $seq),
+            ]));
+    }
+
+    public function cari_mahasiswa_transfer_ajax()
+    {
+        $nim = trim($this->input->post('nim') ?? '');
+
+        if (empty($nim)) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => false, 'message' => 'NIM mahasiswa asal harus diisi.']));
+        }
+
+        $mhs = $this->db->select('m.*, ps.nama_program_studi as nama_prodi_asal')
+            ->from('mahasiswa m')
+            ->join('program_studi ps', 'm.program_studi_kode = ps.kode_program_studi', 'left')
+            ->where('m.nim', $nim)
+            ->get()
+            ->row();
+
+        if (!$mhs) {
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => false, 'message' => 'Mahasiswa dengan NIM ' . $nim . ' tidak ditemukan di database Bumigora.']));
+        }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'status' => true,
+                'data'   => [
+                    'nim_asal'           => $mhs->nim,
+                    'nama_mahasiswa'     => $mhs->nama_mahasiswa,
+                    'nama_prodi_asal'    => $mhs->nama_prodi_asal ?? '-',
+                    'nik'                => $mhs->nik,
+                    'npm'                => $mhs->npm,
+                    'tempat_lahir'       => $mhs->tempat_lahir,
+                    'tanggal_lahir'      => $mhs->tanggal_lahir,
+                    'alamat_lengkap'     => $mhs->alamat,
+                    'kota'               => $mhs->kota,
+                    'propinsi'           => $mhs->propinsi,
+                    'telepon'            => $mhs->telepon,
+                    'jenis_kelamin'      => $mhs->jenis_kelamin,
+                    'agama'              => $mhs->agama,
+                    'golongan_darah'     => $mhs->golongan_darah,
+                    'kewarganegaraan'    => $mhs->kewarganegaraan,
+                    'nama_instansi'      => $mhs->nama_instansi,
+                    'nama_ayah'          => $mhs->nama_ayah,
+                    'agama_ayah'         => $mhs->agama_ayah,
+                    'pekerjaan_ayah'     => $mhs->pekerjaan_ayah,
+                    'nama_ibu'           => $mhs->nama_ibu,
+                    'agama_ibu'          => $mhs->agama_ibu,
+                    'pekerjaan_ibu'      => $mhs->pekerjaan_ibu,
+                    'alamat_orangtua'    => $mhs->alamat_orangtua,
+                    'kota_orangtua'      => $mhs->kota_orangtua,
+                    'propinsi_orangtua'  => $mhs->propinsi_orangtua,
+                    'telepon_orangtua'   => $mhs->telepon_orangtua,
+                ]
+            ]));
+    }
+
+    public function simpan_nim_baru()
+    {
+        $this->load->library('form_validation');
+        $this->load->service('MahasiswaService', 'mahasiswaservice');
+
+        $this->form_validation->set_rules('program_studi_kode', 'Program Studi', 'required');
+        $this->form_validation->set_rules('nim', 'NIM', 'required|numeric');
+        $this->form_validation->set_rules('nama_mahasiswa', 'Nama Mahasiswa', 'required');
+        $this->form_validation->set_rules('nik', 'NIK', 'required');
+        $this->form_validation->set_rules('status', 'Status Kuliah', 'required');
+
+        $is_transfer = ($this->input->post('is_transfer') == '1');
+        $redirect_url = $is_transfer ? 'admin/pengaturan/pembuatan_nim_transfer' : 'admin/pengaturan/pembuatan_nim_baru';
+
+        if ($this->form_validation->run() === false) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>' . validation_errors(' ', ' ') . '</h6></div>');
+            redirect($redirect_url);
+            return;
+        }
+
+        $post = $this->input->post();
+
+        if ($is_transfer) {
+            $post['status_pendaftaran'] = 'T';
+        } else {
+            // Murni baru: hanya boleh opsi selain T, atau valid enum B/L
+            if (!in_array($post['status_pendaftaran'] ?? '', ['B', 'L'])) {
+                $post['status_pendaftaran'] = 'B';
+            }
+        }
+
+        // Cek duplikasi NIM
+        if ($this->db->where('nim', $post['nim'])->count_all_results('mahasiswa') > 0) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>NIM ' . e($post['nim']) . ' sudah digunakan. Silakan generate NIM baru.</h6></div>');
+            redirect($redirect_url);
+            return;
+        }
+
+        // Default password jika kosong atau kurang dari 8 karakter
+        if (empty($post['password'])) {
+            $post['password'] = !empty($post['tanggal_lahir']) ? date('dmY', strtotime($post['tanggal_lahir'])) : '12345678';
+        }
+        if (strlen($post['password']) < 8) {
+            $post['password'] = str_pad($post['password'], 8, '0', STR_PAD_RIGHT);
+        }
+
+        // Set default value jika field opsional tidak diisi
+        $post['npm']                     = $post['npm'] ?? '';
+        $post['no_pendaftaran']          = !empty($post['no_pendaftaran']) ? $post['no_pendaftaran'] : 'REG' . substr($post['nim'], 0, 2) . substr($post['nim'], -4);
+        $post['no_pendaftaran_ulang']    = !empty($post['no_pendaftaran_ulang']) ? $post['no_pendaftaran_ulang'] : $post['no_pendaftaran'];
+        $post['tempat_lahir']            = $post['tempat_lahir'] ?? '';
+        $post['tanggal_lahir']           = !empty($post['tanggal_lahir']) ? $post['tanggal_lahir'] : date('Y-m-d');
+        $post['alamat_lengkap']          = $post['alamat_lengkap'] ?? '';
+        $post['kota']                    = $post['kota'] ?? '';
+        $post['propinsi']                = $post['propinsi'] ?? '';
+        $post['telepon']                 = $post['telepon'] ?? '';
+        $post['jenis_kelamin']           = $post['jenis_kelamin'] ?? 'L';
+        $post['agama']                   = $post['agama'] ?? 'Islam';
+        $post['golongan_darah']          = $post['golongan_darah'] ?? '-';
+        $post['kewarganegaraan']         = $post['kewarganegaraan'] ?? 'WNI';
+        $post['nama_instansi']           = $post['nama_instansi'] ?? '';
+        $post['nama_ayah']               = $post['nama_ayah'] ?? '';
+        $post['agama_ayah']              = $post['agama_ayah'] ?? 'Islam';
+        $post['pekerjaan_ayah']          = $post['pekerjaan_ayah'] ?? '-';
+        $post['nama_ibu']                = $post['nama_ibu'] ?? '';
+        $post['agama_ibu']               = $post['agama_ibu'] ?? 'Islam';
+        $post['pekerjaan_ibu']           = $post['pekerjaan_ibu'] ?? '-';
+        $post['alamat_orangtua']         = $post['alamat_orangtua'] ?? '';
+        $post['kota_orangtua']           = $post['kota_orangtua'] ?? '';
+        $post['propinsi_orangtua']       = $post['propinsi_orangtua'] ?? '';
+        $post['telepon_orangtua']        = $post['telepon_orangtua'] ?? '';
+
+        $res = $this->mahasiswaservice->simpanMahasiswa($post);
+
+        if ($res['status']) {
+            // Catat ke tabel riwayat_pembuatan_nim
+            $admin_username = $this->session->userdata('nama_login') ?? $this->session->userdata('username') ?? 'admin';
+            $this->db->insert('riwayat_pembuatan_nim', [
+                'nim'                => $post['nim'],
+                'nama_mahasiswa'     => $post['nama_mahasiswa'],
+                'program_studi_kode' => (int) $post['program_studi_kode'],
+                'tahun_angkatan'     => substr($post['nim'], 0, 2),
+                'jenis'              => $is_transfer ? 'transfer' : 'baru',
+                'nim_asal'           => $is_transfer ? ($post['nim_asal'] ?? null) : null,
+                'status_pendaftaran' => $post['status_pendaftaran'],
+                'created_by'         => $admin_username,
+                'created_at'         => date('Y-m-d H:i:s')
+            ]);
+
+            $msg = 'Berhasil membuat mahasiswa baru dengan NIM: <strong>' . e($post['nim']) . '</strong> - ' . e($post['nama_mahasiswa']);
+            if ($is_transfer) {
+                $msg .= ' (Status: Transfer Mahasiswa Bumigora)';
+            }
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>' . $msg . '</h6></div>');
+        } else {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>' . e($res['msg']) . '</h6></div>');
+        }
+
+        redirect($redirect_url);
+    }
+
+    public function riwayat_pembuatan_nim()
+    {
+        $this->load->service('MahasiswaService', 'mahasiswaservice');
+
+        $prodi_filter = (int) ($this->input->get('prodi') ?? 0);
+        $jenis_filter = trim($this->input->get('jenis') ?? '');
+
+        $builder = $this->db->select('r.*, ps.nama_program_studi')
+            ->from('riwayat_pembuatan_nim r')
+            ->join('program_studi ps', 'r.program_studi_kode = ps.kode_program_studi', 'left');
+
+        if ($prodi_filter > 0) {
+            $builder->where('r.program_studi_kode', $prodi_filter);
+        }
+        if (in_array($jenis_filter, ['baru', 'transfer'])) {
+            $builder->where('r.jenis', $jenis_filter);
+        }
+
+        $riwayat = $builder->order_by('r.id', 'DESC')->get()->result();
+
+        $data = [
+            'content'         => 'admin/pengaturan/V_riwayat_pembuatan_nim',
+            'judul'           => 'Pengaturan',
+            'judul_sub_judul' => 'Mahasiswa Baru',
+            'sub_judul'       => 'Riwayat',
+            'title_h1'        => '<i class="fa fa-history"></i> <li>Pengaturan</li>',
+            'title_h2'        => '<li>Mahasiswa Baru</li>',
+            'title_h3'        => '<li>Riwayat</li>',
+            'riwayat'         => $riwayat,
+            'prodi'           => $this->mahasiswaservice->getProgramStudiLengkap(),
+            'filter_prodi'    => $prodi_filter,
+            'filter_jenis'    => $jenis_filter
+        ];
+
+        $this->load->view('admin/template/V_main', $data);
+    }
 }

@@ -344,6 +344,16 @@ function has_access($acc, $controllers, $role = 0) {
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/krs_kpat'); ?>"><i class="fa fa-circle-o"></i> KRS KPAT</a></li>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi</a></li>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/status_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Status Mahasiswa</a></li>
+                    <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Mahasiswa Baru') ? 'active' : ''; ?>">
+                        <a href="#"><i class="fa fa-circle-o"></i> Mahasiswa Baru
+                            <i class="fa fa-angle-down pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'NIM Baru') ? 'active' : '' ?>"><a href="<?= site_url('admin/pengaturan/pembuatan_nim_baru'); ?>"><i class="fa fa-circle-o"></i> NIM Baru</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'NIM Transfer') ? 'active' : '' ?>"><a href="<?= site_url('admin/pengaturan/pembuatan_nim_transfer'); ?>"><i class="fa fa-circle-o"></i> NIM Transfer</a></li>
+                            <li class="<?= (isset($sub_judul) && $sub_judul == 'Riwayat') ? 'active' : '' ?>"><a href="<?= site_url('admin/pengaturan/riwayat_pembuatan_nim'); ?>"><i class="fa fa-circle-o"></i> Riwayat</a></li>
+                        </ul>
+                    </li>
                     <li><a href="<?= site_url('admin/pengaturan/pengaturan/hapus_krs'); ?>"><i class="fa fa-circle-o"></i> Penghapusan KRS</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Api_tokens')): ?>

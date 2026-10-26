@@ -115,6 +115,18 @@ $route['admin/pengaturan/backup_database'] = 'admin/pengaturan/Backup_database/i
 $route['admin/pengaturan/backup_database/export'] = 'admin/pengaturan/Backup_database/export';
 $route['admin/pengaturan/backup_database/import'] = 'admin/pengaturan/Backup_database/import';
 
+// Pembuatan NIM Baru & Transfer
+$route['admin/pengaturan/pembuatan_nim_baru'] = 'admin/pengaturan/Pengaturan/pembuatan_nim_baru';
+$route['admin/pengaturan/pembuatan_nim_baru/generate_nim'] = 'admin/pengaturan/Pengaturan/generate_nim_ajax';
+$route['admin/pengaturan/pembuatan_nim_baru/simpan'] = 'admin/pengaturan/Pengaturan/simpan_nim_baru';
+
+$route['admin/pengaturan/pembuatan_nim_transfer'] = 'admin/pengaturan/Pengaturan/pembuatan_nim_transfer';
+$route['admin/pengaturan/pembuatan_nim_transfer/generate_nim'] = 'admin/pengaturan/Pengaturan/generate_nim_ajax';
+$route['admin/pengaturan/pembuatan_nim_transfer/cari_transfer'] = 'admin/pengaturan/Pengaturan/cari_mahasiswa_transfer_ajax';
+$route['admin/pengaturan/pembuatan_nim_transfer/simpan'] = 'admin/pengaturan/Pengaturan/simpan_nim_baru';
+
+$route['admin/pengaturan/riwayat_pembuatan_nim'] = 'admin/pengaturan/Pengaturan/riwayat_pembuatan_nim';
+
 // Audit Nilai
 $route['admin/audit'] = 'admin/Audit/index';
 $route['admin/audit/nilai_dosen_khs'] = 'admin/Audit/nilai_dosen_khs';

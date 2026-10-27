@@ -137,7 +137,7 @@
                 <tr>
                     <td><strong>IP Semester ini</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= number_format($ipk,2)  ?></td>
+                    <td><?= format_ipk($ipk)  ?></td>
                 </tr>
                 <tr>
                     <td><strong>Maksimum SKS Semester Depan</strong></td>

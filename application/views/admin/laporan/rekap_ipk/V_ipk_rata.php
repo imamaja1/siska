@@ -37,8 +37,8 @@
                         <td align="center"><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
                         <td ><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                         <td align="center"><?= !empty($row->jenis_kelamin) ? e($row->jenis_kelamin) : '-' ?></td>
-                        <td align="center"><?= $row->ip ?></td>
-                        <td align="center"><?= $row->ipk ?></td>
+                        <td align="center"><?= format_ipk($row->ip) ?></td>
+                        <td align="center"><?= format_ipk($row->ipk) ?></td>
                         <td align="center"><?= $row->total_sks ?></td>
                         <td align="center"><?= $row->skripsi == 0 ? '' : 'SKRIPSI' ?></td>
                         <td align="center"><?= $row->kkp == 0 ? '' : 'KKP' ?></td>

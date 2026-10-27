@@ -96,7 +96,7 @@
                 <tr>
                     <td><strong>IP Semester ini</strong></td>
                     <td><strong>:</strong></td>
-                    <td><?= e(sprintf("%.2f",$sksn / $sks)) ?></td>
+                    <td><?= e($sks > 0 ? format_ipk($sksn / $sks) : '0.00') ?></td>
                 </tr>
                 <?php if (substr($data['nim'],4,1) !=3) :?>
                 <tr>

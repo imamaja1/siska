@@ -152,7 +152,7 @@
     <tr>
         <td colspan="3"><strong>IP Semester ini</strong></td>
         <td><strong>=</strong></td>
-        <td><strong><?= sprintf("%.2f",$sksn / $sks) ?></td>
+        <td><strong><?= $sks > 0 ? format_ipk($sksn / $sks) : '0.00' ?></td>
         <td colspan="2">&nbsp;</td>
     </tr>
     <?php if (substr($data['nim'],4,1) !=3) : ?>

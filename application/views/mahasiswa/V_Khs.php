@@ -124,7 +124,7 @@
             <div class="col-md-6 col-sm-12">
                 <div class="mhs-summary">
                     <div class="mhs-summary-row"><span>Jumlah SKS yang ditempuh</span><strong><?= $sks ?></strong></div>
-                    <div class="mhs-summary-row"><span>IP Semester ini</span><strong><?= number_format($ipk, 2) ?></strong></div>
+                    <div class="mhs-summary-row"><span>IP Semester ini</span><strong><?= format_ipk($ipk) ?></strong></div>
                     <?php if (substr($data['nim'], 4, 1) != 3) : ?>
                         <div class="mhs-summary-row"><span>Maksimum SKS Semester Depan</span><strong><?= $jumlah_maksimum_sks ?></strong></div>
                     <?php endif; ?>

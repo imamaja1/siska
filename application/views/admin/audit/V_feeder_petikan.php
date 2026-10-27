@@ -164,7 +164,7 @@
                             </tr>
                             <tr>
                                 <th class="text-right">IPK</th>
-                                <td class="text-center"><strong><?= number_format(round((float) ($petikan_ipk ?? $ipk), 2, PHP_ROUND_HALF_EVEN), 2) ?></strong></td>
+                                <td class="text-center"><strong><?= format_ipk($petikan_ipk ?? $ipk) ?></strong></td>
 
                             </tr>
                         </table>

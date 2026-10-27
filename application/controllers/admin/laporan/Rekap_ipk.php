@@ -214,7 +214,7 @@ class Rekap_ipk extends CI_Controller
       
       
         $row_total = $numrow + 1;
-        $rata_ipk = $jumlah_data > 0 ? number_format($total_ipk / $jumlah_data, 2) : '0';
+        $rata_ipk = $jumlah_data > 0 ? format_ipk($total_ipk / $jumlah_data) : '0';
         $excel->setActiveSheetIndex(0)->setCellValue('A' . $row_total, 'Rata - Rata IPK');
         $excel->getActiveSheet()->mergeCells('A' . $row_total . ':E' . $row_total);
         $excel->setActiveSheetIndex(0)->setCellValue('F' . $row_total, $rata_ipk);
@@ -346,7 +346,7 @@ class Rekap_ipk extends CI_Controller
         endforeach;
         $table .= '<tr>';
         $table .= '<td colspan="5" style="text-align: center"><b>IPK Rata-rata</b></td>';
-        $table .= '<td style="text-align: center; font-weight: bold">'.($jumah_data > 0 ? number_format($total_ipk/$jumah_data,2) : '0').'</td>';
+        $table .= '<td style="text-align: center; font-weight: bold">'.($jumah_data > 0 ? format_ipk($total_ipk/$jumah_data) : '0').'</td>';
         $table .= '<td colspan="4">-</td>';
         $table .= '</tr>';
         $table .= '</table>';
@@ -401,7 +401,7 @@ class Rekap_ipk extends CI_Controller
         endforeach;
         $table .= '<tr>';
         $table .= '<td colspan="5" style="text-align: center"><b>IPK Rata-rata</b></td>';
-        $table .= '<td style="text-align: center; font-weight: bold">'.($jumah_data > 0 ? number_format($total_ipk/$jumah_data,2) : '0').'</td>';
+        $table .= '<td style="text-align: center; font-weight: bold">'.($jumah_data > 0 ? format_ipk($total_ipk/$jumah_data) : '0').'</td>';
         $table .= '<td colspan="1">-</td>';
         $table .= '</tr>';
         $table .= '</table>';

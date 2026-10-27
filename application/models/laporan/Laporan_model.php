@@ -582,7 +582,7 @@ class Laporan_model extends CI_Model
                     $data['ip'] = 0;
                     $data['sks'] = $sks;
                 } else {
-                    $data['ip'] = number_format($sksn / $sks, 2);
+                    $data['ip'] = format_ipk($sksn / $sks);
                     $data['sks'] = $sks;
                 }
 
@@ -638,7 +638,7 @@ class Laporan_model extends CI_Model
                         $data['ip'] = 0;
                         $data['sks'] = $sks;
                     } else {
-                        $data['ip'] = number_format($sksn / $sks, 2);
+                        $data['ip'] = format_ipk($sksn / $sks);
                         $data['sks'] = $sks;
                     }
                 } else {
@@ -686,7 +686,7 @@ class Laporan_model extends CI_Model
                 $data['ip'] = 0;
                 $data['sks'] = $sks;
             } else {
-                $data['ip'] = number_format($sksn / $sks, 2);
+                $data['ip'] = format_ipk($sksn / $sks);
                 $data['sks'] = $sks;
             }
 
@@ -721,7 +721,7 @@ class Laporan_model extends CI_Model
     {
         $mk_skripsi = get_kode_matakuliah_skripsi();
         $mk_kkp = get_kode_matakuliah_kkp();
-        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin')->from('krs')
+        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin,mah.status_pendaftaran')->from('krs')
                         ->join('mahasiswa as mah','krs.nim=mah.nim')
                         ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                         ->where('mid(mah.nim,1,2)', $tahun_angkatan)
@@ -763,11 +763,11 @@ class Laporan_model extends CI_Model
                 }
             }        
             $semester = $this->semester_saat_ini($value->nim, $kode_tahun_akademik);
-            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran);
+            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran ?? 'B');
             $data_new[$key]->praktikum = $praktikum;
             $data_new[$key]->skripsi = $skripsi;
             $data_new[$key]->kkp =  $kkp;
-            $data_new[$key]->ipk = round($bobot/$total_sks, 2);;
+            $data_new[$key]->ipk = $total_sks > 0 ? round($bobot / $total_sks, 2, PHP_ROUND_HALF_EVEN) : 0;
             $data_new[$key]->total_sks = $total_sks;
             $data_new[$key]->ip = $ip['ip'];
         }     
@@ -777,7 +777,7 @@ class Laporan_model extends CI_Model
     {
         $mk_skripsi = get_kode_matakuliah_skripsi();
         $mk_kkp = get_kode_matakuliah_kkp();
-        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin')->from('krs')
+        $data_new = $this->db->select('mah.nama_mahasiswa,mah.nim,mah.jenis_kelamin,mah.status_pendaftaran')->from('krs')
                         ->join('mahasiswa as mah','krs.nim=mah.nim')
                         ->where('krs.kode_tahun_akademik', $kode_tahun_akademik)
                         ->where('mid(mah.nim,1,2)', $tahun_angkatan)
@@ -817,11 +817,11 @@ class Laporan_model extends CI_Model
                 }
             }        
             $semester = $this->semester_saat_ini($value->nim, $kode_tahun_akademik);
-            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran);
+            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran ?? 'B');
             $data_new[$key]->praktikum = $praktikum;
             $data_new[$key]->skripsi = $skripsi;
             $data_new[$key]->kkp =  $kkp;
-            $data_new[$key]->ipk = round($bobot/$total_sks, 2);
+            $data_new[$key]->ipk = $total_sks > 0 ? round($bobot / $total_sks, 2, PHP_ROUND_HALF_EVEN) : 0;
             $data_new[$key]->total_sks = $total_sks;
             $data_new[$key]->ip = $ip['ip'];
         }     
@@ -874,11 +874,11 @@ class Laporan_model extends CI_Model
                 }
             }        
             $semester = $this->semester_saat_ini($value->nim, $kode_tahun_akademik);
-            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran);
+            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran ?? 'B');
             $data_new[$key]->praktikum = $praktikum;
             $data_new[$key]->skripsi = $skripsi;
             $data_new[$key]->kkp =  $kkp;
-            $data_new[$key]->ipk = round($bobot/$total_sks, 2);;
+            $data_new[$key]->ipk = $total_sks > 0 ? round($bobot / $total_sks, 2, PHP_ROUND_HALF_EVEN) : 0;
             $data_new[$key]->total_sks = $total_sks;
             $data_new[$key]->ip = $ip['ip'];
             $data_new[$key]->sks = $ip['sks'];
@@ -932,11 +932,11 @@ class Laporan_model extends CI_Model
                 }
             }        
             $semester = $this->semester_saat_ini($value->nim, $kode_tahun_akademik);
-            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran);
+            $ip = $this->ip($value->nim, $semester, $value->status_pendaftaran ?? 'B');
             $data_new[$key]->praktikum = $praktikum;
             $data_new[$key]->skripsi = $skripsi;
             $data_new[$key]->kkp =  $kkp;
-            $data_new[$key]->ipk = round($bobot/$total_sks, 2);;
+            $data_new[$key]->ipk = $total_sks > 0 ? round($bobot / $total_sks, 2, PHP_ROUND_HALF_EVEN) : 0;
             $data_new[$key]->total_sks = $total_sks;
             $data_new[$key]->ip = $ip['ip'];
             $data_new[$key]->sks = $ip['sks'];

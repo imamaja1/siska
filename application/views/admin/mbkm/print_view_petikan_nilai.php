@@ -240,7 +240,7 @@
                     <td width="30%" style="border-bottom:1px solid black;" align="center"><?php echo e($sksn); ?></td>
                     <td width="5%" rowspan="2" valign="middle" align="center">=</td>
                     <!-- <td width="15%" rowspan="2" valign="middle" align="center"><?php echo number_format($ipk, 2, '.', ''); ?></td> -->
-                    <td width="15%" rowspan="2" valign="middle" align="center"><?= sprintf("%.2f", $ipk); ?>
+                    <td width="15%" rowspan="2" valign="middle" align="center"><?= format_ipk($ipk); ?>
                 </tr>
                 <tr>
                     <td align="center">&#931; SKS</td>

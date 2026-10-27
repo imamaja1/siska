@@ -35,8 +35,8 @@
                         <td align="center"><?= !empty($row->nim) ? e($row->nim) : '-' ?></td>
                         <td ><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                         <td align="center"><?= $row->sks ?></td>
-                        <td align="center"><?= $row->ip ?></td>
-                        <td align="center"><?= $row->ipk ?></td>
+                        <td align="center"><?= format_ipk($row->ip) ?></td>
+                        <td align="center"><?= format_ipk($row->ipk) ?></td>
                         <td align="center"><?= $row->total_sks ?></td>
                     </tr>
                 <?php endforeach; ?>

@@ -38,17 +38,16 @@ if (!function_exists('trunc')) {
 
 if (!function_exists('format_ipk')) {
     /**
-     * Format IPK / IPS dengan memotong 2 digit desimal (truncation) tanpa pembulatan ke atas.
-     * Contoh: 0.777 -> "0.77", 3.859 -> "3.85", 3.8 -> "3.80".
+     * Format IPK / IPS menggunakan Banker's rounding (round half to even).
+     * Jika digit ke-3 adalah 6 ke atas -> naik satu.
+     * Jika digit ke-3 adalah 4 ke bawah -> turun.
+     * Jika digit ke-3 adalah tepat 5 -> dibulatkan ke angka genap terdekat.
      */
     function format_ipk($angka) {
         if (!is_numeric($angka) || (float)$angka == 0.0) {
             return '0.00';
         }
-        $str = sprintf('%.8f', (float)$angka);
-        $parts = explode('.', $str);
-        $dec = isset($parts[1]) ? substr(str_pad($parts[1], 2, '0'), 0, 2) : '00';
-        return $parts[0] . '.' . $dec;
+        return number_format(round((float)$angka, 2, PHP_ROUND_HALF_EVEN), 2, '.', '');
     }
 }
 

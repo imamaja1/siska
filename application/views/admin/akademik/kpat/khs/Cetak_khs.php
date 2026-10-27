@@ -134,7 +134,7 @@
         <td><strong>
                 <?php
                 $ipk = $sks ? $sksn / $sks : 0;
-                $ipk = number_format($ipk,2);
+                $ipk = format_ipk($ipk);
                 echo e($ipk);
                 ?></strong>
         </td>

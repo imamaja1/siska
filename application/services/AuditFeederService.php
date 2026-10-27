@@ -523,7 +523,7 @@ class AuditFeederService extends MY_Service {
         ksort($grouped);
 
         foreach ($grouped as $key => $g) {
-            $grouped[$key]['ips'] = $g['total_sks'] > 0 ? $g['total_sksn'] / $g['total_sks'] : 0;
+            $grouped[$key]['ips'] = $g['total_sks'] > 0 ? round($g['total_sksn'] / $g['total_sks'], 2, PHP_ROUND_HALF_EVEN) : 0;
         }
 
         // Konsolidasi: satu baris per kode matakuliah, ambil nilai terbaik (indeks tertinggi, lalu angka tertinggi)
@@ -746,7 +746,7 @@ class AuditFeederService extends MY_Service {
                 'items'         => $konversi_items,
                 'total_sks'     => $k_sks,
                 'total_sksn'    => $k_sksn,
-                'ips'           => $k_sks > 0 ? $k_sksn / $k_sks : 0,
+                'ips'           => $k_sks > 0 ? round($k_sksn / $k_sks, 2, PHP_ROUND_HALF_EVEN) : 0,
             ]);
         }
 
@@ -898,7 +898,7 @@ class AuditFeederService extends MY_Service {
                     $status = 'Feeder belum ada nilai';
                     $summary_banding['feeder_kosong']++;
                 } elseif ($f_angka !== NULL && $s_angka !== NULL) {
-                    if (abs(round($f_angka, 2) - round($s_angka, 2)) <= 0.001) {
+                    if (abs(round($f_angka, 2, PHP_ROUND_HALF_EVEN) - round($s_angka, 2, PHP_ROUND_HALF_EVEN)) <= 0.001) {
                         $status = 'Sesuai';
                         $summary_banding['sesuai']++;
                     } else {
@@ -986,11 +986,11 @@ class AuditFeederService extends MY_Service {
             'konsolidasi'      => $konsolidasi,
             'total_sks'        => $grand_sks,
             'total_sksn'       => $grand_sksn,
-            'ipk'              => $grand_sks > 0 ? $grand_sksn / $grand_sks : 0,
+            'ipk'              => $grand_sks > 0 ? round($grand_sksn / $grand_sks, 2, PHP_ROUND_HALF_EVEN) : 0,
             'petikan'          => $petikan,
             'petikan_total_sks'  => $p_sks,
             'petikan_total_sksn' => $p_sksn,
-            'petikan_ipk'        => $p_sks > 0 ? trunc($p_sksn / $p_sks, 2) : 0,
+            'petikan_ipk'        => $p_sks > 0 ? round($p_sksn / $p_sks, 2, PHP_ROUND_HALF_EVEN) : 0,
             'transkrip_error'  => $transkrip_error,
             'raw_rows'         => $raw_rows,
             'transkrip_raw'    => $transkrip_raw,
@@ -1045,7 +1045,7 @@ class AuditFeederService extends MY_Service {
             } elseif ($f === NULL) {
                 $status = 'Tidak ada di Feeder';
                 $summary['tidak_ada']++;
-            } elseif (abs(round((float) $nilai_siska, 2) - round((float) $angka, 2)) > 0.001) {
+            } elseif (abs(round((float) $nilai_siska, 2, PHP_ROUND_HALF_EVEN) - round((float) $angka, 2, PHP_ROUND_HALF_EVEN)) > 0.001) {
                 $status = 'Berbeda';
                 $summary['berbeda']++;
             } else {
@@ -1121,7 +1121,7 @@ class AuditFeederService extends MY_Service {
         if (!is_numeric($v)) {
             return 'NaN';
         }
-        return number_format(round((float) $v, 2), 2, '.', '');
+        return number_format(round((float) $v, 2, PHP_ROUND_HALF_EVEN), 2, '.', '');
     }
 
     private function nilaiHurufSiska($nim, $semester, $nilai_akhir)

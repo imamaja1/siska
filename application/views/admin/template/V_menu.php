@@ -141,7 +141,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Akademik -->
-            <?php if (has_access($acc, ['Mahasiswa', 'Krs', 'Nilai', 'Khs', 'Kkp', 'Petikan_nilai', 'Konversi', 'Kompetensi', 'Pembayaran_mahasiswa', 'Status_perkuliahan', 'Semester_ini', 'Semester_lalu', 'Nilai_kelas', 'Krs_mahasiswa', 'Log_nilai', 'Kelas'])): ?>
+            <?php if (has_access($acc, ['Mahasiswa', 'Krs', 'Nilai', 'Khs', 'Nama_jurusan', 'Kkp', 'Petikan_nilai', 'Konversi', 'Kompetensi', 'Pembayaran_mahasiswa', 'Status_perkuliahan', 'Semester_ini', 'Semester_lalu', 'Nilai_kelas', 'Krs_mahasiswa', 'Log_nilai', 'Kelas'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Akademik') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-sticky-note"></i>
@@ -149,14 +149,25 @@ function has_access($acc, $controllers, $role = 0) {
                     <i class="fa fa-angle-down pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
+                    <?php if (has_access($acc, 'Mahasiswa')): ?>
                     <li><a href="<?= site_url('admin/akademik/mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Krs')): ?>
                     <li><a href="<?= site_url('admin/akademik/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Nilai')): ?>
                     <li><a href="<?= site_url('admin/akademik/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Khs')): ?>
                     <li><a href="<?= site_url('admin/akademik/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
+                    <?php endif; ?>
                     <?php if (has_access($acc, 'Nama_jurusan')): ?>
                     <li><a href="<?= site_url('admin/akademik/kop_prodi'); ?>"><i class="fa fa-circle-o"></i> Kop Prodi</a></li>
                     <?php endif; ?>
+                    <?php if (has_access($acc, 'Kkp')): ?>
                     <li><a href="<?= site_url('admin/akademik/kkp'); ?>"><i class="fa fa-circle-o"></i> KKP</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Petikan_nilai')): ?>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Petikan Nilai') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> Petikan Nilai
                             <i class="fa fa-angle-down pull-right"></i>
@@ -166,33 +177,64 @@ function has_access($acc, $controllers, $role = 0) {
                             <li><a href="<?= site_url('admin/akademik/petikan_nilai/prodi'); ?>"><i class="fa fa-circle-o"></i> Prodi</a></li>
                         </ul>
                     </li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Konversi')): ?>
                     <li><a href="<?= site_url('admin/akademik/konversi'); ?>"><i class="fa fa-circle-o"></i> Konversi Matakuliah</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Kompetensi')): ?>
                     <li><a href="<?= site_url('admin/akademik/kompetensi'); ?>"><i class="fa fa-circle-o"></i> Kompetensi Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Pembayaran_mahasiswa')): ?>
                     <li><a href="<?= site_url('admin/akademik/pembayaran_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> Pembayaran Mahasiswa</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Status_perkuliahan')): ?>
                     <li><a href="<?= site_url('admin/akademik/status_perkuliahan'); ?>"><i class="fa fa-circle-o"></i> Status Perkuliahan</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Semester_ini', 'Semester_lalu', 'Nilai_kelas', 'Krs_mahasiswa', 'Log_nilai'])): ?>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'Perubahan') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> Perubahan
                             <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
+                            <?php if (has_access($acc, 'Semester_ini')): ?>
                             <li><a href="<?= site_url('admin/akademik/perubahan/semester_ini'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Ini</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Semester_lalu')): ?>
                             <li><a href="<?= site_url('admin/akademik/perubahan/semester_lalu'); ?>"><i class="fa fa-circle-o"></i> KRS &amp; Nilai Semester Lalu</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Nilai_kelas')): ?>
                             <li><a href="<?= site_url('admin/akademik/perubahan/nilai_kelas'); ?>"><i class="fa fa-circle-o"></i> Nilai Per Kelas</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Krs_mahasiswa')): ?>
                             <li><a href="<?= site_url('admin/akademik/perubahan/krs_mahasiswa'); ?>"><i class="fa fa-circle-o"></i> KRS Mahasiswa</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Log_nilai')): ?>
                             <li><a href="<?= site_url('admin/akademik/perubahan/log_nilai'); ?>"><i class="fa fa-circle-o"></i> Log Aktivitas Nilai</a></li>
+                            <?php endif; ?>
                         </ul>
                     </li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Kelas', 'Krs', 'Nilai', 'Khs'])): ?>
                     <li class="<?= (isset($judul_sub_judul) && $judul_sub_judul == 'KPAT') ? 'active' : ''; ?>">
                         <a href="#"><i class="fa fa-circle-o"></i> KPAT
                             <i class="fa fa-angle-down pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
+                            <?php if (has_access($acc, 'Kelas')): ?>
                             <li><a href="<?= site_url('admin/akademik/kpat/kelas'); ?>"><i class="fa fa-circle-o"></i> Kelas</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Krs')): ?>
                             <li><a href="<?= site_url('admin/akademik/kpat/krs'); ?>"><i class="fa fa-circle-o"></i> KRS</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Nilai')): ?>
                             <li><a href="<?= site_url('admin/akademik/kpat/nilai'); ?>"><i class="fa fa-circle-o"></i> Nilai</a></li>
+                            <?php endif; ?>
+                            <?php if (has_access($acc, 'Khs')): ?>
                             <li><a href="<?= site_url('admin/akademik/kpat/khs'); ?>"><i class="fa fa-circle-o"></i> KHS</a></li>
+                            <?php endif; ?>
                         </ul>
                     </li>
+                    <?php endif; ?>
                 </ul>
             </li>
             <?php endif; ?>
@@ -331,7 +373,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Pengaturan -->
-            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens', 'Backup_database', 'Feeder'])): ?>
+            <?php if (has_access($acc, ['Pengaturan', 'Api_tokens', 'Distribusi_perwalian', 'Backup_database', 'Feeder'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Pengaturan') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-cog"></i>
@@ -358,6 +400,8 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Api_tokens')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/api_tokens'); ?>"><i class="fa fa-circle-o"></i> API Integrasi</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, 'Distribusi_perwalian')): ?>
                     <li><a href="<?= site_url('admin/pengaturan/distribusi_perwalian'); ?>"><i class="fa fa-circle-o"></i> Distribusi Perwalian</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Backup_database')): ?>

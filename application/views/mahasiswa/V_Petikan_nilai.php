@@ -68,11 +68,11 @@
                                     <td style="font-size: 11px;">
                                         <?php if (isset($row['attempts']) && count($row['attempts']) > 0): ?>
                                             <?php foreach ($row['attempts'] as $att): ?>
-                                                Smt <?= $att['semester'] ?>: <?= number_format($att['nilai_akhir'], 2) ?> (<?= $att['grade'] ?>)<br>
+                                                Smt <?= $att['semester'] ?>: <?= e(format_dua_desimal_ganjil($att['nilai_akhir'])) ?> (<?= $att['grade'] ?>)<br>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <?php if (isset($row['nilai_akhir'])): ?>
-                                                Smt <?= $row['semester'] ?? '-' ?>: <?= number_format($row['nilai_akhir'], 2) ?> (<?= $row['grade'] ?? '-' ?>)
+                                                Smt <?= $row['semester'] ?? '-' ?>: <?= e(format_dua_desimal_ganjil($row['nilai_akhir'])) ?> (<?= $row['grade'] ?? '-' ?>)
                                             <?php else: ?>
                                                 -
                                             <?php endif; ?>

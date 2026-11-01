@@ -36,18 +36,66 @@ if (!function_exists('trunc')) {
     }
 }
 
+if (!function_exists('format_dua_desimal_ganjil')) {
+    /**
+     * Pembulatan 2 desimal dengan aturan half-to-odd.
+     * - Digit ke-3 6 ke atas  -> selalu naik (3.846 -> 3.85, 3.856 -> 3.86).
+     * - Digit ke-3 4 ke bawah -> selalu turun (3.854 -> 3.85).
+     * - Digit ke-3 tepat 5    -> dibulatkan ke digit ke-2 ganjil terdekat
+     *   (3.855 -> 3.85, 3.845 -> 3.85).
+     *
+     * Diproses sebagai string desimal agar kasus "tepat 5" tidak meleset
+     * akibat representasi float (mis. 3.855 * 100 = 385.4999...).
+     */
+    function format_dua_desimal_ganjil($angka) {
+        if (!is_numeric($angka)) {
+            return '0.00';
+        }
+
+        $angka = (float) $angka;
+        if ($angka == 0.0) {
+            return '0.00';
+        }
+
+        $negatif = $angka < 0;
+        $str = sprintf('%.10f', abs($angka));
+        list($bulat, $desimal) = explode('.', $str);
+
+        $dua_digit = (int) substr($desimal, 0, 2);
+        $digit_ketiga = (int) $desimal[2];
+        $sisa = substr($desimal, 3);
+
+        $tepat_lima = ($digit_ketiga === 5) && (trim($sisa, '0') === '');
+
+        if ($tepat_lima) {
+            if ($dua_digit % 2 === 0) {
+                $dua_digit++;
+            }
+        } elseif ($digit_ketiga >= 5) {
+            $dua_digit++;
+        }
+
+        if ($dua_digit >= 100) {
+            $bulat = (string) ((int) $bulat + 1);
+            $dua_digit = 0;
+        }
+
+        $hasil = $bulat . '.' . str_pad((string) $dua_digit, 2, '0', STR_PAD_LEFT);
+
+        return ($negatif ? '-' : '') . $hasil;
+    }
+}
+
 if (!function_exists('format_ipk')) {
     /**
-     * Format IPK / IPS menggunakan Banker's rounding (round half to even).
-     * Jika digit ke-3 adalah 6 ke atas -> naik satu.
-     * Jika digit ke-3 adalah 4 ke bawah -> turun.
-     * Jika digit ke-3 adalah tepat 5 -> dibulatkan ke angka genap terdekat.
+     * Format IPK / IPS memakai aturan pembulatan half-to-odd
+     * (lihat format_dua_desimal_ganjil).
      */
     function format_ipk($angka) {
         if (!is_numeric($angka) || (float)$angka == 0.0) {
             return '0.00';
         }
-        return number_format(round((float)$angka, 2, PHP_ROUND_HALF_EVEN), 2, '.', '');
+        return format_dua_desimal_ganjil($angka);
     }
 }
 

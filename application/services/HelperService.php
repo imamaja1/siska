@@ -36,6 +36,25 @@ class HelperService extends MY_Service
         return false;
     }
 
+    public function isSemesterMasukGenap($nim)
+    {
+        static $genap = null;
+        if ($genap === null) {
+            $genap = array();
+            if ($this->db->table_exists('mahasiswa_semester_masuk')) {
+                $rows = $this->db->select('nim')
+                    ->where('semester_masuk', 'GENAP')
+                    ->get('mahasiswa_semester_masuk')
+                    ->result();
+                foreach ($rows as $row) {
+                    $genap[trim($row->nim)] = true;
+                }
+            }
+        }
+
+        return isset($genap[trim((string) $nim)]);
+    }
+
     public function kodeNamaKurikulum($nim)
     {
         $ex = substr($nim, 6, 1);

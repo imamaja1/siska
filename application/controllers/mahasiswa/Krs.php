@@ -393,10 +393,8 @@ class Krs extends CI_Controller
             } else {
                 $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
             }
-            if (substr($nim, 2, 4) == "0108") {
-                if(substr($nim, 0, 2) == "24" && substr($nim, 10, 2) > 7  ){
-                    $semester = ($semester - 1);
-                }
+            if (semester_masuk_genap($nim)) {
+                $semester = $semester - 1;
             }
             $cek_krs_exis = $this->mahasiswaservice->getCekKrsExis($this->session->userdata('nim'), $kode_tahun_akademik);
             if (empty($cek_krs_exis)) {
@@ -1044,21 +1042,8 @@ class Krs extends CI_Controller
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
         }
-		if (substr($nim, 2, 4) == "0108") {
-            if(substr($nim, 0, 2) == "24" && substr($nim, 9, 2) > 7  ){
-                return ($semester - 1);
-            }
-          	if(substr($nim, 0, 2) == "25" && substr($nim, 9, 2) > 9  ){
-                return ($semester - 1);
-            }
-        }
-      	if (substr($nim, 2, 4) == "0402") {
-            if(substr($nim, 0, 2) == "24" && substr($nim, 9, 2) > 3  ){
-                return ($semester - 1);
-            }
-          	if(substr($nim, 0, 2) == "25" && substr($nim, 9, 2) > 5  ){
-                return ($semester - 1);
-            }
+        if (semester_masuk_genap($nim)) {
+            return ($semester - 1);
         }
         return $semester;
     }
@@ -1201,6 +1186,9 @@ class Krs extends CI_Controller
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 2;
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
+        }
+        if (semester_masuk_genap($nim)) {
+            $semester = $semester - 1;
         }
         if ($total_sks_server > $beban_sekarang) {
             $this->session->set_flashdata(

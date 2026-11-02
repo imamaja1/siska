@@ -139,15 +139,8 @@ class Khs extends CI_Controller
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
         }
-		if (substr($nim, 2, 4) == "0108") {
-            if(substr($nim, 0, 2) == "24" && substr($nim, 9, 2) > 7  ){
-                return $semester-1;
-            }
-        }
-      	if (substr($nim, 2, 4) == "0402") {
-            if(substr($nim, 0, 2) == "24" && substr($nim, 9, 2) > 3  ){
-                return ($semester - 1);
-            }
+		if (semester_masuk_genap($nim)) {
+            return $semester - 1;
         }
         return $semester;
     }

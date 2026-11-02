@@ -154,6 +154,10 @@ function available_kompetensi($nim) { return _helper_service()->availableKompete
 
 function available_extensi($nim) { return _helper_service()->availableExtensi($nim); }
 
+if (!function_exists('semester_masuk_genap')) {
+    function semester_masuk_genap($nim) { return _helper_service()->isSemesterMasukGenap($nim); }
+}
+
 function get_kode_nama_kurikulum_by_prodi_angkatan($kode_program_studi, $angkatan) { return _helper_service()->getKodeNamaKurikulumByProdiAngkatan($kode_program_studi, $angkatan); }
 
 function get_makul_kkp_by_kode_nama_kurikulum($kode_nama_kurikulum) { return _helper_service()->getMakulKkpByKodeNamaKurikulum($kode_nama_kurikulum); }

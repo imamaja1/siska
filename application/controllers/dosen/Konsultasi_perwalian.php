@@ -235,6 +235,9 @@ class Konsultasi_perwalian extends CI_Controller {
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
         }
+        if (semester_masuk_genap($nim)) {
+            $semester = $semester - 1;
+        }
 
         return $semester;
     }

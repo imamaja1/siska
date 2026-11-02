@@ -664,6 +664,9 @@ class MahasiswaService extends MY_Service {
         } else {
             $semester = ($tahun_akademik - $angkatan_nim) * 2 + 1;
         }
+        if (semester_masuk_genap($nim)) {
+            $semester = $semester - 1;
+        }
 
         return ($angkatan_nim == $tahun_akademik && $semester == 1);
     }

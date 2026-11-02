@@ -306,6 +306,9 @@ class Pengaturan extends CI_Controller
         } else {
             $semester = ($tahun->tahun - $tahun_angkatan) * 2 + 1;
         }
+        if (semester_masuk_genap($krs->nim)) {
+            $semester = $semester - 1;
+        }
 
         $this->db->where('kode_krs', $kode_krs)->update('krs', [
             'kode_tahun_akademik' => $kode_tahun_akademik,
@@ -771,5 +774,148 @@ class Pengaturan extends CI_Controller
         ];
 
         $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function semester_masuk()
+    {
+        $this->load->model('jurusan/program_studi/Nama_jurusan_model');
+
+        $search          = trim($this->input->get('search') ?? '');
+        $filter_prodi    = (int) ($this->input->get('prodi') ?? 0);
+        $filter_angkatan = trim($this->input->get('angkatan') ?? '');
+        $filter_status   = strtoupper(trim($this->input->get('semester_masuk') ?? ''));
+
+        if (!in_array($filter_status, ['GANJIL', 'GENAP'], true)) {
+            $filter_status = '';
+        }
+
+        if ($search === '' && $filter_prodi === 0 && $filter_angkatan === '' && $filter_status === '') {
+            $filter_status = 'GENAP';
+        }
+
+        $page     = max(1, (int) ($this->input->get('page') ?? 1));
+        $per_page = 50;
+
+        $total = $this->_query_semester_masuk($search, $filter_prodi, $filter_angkatan, $filter_status, true)
+            ->count_all_results('', true);
+
+        $data_mahasiswa = $this->_query_semester_masuk($search, $filter_prodi, $filter_angkatan, $filter_status, false)
+            ->order_by('semester_masuk', 'DESC')
+            ->order_by('m.nim', 'ASC')
+            ->limit($per_page, ($page - 1) * $per_page)
+            ->get()
+            ->result();
+
+        $this->load->view('admin/template/V_main', [
+            'content'      => 'admin/pengaturan/V_semester_masuk',
+            'judul'        => 'Pengaturan',
+            'sub_judul'    => 'Semester Masuk',
+            'title_h1'     => '<i class="fa fa-calendar-check-o"></i> <li>Pengaturan</li>',
+            'title_h2'     => '<li>Semester Masuk Mahasiswa</li>',
+            'data'         => $data_mahasiswa,
+            'prodi'        => $this->Nama_jurusan_model->get(),
+            'total'        => $total,
+            'page'         => $page,
+            'per_page'     => $per_page,
+            'filter'       => [
+                'search'         => $search,
+                'prodi'          => $filter_prodi,
+                'angkatan'       => $filter_angkatan,
+                'semester_masuk' => $filter_status,
+            ],
+        ]);
+    }
+
+    private function _query_semester_masuk($search, $filter_prodi, $filter_angkatan, $filter_status, $for_count)
+    {
+        $has_table = $this->db->table_exists('mahasiswa_semester_masuk');
+
+        if ($for_count) {
+            $this->db->from('mahasiswa m')
+                ->join('program_studi ps', 'ps.kode_program_studi = m.program_studi_kode', 'left')
+                ->join('jenjang je', 'je.id_jenjang = ps.id_jenjang', 'left');
+        } else {
+            $this->db->select('m.nim, m.nama_mahasiswa, m.program_studi_kode, ps.nama_program_studi, je.nama_jenjang');
+            if ($has_table) {
+                $this->db->select('COALESCE(msm.semester_masuk, "GANJIL") AS semester_masuk, msm.keterangan, msm.diubah_oleh, msm.updated_at');
+            } else {
+                $this->db->select('"GANJIL" AS semester_masuk, NULL AS keterangan, NULL AS diubah_oleh, NULL AS updated_at');
+            }
+            $this->db->from('mahasiswa m')
+                ->join('program_studi ps', 'ps.kode_program_studi = m.program_studi_kode', 'left')
+                ->join('jenjang je', 'je.id_jenjang = ps.id_jenjang', 'left');
+        }
+
+        if ($has_table) {
+            $this->db->join('mahasiswa_semester_masuk msm', 'msm.nim = m.nim', 'left');
+        }
+
+        if ($search !== '') {
+            $this->db->group_start()
+                ->like('m.nim', $search)
+                ->or_like('m.nama_mahasiswa', $search)
+                ->group_end();
+        }
+        if ($filter_prodi > 0) {
+            $this->db->where('m.program_studi_kode', $filter_prodi);
+        }
+        if ($filter_angkatan !== '') {
+            $this->db->where("SUBSTR(m.nim,1,2) = " . $this->db->escape($filter_angkatan), null, false);
+        }
+        if ($filter_status !== '') {
+            if ($has_table) {
+                $this->db->where('COALESCE(msm.semester_masuk, "GANJIL") = ' . $this->db->escape($filter_status), null, false);
+            } elseif ($filter_status === 'GENAP') {
+                $this->db->where('1 = 0', null, false);
+            }
+        }
+
+        return $this->db;
+    }
+
+    public function simpan_semester_masuk()
+    {
+        $nim        = trim($this->input->post('nim') ?? '');
+        $semester   = strtoupper(trim($this->input->post('semester_masuk') ?? ''));
+        $keterangan = trim($this->input->post('keterangan') ?? '');
+        $redirect   = 'admin/pengaturan/pengaturan/semester_masuk';
+
+        if ($nim === '' || !in_array($semester, ['GANJIL', 'GENAP'], true)) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>NIM dan semester masuk wajib diisi dengan benar.</h6></div>');
+            redirect($redirect);
+            return;
+        }
+
+        $mahasiswa = $this->db->select('nim')->where('nim', $nim)->get('mahasiswa')->row();
+        if (!$mahasiswa) {
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-warning"><h6>Mahasiswa dengan NIM ' . e($nim) . ' tidak ditemukan.</h6></div>');
+            redirect($redirect);
+            return;
+        }
+
+        if ($semester === 'GANJIL') {
+            $this->db->where('nim', $nim)->delete('mahasiswa_semester_masuk');
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>NIM ' . e($nim) . ' dikembalikan ke semester masuk GANJIL (default).</h6></div>');
+        } else {
+            $data = [
+                'nim'            => $nim,
+                'semester_masuk' => 'GENAP',
+                'keterangan'     => $keterangan !== '' ? $keterangan : null,
+                'diubah_oleh'    => $this->session->userdata('nama_login'),
+                'updated_at'     => date('Y-m-d H:i:s'),
+            ];
+
+            $exists = $this->db->where('nim', $nim)->count_all_results('mahasiswa_semester_masuk') > 0;
+            if ($exists) {
+                $this->db->where('nim', $nim)->update('mahasiswa_semester_masuk', $data);
+            } else {
+                $data['created_at'] = date('Y-m-d H:i:s');
+                $this->db->insert('mahasiswa_semester_masuk', $data);
+            }
+
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>NIM ' . e($nim) . ' ditandai masuk semester GENAP.</h6></div>');
+        }
+
+        redirect($redirect . '?search=' . urlencode($nim));
     }
 }

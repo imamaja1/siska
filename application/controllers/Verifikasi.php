@@ -52,6 +52,9 @@ class Verifikasi extends CI_Controller {
         foreach ($data as $key => $value) {
             $cek = $this->verifikasiservice->getKrsByNimTa($value->nim, 28);
             $semester = (24 - substr($value->nim,0,2))*2 +2;
+            if (semester_masuk_genap($value->nim)) {
+                $semester--;
+            }
             
             if($cek <= 0){
                 $data1 = array(

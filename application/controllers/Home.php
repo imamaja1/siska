@@ -102,6 +102,9 @@ class Home extends CI_Controller {
         $data['semester_aktif'] = ($sem == 0)
             ? ($tahun_akademik_2 - $tahun_angkatan) * 2 + 2
             : ($tahun_akademik_2 - $tahun_angkatan) * 2 + 1;
+        if (semester_masuk_genap($nim)) {
+            $data['semester_aktif']--;
+        }
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 }

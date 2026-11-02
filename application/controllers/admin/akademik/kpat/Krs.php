@@ -184,6 +184,9 @@ class Krs extends CI_Controller
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
         }
+        if (semester_masuk_genap($nim)) {
+            $semester = $semester - 1;
+        }
 
         if (empty($matakuliah_kpat)) {
             $this->session->set_flashdata(
@@ -261,6 +264,9 @@ class Krs extends CI_Controller
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 2;
         } else {
             $semester = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
+        }
+        if (semester_masuk_genap($krs['data_mahasiswa']->nim)) {
+            $semester = $semester - 1;
         }
         $data['data_mahasiswa'] = $krs['data_mahasiswa'];
 //        $data['prodi'] = $this->Nama_jurusan_model->get_prodi_by_nim($krs['data_mahasiswa']->nim);

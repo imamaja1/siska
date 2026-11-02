@@ -131,10 +131,15 @@ class Status_perkuliahan extends CI_Controller
         }
 
         foreach ($param as $value) {
+            if (semester_masuk_genap($value)) {
+                $sem_value = $sem - 1;
+            } else {
+                $sem_value = $sem;
+            }
             $data = array(
                 'kode_tahun_akademik' => $kode_tahun_akademik,
                 'status_perkuliahan' => $status,
-                'semester' => $sem,
+                'semester' => $sem_value,
                 'nim' => $value,
             );
             if ($status == 'L') {
@@ -168,6 +173,9 @@ class Status_perkuliahan extends CI_Controller
             $sem = ($tahun_akademik - $tahun_angkatan) * 2 + 2;
         } else {
             $sem = ($tahun_akademik - $tahun_angkatan) * 2 + 1;
+        }
+        if (semester_masuk_genap($nim)) {
+            $sem = $sem - 1;
         }
         $data = array(
             'nim' => $nim,

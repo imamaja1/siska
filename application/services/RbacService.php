@@ -18,4 +18,14 @@ class RbacService extends MY_Service {
     public function insertAccess($data) {
         return $this->db->insert('access', $data);
     }
+
+    public function checkRoleExists($nama_role) {
+        return $this->db->where('LOWER(nama_role)', strtolower(trim($nama_role)))
+            ->count_all_results('role') > 0;
+    }
+
+    public function insertRole($data) {
+        $this->db->insert('role', $data);
+        return $this->db->insert_id();
+    }
 }

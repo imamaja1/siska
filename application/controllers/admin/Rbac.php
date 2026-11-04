@@ -10,7 +10,7 @@ class Rbac extends CI_Controller
         $class = $this->router->fetch_class();
         if (!$this->session->userdata('nama_login')) {
             redirect('login/admin');
-        }else{
+        } else {
             $id_user = $this->session->userdata('id');
             $cek = rbac_cek($class, $id_user);
             if (!$cek) {
@@ -19,6 +19,7 @@ class Rbac extends CI_Controller
         }
         $this->load->service('RbacService');
         $this->load->helper('directory');
+        $this->load->library('form_validation');
     }
 
     function index()
@@ -56,12 +57,44 @@ class Rbac extends CI_Controller
         $id_roel = $this->input->post('id_role');
         $this->rbacservice->deleteAccessByRole($id_roel);
         $controller = $this->input->post('controller');
-        foreach ($controller as $key => $value) {
-            $data_simpan = array(
-                'id_role' => $id_roel,
-                'nama_controller' => $value,
-            );
-            $this->rbacservice->insertAccess($data_simpan);
+        if (is_array($controller)) {
+            foreach ($controller as $key => $value) {
+                $data_simpan = array(
+                    'id_role' => $id_roel,
+                    'nama_controller' => $value,
+                );
+                $this->rbacservice->insertAccess($data_simpan);
+            }
+        }
+
+        $this->session->set_flashdata('pesan', '<script>swal("Sukses!","Hak akses berhasil diperbarui","success")</script>');
+        redirect(site_url('admin/rbac'));
+    }
+
+    function tambah_role()
+    {
+        $this->form_validation->set_rules('nama_role', 'Nama Role', 'trim|required|min_length[2]|max_length[100]');
+
+        if ($this->form_validation->run() === FALSE) {
+            $error = validation_errors(' ', ' ');
+            $this->session->set_flashdata('pesan', '<script>swal("Perhatian!","' . addslashes(trim($error)) . '","warning")</script>');
+            redirect(site_url('admin/rbac'));
+            return;
+        }
+
+        $nama_role = trim($this->input->post('nama_role', TRUE));
+
+        if ($this->rbacservice->checkRoleExists($nama_role)) {
+            $this->session->set_flashdata('pesan', '<script>swal("Gagal!","Role dengan nama tersebut sudah ada!","error")</script>');
+            redirect(site_url('admin/rbac'));
+            return;
+        }
+
+        $insert_id = $this->rbacservice->insertRole(['nama_role' => $nama_role]);
+        if ($insert_id) {
+            $this->session->set_flashdata('pesan', '<script>swal("Sukses!","Role ' . addslashes($nama_role) . ' berhasil ditambahkan","success")</script>');
+        } else {
+            $this->session->set_flashdata('pesan', '<script>swal("Gagal!","Terjadi kesalahan saat menambahkan role","error")</script>');
         }
 
         redirect(site_url('admin/rbac'));

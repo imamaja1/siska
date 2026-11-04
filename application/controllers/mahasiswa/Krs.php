@@ -786,7 +786,13 @@ class Krs extends CI_Controller
         $kode_program_studi = $this->session->userdata('kode_program_studi');
        $khs_lama = $this->mahasiswaservice->getKhsLamaMaksimumSks($nim, $ta);
       
-       $data_penilaian = $khs_lama ? data_penilaian($nim, $khs_lama['semester']) : [];
+       $data_penilaian = $khs_lama ? data_penilaian($nim, $khs_lama['semester']) : data_penilaian($nim, 1);
+       if (empty($data_penilaian)) {
+           $data_penilaian = data_penilaian($nim);
+       }
+       if (!is_array($data_penilaian)) {
+           $data_penilaian = [];
+       }
         //        $kode_nama_kurikulum = kode_nama_kurikulum($nim);
         //$data_penilaian = data_penilaian($nim, $this->semester - 1);
         //        if (stup_grade($kode_nama_kurikulum, $this->semester-1))
@@ -831,17 +837,21 @@ class Krs extends CI_Controller
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
-                    //                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                    $khs['data_nilai'][$i]['grade'] = '-';
+                    $khs['data_nilai'][$i]['sksn'] = 0;
                     $nilai_akhir = $row->nilai_akhir * 1;
-                    foreach ($data_penilaian as $key) {
-                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    if (!empty($data_penilaian) && is_array($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                                break;
+                            }
                         }
                     }
-                    $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                    $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                    $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                    $sks = $sks + ($khs['data_nilai'][$i]['sks'] ?? 0);
+                    $khs['sksn'] = ($khs['sksn'] ?? 0) + ($khs['data_nilai'][$i]['sks'] ?? 0);
                     $khs['nama_jenjang'] = $this->Jenjang_model->get_nama_bykode($kode_jenjang);
                     $khs['nama_jurusan'] = $this->Kode_jurusan_model->get_nama_bykode($kode_jurusan);
                     $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($kode_program_studi);
@@ -900,17 +910,21 @@ class Krs extends CI_Controller
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
-                    //                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                    $khs['data_nilai'][$i]['grade'] = '-';
+                    $khs['data_nilai'][$i]['sksn'] = 0;
                     $nilai_akhir = $row->nilai_akhir * 1;
-                    foreach ($data_penilaian as $key) {
-                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    if (!empty($data_penilaian) && is_array($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                                break;
+                            }
                         }
                     }
-                    $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                    $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                    $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                    $sks = $sks + ($khs['data_nilai'][$i]['sks'] ?? 0);
+                    $khs['sksn'] = ($khs['sksn'] ?? 0) + ($khs['data_nilai'][$i]['sks'] ?? 0);
                     $khs['nama_jenjang'] = $this->Jenjang_model->get_nama_bykode($kode_jenjang);
                     $khs['nama_jurusan'] = $this->Kode_jurusan_model->get_nama_bykode($kode_jurusan);
                     $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($kode_program_studi);
@@ -971,17 +985,21 @@ class Krs extends CI_Controller
                 $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                 $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                 $khs['data_nilai'][$i]['sks'] = $row->sks;
-                //                $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                $khs['data_nilai'][$i]['grade'] = '-';
+                $khs['data_nilai'][$i]['sksn'] = 0;
                 $nilai_akhir = $row->nilai_akhir * 1;
-                foreach ($data_penilaian as $key) {
-                    if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                        $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                        $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                if (!empty($data_penilaian) && is_array($data_penilaian)) {
+                    foreach ($data_penilaian as $key) {
+                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                            break;
+                        }
                     }
                 }
-                $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                $sks = $sks + ($khs['data_nilai'][$i]['sks'] ?? 0);
+                $khs['sksn'] = ($khs['sksn'] ?? 0) + ($khs['data_nilai'][$i]['sks'] ?? 0);
                 $khs['nama_jenjang'] = $this->Jenjang_model->get_nama_bykode($kode_jenjang);
                 $khs['nama_jurusan'] = $this->Kode_jurusan_model->get_nama_bykode($kode_jurusan);
                 $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($kode_program_studi);
@@ -1520,7 +1538,13 @@ class Krs extends CI_Controller
 
         $kode_program_studi = $this->session->userdata('kode_program_studi');
         //        $kode_nama_kurikulum = kode_nama_kurikulum($nim);
-        $data_penilaian = data_penilaian($nim, $semester - 1);
+        $data_penilaian = data_penilaian($nim, $semester > 1 ? $semester - 1 : 1);
+        if (empty($data_penilaian)) {
+            $data_penilaian = data_penilaian($nim);
+        }
+        if (!is_array($data_penilaian)) {
+            $data_penilaian = [];
+        }
         //        if (stup_grade($kode_nama_kurikulum, $this->semester-1))
 //        {
 //            $data_penilaian = stup_grade($kode_nama_kurikulum, $this->semester-1);
@@ -1557,17 +1581,21 @@ class Krs extends CI_Controller
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
-                    //                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                    $khs['data_nilai'][$i]['grade'] = '-';
+                    $khs['data_nilai'][$i]['sksn'] = 0;
                     $nilai_akhir = $row->nilai_akhir * 1;
-                    foreach ($data_penilaian as $key) {
-                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    if (!empty($data_penilaian) && is_array($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                                break;
+                            }
                         }
                     }
-                    $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                    $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                    $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                    $sks = $sks + ($khs['data_nilai'][$i]['sks'] ?? 0);
+                    $khs['sksn'] = ($khs['sksn'] ?? 0) + ($khs['data_nilai'][$i]['sks'] ?? 0);
                     $khs['nama_jenjang'] = $this->Jenjang_model->get_nama_bykode($kode_jenjang);
                     $khs['nama_jurusan'] = $this->Kode_jurusan_model->get_nama_bykode($kode_jurusan);
                     $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($kode_program_studi);
@@ -1635,17 +1663,21 @@ class Krs extends CI_Controller
                     $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                     $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                     $khs['data_nilai'][$i]['sks'] = $row->sks;
-                    //                    $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                    $khs['data_nilai'][$i]['grade'] = '-';
+                    $khs['data_nilai'][$i]['sksn'] = 0;
                     $nilai_akhir = $row->nilai_akhir * 1;
-                    foreach ($data_penilaian as $key) {
-                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                    if (!empty($data_penilaian) && is_array($data_penilaian)) {
+                        foreach ($data_penilaian as $key) {
+                            if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                                $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                                $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                                break;
+                            }
                         }
                     }
-                    $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                    $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                    $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                    $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                    $sks = $sks + ($khs['data_nilai'][$i]['sks'] ?? 0);
+                    $khs['sksn'] = ($khs['sksn'] ?? 0) + ($khs['data_nilai'][$i]['sks'] ?? 0);
                     $khs['nama_jenjang'] = $this->Jenjang_model->get_nama_bykode($kode_jenjang);
                     $khs['nama_jurusan'] = $this->Kode_jurusan_model->get_nama_bykode($kode_jurusan);
                     $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($kode_program_studi);
@@ -1706,17 +1738,21 @@ class Krs extends CI_Controller
                 $khs['data_nilai'][$i]['kode_matakuliah'] = $row->kode_matakuliah;
                 $khs['data_nilai'][$i]['nama_matakuliah'] = $row->nama_matakuliah;
                 $khs['data_nilai'][$i]['sks'] = $row->sks;
-                //                $nilai_akhir = ($row->nilai_harian * 20 / 100) + ($row->nilai_uts * 30 / 100) + ($row->nilai_uas * 50 / 100);
+                $khs['data_nilai'][$i]['grade'] = '-';
+                $khs['data_nilai'][$i]['sksn'] = 0;
                 $nilai_akhir = $row->nilai_akhir * 1;
-                foreach ($data_penilaian as $key) {
-                    if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
-                        $khs['data_nilai'][$i]['grade'] = $key['grade'];
-                        $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                if (!empty($data_penilaian) && is_array($data_penilaian)) {
+                    foreach ($data_penilaian as $key) {
+                        if (($key['nilai_minimum'] <= $nilai_akhir) && ($nilai_akhir <= $key['nilai_maksimum'])) {
+                            $khs['data_nilai'][$i]['grade'] = $key['grade'];
+                            $khs['data_nilai'][$i]['sksn'] = $key['bobot_nilai'] * $row->sks;
+                            break;
+                        }
                     }
                 }
-                $sksn = $sksn + $khs['data_nilai'][$i]['sksn'];
-                $sks = $sks + $khs['data_nilai'][$i]['sks'];
-                $khs['sksn'] = $khs['sksn'] + $khs['data_nilai'][$i]['sks'];
+                $sksn = $sksn + ($khs['data_nilai'][$i]['sksn'] ?? 0);
+                $sks = $sks + ($khs['data_nilai'][$i]['sks'] ?? 0);
+                $khs['sksn'] = ($khs['sksn'] ?? 0) + ($khs['data_nilai'][$i]['sks'] ?? 0);
                 $khs['nama_jenjang'] = $this->Jenjang_model->get_nama_bykode($kode_jenjang);
                 $khs['nama_jurusan'] = $this->Kode_jurusan_model->get_nama_bykode($kode_jurusan);
                 $khs['kaprodi'] = $this->Ketua_jurusan_model->get_kaprodi($kode_program_studi);

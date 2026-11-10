@@ -121,11 +121,11 @@ $kur_name = $kurikulum->nama_kurikulum ?? 'Berjalan';
                                     </td>
                                     <td style="text-align: center;">
                                         <?php if ($is_pilihan_umum) : ?>
-                                            <span class="kurikulum-badge-pilihan">Pilihan Umum</span>
+                                            <span class="kurikulum-badge-pilihan">Pilihan</span>
                                         <?php elseif ($is_pilihan_kompetensi) : ?>
                                             <span class="kurikulum-badge-pilihan">Pilihan</span>
                                         <?php else : ?>
-                                            <span class="kurikulum-badge-wajib">Wajib Prodi</span>
+                                            <span class="kurikulum-badge-wajib">Wajib</span>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

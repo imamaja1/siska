@@ -18,16 +18,7 @@ class Home extends CI_Controller {
             redirect('login');
         }
 
-        $nim = $this->session->userdata('nim');
-        $data = array(
-            'conten' => 'mahasiswa/V_dashbord',
-            'judul' => 'Dashboard',
-            'hide_page_header' => true,
-            'prodi' => get_kode_prodi($nim),
-            'tahun_akademik' => tahun_akademik(),
-            'angkatan' => '20' . substr($nim, 0, 2),
-        );
-        $this->load->view('mahasiswa/V_dashbord', $data);
+        redirect('mahasiswa/home');
     }
 
     function admin() {

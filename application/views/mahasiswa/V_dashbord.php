@@ -62,16 +62,6 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
 
         <div class="dash-hero-right">
             <div class="dash-academic-summary">
-                <div class="dash-acad-item">
-                    <span class="dash-acad-label">IPK Kumulatif</span>
-                    <strong class="dash-acad-value is-ipk"><?= e($ipk_display) ?></strong>
-                </div>
-                <div class="dash-acad-divider"></div>
-                <div class="dash-acad-item">
-                    <span class="dash-acad-label">Total SKS Lulus</span>
-                    <strong class="dash-acad-value is-sks"><?= e($sks_display) ?> <span class="dash-acad-sub">/ 144 SKS</span></strong>
-                </div>
-                <div class="dash-acad-divider"></div>
                 <div class="dash-acad-item is-dpa">
                     <span class="dash-acad-label">Dosen Pembimbing Akademik</span>
                     <strong class="dash-acad-dpa"><?= e($dpa_display) ?></strong>

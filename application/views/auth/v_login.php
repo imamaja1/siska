@@ -9,10 +9,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <title>SISKA - Universitas Bumigora | Sistem Informasi Akademik</title>
     <link rel="icon" href="<?= app_favicon() ?>">
 
-    <!-- Google Font: Roboto -->
+    <!-- Google Font: Inter & Roboto -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -24,18 +24,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Roboto"', 'system-ui', 'sans-serif'],
+                        sans: ['"Inter"', '"Roboto"', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        ubg: {
-                            blue: '#0369a1',
-                            darkblue: '#1e3a8a',
-                            navy: '#0f172a',
-                            green: '#047857',
-                            darkgreen: '#064e3b',
-                            lightgreen: '#ecfdf5',
-                            accent: '#d97706',
-                            danger: '#dc2626'
+                        brand: {
+                            blue: '#2563eb',
+                            hoverblue: '#1d4ed8',
+                            danger: '#ef4444',
+                            hoverdanger: '#dc2626',
+                            dark: '#0f172a',
+                            muted: '#64748b',
+                            cardbg: '#f8fafc',
+                            border: '#e2e8f0'
                         }
                     }
                 }
@@ -43,45 +43,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
     </script>
 </head>
-<body class="min-h-screen bg-slate-100 font-sans text-slate-800 flex flex-col justify-between selection:bg-sky-600 selection:text-white">
+<body class="min-h-screen bg-[#f1f5f9] font-sans text-slate-800 flex items-center justify-center p-3 sm:p-5 lg:p-8 selection:bg-blue-600 selection:text-white">
 
-    <!-- BEGIN: MainContent -->
-    <main class="flex-grow flex items-center justify-center py-8 sm:py-10 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-md">
+    <!-- BEGIN: Main App Container (Figma: Desktop / SISKA Login Modern v3) -->
+    <main class="w-full max-w-[1360px] bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden p-4 sm:p-5 lg:p-6 my-auto">
+        <div class="flex flex-col lg:flex-row gap-5 lg:gap-8 items-stretch justify-between">
 
-            <!-- BEGIN: LoginFormSection -->
-            <section class="w-full" data-purpose="login-panel">
-                <div class="bg-white rounded-2xl border border-slate-300/80 shadow-md p-6 sm:p-7 text-slate-800">
-                    
-                    <!-- Login Header -->
-                    <div class="text-center pb-5 mb-5 border-b border-slate-100">
-                        <div class="inline-flex items-center justify-center mb-2.5">
-                            <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora" class="h-16 w-auto object-contain">
+            <!-- BEGIN: Left Column (Col / Auth Form) -->
+            <section class="w-full lg:w-[480px] xl:w-[540px] flex flex-col justify-between p-2 sm:p-6 lg:p-8 flex-shrink-0" data-purpose="login-auth-form">
+                
+                <div>
+                    <!-- Top Section: Brand Row -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-full bg-slate-50 border border-slate-200/80 flex items-center justify-center p-1.5 shadow-sm overflow-hidden flex-shrink-0">
+                            <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora" class="w-full h-full object-contain">
                         </div>
-                        <h3 class="text-xl font-bold text-slate-900">Masuk Akun SISKA</h3>
-                        <p class="text-xs text-slate-500 mt-1">Silakan masukkan identitas akun resmi Anda</p>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold tracking-tight text-slate-900 leading-tight">UNIVERSITAS BUMIGORA</span>
+                            <span class="text-xs text-slate-500 font-medium leading-tight">Sistem Informasi Akademik (SISKA)</span>
+                        </div>
+                    </div>
+
+                    <!-- Heading Group -->
+                    <div class="mt-6 sm:mt-7">
+                        <h1 class="text-2xl sm:text-[30px] font-extrabold text-slate-900 tracking-tight leading-tight">
+                            Selamat Datang Kembali
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1.5">
+                            Silakan masukkan identitas akun resmi kampus Anda
+                        </p>
                     </div>
 
                     <!-- Flash Message / Alert Notification -->
                     <?php if ($this->session->flashdata('pesan')): ?>
-                        <div class="mb-4 p-3.5 rounded-lg text-xs font-medium flex items-start gap-2.5 <?= ($this->session->flashdata('tipe') == 'danger' || strpos(strtolower($this->session->flashdata('pesan')), 'salah') !== false || strpos(strtolower($this->session->flashdata('pesan')), 'belum') !== false) ? 'bg-rose-50 text-rose-800 border border-rose-200' : 'bg-emerald-50 text-emerald-800 border border-emerald-200' ?>">
+                        <div class="mt-4 p-3.5 rounded-xl text-xs font-medium flex items-start gap-2.5 <?= ($this->session->flashdata('tipe') == 'danger' || strpos(strtolower($this->session->flashdata('pesan')), 'salah') !== false || strpos(strtolower($this->session->flashdata('pesan')), 'belum') !== false) ? 'bg-rose-50 text-rose-800 border border-rose-200' : 'bg-emerald-50 text-emerald-800 border border-emerald-200' ?>">
                             <i class="fa-solid fa-circle-exclamation mt-0.5 text-sm <?= ($this->session->flashdata('tipe') == 'danger' || strpos(strtolower($this->session->flashdata('pesan')), 'salah') !== false) ? 'text-rose-600' : 'text-emerald-600' ?>"></i>
                             <div><?= $this->session->flashdata('pesan'); ?></div>
                         </div>
                     <?php endif; ?>
 
                     <!-- Form Content -->
-                    <?= form_open('login', array('id' => 'siska-login-form', 'class' => 'space-y-4')); ?>
+                    <?= form_open('login', array('id' => 'siska-login-form', 'class' => 'mt-6 space-y-4')); ?>
                         
-                        <!-- Identifier / Username Input -->
-                        <div class="space-y-1.5" data-purpose="input-group-identifier">
-                            <label class="block text-xs font-bold text-slate-700" for="username">
+                        <!-- Field / Username -->
+                        <div class="space-y-1.5" data-purpose="input-group-username">
+                            <label class="block text-xs font-bold text-slate-800" for="username">
                                 Username
                             </label>
                             <div class="relative">
-                                <input class="w-full pl-3.5 pr-10 py-2.5 rounded-lg border <?= form_error('username') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-300 focus:border-sky-600 focus:ring-sky-600' ?> text-slate-900 bg-white focus:bg-white text-sm focus:ring-1 transition-all outline-none" id="username" name="username" placeholder="Masukkan NIM atau NIDN..." required type="text" autocomplete="off" value="<?= set_value('username') ?>">
+                                <input class="w-full h-11 pl-3.5 pr-10 rounded-lg border <?= form_error('username') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-900 bg-white text-sm focus:ring-1 transition-all outline-none" id="username" name="username" placeholder="Masukkan NIM atau NIDN..." required type="text" autocomplete="off" value="<?= set_value('username') ?>">
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
-                                    <i class="fa-solid fa-user text-xs"></i>
+                                    <i class="fa-regular fa-user text-sm"></i>
                                 </div>
                             </div>
                             <?php if (form_error('username')): ?>
@@ -89,20 +101,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php endif; ?>
                         </div>
 
-                        <!-- Password Input -->
+                        <!-- Field / Password -->
                         <div class="space-y-1.5" data-purpose="input-group-password">
                             <div class="flex items-center justify-between">
-                                <label class="block text-xs font-bold text-slate-700" for="password">
+                                <label class="block text-xs font-bold text-slate-800" for="password">
                                     Kata Sandi
                                 </label>
-                                <a class="text-xs text-sky-700 hover:text-sky-800 font-semibold hover:underline transition-colors" href="<?= site_url('lupa_password') ?>">
+                                <a class="text-xs text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors" href="<?= site_url('lupa_password') ?>">
                                     Lupa Password?
                                 </a>
                             </div>
                             <div class="relative">
-                                <input class="w-full pl-3.5 pr-10 py-2.5 rounded-lg border <?= form_error('password') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-300 focus:border-sky-600 focus:ring-sky-600' ?> text-slate-900 bg-white focus:bg-white text-sm focus:ring-1 transition-all outline-none" id="password" name="password" placeholder="••••••••••••••••" required type="password" value="<?= set_value('password') ?>">
+                                <input class="w-full h-11 pl-3.5 pr-10 rounded-lg border <?= form_error('password') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-900 bg-white text-sm focus:ring-1 transition-all outline-none" id="password" name="password" placeholder="••••••••••••••" required type="password" value="<?= set_value('password') ?>">
                                 <button aria-label="Lihat kata sandi" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600 transition-colors" id="togglePassword" type="button">
-                                    <i class="fa-solid fa-lock text-xs" id="lockIcon"></i>
+                                    <i class="fa-solid fa-lock text-sm" id="lockIcon"></i>
                                 </button>
                             </div>
                             <?php if (form_error('password')): ?>
@@ -110,13 +122,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php endif; ?>
                         </div>
 
-                        <!-- Role Selector Dropdown -->
+                        <!-- Utility Row (Remember Me) -->
+                        <div class="flex items-center justify-between pt-0.5">
+                            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                                <input type="checkbox" name="remember" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 transition">
+                                <span class="text-xs font-medium text-slate-700">Ingat saya</span>
+                            </label>
+                        </div>
+
+                        <!-- Field / Hak Akses -->
                         <div class="space-y-1.5" data-purpose="input-group-role">
-                            <label class="block text-xs font-bold text-slate-700" for="userRole">
+                            <label class="block text-xs font-bold text-slate-800" for="userRole">
                                 Hak Akses / Peran
                             </label>
                             <div class="relative">
-                                <select class="w-full py-2.5 pl-3.5 pr-10 rounded-lg border <?= form_error('status') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-300 focus:border-sky-600 focus:ring-sky-600' ?> text-slate-700 bg-white focus:bg-white text-sm focus:ring-1 appearance-none transition-all outline-none" id="userRole" name="status" required>
+                                <select class="w-full h-11 py-2.5 pl-3.5 pr-10 rounded-lg border <?= form_error('status') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-800 bg-white text-sm focus:ring-1 appearance-none transition-all outline-none cursor-pointer" id="userRole" name="status" required>
                                     <option value="mahasiswa" <?= (set_value('status', 'mahasiswa') == 'mahasiswa') ? 'selected' : '' ?>>Mahasiswa</option>
                                     <option value="dosen" <?= (set_value('status') == 'dosen') ? 'selected' : '' ?>>Dosen / Tenaga Pengajar</option>
                                 </select>
@@ -129,59 +149,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?php endif; ?>
                         </div>
 
-                        <!-- Action Buttons Group -->
-                        <div class="pt-2 space-y-2.5">
-                            <!-- Primary Login Button -->
-                            <button class="w-full py-2.5 px-4 rounded-lg bg-sky-700 hover:bg-sky-800 active:bg-sky-900 text-white text-sm font-bold tracking-wide shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit" name="submit" value="Log In">
-                                <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                        <!-- Action Buttons -->
+                        <div class="pt-3 space-y-2.5">
+                            <!-- Button / Log In -->
+                            <button class="w-full h-[46px] py-2.5 px-4 rounded-lg bg-[#2563eb] hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit" name="submit" value="Log In">
+                                <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
                                 <span>Log In ke SISKA</span>
                             </button>
 
-                            <!-- Secondary Payment Validation Button -->
-                            <button type="button" onclick="openPaymentModal()" class="w-full py-2.5 px-4 rounded-lg bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-bold tracking-wide shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer text-center">
-                                <i class="fa-solid fa-receipt text-xs"></i>
+                            <!-- Button / Validasi -->
+                            <button type="button" onclick="openPaymentModal()" class="w-full h-[46px] py-2.5 px-4 rounded-lg bg-[#ef4444] hover:bg-red-600 active:bg-red-700 text-white text-[15px] font-bold tracking-wide shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer text-center">
+                                <i class="fa-solid fa-receipt text-sm"></i>
                                 <span>Cek Validasi Pembayaran!</span>
                             </button>
                         </div>
+
                     <?= form_close(); ?>
-
-                    <!-- Divider -->
-                    <div class="my-5 flex items-center">
-                        <div class="flex-grow border-t border-slate-200"></div>
-                        <span class="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tautan Akademik Cepat</span>
-                        <div class="flex-grow border-t border-slate-200"></div>
-                    </div>
-
-                    <!-- BEGIN: InformationalQuickLinks -->
-                    <nav aria-label="Tautan Informasi Mahasiswa" class="space-y-1.5" data-purpose="quick-academic-links">
-                        <a class="group flex items-center justify-between p-2 rounded-lg text-xs font-semibold text-slate-700 hover:text-sky-700 hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200" href="https://www.youtube.com/watch?v=HgRVzuzvFf4" target="_blank">
-                            <div class="flex items-center gap-2.5">
-                                <i class="fa-solid fa-book-bookmark text-sky-600"></i>
-                                <span>Cara Mengurus KRS MABA</span>
-                            </div>
-                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-sky-600 transition-colors"></i>
-                        </a>
-                    </nav>
-                    <!-- END: InformationalQuickLinks -->
-
-                    <!-- Footer Information -->
-                    <div class="mt-5 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-500 space-y-0.5">
-                        <p class="font-medium text-slate-600">
-                            &copy; <?= date('Y') ?> <strong>Universitas Bumigora</strong> (UBG). Hak Cipta Dilindungi.
-                        </p>
-                        <p class="text-slate-400">
-                            Jl. Ismail Marzuki No. 22, Cilinaya, Kec. Cakranegara, Kota Mataram, NTB 83127
-                        </p>
-                        <p class="text-slate-400">SISKA v2.0 Terintegrasi</p>
-                    </div>
-
                 </div>
+
+                <!-- Bottom Section: Quick Link & Footer Meta -->
+                <div class="mt-8 pt-4 border-t border-slate-100 space-y-3">
+                    <!-- Quick Link KRS -->
+                    <a class="w-full h-11 px-3.5 bg-[#f8fafc] hover:bg-slate-100 active:bg-slate-200 border border-slate-200/90 rounded-lg flex items-center justify-between text-xs font-semibold text-slate-800 hover:text-blue-600 transition-colors group" href="https://www.youtube.com/watch?v=HgRVzuzvFf4" target="_blank" rel="noopener noreferrer">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-book-open text-blue-600 text-sm"></i>
+                            <span>Cara Mengurus KRS MABA</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                    </a>
+
+                    <!-- Footer Meta -->
+                    <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
+                        <span>&copy; <?= date('Y') ?> Universitas Bumigora</span>
+                        <span class="hidden sm:inline">SISKA v2.0 Terintegrasi</span>
+                    </div>
+                </div>
+
             </section>
-            <!-- END: LoginFormSection -->
+            <!-- END: Left Column -->
+
+            <!-- BEGIN: Right Column (Col / Hero Showcase) -->
+            <aside class="hidden lg:flex flex-1 relative rounded-[20px] overflow-hidden bg-slate-900 min-h-[580px] xl:min-h-[720px] shadow-inner" aria-label="Gedung Universitas Bumigora">
+                <img src="<?= base_url('assets/siska/img/gedung_ubg_hero.jpg') ?>?v=<?= file_exists(FCPATH . 'assets/siska/img/gedung_ubg_hero.jpg') ? filemtime(FCPATH . 'assets/siska/img/gedung_ubg_hero.jpg') : '1' ?>" alt="Gedung Kampus Universitas Bumigora" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
+            </aside>
+            <!-- END: Right Column -->
 
         </div>
     </main>
-    <!-- END: MainContent -->
+    <!-- END: Main App Container -->
 
     <!-- BEGIN: Modal Cek Validasi Pembayaran -->
     <div id="modal-cek-validasi" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-4">
@@ -199,8 +215,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="mb-4">
                     <label class="block text-xs font-bold text-slate-700 mb-1.5" for="input-nim">Nomor Induk Mahasiswa (NIM)</label>
                     <div class="flex gap-2">
-                        <input type="text" id="input-nim" inputmode="numeric" pattern="[0-9]+" name="nim" required class="flex-grow py-2.5 px-3.5 rounded-lg border border-slate-300 text-sm focus:border-sky-600 focus:ring-1 focus:ring-sky-600 outline-none transition" minlength="8" maxlength="20" title="Masukkan digit NIM dengan benar">
-                        <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white rounded-lg text-sm font-bold transition flex items-center gap-1.5 cursor-pointer">
+                        <input type="text" id="input-nim" inputmode="numeric" pattern="[0-9]+" name="nim" required class="flex-grow py-2.5 px-3.5 rounded-lg border border-slate-300 text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition" minlength="8" maxlength="20" placeholder="Masukkan digit NIM..." title="Masukkan digit NIM dengan benar">
+                        <button type="submit" class="px-5 py-2.5 bg-[#ef4444] hover:bg-red-600 active:bg-red-700 text-white rounded-lg text-sm font-bold transition flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-magnifying-glass text-xs"></i> Cari
                         </button>
                     </div>
@@ -227,15 +243,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 if (isPassword) {
                     passwordInput.setAttribute('type', 'text');
                     lockIcon.classList.remove('fa-lock');
-                    lockIcon.classList.add('fa-unlock');
+                    lockIcon.classList.add('fa-lock-open');
                 } else {
                     passwordInput.setAttribute('type', 'password');
-                    lockIcon.classList.remove('fa-unlock');
+                    lockIcon.classList.remove('fa-lock-open');
                     lockIcon.classList.add('fa-lock');
                 }
             });
         }
-
 
         // Modal Cek Validasi Pembayaran
         function openPaymentModal() {
@@ -257,6 +272,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         // Close modal when clicking on backdrop
         document.getElementById('modal-cek-validasi')?.addEventListener('click', function(e) {
             if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 closePaymentModal();
             }
         });

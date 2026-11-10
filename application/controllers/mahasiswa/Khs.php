@@ -13,6 +13,7 @@ class Khs extends CI_Controller
                 'jurusan/program_studi/Jenjang_model',
                 'jurusan/program_studi/Kode_jurusan_model',
                 'jurusan/program_studi/Ketua_jurusan_model',
+                'jurusan/Perwalian_model',
                 'akademik/Khs_model',
                 'akademik/Krs_model',
                 'kuisioner/kuisioner_model',
@@ -120,6 +121,9 @@ class Khs extends CI_Controller
         $data['conten'] = "mahasiswa/V_Khs";
         $data['data'] = $khs;
         $data['prodi'] = $this->Nama_jurusan_model->get_prodi_by_nim($nim);
+        $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($nim);
+        $data['dosen_wali'] = !empty($dosen_wali) && is_object($dosen_wali) ? $dosen_wali->nama_dosen : '-';
+        $data['hide_page_header'] = true;
         // echo json_encode($khs);break;
         $this->load->view("mahasiswa/template/V_main", $data);
     }

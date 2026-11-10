@@ -73,6 +73,7 @@ class Petikan_nilai extends CI_Controller
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         $data['tahun_akademik'] = $this->m_tahun_akademik->get_semester();
         $data['prodi'] = $this->Nama_jurusan_model->get_prodi_by_nim($nim);
+        $data['hide_page_header'] = true;
 
         $this->load->view('mahasiswa/template/V_main', $data);
         //echo '<pre>';
@@ -95,6 +96,7 @@ class Petikan_nilai extends CI_Controller
         $data['mahasiswa'] = $this->mahasiswa_model->get($nim);
         $data['tahun_akademik'] = $this->m_tahun_akademik->get_semester();
         $data['prodi'] = $this->Nama_jurusan_model->get_prodi_by_nim($nim);
+        $data['hide_page_header'] = true;
 
         $this->load->view('mahasiswa/template/V_main', $data);
     }

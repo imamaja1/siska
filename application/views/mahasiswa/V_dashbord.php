@@ -17,150 +17,203 @@ $pakai_ukt = $angkatan_num >= 2025;
 $foto_session = $this->session->userdata('foto');
 $foto_file = FCPATH . 'assets/foto/' . $foto_session;
 $has_foto = !empty($foto_session) && $foto_session !== 'P.png' && $foto_session !== 'L.png' && is_file($foto_file);
-$foto_url = $has_foto ? base_url('assets/foto/' . $foto_session) : base_url('assets/siska/img/avatar-placeholder.svg');
+$foto_url = $has_foto ? base_url('assets/foto/' . $foto_session) : '';
+
+$nama_parts = array_values(array_filter(explode(' ', trim($nama ?? ''))));
+$initials = '';
+if (count($nama_parts) >= 2) {
+    $initials = strtoupper(substr($nama_parts[0], 0, 1) . substr($nama_parts[1], 0, 1));
+} elseif (count($nama_parts) === 1) {
+    $initials = strtoupper(substr($nama_parts[0], 0, 2));
+} else {
+    $initials = 'M';
+}
+
+$ipk_display = !empty($ipk_kumulatif) ? $ipk_kumulatif : '0.00';
+$sks_display = !empty($total_sks_lulus) ? $total_sks_lulus : '0';
+$dpa_display = !empty($dosen_wali) ? $dosen_wali : '-';
+$sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
 ?>
 
 <div class="mhs-dash">
 
-    <!-- BEGIN: Hero -->
-    <section class="dash-hero">
-        <div class="dash-hero-main">
-            <div class="dash-avatar">
-                <img src="<?= $foto_url ?>" alt="<?= e($nama) ?>">
-            </div>
-            <div class="dash-hero-text">
-                <span class="dash-greeting-lead">Selamat datang kembali</span>
-                <h1 class="dash-greeting-name"><?= e($nama) ?></h1>
-                <div class="dash-meta">
-                    <span class="dash-meta-nim">NIM <?= e($nim) ?></span>
-                    <?php if ($prodi_nama !== ''): ?>
-                        <span class="dash-meta-item"><i class="fa fa-graduation-cap"></i> <?= e($prodi_nama) ?></span>
-                    <?php endif; ?>
-                    <?php if ($ta_label !== ''): ?>
-                        <span class="dash-meta-item"><i class="fa fa-calendar-check-o"></i> Semester <?= e($semester_label) ?> &bull; TA <?= e($ta_label) ?></span>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- END: Hero -->
-
-    <!-- BEGIN: Status Mahasiswa -->
-    <section class="dash-panel dash-pay">
-        <div class="dash-panel-head">
-            <div>
-                <h2 class="dash-panel-title">Status Mahasiswa</h2>
-                <small class="dash-panel-sub">Status registrasi &amp; administrasi akademik</small>
-            </div>
-            <?php if ($ta_label !== ''): ?>
-                <span class="dash-panel-hint">TA <?= e($ta_label) ?> <?= e($semester_label) ?></span>
-            <?php endif; ?>
-        </div>
-        <div class="dash-pay-body">
-            <div class="dash-pay-grid">
-                <?php if ($pakai_ukt): ?>
-                    <div class="dash-stat">
-                        <div class="dash-stat-icon"><i class="fa fa-university"></i></div>
-                        <div class="dash-stat-content">
-                            <span class="dash-stat-label">UKT Kuliah</span>
-                            <span class="dash-stat-value <?= $spp_ok ? 'is-ok' : 'is-warn' ?>"><?= $spp_ok ? 'Lunas' : 'Belum Lunas' ?></span>
-                        </div>
-                    </div>
+    <!-- BEGIN: Hero / Identity Card -->
+    <section class="dash-hero-card">
+        <div class="dash-hero-left">
+            <div class="dash-avatar-box">
+                <?php if ($has_foto): ?>
+                    <img src="<?= $foto_url ?>" alt="<?= e($nama) ?>" class="dash-avatar-img">
                 <?php else: ?>
-                    <div class="dash-stat">
-                        <div class="dash-stat-icon"><i class="fa fa-university"></i></div>
-                        <div class="dash-stat-content">
-                            <span class="dash-stat-label">SPP Kuliah</span>
-                            <span class="dash-stat-value <?= $spp_ok ? 'is-ok' : 'is-warn' ?>"><?= $spp_ok ? 'Lunas' : 'Belum Lunas' ?></span>
-                        </div>
-                    </div>
-                    <div class="dash-stat">
-                        <div class="dash-stat-icon"><i class="fa fa-pencil-square-o"></i></div>
-                        <div class="dash-stat-content">
-                            <span class="dash-stat-label">SKS</span>
-                            <span class="dash-stat-value <?= $sks_ok ? 'is-ok' : 'is-warn' ?>"><?= $sks_ok ? 'Lunas' : 'Belum Lunas' ?></span>
-                        </div>
-                    </div>
-                    <div class="dash-stat">
-                        <div class="dash-stat-icon"><i class="fa fa-flask"></i></div>
-                        <div class="dash-stat-content">
-                            <span class="dash-stat-label">Praktikum</span>
-                            <span class="dash-stat-value <?= $lab_ok ? 'is-ok' : 'is-warn' ?>"><?= $lab_ok ? 'Lunas' : 'Belum Lunas' ?></span>
-                        </div>
-                    </div>
+                    <span class="dash-avatar-initials"><?= e($initials) ?></span>
                 <?php endif; ?>
             </div>
-            <div class="dash-hero-actions">
-                <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn dash-btn-solid">
-                    <i class="fa fa-pencil-square-o"></i>
-                    <span>Susun KRS</span>
-                </a>
-                <a href="<?= site_url('mahasiswa/khs') ?>" class="dash-btn dash-btn-line">
-                    <i class="fa fa-bar-chart"></i>
-                    <span>Lihat KHS</span>
-                </a>
+            <div class="dash-hero-info">
+                <span class="dash-portal-lead">PORTAL MAHASISWA</span>
+                <h1 class="dash-hero-name"><?= e($nama) ?></h1>
+                <div class="dash-hero-chips">
+                    <span class="dash-chip dash-chip-nim">NIM <?= e($nim) ?></span>
+                    <?php if ($ta_label !== ''): ?>
+                        <span class="dash-chip">Semester <?= e($semester_label) ?> <?= e($ta_label) ?></span>
+                    <?php endif; ?>
+                    <span class="dash-chip dash-chip-active">AKTIF</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-hero-right">
+            <div class="dash-academic-summary">
+                <div class="dash-acad-item">
+                    <span class="dash-acad-label">IPK Kumulatif</span>
+                    <strong class="dash-acad-value is-ipk"><?= e($ipk_display) ?></strong>
+                </div>
+                <div class="dash-acad-divider"></div>
+                <div class="dash-acad-item">
+                    <span class="dash-acad-label">Total SKS Lulus</span>
+                    <strong class="dash-acad-value is-sks"><?= e($sks_display) ?> <span class="dash-acad-sub">/ 144 SKS</span></strong>
+                </div>
+                <div class="dash-acad-divider"></div>
+                <div class="dash-acad-item is-dpa">
+                    <span class="dash-acad-label">Dosen Pembimbing Akademik</span>
+                    <strong class="dash-acad-dpa"><?= e($dpa_display) ?></strong>
+                </div>
             </div>
         </div>
     </section>
-    <!-- END: Status Mahasiswa -->
+    <!-- END: Hero / Identity Card -->
 
-    <div class="dash-grid">
+    <!-- BEGIN: Status Administrasi & Registrasi Keuangan -->
+    <section class="dash-panel-card dash-pay-card">
+        <div class="dash-panel-header">
+            <div>
+                <h2 class="dash-card-title">Status Administrasi &amp; Registrasi Keuangan</h2>
+                <span class="dash-card-sub">Informasi kewajiban pembayaran Semester <?= e($semester_label) ?> <?= e($ta_label) ?></span>
+            </div>
+            <span class="dash-reg-badge">Status: Terdaftar</span>
+        </div>
 
-        <!-- BEGIN: Quick Access -->
-        <section class="dash-panel">
-            <div class="dash-panel-head">
-                <div>
-                    <h2 class="dash-panel-title">Akses Cepat</h2>
-                    <small class="dash-panel-sub">Pintasan menu administrasi studi</small>
+        <div class="dash-pay-grid">
+            <?php if ($pakai_ukt): ?>
+                <div class="dash-pay-item <?= $spp_ok ? 'is-paid' : 'is-unpaid' ?>">
+                    <div class="dash-pay-item-top">
+                        <span class="dash-pay-type">UKT KULIAH</span>
+                        <?php if ($spp_ok): ?>
+                            <span class="dash-badge-lunas">LUNAS</span>
+                        <?php else: ?>
+                            <span class="dash-badge-unpaid">BELUM LUNAS</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="dash-pay-info">
+                        <?php if ($spp_ok): ?>
+                            <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
+                        <?php else: ?>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran / Validasi</span>
+                            <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-pay-now">Cek Tagihan / KRS &rarr;</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <a href="<?= site_url('mahasiswa/kurikulum') ?>" class="dash-panel-link">Menu akademik &rsaquo;</a>
+            <?php else: ?>
+                <div class="dash-pay-item <?= $spp_ok ? 'is-paid' : 'is-unpaid' ?>">
+                    <div class="dash-pay-item-top">
+                        <span class="dash-pay-type">SPP KULIAH TETAP</span>
+                        <?php if ($spp_ok): ?>
+                            <span class="dash-badge-lunas">LUNAS</span>
+                        <?php else: ?>
+                            <span class="dash-badge-unpaid">BELUM LUNAS</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="dash-pay-info">
+                        <?php if ($spp_ok): ?>
+                            <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
+                        <?php else: ?>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran / Validasi</span>
+                            <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-pay-now">Cek Tagihan / KRS &rarr;</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="dash-pay-item <?= $sks_ok ? 'is-paid' : 'is-unpaid' ?>">
+                    <div class="dash-pay-item-top">
+                        <span class="dash-pay-type">BIAYA SKS VARIABEL</span>
+                        <?php if ($sks_ok): ?>
+                            <span class="dash-badge-lunas">LUNAS</span>
+                        <?php else: ?>
+                            <span class="dash-badge-unpaid">BELUM LUNAS</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="dash-pay-info">
+                        <?php if ($sks_ok): ?>
+                            <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> <?= e($sks_krs_display) ?> SKS Disetujui, Terverifikasi</span>
+                        <?php else: ?>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Belum Diverifikasi (<?= e($sks_krs_display) ?> SKS)</span>
+                            <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-pay-now">Cek Tagihan / KRS &rarr;</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+    <!-- END: Status Administrasi & Registrasi Keuangan -->
+
+    <!-- BEGIN: Akses Cepat Layanan -->
+    <section class="dash-quick-section">
+        <div class="dash-section-head">
+            <h2 class="dash-section-title">Akses Cepat Layanan</h2>
+            <a href="<?= site_url('mahasiswa/kurikulum') ?>" class="dash-section-link">Semua Layanan &rarr;</a>
+        </div>
+
+        <div class="dash-services-grid">
+            <!-- Card KRS -->
+            <div class="dash-service-card">
+                <div class="dash-service-top">
+                    <h3 class="dash-service-title">Kartu Rencana Studi (KRS)</h3>
+                    <span class="dash-service-badge"><?= e($sks_krs_display) ?> SKS</span>
+                </div>
+                <p class="dash-service-desc">
+                    Susun rencana studi, konsultasikan dengan DPA, dan cetak KRS yang telah disetujui.
+                </p>
+                <div class="dash-service-action">
+                    <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-navy-solid">
+                        Susun KRS Online &rarr;
+                    </a>
+                </div>
             </div>
 
-            <ul class="dash-list">
-                <li class="dash-list-item">
-                    <a href="<?= site_url('mahasiswa/krs') ?>">
-                        <span class="dash-list-icon"><i class="fa fa-pencil-square-o"></i></span>
-                        <span class="dash-list-text">
-                            <span class="dash-list-label">Kartu Rencana Studi (KRS)</span>
-                            <span class="dash-list-desc">Susun, konsultasikan, dan ajukan matakuliah semester berjalan secara online.</span>
-                        </span>
-                        <i class="fa fa-angle-right dash-list-arrow"></i>
+            <!-- Card KHS -->
+            <div class="dash-service-card">
+                <div class="dash-service-top">
+                    <h3 class="dash-service-title">Kartu Hasil Studi (KHS)</h3>
+                </div>
+                <p class="dash-service-desc">
+                    Evaluasi hasil studi semester, riwayat indeks prestasi, dan rincian nilai matakuliah.
+                </p>
+                <div class="dash-service-action">
+                    <a href="<?= site_url('mahasiswa/khs') ?>" class="dash-btn-navy-outline">
+                        Lihat KHS Semester &rarr;
                     </a>
-                </li>
-                <li class="dash-list-item">
-                    <a href="<?= site_url('mahasiswa/khs') ?>">
-                        <span class="dash-list-icon"><i class="fa fa-bar-chart"></i></span>
-                        <span class="dash-list-text">
-                            <span class="dash-list-label">Kartu Hasil Studi (KHS)</span>
-                            <span class="dash-list-desc">Pantau perolehan IPK, IPS, dan nilai final tiap semester yang telah dipublikasikan.</span>
-                        </span>
-                        <i class="fa fa-angle-right dash-list-arrow"></i>
-                    </a>
-                </li>
-                <li class="dash-list-item">
-                    <a href="<?= site_url('mahasiswa/petikan_nilai') ?>">
-                        <span class="dash-list-icon"><i class="fa fa-file-text-o"></i></span>
-                        <span class="dash-list-text">
-                            <span class="dash-list-label">Petikan Nilai</span>
-                            <span class="dash-list-desc">Transkrip nilai sementara seluruh semester dari awal studi hingga sekarang.</span>
-                        </span>
-                        <i class="fa fa-angle-right dash-list-arrow"></i>
-                    </a>
-                </li>
-                <li class="dash-list-item">
-                    <a href="<?= site_url('mahasiswa/kuisioner') ?>">
-                        <span class="dash-list-icon"><i class="fa fa-comments-o"></i></span>
-                        <span class="dash-list-text">
-                            <span class="dash-list-label">Kuisioner Evaluasi</span>
-                            <span class="dash-list-desc">Beri evaluasi dan masukan terhadap proses perkuliahan dan pelayanan akademik.</span>
-                        </span>
-                        <i class="fa fa-angle-right dash-list-arrow"></i>
-                    </a>
-                </li>
-            </ul>
-        </section>
-        <!-- END: Quick Access -->
+                </div>
+            </div>
+        </div>
 
-    </div>
+        <!-- Secondary Services Links -->
+        <div class="dash-secondary-links">
+            <a href="<?= site_url('mahasiswa/petikan_nilai') ?>" class="dash-sublink-item">
+                <i class="fa fa-file-text-o"></i>
+                <div class="dash-sublink-text">
+                    <strong>Petikan Nilai</strong>
+                    <span>Transkrip nilai sementara seluruh semester</span>
+                </div>
+                <i class="fa fa-angle-right dash-sublink-arrow"></i>
+            </a>
+            <a href="<?= site_url('mahasiswa/kuisioner') ?>" class="dash-sublink-item">
+                <i class="fa fa-comments-o"></i>
+                <div class="dash-sublink-text">
+                    <strong>Kuisioner Evaluasi</strong>
+                    <span>Evaluasi proses perkuliahan dan pelayanan akademik</span>
+                </div>
+                <i class="fa fa-angle-right dash-sublink-arrow"></i>
+            </a>
+        </div>
+    </section>
+    <!-- END: Akses Cepat Layanan -->
 
 </div>

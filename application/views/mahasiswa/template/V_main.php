@@ -59,9 +59,27 @@
                 
                 <!-- Right: User Menu (pure CSS dropdown, desktop only) & Menu Toggle -->
                 <div class="siska-header-actions">
+                    <?php
+                    $sess_nama = $this->session->userdata('nama_mahasiswa') ?: 'Mahasiswa';
+                    $sess_parts = array_values(array_filter(explode(' ', trim($sess_nama))));
+                    $sess_initials = '';
+                    if (count($sess_parts) >= 2) {
+                        $sess_initials = strtoupper(substr($sess_parts[0], 0, 1) . substr($sess_parts[1], 0, 1));
+                    } elseif (count($sess_parts) === 1) {
+                        $sess_initials = strtoupper(substr($sess_parts[0], 0, 2));
+                    } else {
+                        $sess_initials = 'M';
+                    }
+                    if (count($sess_parts) > 2) {
+                        $sess_short_name = $sess_parts[0] . ' ' . $sess_parts[1] . ' ' . substr($sess_parts[2], 0, 1) . '.';
+                    } else {
+                        $sess_short_name = $sess_nama;
+                    }
+                    ?>
                     <div class="siska-user-menu">
                         <button type="button" class="siska-user-trigger" aria-haspopup="true" aria-label="Menu Akun">
-                            <i class="fa fa-user"></i>
+                            <span class="siska-user-initials"><?= e($sess_initials) ?></span>
+                            <span class="siska-user-shortname"><?= e($sess_short_name) ?></span>
                             <i class="fa fa-angle-down siska-user-caret"></i>
                         </button>
                         <div class="siska-user-panel" role="menu">
@@ -193,6 +211,7 @@
             if (e.keyCode === 27) closeDrawer();
         });
         $drawer.find('a').not('.dropdown-toggle').on('click', closeDrawer);
+        $drawer.find('.siska-drawer-close, #btn-drawer-close').on('click', closeDrawer);
     });
 </script>
 <?php $this->load->view('csrf_js'); ?>

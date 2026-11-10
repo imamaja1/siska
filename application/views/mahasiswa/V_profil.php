@@ -36,10 +36,12 @@ $val = function ($v) {
     <div class="pf-banner">
         <div class="pf-banner-left">
             <span class="pf-banner-icon"><i class="fa fa-user"></i></span>
-            <h1>Profil Mahasiswa</h1>
+            <div>
+                <h1>Profil Mahasiswa</h1>
+                <p class="pf-banner-sub">Informasi data diri dan status administrasi akademik mahasiswa</p>
+            </div>
         </div>
         <span class="pf-ta-pill">
-            <span class="pf-dot"></span>
             <?php if ($ta_label !== ''): ?>
                 Tahun Ajaran <?= e($ta_label) ?> <?= e($semester_label) ?>
             <?php else: ?>
@@ -64,7 +66,7 @@ $val = function ($v) {
                 <i class="fa fa-camera"></i> <?= $sudah_foto ? 'Ganti Foto' : 'Upload Foto' ?>
             </button>
             <a href="<?= site_url('mahasiswa/profil/ubah_data_mahasiswa'); ?>" class="btn btn-primary">
-                <i class="fa fa-pencil-square-o"></i> Ubah Profil
+                <i class="fa fa-edit"></i> Ubah Profil
             </a>
         </div>
     </div>
@@ -160,7 +162,7 @@ $val = function ($v) {
                         <div class="pf-photo-frame <?= $sudah_foto ? '' : 'is-empty' ?>" data-toggle="modal" data-target="#modalUploadFoto" <?= $sudah_foto ? 'data-ganti="1"' : '' ?>>
                             <img src="<?= $foto_url ?>" alt="Foto <?= e($data->nama_mahasiswa) ?>">
                             <div class="pf-photo-overlay"><span><i class="fa fa-camera"></i> <?= $sudah_foto ? 'Ganti Foto' : 'Upload Foto' ?></span></div>
-                            <div class="pf-photo-badge">Pasfoto BAAK 3x4</div>
+                            <div class="pf-photo-badge">PASFOTO BAAK 3X4</div>
                         </div>
                         <h3 class="pf-photo-name"><?= e($data->nama_mahasiswa) ?></h3>
                         <p class="pf-photo-nim">NIM: <?= e($data->nim) ?></p>

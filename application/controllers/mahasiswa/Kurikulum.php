@@ -7,6 +7,7 @@ class Kurikulum extends CI_Controller {
         $this->load->model(array(
             'jurusan/kurikulum/m_data_kurikulum',
             'jurusan/kurikulum/m_nama_kurikulum',
+            'jurusan/program_studi/Nama_jurusan_model',
         ));
         $this->load->service('MahasiswaService');
         if ($this->session->userdata('status') !== 'login_mahasiswa') {
@@ -35,6 +36,10 @@ class Kurikulum extends CI_Controller {
             $data['mk_pilihan'] = array_column($kompetensi, 'id_matakuliah');
             $data['nama_pilihan'] = array_column($kompetensi, 'nama', 'id_matakuliah');
         }
+
+        $data['kurikulum'] = $kurikulum;
+        $data['prodi'] = $this->Nama_jurusan_model->get_all_byid($kode_prodi);
+        $data['hide_page_header'] = true;
 
         $this->load->view('mahasiswa/template/V_main', $data);
     }

@@ -78,6 +78,7 @@ class Krs extends CI_Controller
         $data['ta'] = $ta;
         $data['ta_selected'] = $tahun_akademik;
         $data['is_old_krs'] = true;
+        $data['hide_page_header'] = true;
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 
@@ -101,6 +102,7 @@ class Krs extends CI_Controller
             $data['bayar_sks'] = $this->mahasiswaservice->getBayarSks($nim, $tahun_akademik);
             $kode_krs = $this->Krs_model->get_kode_krs($this->session->userdata('nim'), $tahun_akademik);
             $data['conten'] = "mahasiswa/V_Krs";
+            $data['hide_page_header'] = true;
             $data['beban_sks'] = $this->maksimum_sks();
             $data['data'] = $this->Krs_detail_model->get_data_krs($kode_krs);
             
@@ -212,6 +214,7 @@ class Krs extends CI_Controller
         // echo "<pre>";
         // print_r($data);
         // echo json_encode($data['data_matakuliah']);break;
+        $data['hide_page_header'] = true;
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 
@@ -538,6 +541,9 @@ class Krs extends CI_Controller
                 $data['semester'] = $this->semester;
                 $data['data_mahasiswa'] = $this->Mahasiswa_model->get($this->session->userdata('nim'));
                 $data['tahun_akademik'] = $this->m_tahun_akademik->get_all_byid($kode_tahun_akademik);
+                $data['krs_mhs'] = $this->mahasiswaservice->getKrsMhsHistoryWithoutTa($nim, $kode_tahun_akademik);
+                $data['ta'] = $kode_tahun_akademik;
+                $data['hide_page_header'] = true;
 
                 $this->load->view('mahasiswa/template/V_main', $data);
             }

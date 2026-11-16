@@ -85,21 +85,29 @@
 </head>
 
 <body style="font-size: 8pt; font-family: sans-serif; margin: 0px">
-    <table width="100%" style="margin-top: 0px">
+    <?php
+    $kop_nama = !empty($kop_file) ? $kop_file : (function_exists('bodo_kop') && !empty($mahasiswa->nim) ? (bodo_kop($mahasiswa->nim)['kop'] ?? '') : '');
+    ?>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse; margin-top: 0px;">
         <tr>
-            <td colspan="2" align="right" style="font-size: 8pt;">BG/BAA/QSR/032-00/09</td>
+            <td align="right" style="font-size: 7.5pt; color: #333333; padding-bottom: 2px;">BG/BAA/QSR/032-00/09</td>
         </tr>
         <tr>
-            <td style="text-align: center; vertical-align: bottom; font-family:serif; font-size: 8pt;">
-                <!--<img style="height: 120px;" src="<?= base_url('assets/gambar/kop/' . $prodi->kode_fakultas . '.png') ?>" />-->
-                <img style="height: 120px;"
-                    src="<?= e(base_url('assets/gambar/kop/' . rawurlencode(bodo_kop($mahasiswa->nim)['kop'] ?? ''))) ?>">
+            <td style="text-align: center; vertical-align: middle; padding: 0;">
+                <img style="max-width: 100%; max-height: 110px; height: auto; display: inline-block; margin: 0 auto;" src="<?= e(base_url('assets/gambar/kop/' . rawurlencode($kop_nama))) ?>" alt="Kop Surat">
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-top: 4px; padding-bottom: 0;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                    <tr><td style="border-top: 0.75px solid #000000; height: 1.5px; font-size: 1px; line-height: 1px; padding: 0;"></td></tr>
+                    <tr><td style="border-top: 2.5px solid #000000; height: 0px; font-size: 1px; line-height: 1px; padding: 0;"></td></tr>
+                </table>
             </td>
         </tr>
     </table>
     <!-- Start Header Petikan Nilai -->
-    <hr style="border: 2px solid black;">
-    <h4 class="header-text" style="text-align: center; font-size: 8pt">PETIKAN NILAI <?= $status ? 'NON' : '' ?> MBKM
+    <h4 class="header-text" style="text-align: center; font-size: 8pt; margin-top: 10px; margin-bottom: 8px;">PETIKAN NILAI <?= $status ? 'NON' : '' ?> MBKM
         MAHASISWA SEMESTER <?= $tahun_akademik->semester != 1 ? "GENAP" : "GANJIL"; ?>
         TA. <?= e($tahun_akademik->ta) ?> ANGKATAN 20<?= e(substr($mahasiswa->nim, 0, 2)) ?></h4>
     <table width="100%" style="font-size: 8pt; border-collapse: collapse;" cellpadding="2">

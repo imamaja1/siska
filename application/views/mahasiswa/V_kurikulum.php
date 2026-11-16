@@ -26,7 +26,6 @@ $kur_name = $kurikulum->nama_kurikulum ?? 'Berjalan';
     <!-- 2. PROGRAM STUDI INFO STRIP -->
     <div class="kurikulum-meta-strip">
         <div class="kurikulum-brand-group">
-            <div class="kurikulum-brand-badge">UBG</div>
             <div class="kurikulum-program-info">
                 <h3 class="kurikulum-program-title"><?= e($prodi_name) ?></h3>
                 <p class="kurikulum-program-sub">

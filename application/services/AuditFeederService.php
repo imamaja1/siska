@@ -1139,4 +1139,254 @@ class AuditFeederService extends MY_Service {
 
         return NULL;
     }
+
+    /**
+     * Komparasi Mahasiswa SISKA vs Feeder berdasarkan Angkatan dan Program Studi.
+     */
+    public function bandingkanMahasiswa($angkatan, $kode_program_studi = NULL)
+    {
+        $angkatan = trim((string) $angkatan);
+        if ($angkatan === '') {
+            return ['error' => 'Angkatan wajib dipilih/diisi.'];
+        }
+
+        $angkatan_2digit = (strlen($angkatan) === 4) ? substr($angkatan, 2, 2) : $angkatan;
+        $angkatan_4digit = (strlen($angkatan) === 2) ? ((int)$angkatan > 50 ? '19' . $angkatan : '20' . $angkatan) : $angkatan;
+
+        // Ambil data SISKA
+        $siska_rows = $this->Audit_feeder_model->getMahasiswaSiskaByAngkatanProdi($angkatan_2digit, $kode_program_studi);
+        $siska_map = [];
+        foreach ($siska_rows as $row) {
+            $nim = trim((string) $row->nim);
+            if ($nim !== '') {
+                $siska_map[$nim] = $row;
+            }
+        }
+
+        // Cari ID Prodi Feeder jika prodi dipilih menggunakan GetAllProdi
+        $feeder_id_prodi = '';
+        $prodi_name = '';
+        if (!empty($kode_program_studi)) {
+            $prodi_name = $this->Audit_feeder_model->getProdiNameByKode($kode_program_studi);
+            $prodi_res = $this->feederservice->getAllProdiFeeder();
+            if (empty($prodi_res['error']) && !empty($prodi_res['data']) && is_array($prodi_res['data'])) {
+                $prodi_norm = $this->normalizeName($prodi_name);
+                foreach ($prodi_res['data'] as $p) {
+                    $p_name = $this->normalizeName($p['nama_program_studi'] ?? '');
+                    $p_kode = trim((string) ($p['kode_program_studi'] ?? ''));
+                    if ($p_name === $prodi_norm || ($p_kode !== '' && $p_kode === (string) $kode_program_studi)) {
+                        $feeder_id_prodi = (string) ($p['id_prodi'] ?? '');
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Susun filter Feeder berdasarkan 2 digit NIM dan id_prodi
+        $feeder_filter_parts = ["(nim like '" . $angkatan_2digit . "%' or nipd like '" . $angkatan_2digit . "%')"];
+        if ($feeder_id_prodi !== '') {
+            $feeder_filter_parts[] = "id_prodi='" . str_replace("'", "\\'", $feeder_id_prodi) . "'";
+        }
+        $feeder_filter = implode(' and ', $feeder_filter_parts);
+
+        // Ambil data Feeder
+        $feeder_error = '';
+        $feeder_res = $this->feederservice->getAllMahasiswaByFilter($feeder_filter, 'nim asc');
+        if (!empty($feeder_res['error'])) {
+            $feeder_error = $feeder_res['error'];
+            $feeder_rows = [];
+        } else {
+            $feeder_rows = $feeder_res['rows'] ?? [];
+        }
+
+        // Jika Feeder tidak terfilter id_prodi dan user memilih prodi, filter manual berdasarkan nama prodi
+        if ($feeder_id_prodi === '' && $prodi_name !== '') {
+            $prodi_norm = $this->normalizeName($prodi_name);
+            $filtered_feeder = [];
+            foreach ($feeder_rows as $fr) {
+                if ($this->normalizeName($fr['nama_program_studi']) === $prodi_norm) {
+                    $filtered_feeder[] = $fr;
+                }
+            }
+            $feeder_rows = $filtered_feeder;
+        }
+
+        $feeder_map = [];
+        foreach ($feeder_rows as $frow) {
+            $nim = trim((string) $frow['nim']);
+            if ($nim !== '') {
+                $feeder_map[$nim] = $frow;
+            }
+        }
+
+        // Komparasi gabungan
+        $all_nims = array_unique(array_merge(array_keys($siska_map), array_keys($feeder_map)));
+        sort($all_nims, SORT_NATURAL);
+
+        $rows = [];
+        $summary = [
+            'total_siska'        => count($siska_map),
+            'total_feeder'       => count($feeder_map),
+            'total_cocok'        => 0,
+            'total_beda_nama'    => 0,
+            'total_hanya_siska'  => 0,
+            'total_hanya_feeder' => 0,
+            'feeder_error'       => $feeder_error,
+        ];
+
+        foreach ($all_nims as $nim) {
+            $in_siska = isset($siska_map[$nim]);
+            $in_feeder = isset($feeder_map[$nim]);
+
+            $siska_item = $in_siska ? $siska_map[$nim] : NULL;
+            $feeder_item = $in_feeder ? $feeder_map[$nim] : NULL;
+
+            $status = '';
+            $status_class = '';
+            $nama_siska = $siska_item ? trim((string) $siska_item->nama_mahasiswa) : '';
+            $nama_feeder = $feeder_item ? trim((string) $feeder_item['nama_mahasiswa']) : '';
+
+            if ($in_siska && $in_feeder) {
+                if ($this->normalizeName($nama_siska) === $this->normalizeName($nama_feeder)) {
+                    $status = 'Cocok';
+                    $status_class = 'success';
+                    $summary['total_cocok']++;
+                } else {
+                    $status = 'Nama Berbeda';
+                    $status_class = 'warning';
+                    $summary['total_beda_nama']++;
+                }
+            } elseif ($in_siska && !$in_feeder) {
+                $status = 'Hanya di SISKA';
+                $status_class = 'danger';
+                $summary['total_hanya_siska']++;
+            } elseif (!$in_siska && $in_feeder) {
+                $status = 'Hanya di Feeder';
+                $status_class = 'info';
+                $summary['total_hanya_feeder']++;
+            }
+
+            $rows[] = (object) [
+                'nim'                  => $nim,
+                'nama_siska'           => $nama_siska,
+                'nama_feeder'          => $nama_feeder,
+                'status_siska'         => $siska_item ? ($siska_item->status === 'A' ? 'Aktif' : 'Non-Aktif') : '-',
+                'status_feeder'        => $feeder_item ? ($feeder_item['nama_status_mahasiswa'] ?: '-') : '-',
+                'prodi_siska'          => $siska_item ? ($siska_item->nama_program_studi ?: '-') : '-',
+                'prodi_feeder'         => $feeder_item ? ($feeder_item['nama_program_studi'] ?: '-') : '-',
+                'id_mahasiswa'         => $feeder_item ? ($feeder_item['id_mahasiswa'] ?: '') : '',
+                'status'               => $status,
+                'status_class'         => $status_class,
+                'in_siska'             => $in_siska,
+                'in_feeder'            => $in_feeder,
+            ];
+        }
+
+        return [
+            'angkatan'        => $angkatan,
+            'angkatan_4digit' => $angkatan_4digit,
+            'prodi_name'      => $prodi_name,
+            'rows'            => $rows,
+            'summary'         => $summary,
+        ];
+    }
+
+    /**
+     * Detail Komparasi Biodata Mahasiswa SISKA vs Feeder berdasarkan NIM.
+     */
+    public function auditBiodataNim($nim)
+    {
+        $nim = trim((string) $nim);
+        if ($nim === '') {
+            return ['error' => 'NIM wajib diisi.'];
+        }
+
+        $siska = $this->Audit_feeder_model->getBiodataMahasiswaSiska($nim);
+
+        // Cari di Feeder
+        $feeder_list = NULL;
+        $feeder_bio = NULL;
+        $id_mahasiswa = '';
+
+        $list_res = $this->feederservice->getListMahasiswa("nim='" . str_replace("'", "\\'", $nim) . "' or nipd='" . str_replace("'", "\\'", $nim) . "'", '', 1, 0);
+        if (!empty($list_res['data']) && is_array($list_res['data']) && isset($list_res['data'][0])) {
+            $feeder_list = $list_res['data'][0];
+            $id_mahasiswa = trim((string) ($feeder_list['id_mahasiswa'] ?? ''));
+        }
+
+        if ($id_mahasiswa !== '') {
+            $bio_res = $this->feederservice->getBiodataMahasiswa($id_mahasiswa);
+            if (!empty($bio_res['data'])) {
+                $feeder_bio = $bio_res['data'];
+            }
+        }
+
+        if (!$siska && !$feeder_list && !$feeder_bio) {
+            return ['error' => "Data mahasiswa dengan NIM {$nim} tidak ditemukan di SISKA maupun di Feeder."];
+        }
+
+        // Format tanggal lahir siska menjadi hari-bulan-tahun (d-m-Y)
+        $tgl_lahir_siska = '-';
+        if ($siska && !empty($siska->tanggal_lahir) && $siska->tanggal_lahir !== '0000-00-00') {
+            $ts = strtotime($siska->tanggal_lahir);
+            $tgl_lahir_siska = $ts ? date('d-m-Y', $ts) : $siska->tanggal_lahir;
+        }
+
+        // Format tanggal lahir feeder ke d-m-Y jika valid
+        $raw_tgl_feeder = $feeder_bio ? ($feeder_bio['tanggal_lahir'] ?? '') : ($feeder_list ? ($feeder_list['tanggal_lahir'] ?? '') : '');
+        $tgl_lahir_feeder = '-';
+        if (!empty($raw_tgl_feeder) && $raw_tgl_feeder !== '0000-00-00') {
+            $ts_f = strtotime($raw_tgl_feeder);
+            $tgl_lahir_feeder = $ts_f ? date('d-m-Y', $ts_f) : $raw_tgl_feeder;
+        }
+
+        // Format NISN siska jika numerik & panjang < 10 digit, pad 0 di depan (standar 10 digit NISN)
+        $nisn_siska = '-';
+        if ($siska && !empty($siska->nisn)) {
+            $raw_nisn_siska = trim((string) $siska->nisn);
+            if ($raw_nisn_siska !== '') {
+                $nisn_siska = (ctype_digit($raw_nisn_siska) && strlen($raw_nisn_siska) < 10)
+                    ? str_pad($raw_nisn_siska, 10, '0', STR_PAD_LEFT)
+                    : $raw_nisn_siska;
+            }
+        }
+
+        // Format NISN feeder
+        $raw_nisn_feeder = $feeder_bio ? ($feeder_bio['nisn'] ?? '') : ($feeder_list ? ($feeder_list['nisn'] ?? '') : '');
+        $nisn_feeder = '-';
+        if (!empty($raw_nisn_feeder)) {
+            $raw_nisn_feeder = trim((string) $raw_nisn_feeder);
+            if ($raw_nisn_feeder !== '') {
+                $nisn_feeder = (ctype_digit($raw_nisn_feeder) && strlen($raw_nisn_feeder) < 10)
+                    ? str_pad($raw_nisn_feeder, 10, '0', STR_PAD_LEFT)
+                    : $raw_nisn_feeder;
+            }
+        }
+
+        // Field comparison table
+        $fields = [
+            ['label' => 'NIM / NIPD', 'siska' => $siska ? $siska->nim : '-', 'feeder' => $feeder_list ? ($feeder_list['nim'] ?? ($feeder_list['nipd'] ?? '-')) : '-'],
+            ['label' => 'Nama Mahasiswa', 'siska' => $siska ? $siska->nama_mahasiswa : '-', 'feeder' => $feeder_bio ? ($feeder_bio['nama_mahasiswa'] ?? '-') : ($feeder_list ? ($feeder_list['nama_mahasiswa'] ?? '-') : '-')],
+            ['label' => 'Jenis Kelamin', 'siska' => $siska ? ($siska->jenis_kelamin === 'L' ? 'Laki-Laki' : ($siska->jenis_kelamin === 'P' ? 'Perempuan' : $siska->jenis_kelamin)) : '-', 'feeder' => $feeder_bio ? ($feeder_bio['jenis_kelamin'] === 'L' ? 'Laki-Laki' : ($feeder_bio['jenis_kelamin'] === 'P' ? 'Perempuan' : ($feeder_bio['jenis_kelamin'] ?? '-'))) : '-'],
+            ['label' => 'Tempat Lahir', 'siska' => $siska ? $siska->tempat_lahir : '-', 'feeder' => $feeder_bio ? ($feeder_bio['tempat_lahir'] ?? '-') : '-'],
+            ['label' => 'Tanggal Lahir', 'siska' => $tgl_lahir_siska, 'feeder' => $tgl_lahir_feeder],
+            ['label' => 'NIK', 'siska' => $siska ? $siska->nik : '-', 'feeder' => $feeder_bio ? ($feeder_bio['nik'] ?? '-') : '-'],
+            ['label' => 'NISN', 'siska' => $nisn_siska, 'feeder' => $nisn_feeder],
+            ['label' => 'Agama', 'siska' => $siska ? $siska->agama : '-', 'feeder' => $feeder_bio ? ($feeder_bio['nama_agama'] ?? '-') : ($feeder_list ? ($feeder_list['nama_agama'] ?? '-') : '-')],
+            ['label' => 'Nama Ibu Kandung', 'siska' => $siska ? $siska->nama_ibu : '-', 'feeder' => $feeder_bio ? ($feeder_bio['nama_ibu_kandung'] ?? '-') : '-'],
+            ['label' => 'Nama Ayah', 'siska' => $siska ? $siska->nama_ayah : '-', 'feeder' => $feeder_bio ? ($feeder_bio['nama_ayah'] ?? '-') : '-'],
+            ['label' => 'No. Telepon / HP', 'siska' => $siska ? $siska->telepon : '-', 'feeder' => $feeder_bio ? ($feeder_bio['handphone'] ?? ($feeder_bio['telepon'] ?? '-')) : '-'],
+            ['label' => 'Email', 'siska' => $siska ? $siska->email : '-', 'feeder' => $feeder_bio ? ($feeder_bio['email'] ?? '-') : '-'],
+            ['label' => 'Program Studi', 'siska' => $siska ? $siska->nama_program_studi : '-', 'feeder' => $feeder_list ? ($feeder_list['nama_program_studi'] ?? '-') : '-'],
+            ['label' => 'Status Mahasiswa', 'siska' => $siska ? ($siska->status === 'A' ? 'Aktif' : 'Non-Aktif') : '-', 'feeder' => $feeder_list ? ($feeder_list['nama_status_mahasiswa'] ?? '-') : '-'],
+        ];
+
+        return [
+            'nim'         => $nim,
+            'siska'       => $siska,
+            'feeder_list' => $feeder_list,
+            'feeder_bio'  => $feeder_bio,
+            'fields'      => $fields,
+        ];
+    }
 }

@@ -166,14 +166,52 @@ class Petikan_nilai extends CI_Controller
             ? $sem->semester + $semester_offset
             : 0;
 
+        $prodi = get_kode_prodi($nim);
+
+        // Ambil data dekan dari tabel fakultas -> join ke tabel dosen berdasarkan fakultas.dekan
+        $dekan = null;
+        if ($prodi && !empty($prodi->dekan)) {
+            $dekan = $this->db->select('kode_dosen, nama_dosen, nik, signature')
+                ->from('dosen')
+                ->where('kode_dosen', $prodi->dekan)
+                ->get()->row_object();
+        }
+
+        $nama_dekan = $dekan ? $dekan->nama_dosen : '';
+        $nik_dekan  = $dekan ? $dekan->nik : '';
+
+        // Tanda tangan dekan (file signature)
+        $ttd_dekan = '';
+        if ($dekan && !empty($dekan->signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $dekan->signature)) {
+            $ttd_dekan = $dekan->signature;
+        } elseif (!empty($nik_dekan)) {
+            $ttd_dekan = $this->mahasiswaservice->getSignatureDosen($nik_dekan);
+        }
+
+        // Kop surat prodi / fakultas
+        $kop_file = '';
+        if ($prodi && !empty($prodi->kode_program_studi)) {
+            $prodi_kop = glob(FCPATH . 'assets/gambar/kop/prodi_' . $prodi->kode_program_studi . '.*');
+            if (!empty($prodi_kop)) {
+                $kop_file = basename($prodi_kop[0]);
+            }
+        }
+        if (empty($kop_file) && function_exists('bodo_kop')) {
+            $kop_file = bodo_kop($nim)['kop'] ?? '';
+        }
+
         return array(
             'mahasiswa'      => $this->mahasiswa_model->get($nim),
             'tahun_akademik' => $this->mahasiswaservice->getTahunAkademikById($kode_tahun_akademik),
-            'prodi'          => get_kode_prodi($nim),
+            'prodi'          => $prodi,
             'semester'       => $semester,
             'semester_jalan' => substr($ta ? $ta->tahun_akademik : '', -2) - substr($nim, 0, 2),
             'data'           => $this->Petikan_nilai_model->petikan_nilai_new($nim, $kode_nama_kurikulum, $semester + 1) ?: [],
-            'ttd'            => $this->mahasiswaservice->getSignatureDosen(bodo_kop($nim)['nik']),
+            'ttd'            => $ttd_dekan,
+            'nama_dekan'     => $nama_dekan,
+            'nik_dekan'      => $nik_dekan,
+            'dekan'          => $dekan,
+            'kop_file'       => $kop_file,
         );
     }
 
@@ -204,7 +242,7 @@ class Petikan_nilai extends CI_Controller
         $content_view = 'admin/akademik/petikan_nilai/cetak_petikan_nilai';
         $header_view  = 'admin/akademik/petikan_nilai/header_petikan_nilai';
         $header = $this->load->view($header_view, $data, true);
-
+        // echo json_encode($data);die();
         foreach (self::PETIKAN_FONT_SIZES as $font_size) {
             $data['font_size'] = $font_size;
 

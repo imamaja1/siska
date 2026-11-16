@@ -1,6 +1,26 @@
 <?php
 $fs  = isset($font_size) ? (float) $font_size : 8;
-$kop = bodo_kop($mahasiswa->nim);
+
+// Pastikan data Dekan tersedia secara mandiri tanpa kop helper
+if (empty($nama_dekan) && !empty($dekan->nama_dosen)) {
+    $nama_dekan = $dekan->nama_dosen;
+}
+if (empty($nik_dekan) && !empty($dekan->nik)) {
+    $nik_dekan = $dekan->nik;
+}
+if (empty($nama_dekan) && !empty($prodi->dekan)) {
+    $ci =& get_instance();
+    $dosen_dekan = $ci->db->select('nama_dosen, nik, signature')->from('dosen')->where('kode_dosen', $prodi->dekan)->get()->row_object();
+    if ($dosen_dekan) {
+        $nama_dekan = $dosen_dekan->nama_dosen;
+        $nik_dekan  = $dosen_dekan->nik;
+        if (empty($ttd) && !empty($dosen_dekan->signature)) {
+            $ttd = $dosen_dekan->signature;
+        }
+    }
+}
+$nama_dekan = $nama_dekan ?? '';
+$nik_dekan  = $nik_dekan ?? '';
 
 // Hitung total SKS/SKSN & IPK bila belum disediakan oleh pemanggil.
 if (!isset($total_sks) || !isset($total_sksn) || !isset($ipk)) {
@@ -90,8 +110,7 @@ $tabelSemester = function ($data, $dari, $sampai, $semester, $nilai) use ($fs) {
     <body>
 
         <!-- Start Header Petikan Nilai -->
-        <hr style="border:5px solid black">
-        <h4>PETIKAN NILAI MAHASISWA SEMESTER <?= $tahun_akademik->semester != 1 ? 'GENAP' : 'GANJIL'; ?>
+        <h4 style="margin-top: 10px;">PETIKAN NILAI MAHASISWA SEMESTER <?= $tahun_akademik->semester != 1 ? 'GENAP' : 'GANJIL'; ?>
             TA. <?= e($tahun_akademik->ta) ?> ANGKATAN 20<?= e(substr($mahasiswa->nim, 0, 2)) ?></h4>
         <table width="100%" style="font-size: <?= $fs ?>pt; border-collapse: collapse;" cellpadding="2">
             <tr>
@@ -120,7 +139,7 @@ $tabelSemester = function ($data, $dari, $sampai, $semester, $nilai) use ($fs) {
                         <tr>
                             <td><b>Fakultas</b></td>
                             <td><b>:</b></td>
-                            <td><?= e($kop['nama_fakultas']) ?></td>
+                            <td><?= e(!empty($prodi->nama_fakultas) ? $prodi->nama_fakultas : $prodi->nama_program_studi) ?></td>
                         </tr>
                     </table>
                 </td>
@@ -166,8 +185,8 @@ $tabelSemester = function ($data, $dari, $sampai, $semester, $nilai) use ($fs) {
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="garis_bawah"><?= e($kop['dekan']) ?></div>
-                                    NIK: <?= e($kop['nik']) ?>
+                                    <div class="garis_bawah"><?= e($nama_dekan) ?></div>
+                                    NIK: <?= e($nik_dekan) ?>
                                 </td>
                             </tr>
                         </table>

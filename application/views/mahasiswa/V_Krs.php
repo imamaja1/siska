@@ -42,7 +42,7 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
         <div class="krs-actions">
             <?php if ($is_approved) : ?>
                 <span class="krs-status-approved">
-                    <i class="fa fa-check-circle"></i> Status: Disetujui DPA ✓
+                    <i class="fa fa-check-circle"></i> Status: Disetujui DPA
                 </span>
             <?php else : ?>
                 <span class="krs-status-pending">
@@ -66,7 +66,7 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
                             <i class="fa fa-print"></i> Cetak KRS
                         </a>
                         <a href="<?= site_url('mahasiswa/krs/cetak') ?>" class="krs-btn-navy">
-                            <i class="fa fa-download"></i> Unduh PDF &rarr;
+                            <i class="fa fa-download"></i> Unduh PDF
                         </a>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -75,7 +75,7 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
                         <i class="fa fa-print"></i> Cetak KRS
                     </a>
                     <a href="<?= site_url('mahasiswa/krs/cetak') ?>" class="krs-btn-navy">
-                        <i class="fa fa-download"></i> Unduh PDF &rarr;
+                        <i class="fa fa-download"></i> Unduh PDF
                     </a>
                 <?php endif; ?>
             <?php elseif ($semester != 'K') : ?>
@@ -83,7 +83,7 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
                     <i class="fa fa-print"></i> Cetak KRS
                 </a>
                 <a href="<?= site_url('mahasiswa/krs/cetak_lalu/'.$tahun_akademik->kode_tahun_akademik.'/'.$semester) ?>" class="krs-btn-navy">
-                    <i class="fa fa-download"></i> Unduh PDF &rarr;
+                    <i class="fa fa-download"></i> Unduh PDF
                 </a>
             <?php endif; ?>
         </div>
@@ -138,11 +138,8 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
             <?php $isCurrentActive = ($ta == $tahun_akademik->kode_tahun_akademik); ?>
             <a href="<?= site_url('mahasiswa/krs/index/') ?>"
                class="krs-tab-item <?= $isCurrentActive ? 'is-active' : '' ?>">
-                <i class="fa fa-calendar-check-o"></i> Semester <?= isset($semester_aktif) ? $semester_aktif : $semester ?> (Aktif Berjalan)
+                <i class="fa fa-calendar-check-o"></i> Semester <?= isset($semester_aktif) ? $semester_aktif : $semester ?>
             </a>
-        </div>
-        <div class="krs-note-hint">
-            Sistem Informasi Akademik &mdash; Universitas Bumigora
         </div>
     </div>
 

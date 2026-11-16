@@ -205,4 +205,34 @@ class Audit_feeder_model extends CI_Model {
 
         return ['khs' => $khs, 'dummy' => $dummy, 'dummy_nilai' => $dummy_nilai, 'hanya_khs' => false];
     }
+
+    public function getMahasiswaSiskaByAngkatanProdi($angkatan, $kode_program_studi = NULL)
+    {
+        $prefix = strlen((string) $angkatan) === 4 ? substr((string) $angkatan, 2, 2) : (string) $angkatan;
+
+        $this->db->select('m.nim, m.nama_mahasiswa, m.status, m.jenis_kelamin, m.tempat_lahir, m.tanggal_lahir,
+                           m.nik, m.nisn, m.telepon, m.email, m.nama_ibu, m.nama_ayah,
+                           ps.kode_program_studi, ps.nama_program_studi')
+            ->from('mahasiswa m')
+            ->join('program_studi ps', 'ps.kode_program_studi = m.program_studi_kode', 'left');
+
+        if ($prefix !== '') {
+            $this->db->where('SUBSTRING(m.nim, 1, 2) =', $prefix);
+        }
+
+        if (!empty($kode_program_studi)) {
+            $this->db->where('m.program_studi_kode', $kode_program_studi);
+        }
+
+        return $this->db->order_by('m.nim', 'ASC')->get()->result_object();
+    }
+
+    public function getBiodataMahasiswaSiska($nim)
+    {
+        return $this->db->select('m.*, ps.nama_program_studi, ps.singkatan_program_studi')
+            ->from('mahasiswa m')
+            ->join('program_studi ps', 'ps.kode_program_studi = m.program_studi_kode', 'left')
+            ->where('m.nim', $nim)
+            ->get()->row_object();
+    }
 }

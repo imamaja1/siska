@@ -20,6 +20,7 @@ class Pdf
     /** @var Options */
     private $options;
 
+    private $isRendered = false;
     private $headerHtml = '';
     private $htmlContent = '';
     private $paper = 'A4';
@@ -47,6 +48,7 @@ class Pdf
 
     public function reinitialize($param)
     {
+        $this->isRendered = false;
         $this->headerHtml = '';
         $this->htmlContent = '';
         $this->initDompdf($param);
@@ -127,17 +129,20 @@ class Pdf
 
     public function SetHTMLHeader($html)
     {
+        $this->isRendered = false;
         $this->headerHtml = (string)$html;
     }
 
     // mPDF alias SetHeader (KRS uses this)
     public function SetHeader($html)
     {
+        $this->isRendered = false;
         $this->headerHtml = (string)$html;
     }
 
     public function WriteHTML($html)
     {
+        $this->isRendered = false;
         $this->htmlContent .= (string)$html;
     }
 
@@ -147,14 +152,7 @@ class Pdf
      */
     public function Output($filename = 'document.pdf', $dest = 'I')
     {
-        $fullHtml = $this->buildFullHtml($this->headerHtml, $this->htmlContent);
-        $this->dompdf->loadHtml($fullHtml);
-
-        // re-apply paper (in case reinitialize changed it after construct)
-        $paper = $this->resolvePaper($this->paper);
-        $this->dompdf->setPaper($paper, $this->orientation);
-
-        $this->dompdf->render();
+        $this->render();
 
         $dest = strtoupper($dest);
         if ($dest === 'S') {
@@ -179,23 +177,29 @@ class Pdf
 
     public function loadHtml($html)
     {
+        $this->isRendered = false;
         $this->htmlContent = (string)$html;
         $this->headerHtml = '';
     }
 
     public function loadHtmlWithHeader($header, $html)
     {
+        $this->isRendered = false;
         $this->headerHtml = (string)$header;
         $this->htmlContent = (string)$html;
     }
 
     public function render()
     {
+        if ($this->isRendered) {
+            return;
+        }
         $fullHtml = $this->buildFullHtml($this->headerHtml, $this->htmlContent);
         $this->dompdf->loadHtml($fullHtml);
         $paper = $this->resolvePaper($this->paper);
         $this->dompdf->setPaper($paper, $this->orientation);
         $this->dompdf->render();
+        $this->isRendered = true;
     }
 
     public function stream($filename = 'document.pdf', $options = [])

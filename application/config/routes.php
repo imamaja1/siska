@@ -142,3 +142,6 @@ $route['admin/audit/petikan/hasil'] = 'admin/Audit_petikan/hasil';
 $route['admin/audit/petikan/cek_null_siska'] = 'admin/Audit_petikan/cek_null_siska';
 $route['admin/audit/pure_feeder'] = 'admin/Pure_feeder/index';
 $route['admin/audit/pure_feeder/hasil'] = 'admin/Pure_feeder/hasil';
+$route['admin/audit/mahasiswa'] = 'admin/Audit_mahasiswa/index';
+$route['admin/audit/mahasiswa/hasil'] = 'admin/Audit_mahasiswa/hasil';
+$route['admin/audit/mahasiswa/detail_nim'] = 'admin/Audit_mahasiswa/detail_nim';

@@ -97,7 +97,6 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                             <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
                         <?php else: ?>
                             <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran / Validasi</span>
-                            <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-pay-now">Cek Tagihan / KRS &rarr;</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -116,7 +115,6 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                             <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
                         <?php else: ?>
                             <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran / Validasi</span>
-                            <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-pay-now">Cek Tagihan / KRS &rarr;</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -135,7 +133,6 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                             <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> <?= e($sks_krs_display) ?> SKS Disetujui, Terverifikasi</span>
                         <?php else: ?>
                             <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Belum Diverifikasi (<?= e($sks_krs_display) ?> SKS)</span>
-                            <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-pay-now">Cek Tagihan / KRS &rarr;</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -148,7 +145,7 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
     <section class="dash-quick-section">
         <div class="dash-section-head">
             <h2 class="dash-section-title">Akses Cepat Layanan</h2>
-            <a href="<?= site_url('mahasiswa/kurikulum') ?>" class="dash-section-link">Semua Layanan &rarr;</a>
+            <a href="<?= site_url('mahasiswa/kurikulum') ?>" class="dash-section-link">Semua Layanan</a>
         </div>
 
         <div class="dash-services-grid">
@@ -163,7 +160,7 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                 </p>
                 <div class="dash-service-action">
                     <a href="<?= site_url('mahasiswa/krs') ?>" class="dash-btn-navy-solid">
-                        Susun KRS Online &rarr;
+                        Susun KRS Online
                     </a>
                 </div>
             </div>
@@ -178,7 +175,7 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                 </p>
                 <div class="dash-service-action">
                     <a href="<?= site_url('mahasiswa/khs') ?>" class="dash-btn-navy-outline">
-                        Lihat KHS Semester &rarr;
+                        Lihat KHS Semester
                     </a>
                 </div>
             </div>

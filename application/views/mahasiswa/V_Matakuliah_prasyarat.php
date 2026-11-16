@@ -18,9 +18,6 @@ $kur_name = $kurikulum->nama_kurikulum ?? '';
 
     <!-- 2. NOTICE ALERT BANNER -->
     <div class="prasyarat-notice-banner">
-        <div class="prasyarat-notice-icon">
-            <i class="fa fa-info-circle"></i>
-        </div>
         <div>
             <h4 class="prasyarat-notice-title">Aturan Pengambilan Matakuliah Berprasyarat</h4>
             <p class="prasyarat-notice-text">

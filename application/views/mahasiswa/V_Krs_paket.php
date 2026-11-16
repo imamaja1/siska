@@ -41,9 +41,6 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
     <!-- 1. Master Page Header Card -->
     <div class="krs-header-card">
         <div class="krs-header-left">
-            <div class="krs-header-icon">
-                <i class="fa fa-calendar-check-o"></i>
-            </div>
             <div>
                 <h2 class="krs-header-title">Pengisian KRS Paket | Semester <?= e($semester_label) ?></h2>
                 <p class="krs-header-sub">
@@ -59,7 +56,6 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
     <!-- 2. Student Context Strip with SKS Quota Indicator -->
     <div class="krs-meta-strip">
         <div class="krs-student-info">
-            <div class="krs-avatar-init"><?= $initials ?></div>
             <div class="krs-student-details">
                 <h3 class="krs-student-name"><?= e($nama) ?></h3>
                 <p class="krs-student-sub">
@@ -178,7 +174,7 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
             <div class="krs-submit-actions">
                 <div id="loading" class="krs-loading-wrap">
                     <button type="submit" name="submit" id="submit" class="krs-btn-submit">
-                        <i class="fa fa-send"></i> Ajukan KRS ke Dosen Wali &rarr;
+                        <i class="fa fa-send"></i> Ajukan KRS ke Dosen Wali
                     </button>
                 </div>
             </div>

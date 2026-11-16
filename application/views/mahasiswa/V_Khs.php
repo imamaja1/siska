@@ -55,9 +55,6 @@ $kurikulum_label = isset($data['kurikulum']) ? e($data['kurikulum']) : '';
     <!-- 1. MASTER PAGE HEADER CARD -->
     <div class="khs-header-card">
         <div class="khs-header-left">
-            <div class="khs-header-icon">
-                <i class="fa fa-bar-chart"></i>
-            </div>
             <div>
                 <h2 class="khs-header-title">KHS | <?= e($sem_label) ?></h2>
                 <p class="khs-header-sub">
@@ -73,7 +70,7 @@ $kurikulum_label = isset($data['kurikulum']) ? e($data['kurikulum']) : '';
                     <i class="fa fa-print"></i> Cetak KHS
                 </a>
                 <a href="<?= site_url('mahasiswa/khs/cetak/'.$data['krs'].'/'.$data['nim']) ?>" class="khs-btn-navy">
-                    <i class="fa fa-download"></i> Unduh KHS &rarr;
+                    <i class="fa fa-download"></i> Unduh KHS
                 </a>
             </div>
         <?php endif; ?>
@@ -82,7 +79,6 @@ $kurikulum_label = isset($data['kurikulum']) ? e($data['kurikulum']) : '';
     <!-- 2. STUDENT CONTEXT STRIP -->
     <div class="khs-meta-strip">
         <div class="khs-student-info">
-            <div class="khs-avatar-init"><?= $initials ?></div>
             <div class="khs-student-details">
                 <h3 class="khs-student-name"><?= e($nama_mhs) ?></h3>
                 <p class="khs-student-sub">

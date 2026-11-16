@@ -1,27 +1,64 @@
 <?php if (!empty($kompetensi_mahasiswa)) : ?>
-    <div class="box box-primary flat">
-        <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-certificate"></i> Kompetensi</h3>
+<div class="prasyarat-wrapper">
+
+    <!-- 1. UNIFIED PAGE HEADER CARD -->
+    <div class="prasyarat-header-card">
+        <div>
+            <h2 class="prasyarat-title">Kompetensi Mahasiswa</h2>
+            <p class="prasyarat-sub">Bidang Keahlian / Peminatan Konsentrasi Program Studi Mahasiswa</p>
         </div>
-        <div class="box-body">
-            <div class="table-responsive mhs-table-wrap">
-                <table class="table mhs-table">
-                    <thead>
+    </div>
+
+    <!-- 2. STANDARDIZED TABLE CARD -->
+    <div class="prasyarat-table-card">
+        <div class="prasyarat-table-head-bar">
+            <h4 class="prasyarat-table-title">
+                Data Pilihan Bidang Kompetensi
+            </h4>
+            <span class="prasyarat-table-badge">
+                Terdaftar
+            </span>
+        </div>
+
+        <div class="table-responsive" style="margin: 0; border: none;">
+            <table class="prasyarat-table-grid">
+                <thead>
                     <tr>
-                        <th>NIM</th>
-                        <th>Kompetensi</th>
+                        <th style="width: 50px; text-align: center;">NO</th>
+                        <th style="width: 140px; text-align: center;">NIM</th>
+                        <th>NAMA MAHASISWA</th>
+                        <th style="width: 140px; text-align: center;">KODE</th>
+                        <th>BIDANG KOMPETENSI / KONSENTRASI</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     <tr>
-                        <td class="mhs-num"><?= e($kompetensi_mahasiswa->nim) ?></td>
-                        <td class="text-center"><?= e($kompetensi_mahasiswa->nama_kompetensi) ?></td>
+                        <td style="text-align: center; color: #64748B; font-weight: 600;">1.</td>
+                        <td style="text-align: center;" class="prasyarat-td-code"><?= e($kompetensi_mahasiswa->nim) ?></td>
+                        <td class="prasyarat-td-name"><?= e($this->session->userdata('nama_mahasiswa') ?? '-') ?></td>
+                        <td style="text-align: center;" class="prasyarat-td-syarat-code"><?= e($kompetensi_mahasiswa->kode_kompetensi ?? '-') ?></td>
+                        <td class="prasyarat-td-syarat-name">
+                            <b><?= e($kompetensi_mahasiswa->nama_kompetensi) ?></b>
+                            <?php if (!empty($kompetensi_mahasiswa->singkatan_kompetensi)): ?>
+                                (<?= e($kompetensi_mahasiswa->singkatan_kompetensi) ?>)
+                            <?php endif; ?>
+                        </td>
                     </tr>
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prasyarat-table-footer-bar">
+            <div>
+                Status: <b>Telah Terdaftar &amp; Terverifikasi</b>
+            </div>
+            <div>
+                Sistem Informasi Akademik &mdash; Universitas Bumigora
             </div>
         </div>
     </div>
+
+</div>
 <?php else: ?>
     <div class="modal fade" id="tambah-kompetensi">
         <div class="modal-dialog modal-lg">

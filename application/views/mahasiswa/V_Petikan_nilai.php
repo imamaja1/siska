@@ -25,9 +25,6 @@ $data_list = (isset($data) && is_iterable($data)) ? $data : [];
     <!-- 1. MASTER PAGE HEADER CARD -->
     <div class="petikan-header-card">
         <div class="petikan-header-left">
-            <div class="petikan-header-icon">
-                <i class="fa fa-file-text-o"></i>
-            </div>
             <div>
                 <h2 class="petikan-header-title">Petikan Nilai</h2>
                 <p class="petikan-header-sub">
@@ -42,7 +39,7 @@ $data_list = (isset($data) && is_iterable($data)) ? $data : [];
                 <i class="fa fa-download"></i> Versi Sebelumnya
             </a>
             <a href="<?= site_url('mahasiswa/Petikan_nilai/cetak_now') ?>" class="petikan-btn-navy">
-                <i class="fa fa-download"></i> Versi Terbaru &rarr;
+                <i class="fa fa-download"></i> Versi Terbaru
             </a>
         </div>
     </div>
@@ -50,7 +47,6 @@ $data_list = (isset($data) && is_iterable($data)) ? $data : [];
     <!-- 2. STUDENT CONTEXT STRIP -->
     <div class="petikan-meta-strip">
         <div class="petikan-student-info">
-            <div class="petikan-avatar-init"><?= $initials ?></div>
             <div class="petikan-student-details">
                 <h3 class="petikan-student-name"><?= e($nama_mhs) ?></h3>
                 <p class="petikan-student-sub">

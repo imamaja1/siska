@@ -116,15 +116,39 @@ class NilaiService extends MY_Service {
             }
         }
 
-        // Signature (TTD)
-        $nik_data = bodo_kop($nim);
+        // Dekan & Signature (TTD)
+        $dekan = null;
+        if ($prodi && !empty($prodi->dekan)) {
+            $dekan = $this->db->select('kode_dosen, nama_dosen, nik, signature')
+                ->from('dosen')
+                ->where('kode_dosen', $prodi->dekan)
+                ->get()->row_object();
+        }
+
+        $nama_dekan = $dekan ? $dekan->nama_dosen : '';
+        $nik_dekan  = $dekan ? $dekan->nik : '';
+
         $ttd = '';
-        if ($nik_data && isset($nik_data['nik'])) {
-            $dosen = $this->db->select('signature')->from('dosen')->where('nik', $nik_data['nik'])->get()->row_object();
+        if ($dekan && !empty($dekan->signature) && file_exists(FCPATH . 'assets/signature-dosen/' . $dekan->signature)) {
+            $ttd = $dekan->signature;
+        } elseif (!empty($nik_dekan)) {
+            $dosen = $this->db->select('signature')->from('dosen')->where('nik', $nik_dekan)->get()->row_object();
             $ttd = $dosen ? $dosen->signature : '';
         }
 
         $total = $this->hitung_total_petikan($data_petikan, $type, $semester_total);
+
+        // Kop surat prodi / fakultas
+        $kop_file = '';
+        if ($prodi && !empty($prodi->kode_program_studi)) {
+            $prodi_kop = glob(FCPATH . 'assets/gambar/kop/prodi_' . $prodi->kode_program_studi . '.*');
+            if (!empty($prodi_kop)) {
+                $kop_file = basename($prodi_kop[0]);
+            }
+        }
+        if (empty($kop_file) && function_exists('bodo_kop')) {
+            $kop_file = bodo_kop($nim)['kop'] ?? '';
+        }
 
         return array(
             'sub_judul' => $nim,
@@ -135,6 +159,10 @@ class NilaiService extends MY_Service {
             'semester' => $semester_target,
             'semester_jalan' => isset($semester_jalan) ? $semester_jalan : 0,
             'ttd' => $ttd,
+            'nama_dekan' => $nama_dekan,
+            'nik_dekan' => $nik_dekan,
+            'dekan' => $dekan,
+            'kop_file' => $kop_file,
             'total_sks' => $total['total_sks'],
             'total_sksn' => $total['total_sksn'],
             'ipk' => $total['ipk'],

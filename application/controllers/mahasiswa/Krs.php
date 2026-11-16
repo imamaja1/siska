@@ -381,9 +381,9 @@ class Krs extends CI_Controller
         if ($total_sks_server > $beban_sekarang) {
             $this->session->set_flashdata(
                 'info',
-                '<script>swal("Gagal","Jumlah SKS Matakuliah yang anda pilih lebih besar dari beban yang di berikan '.$total_sks_dipilih.'","error")</script>'
+                '<script>swal("Gagal!","Jumlah SKS yang dipilih (' . $total_sks_server . ' SKS) melebihi kuota maksimal ' . $beban_sekarang . ' SKS. Silakan kurangi pilihan matakuliah Anda.","error")</script>'
             );
-            redirect('mahasiswa/krs');
+            redirect('mahasiswa/krs/starter');
 
         } else {
             $tahun = $this->m_tahun_akademik->get_semester();
@@ -1217,7 +1217,7 @@ class Krs extends CI_Controller
         if ($total_sks_server > $beban_sekarang) {
             $this->session->set_flashdata(
                 'info',
-                '<script>swal("Gagal","Jumlah SKS Matakuliah yang anda pilih lebih besar dari beban yang di berikan","error")</script>'
+                '<script>swal("Gagal!","Jumlah SKS yang dipilih (' . $total_sks_server . ' SKS) melebihi kuota maksimal ' . $beban_sekarang . ' SKS. Silakan kurangi pilihan matakuliah Anda.","error")</script>'
             );
             redirect('mahasiswa/krs/edit_krs');
 

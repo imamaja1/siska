@@ -41,9 +41,6 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
     <!-- 1. Master Page Header Card -->
     <div class="krs-header-card">
         <div class="krs-header-left">
-            <div class="krs-header-icon">
-                <i class="fa fa-calendar-check-o"></i>
-            </div>
             <div>
                 <h2 class="krs-header-title">Pengisian KRS | Semester <?= e($semester_label) ?></h2>
                 <p class="krs-header-sub">
@@ -59,7 +56,6 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
     <!-- 2. Student Context Strip with SKS Quota Indicator -->
     <div class="krs-meta-strip">
         <div class="krs-student-info">
-            <div class="krs-avatar-init"><?= $initials ?></div>
             <div class="krs-student-details">
                 <h3 class="krs-student-name"><?= e($nama) ?></h3>
                 <p class="krs-student-sub">
@@ -239,20 +235,28 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
             <?php endforeach; ?>
         <?php endif; ?>
 
-        <!-- 5. Submission Bar Card -->
-        <div class="krs-submit-card">
+        <!-- Floating Status & Reset Action (Fixed Bottom-Right) -->
+        <div class="krs-floating-action">
             <div id="kotak-pesan" class="krs-live-status">
                 <i class="fa fa-info-circle"></i>
                 <span class="krs-status-text">Silakan pilih matakuliah yang ingin diambil (Maksimal <b><?= e($max_sks) ?> SKS</b>)</span>
             </div>
+            <button type="button" class="krs-btn-reset" onclick="batal()" title="Reset semua pilihan matakuliah">
+                <i class="fa fa-undo"></i> Reset Pilihan
+            </button>
+        </div>
+
+        <!-- 5. Submission Bar Card -->
+        <div class="krs-submit-card">
+            <div class="krs-submit-hint">
+                <i class="fa fa-info-circle"></i>
+                <span>Pastikan pilihan matakuliah telah sesuai sebelum mengajukan rencana studi.</span>
+            </div>
 
             <div class="krs-submit-actions">
-                <button type="button" class="krs-btn-reset" onclick="batal()">
-                    <i class="fa fa-undo"></i> Reset Pilihan
-                </button>
                 <div id="loading" class="krs-loading-wrap">
                     <button type="submit" name="submit" id="submit" class="krs-btn-submit">
-                        <i class="fa fa-send"></i> Ajukan KRS ke Dosen Wali &rarr;
+                        <i class="fa fa-send"></i> Ajukan KRS ke Dosen Wali
                     </button>
                 </div>
             </div>
@@ -353,7 +357,7 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
                     if (total > jumlah_maksimum_sks) {
                         $('#kotak-pesan').addClass('is-over').removeClass('is-ok');
                         $('#kotak-pesan').html('<i class="fa fa-exclamation-triangle"></i> <span class="krs-status-text">Jumlah SKS yang dipilih: <b>' + total + ' SKS</b> (Melebihi kuota maksimal <b>' + jumlah_maksimum_sks + ' SKS</b>). Silakan kurangi pilihan matakuliah.</span>');
-                        $('#submit').prop('disabled', true);
+                        $('#submit').prop('disabled', false);
                     } else if (total == jumlah_maksimum_sks) {
                         $('#kotak-pesan').addClass('is-ok').removeClass('is-over');
                         $('#kotak-pesan').html('<i class="fa fa-check-circle"></i> <span class="krs-status-text">Jumlah SKS yang dipilih tepat sesuai kuota: <b>' + total + ' SKS</b> dari batas <b>' + jumlah_maksimum_sks + ' SKS</b>.</span>');
@@ -373,11 +377,25 @@ $max_sks = isset($jumlah_maksimum_sks['beban_sks']) ? (int)$jumlah_maksimum_sks[
 
     $('#form-krs-mahasiswa').bind('submit', function (e) {
         if ($('.check-kpat:checked').length < 1) {
-            swal('Peringatan', 'Silakan pilih minimal satu matakuliah untuk diajukan.', 'warning');
+            swal('Peringatan!', 'Silakan pilih minimal satu matakuliah untuk diajukan.', 'warning');
             return false;
-        } else {
-            var button = $('#loading');
-            button.html('<button class="krs-btn-submit" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang diproses...</button>');
         }
+        var total = 0;
+        $('.check-kpat:checked').each(function() {
+            var parts = $(this).val().split(',');
+            if (parts.length > 1) {
+                total += parseInt(parts[1]) || 0;
+            }
+        });
+        if (total === 0) {
+            total = parseInt($('#total-sks-dipilih').val()) || 0;
+        }
+        var jumlah_maksimum_sks = <?= (int)$max_sks ?>;
+        if (total > jumlah_maksimum_sks) {
+            swal('Peringatan!', 'Jumlah SKS yang dipilih (' + total + ' SKS) melebihi kuota maksimal ' + jumlah_maksimum_sks + ' SKS. Silakan kurangi pilihan matakuliah Anda.', 'warning');
+            return false;
+        }
+        var button = $('#loading');
+        button.html('<button class="krs-btn-submit" disabled><i class="fa fa-refresh fa-spin"></i> Permintaan sedang diproses...</button>');
     });
 </script>

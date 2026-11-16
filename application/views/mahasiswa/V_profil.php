@@ -35,7 +35,6 @@ $val = function ($v) {
     <!-- Page Context Banner -->
     <div class="pf-banner">
         <div class="pf-banner-left">
-            <span class="pf-banner-icon"><i class="fa fa-user"></i></span>
             <div>
                 <h1>Profil Mahasiswa</h1>
                 <p class="pf-banner-sub">Informasi data diri dan status administrasi akademik mahasiswa</p>
@@ -75,11 +74,6 @@ $val = function ($v) {
     <div class="pf-card">
         <div class="pf-card-head">
             <h2><i class="fa fa-id-card-o"></i> Detail Data Mahasiswa</h2>
-            <div class="pf-tags">
-                <span class="pf-status <?= $status_aktif ? 'is-active' : 'is-inactive' ?>">
-                    <i class="fa <?= $status_aktif ? 'fa-check-circle' : 'fa-times-circle' ?>"></i> <?= e($status_label) ?>
-                </span>
-            </div>
         </div>
         <div class="pf-card-body">
             <div class="row">

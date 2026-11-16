@@ -598,6 +598,129 @@ class FeederService extends MY_Service {
         return ['rows' => $rows_out, 'total' => count($rows_out), 'error' => ''];
     }
 
+    public function getListMahasiswa($filter = '', $order = '', $limit = 500, $offset = 0)
+    {
+        $params = [
+            'filter' => (string) $filter,
+            'order'  => (string) $order,
+            'limit'  => (string) $limit,
+            'offset' => (string) $offset,
+        ];
+
+        return $this->request('GetListMahasiswa', $params);
+    }
+
+    public function getAllMahasiswaByFilter($filter = '', $order = 'nim asc')
+    {
+        $rows_out = [];
+        $offset = 0;
+        $limit = 500;
+        $guard = 0;
+
+        while (TRUE) {
+            $guard++;
+            if ($guard > 100) {
+                break;
+            }
+
+            $res = $this->getListMahasiswa($filter, $order, $limit, $offset);
+            if (isset($res['error'])) {
+                return ['rows' => [], 'total' => 0, 'error' => $res['error']];
+            }
+
+            $rows = $res['data'] ?? [];
+            if (!is_array($rows) || empty($rows)) {
+                break;
+            }
+
+            foreach ($rows as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $nim = (string) $this->pick($row, ['nim', 'nipd', 'NIM', 'NIPD']);
+                $rows_out[] = [
+                    'nim'                     => $nim,
+                    'nama_mahasiswa'          => (string) $this->pick($row, ['nama_mahasiswa', 'nama', 'nm_mhs']),
+                    'id_prodi'                => (string) $this->pick($row, ['id_prodi']),
+                    'nama_program_studi'      => (string) $this->pick($row, ['nama_program_studi', 'nama_prodi', 'jurusan']),
+                    'id_periode_masuk'        => (string) $this->pick($row, ['id_periode_masuk', 'id_periode', 'angkatan', 'id_smt']),
+                    'id_status_mahasiswa'     => (string) $this->pick($row, ['id_status_mahasiswa', 'id_status']),
+                    'nama_status_mahasiswa'   => (string) $this->pick($row, ['nama_status_mahasiswa', 'nama_status']),
+                    'id_mahasiswa'            => (string) $this->pick($row, ['id_mahasiswa']),
+                    'id_registrasi_mahasiswa' => (string) $this->pick($row, ['id_registrasi_mahasiswa']),
+                    'jenis_kelamin'           => (string) $this->pick($row, ['jenis_kelamin', 'jk']),
+                    'tanggal_lahir'           => (string) $this->pick($row, ['tanggal_lahir', 'tgl_lahir']),
+                    'tempat_lahir'            => (string) $this->pick($row, ['tempat_lahir']),
+                    'total_sks'               => $this->pick($row, ['total_sks', 'sks_total']),
+                    'ipk'                     => $this->pick($row, ['ipk']),
+                    'raw'                     => $row,
+                ];
+            }
+
+            if (count($rows) < $limit) {
+                break;
+            }
+            $offset += $limit;
+        }
+
+        return ['rows' => $rows_out, 'total' => count($rows_out), 'error' => ''];
+    }
+
+    public function getBiodataMahasiswa($id_mahasiswa)
+    {
+        $id_mahasiswa = trim((string) $id_mahasiswa);
+        if ($id_mahasiswa === '') {
+            return ['data' => NULL, 'error' => 'ID mahasiswa kosong.'];
+        }
+
+        $filter = "id_mahasiswa='" . str_replace("'", "\\'", $id_mahasiswa) . "'";
+        $res = $this->request('GetBiodataMahasiswa', [
+            'filter' => $filter,
+            'order'  => '',
+            'limit'  => '1',
+            'offset' => '0',
+        ]);
+
+        if (isset($res['error'])) {
+            return ['data' => NULL, 'error' => $res['error']];
+        }
+
+        $rows = $res['data'] ?? [];
+        if (is_array($rows) && isset($rows[0])) {
+            return ['data' => $rows[0], 'error' => ''];
+        }
+
+        return ['data' => is_array($rows) ? $rows : NULL, 'error' => ''];
+    }
+
+    public function getProdiFeeder()
+    {
+        $config = $this->getConfig();
+        $kd_pt = !empty($config['feeder_username']) ? $config['feeder_username'] : '081040';
+        return $this->request('GetAllProdi', [
+            'filter' => "kode_perguruan_tinggi='" . str_replace("'", "\\'", $kd_pt) . "'",
+            'order'  => 'nama_program_studi asc',
+            'limit'  => '100',
+            'offset' => '0',
+        ]);
+    }
+
+    public function getAllProdiFeeder($filter = '')
+    {
+        $config = $this->getConfig();
+        $kd_pt = !empty($config['feeder_username']) ? $config['feeder_username'] : '081040';
+        $finalFilter = "kode_perguruan_tinggi='" . str_replace("'", "\\'", $kd_pt) . "'";
+        if (!empty($filter)) {
+            $finalFilter .= ' and (' . $filter . ')';
+        }
+        return $this->request('GetAllProdi', [
+            'filter' => $finalFilter,
+            'order'  => 'nama_program_studi asc',
+            'limit'  => '100',
+            'offset' => '0',
+        ]);
+    }
+
     public function idSemester($tahun_akademik, $semester)
     {
         $year = (int) substr(trim((string) $tahun_akademik), 0, 4);

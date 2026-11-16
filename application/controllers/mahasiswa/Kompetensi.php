@@ -32,6 +32,7 @@ class Kompetensi extends CI_Controller
         if ($kompetensi->num_rows() > 0) {
             $data['conten'] = 'mahasiswa/V_kompetensi';
             $data['judul'] = 'Kompetensi Mahasiswa';
+            $data['hide_page_header'] = true;
             $data['kompetensi_mahasiswa'] = $kompetensi->row_object();
 
             $this->load->view('mahasiswa/template/V_main', $data);
@@ -60,6 +61,7 @@ class Kompetensi extends CI_Controller
                 if ($kompetensi->num_rows() == 0) {
                     $data['conten'] = 'mahasiswa/V_kompetensi';
                     $data['judul'] = 'Tambah Kompetensi Mahasiswa';
+                    $data['hide_page_header'] = true;
                     $data['data_kompetensi'] = $this->Kompetensi_model->get_kompetensi($this->session->userdata('kode_program_studi'));
                     $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 
@@ -84,6 +86,7 @@ class Kompetensi extends CI_Controller
                 if ($kompetensi->num_rows() == 0) {
                     $data['conten'] = 'mahasiswa/V_kompetensi';
                     $data['judul'] = 'Tambah Kompetensi Mahasiswa';
+                    $data['hide_page_header'] = true;
                     $data['data_kompetensi'] = $this->Kompetensi_model->get_kompetensi($this->session->userdata('kode_program_studi'));
                     $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 
@@ -104,6 +107,7 @@ class Kompetensi extends CI_Controller
                     if ($kompetensi->num_rows() == 0) {
                         $data['conten'] = 'mahasiswa/V_kompetensi';
                         $data['judul'] = 'Tambah Kompetensi Mahasiswa';
+                    $data['hide_page_header'] = true;
                         $data['data_kompetensi'] = $this->Kompetensi_model->get_kompetensi($this->session->userdata('kode_program_studi'));
                         $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 
@@ -115,6 +119,7 @@ class Kompetensi extends CI_Controller
                     if ($kompetensi->num_rows() == 0) {
                         $data['conten'] = 'mahasiswa/V_kompetensi';
                         $data['judul'] = 'Tambah Kompetensi Mahasiswa';
+                    $data['hide_page_header'] = true;
                         $data['data_kompetensi'] = $this->Kompetensi_model->get_kompetensi($this->session->userdata('kode_program_studi'));
                         $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 
@@ -146,6 +151,7 @@ class Kompetensi extends CI_Controller
                 if ($kompetensi->num_rows() == 0) {
                     $data['conten'] = 'mahasiswa/V_kompetensi';
                     $data['judul'] = 'Tambah Kompetensi Mahasiswa';
+                    $data['hide_page_header'] = true;
                     $data['data_kompetensi'] = $this->Kompetensi_model->get_kompetensi($this->session->userdata('kode_program_studi'));
                     $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 
@@ -157,6 +163,7 @@ class Kompetensi extends CI_Controller
                 if ($kompetensi->num_rows() == 0) {
                     $data['conten'] = 'mahasiswa/V_kompetensi';
                     $data['judul'] = 'Tambah Kompetensi Mahasiswa';
+                    $data['hide_page_header'] = true;
                     $data['data_kompetensi'] = $this->Kompetensi_model->get_kompetensi($this->session->userdata('kode_program_studi'));
                     $data['kompetensi_mahasiswa'] = $kompetensi2->row_object();
 

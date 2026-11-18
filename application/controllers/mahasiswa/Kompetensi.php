@@ -35,6 +35,10 @@ class Kompetensi extends CI_Controller
             $data['hide_page_header'] = true;
             $data['kompetensi_mahasiswa'] = $kompetensi->row_object();
 
+            $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum') ?: kode_nama_kurikulum($nim);
+            $service = isset($this->MahasiswaService) ? $this->MahasiswaService : $this->mahasiswaservice;
+            $data['matakuliah_kompetensi'] = $service->getMatakuliahKonsentrasi($kode_nama_kurikulum, $data['kompetensi_mahasiswa']->kode_kompetensi);
+
             $this->load->view('mahasiswa/template/V_main', $data);
         } else {
             $this->starter();

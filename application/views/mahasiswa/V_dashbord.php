@@ -32,7 +32,7 @@ if (count($nama_parts) >= 2) {
 $ipk_display = !empty($ipk_kumulatif) ? $ipk_kumulatif : '0.00';
 $sks_display = !empty($total_sks_lulus) ? $total_sks_lulus : '0';
 $dpa_display = !empty($dosen_wali) ? $dosen_wali : '-';
-$sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
+$sks_krs_display = !empty($sks_krs) ? $sks_krs : '0';
 ?>
 
 <div class="mhs-dash">
@@ -96,7 +96,7 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                         <?php if ($spp_ok): ?>
                             <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
                         <?php else: ?>
-                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran / Validasi</span>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran</span>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -114,7 +114,7 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                         <?php if ($spp_ok): ?>
                             <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
                         <?php else: ?>
-                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran / Validasi</span>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran</span>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -132,7 +132,25 @@ $sks_krs_display = !empty($sks_krs) ? $sks_krs : '24';
                         <?php if ($sks_ok): ?>
                             <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> <?= e($sks_krs_display) ?> SKS Disetujui, Terverifikasi</span>
                         <?php else: ?>
-                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Belum Diverifikasi (<?= e($sks_krs_display) ?> SKS)</span>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="dash-pay-item <?= $lab_ok ? 'is-paid' : 'is-unpaid' ?>">
+                    <div class="dash-pay-item-top">
+                        <span class="dash-pay-type">BIAYA LAB</span>
+                        <?php if ($lab_ok): ?>
+                            <span class="dash-badge-lunas">LUNAS</span>
+                        <?php else: ?>
+                            <span class="dash-badge-unpaid">BELUM LUNAS</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="dash-pay-info">
+                        <?php if ($lab_ok): ?>
+                            <span class="dash-pay-status-desc"><i class="fa fa-check-circle"></i> Terverifikasi Bagian Keuangan</span>
+                        <?php else: ?>
+                            <span class="dash-pay-status-desc is-pending"><i class="fa fa-clock-o"></i> Menunggu Pembayaran</span>
                         <?php endif; ?>
                     </div>
                 </div>

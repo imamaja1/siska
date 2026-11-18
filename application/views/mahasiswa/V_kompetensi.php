@@ -25,9 +25,8 @@
                 <thead>
                     <tr>
                         <th style="width: 50px; text-align: center;">NO</th>
-                        <th style="width: 140px; text-align: center;">NIM</th>
+                        <th style="width: 160px; text-align: center;">NIM</th>
                         <th>NAMA MAHASISWA</th>
-                        <th style="width: 140px; text-align: center;">KODE</th>
                         <th>BIDANG KOMPETENSI / KONSENTRASI</th>
                     </tr>
                 </thead>
@@ -36,7 +35,6 @@
                         <td style="text-align: center; color: #64748B; font-weight: 600;">1.</td>
                         <td style="text-align: center;" class="prasyarat-td-code"><?= e($kompetensi_mahasiswa->nim) ?></td>
                         <td class="prasyarat-td-name"><?= e($this->session->userdata('nama_mahasiswa') ?? '-') ?></td>
-                        <td style="text-align: center;" class="prasyarat-td-syarat-code"><?= e($kompetensi_mahasiswa->kode_kompetensi ?? '-') ?></td>
                         <td class="prasyarat-td-syarat-name">
                             <b><?= e($kompetensi_mahasiswa->nama_kompetensi) ?></b>
                             <?php if (!empty($kompetensi_mahasiswa->singkatan_kompetensi)): ?>
@@ -57,6 +55,60 @@
             </div>
         </div>
     </div>
+
+    <?php if (!empty($matakuliah_kompetensi)) : ?>
+    <?php
+        $total_sks = 0;
+        foreach ($matakuliah_kompetensi as $mk) {
+            $total_sks += (int)($mk->sks ?? 0);
+        }
+    ?>
+    <!-- 3. DAFTAR MATAKULIAH KONSENTRASI CARD -->
+    <div class="prasyarat-table-card">
+        <div class="prasyarat-table-head-bar">
+            <h4 class="prasyarat-table-title">
+                Daftar Matakuliah Konsentrasi / Peminatan
+            </h4>
+            <span class="prasyarat-table-badge">
+                <?= count($matakuliah_kompetensi) ?> Matakuliah (<?= $total_sks ?> SKS)
+            </span>
+        </div>
+
+        <div class="table-responsive" style="margin: 0; border: none;">
+            <table class="prasyarat-table-grid">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">NO</th>
+                        <th style="width: 140px; text-align: center;">KODE MK</th>
+                        <th>NAMA MATAKULIAH</th>
+                        <th style="width: 110px; text-align: center;">SEMESTER</th>
+                        <th style="width: 80px; text-align: center;">SKS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $no = 1; foreach ($matakuliah_kompetensi as $mk) : ?>
+                    <tr>
+                        <td style="text-align: center; color: #64748B; font-weight: 600;"><?= $no++ ?>.</td>
+                        <td style="text-align: center;" class="prasyarat-td-code"><?= e($mk->kode_matakuliah) ?></td>
+                        <td class="prasyarat-td-name"><b><?= e($mk->nama_matakuliah) ?></b></td>
+                        <td style="text-align: center;"><span class="prasyarat-badge-min">Semester <?= e($mk->semester) ?></span></td>
+                        <td style="text-align: center; font-weight: 700; color: #0F3D6E;"><?= e($mk->sks ?? '-') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="prasyarat-table-footer-bar">
+            <div>
+                Total: <b><?= count($matakuliah_kompetensi) ?> Matakuliah</b> &bull; <b><?= $total_sks ?> SKS</b>
+            </div>
+            <div>
+                Kurikulum Berlaku Mahasiswa
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
 </div>
 <?php else: ?>

@@ -634,12 +634,13 @@ class MahasiswaService extends MY_Service {
     // ==================== KOMPETENSI HELPERS ====================
 
     public function getMatakuliahKonsentrasi($kode_nama_kurikulum, $kode_kompetensi) {
-        return $this->db->select('mak.nama_matakuliah, mak.kode_matakuliah, kur.semester')
+        return $this->db->select('mak.nama_matakuliah, mak.kode_matakuliah, kur.semester, (mak.sks_teori + mak.sks_praktek + mak.sks_praktikum) as sks')
             ->from('kurikulum as kur')
             ->join('matakuliah as mak', 'mak.id_matakuliah=kur.id_matakuliah')
             ->join('matakuliah_kompetensi as mk', 'mk.id_matakuliah=mak.id_matakuliah')
             ->where('kur.kode_nama_kurikulum', $kode_nama_kurikulum)
             ->where('mk.kode_kompetensi', $kode_kompetensi)
+            ->order_by('kur.semester', 'ASC')
             ->get()->result();
     }
 

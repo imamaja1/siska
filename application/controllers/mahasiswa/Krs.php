@@ -235,7 +235,7 @@ class Krs extends CI_Controller
         $kompetensi_manajemen_semester4 = substr($nim, 2, 4);
         if ($status_perkuliahan) {
             if ($kompetensi_manajemen_semester4 == "0108") {
-                if (($this->semester_saat_ini() >= 2) && ($this->status_pendaftaran == 'B')) {
+                if (($this->semester_saat_ini() >= 2) && ($this->status_pendaftaran == 'B' || $this->status_pendaftaran == 'T' || $this->status_pendaftaran == 'L')) {
                     $kompetensi = $this->Kompetensi_model->get_kompetensi_mahasiswa($nim);
                     if ($kompetensi->num_rows() == 0 && !available_extensi($nim)) {
                         redirect(site_url('mahasiswa/kompetensi'));
@@ -249,7 +249,7 @@ class Krs extends CI_Controller
                     $this->data_matakuliah = $this->m_data_kurikulum->get_krs_matakuliah_wajib($kode_nama_kurikulum, $semester, $this->semester, $this->status_pendaftaran);
                 }
             }elseif ($kompetensi_manajemen_semester4 == "0301" && substr($nim, 0, 2) < 24 || $kompetensi_manajemen_semester4 == "0501" && substr($nim, 0, 2) >= 24) {
-                if (($this->semester_saat_ini() >= 4) && ($this->status_pendaftaran == 'B')) {
+                if (($this->semester_saat_ini() >= 4) && ($this->status_pendaftaran == 'B' || $this->status_pendaftaran == 'T' || $this->status_pendaftaran == 'L')) {
                     $kompetensi = $this->Kompetensi_model->get_kompetensi_mahasiswa($nim);
                     if ($kompetensi->num_rows() == 0 && !available_extensi($nim)) {
                         redirect(site_url('mahasiswa/kompetensi'));
@@ -260,7 +260,7 @@ class Krs extends CI_Controller
                         $this->data_matakuliah = $this->coba_krs_pilihan($data_kompetensi->kode_kompetensi);
                     }
                 } else {
-                    if (available_kompetensi($nim) && ($this->semester_saat_ini() >= 5) && $this->status_pendaftaran == 'B' || available_kompetensi($nim) && ($this->semester_saat_ini() >= 5) && $this->status_pendaftaran == 'T') {
+                    if (available_kompetensi($nim) && (($this->semester_saat_ini() >= 5) || $this->Kompetensi_model->get_kompetensi_mahasiswa($nim)->num_rows() > 0) && ($this->status_pendaftaran == 'B' || $this->status_pendaftaran == 'T' || $this->status_pendaftaran == 'L')) {
                         $kompetensi = $this->Kompetensi_model->get_kompetensi_mahasiswa($nim);
                         if ($kompetensi->num_rows() == 0 && !available_extensi($nim)) {
                             redirect(site_url('mahasiswa/kompetensi'));
@@ -291,7 +291,7 @@ class Krs extends CI_Controller
                 }
             } else {
 
-                if (available_kompetensi($nim) && ($this->semester_saat_ini() >= 5) && $this->status_pendaftaran == 'B') {
+                if (available_kompetensi($nim) && (($this->semester_saat_ini() >= 5) || $this->Kompetensi_model->get_kompetensi_mahasiswa($nim)->num_rows() > 0) && ($this->status_pendaftaran == 'B' || $this->status_pendaftaran == 'T' || $this->status_pendaftaran == 'L')) {
                     $kompetensi = $this->Kompetensi_model->get_kompetensi_mahasiswa($nim);
                     if ($kompetensi->num_rows() == 0 && !available_extensi($nim)) {
                         redirect(site_url('mahasiswa/kompetensi'));

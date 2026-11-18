@@ -1810,8 +1810,34 @@ class AuditFeederService extends MY_Service {
             return ['status' => false, 'msg' => 'Tidak ada atribut selisih dengan data valid di Feeder yang dapat disinkronkan.'];
         }
 
+        // Ambil data sebelum update untuk keperluan log audit
+        $keys_to_update = array_keys($update_data);
+        $mhs_sebelum = $this->db->select(implode(',', $keys_to_update))
+            ->where('nim', $nim)
+            ->get('mahasiswa')
+            ->row_array();
+
         $this->Audit_feeder_model->updateBiodataMahasiswaFromFeeder($nim, $update_data);
         $count = count($update_data);
+
+        // Catat riwayat perubahan ke log audit aktivitas khusus admin/audit
+        try {
+            $this->load->model('Audit_log_model');
+            $deskripsi = ($field_key === 'all')
+                ? "Sinkronisasi seluruh biodata ({$count} atribut: " . implode(', ', $keys_to_update) . ") dari Feeder ke SISKA"
+                : "Sinkronisasi atribut [{$field_key}] dari Feeder ke SISKA";
+
+            $this->Audit_log_model->catat(
+                'mahasiswa',
+                'SINKRON_BIODATA',
+                $nim,
+                $deskripsi,
+                $mhs_sebelum,
+                $update_data
+            );
+        } catch (\Exception $e) {
+            log_message('error', 'Gagal mencatat log audit: ' . $e->getMessage());
+        }
 
         // Evaluasi ulang audit instan pasca-update menggunakan cache sesi Feeder
         $fresh = $this->auditBiodataNim($nim, TRUE);

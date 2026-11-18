@@ -154,3 +154,6 @@ $route['admin/audit/mahasiswa'] = 'admin/Audit_mahasiswa/index';
 $route['admin/audit/mahasiswa/hasil'] = 'admin/Audit_mahasiswa/hasil';
 $route['admin/audit/mahasiswa/detail_nim'] = 'admin/Audit_mahasiswa/detail_nim';
 $route['admin/audit/mahasiswa/sinkron_feeder_ke_siska'] = 'admin/Audit_mahasiswa/sinkron_feeder_ke_siska';
+$route['admin/audit/log'] = 'admin/Audit_log/index';
+$route['admin/audit/log/(:num)'] = 'admin/Audit_log/index/$1';
+$route['admin/audit/log/detail/(:num)'] = 'admin/Audit_log/detail/$1';

@@ -1,7 +1,7 @@
 
 
 <div class="callout callout-info">
-<h4>Selamat Datang di SISKA V.2</h4>
+<h4>Selamat Datang di SIAKAD V.2</h4>
 
 </div>
 
@@ -31,8 +31,8 @@
                         </ol>
                         <table class="table">
                             <tr>
-                              <td>5. Tekan tombol <b>Mulai</b> yang dibawah ini untuk menyambungkan siska dengan telegram anda, jika sudah tersambung maka tombol <b>Mulai</b> akan berubah menjadi tombol <b>Tersambung</b>.</td>
-                                <td>6. Tekan tombol <b>Kirim Pesan</b> untuk mencoba mengirim pesan dari siska ke telegram anda (Isi pesan yang dikirim yaitu: "<b>SISKA UNIVERSITAS BUMIGORA</b>")</td>
+                              <td>5. Tekan tombol <b>Mulai</b> yang dibawah ini untuk menyambungkan siakad dengan telegram anda, jika sudah tersambung maka tombol <b>Mulai</b> akan berubah menjadi tombol <b>Tersambung</b>.</td>
+                                <td>6. Tekan tombol <b>Kirim Pesan</b> untuk mencoba mengirim pesan dari siakad ke telegram anda (Isi pesan yang dikirim yaitu: "<b>SIAKAD UNIVERSITAS BUMIGORA</b>")</td>
                             </tr>
                             <tr>
                                 <td>
@@ -63,7 +63,7 @@
                 <div class="timeline-item">
                     <h3 class="timeline-header"><a href="#">Penjelasan Menu</a></h3>
                     <div class="timeline-body">
-                        Berikut merupakan penjelasan dari menu yang ada pada SISKA :
+                        Berikut merupakan penjelasan dari menu yang ada pada SIAKAD :
                         <ul>
                             <li>Menu <b>Kurikulum</b> <br>
                                 Menu ini digunakan untuk melihat kurikulum pada jurusan dan angkatan dengan dari mahasiswa yang melakukan bimbingan KRS.

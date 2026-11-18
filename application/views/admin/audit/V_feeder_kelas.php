@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
-                <h4><i class="fa fa-search"></i> Audit Nilai SISKA vs Feeder - Kelas</h4>
+                <h4><i class="fa fa-search"></i> Audit Nilai SIAKAD vs Feeder - Kelas</h4>
             </div>
             <div class="box-body">
                 <form id="form-filter" class="form-horizontal" method="post"

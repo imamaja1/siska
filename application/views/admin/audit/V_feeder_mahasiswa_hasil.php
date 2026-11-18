@@ -13,7 +13,7 @@
         <div class="box-body">
             <?php if (!empty($summary['feeder_error'])) : ?>
                 <div class="callout callout-warning flat">
-                    <p><i class="fa fa-exclamation-triangle"></i> <b>Catatan Feeder:</b> <?= e($summary['feeder_error']) ?> (Menampilkan data lokal SISKA)</p>
+                    <p><i class="fa fa-exclamation-triangle"></i> <b>Catatan Feeder:</b> <?= e($summary['feeder_error']) ?> (Menampilkan data lokal SIAKAD)</p>
                 </div>
             <?php endif; ?>
             <!-- Filter Kategori Tabs -->
@@ -40,7 +40,7 @@
                 </li>
                 <li role="presentation">
                     <a href="#tab-mhs-hanya-siska" aria-controls="tab-mhs-hanya-siska" role="tab" data-toggle="tab">
-                        <i class="fa fa-exclamation-circle text-muted"></i> Hanya di SISKA <span id="badge-count-hanya-siska">(<?= $summary['total_hanya_siska'] ?>)</span>
+                        <i class="fa fa-exclamation-circle text-muted"></i> Hanya di SIAKAD <span id="badge-count-hanya-siska">(<?= $summary['total_hanya_siska'] ?>)</span>
                     </a>
                 </li>
                 <li role="presentation">
@@ -80,7 +80,7 @@
                     ?>
                 </div>
 
-                <!-- Tab Hanya di SISKA -->
+                <!-- Tab Hanya di SIAKAD -->
                 <div role="tabpanel" class="tab-pane" id="tab-mhs-hanya-siska">
                     <?php 
                     $siska_only_rows = array_filter($rows, function($r) { return $r->in_siska && !$r->in_feeder; });
@@ -112,7 +112,7 @@ function renderTabelMahasiswa($data_rows) {
                 <tr class="active">
                     <th width="40" class="text-center">No</th>
                     <th width="110">NIM</th>
-                    <th>Nama Mahasiswa (SISKA)</th>
+                    <th>Nama Mahasiswa (SIAKAD)</th>
                     <th>Nama Mahasiswa (Feeder)</th>
                     <th>Program Studi</th>
                     <th width="100" class="text-center">Status Kuliah</th>
@@ -126,20 +126,20 @@ function renderTabelMahasiswa($data_rows) {
                     <td class="text-center col-no"><?= $no++ ?></td>
                     <td class="col-nim"><b><?= e($row->nim) ?></b></td>
                     <td class="col-nama-siska">
-                        <?= $row->in_siska ? e($row->nama_siska) : '<span class="text-muted"><i>(Tidak ada di SISKA)</i></span>' ?>
+                        <?= $row->in_siska ? e($row->nama_siska) : '<span class="text-muted"><i>(Tidak ada di SIAKAD)</i></span>' ?>
                     </td>
                     <td class="col-nama-feeder">
                         <?= $row->in_feeder ? e($row->nama_feeder) : '<span class="text-muted"><i>(Tidak ada di Feeder)</i></span>' ?>
                     </td>
                     <td class="col-prodi">
                         <small>
-                            <b>SISKA:</b> <?= e($row->prodi_siska) ?><br>
+                            <b>SIAKAD:</b> <?= e($row->prodi_siska) ?><br>
                             <b>Feeder:</b> <?= e($row->prodi_feeder) ?>
                         </small>
                     </td>
                     <td class="text-center col-status-kuliah">
                         <small>
-                            SISKA: <span class="label label-default status-siska-text"><?= e($row->status_siska) ?></span><br>
+                            SIAKAD: <span class="label label-default status-siska-text"><?= e($row->status_siska) ?></span><br>
                             Feeder: <span class="label label-default"><?= e($row->status_feeder) ?></span>
                         </small>
                     </td>
@@ -152,7 +152,7 @@ function renderTabelMahasiswa($data_rows) {
                         <?php endif; ?>
                     </td>
                     <td class="text-center col-aksi">
-                        <button type="button" class="btn btn-xs btn-info flat" onclick="bukaModalBiodata('<?= e($row->nim) ?>')" title="Lihat detail biodata SISKA vs Feeder">
+                        <button type="button" class="btn btn-xs btn-info flat" onclick="bukaModalBiodata('<?= e($row->nim) ?>')" title="Lihat detail biodata SIAKAD vs Feeder">
                             <i class="fa fa-id-card-o"></i> Lihat NIM
                         </button>
                     </td>

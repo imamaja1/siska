@@ -123,7 +123,7 @@ if (count($sess_parts) >= 2) {
             <i class="fa fa-sign-out"></i> Keluar dari Akun
         </button>
         <div class="siska-drawer-version">
-            SISKA &mdash; Universitas Bumigora
+            SIAKAD &mdash; Universitas Bumigora
         </div>
     </div>
 

@@ -57,7 +57,7 @@
             <thead>
                 <tr style="background: #F1F5F9; color: #475569;">
                     <th style="width: 180px;">Atribut / Field</th>
-                    <th style="width: 38%;">Nilai Sebelum (SISKA Lama)</th>
+                    <th style="width: 38%;">Nilai Sebelum (SIAKAD Lama)</th>
                     <th style="width: 38%;">Nilai Sesudah (Diperbarui)</th>
                     <th style="width: 90px; text-align: center;">Status</th>
                 </tr>

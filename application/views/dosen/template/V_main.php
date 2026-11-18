@@ -5,9 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php $sub_judul = isset($sub_judul) ? $sub_judul : ''; $judul = isset($judul) ? $judul : ''; ?>
         <?php if (!empty($judul) || !empty($sub_judul)): ?>
-            <title>SISKA UBG | <?php echo e($judul) . " - " . e($sub_judul); ?></title>
+            <title>SIAKAD UBG | <?php echo e($judul) . " - " . e($sub_judul); ?></title>
         <?php else: ?>
-            <title>SISKA UBG</title>
+            <title>SIAKAD UBG</title>
         <?php endif; ?>
 
         <link rel="icon" href="<?= app_favicon() ?>">
@@ -67,7 +67,7 @@
                 <a href="<?php echo site_url('dosen/home'); ?>" class="logo">
                     <span class="logo-mini"><i class="fa fa-graduation-cap"></i></span>
                     <span class="logo-lg" style="font-size: 16px; font-weight: 700; letter-spacing: 0.5px;">
-                        <i class="fa fa-graduation-cap" style="margin-right: 6px;"></i>SISKA DOSEN
+                        <i class="fa fa-graduation-cap" style="margin-right: 6px;"></i>SIAKAD DOSEN
                     </span>
                 </a>
                 <nav class="navbar navbar-static-top" role="navigation">

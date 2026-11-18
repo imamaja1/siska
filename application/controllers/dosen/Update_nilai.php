@@ -165,7 +165,7 @@ class Update_nilai extends CI_Controller {
         
         $this->dosenakademikservice->updateDummyKelasStatusUts($kelas_id);
         try {
-            $message_text2 = "*SISKA UBG* - Nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah selesai diinputkan oleh " . $query_dosen_kelas['nama_dosen'] . " selaku dosen pengampu dan menunggu validasi dari " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+            $message_text2 = "*SIAKAD UBG* - Nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah selesai diinputkan oleh " . $query_dosen_kelas['nama_dosen'] . " selaku dosen pengampu dan menunggu validasi dari " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
             kirim_ke_telegram($query_prodi['chatid'], $message_text2);
             $this->dosenakademikservice->transCommit();
         } catch (\Throwable $th) {

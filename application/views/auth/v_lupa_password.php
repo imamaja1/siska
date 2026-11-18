@@ -85,7 +85,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora" class="h-10 w-auto object-contain">
                 <div>
                     <h2 class="text-base font-bold text-slate-900 leading-tight tracking-tight">UNIVERSITAS BUMIGORA</h2>
-                    <p class="text-[11px] text-slate-500 font-medium">Sistem Informasi Akademik (SISKA)</p>
+                    <p class="text-[11px] text-slate-500 font-medium">Sistem Informasi Akademik (SIAKAD)</p>
                 </div>
             </div>
             <a href="<?= site_url('login') ?>" class="text-xs font-semibold text-sky-700 hover:text-sky-800 flex items-center gap-1.5 transition-colors">
@@ -183,7 +183,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </p>
             </div>
             <div class="flex items-center gap-4 text-[11px] text-slate-500">
-                <span>SISKA v2.0 Terintegrasi</span>
+                <span>SIAKAD v2.0 Terintegrasi</span>
             </div>
         </div>
     </footer>

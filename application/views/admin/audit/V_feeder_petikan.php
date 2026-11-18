@@ -40,7 +40,7 @@
                 </li>
                 <li role="presentation">
                     <a href="#tab-banding" role="tab" data-toggle="tab">
-                        <i class="fa fa-exchange"></i> Perbandingan SISKA vs Feeder
+                        <i class="fa fa-exchange"></i> Perbandingan SIAKAD vs Feeder
                         <?php if (!empty($perbandingan)) : ?>
                             <span class="label label-danger"><?= (int) ($summary_banding['berbeda'] + $summary_banding['tidak_ada_siska'] + $summary_banding['tidak_ada_feeder']) ?></span>
                         <?php endif; ?>
@@ -171,14 +171,14 @@
                     </div>
                 </div>
 
-                <!-- Tab Perbandingan SISKA vs Feeder -->
+                <!-- Tab Perbandingan SIAKAD vs Feeder -->
                 <div role="tabpanel" class="tab-pane" id="tab-banding">
                     <div style="margin-bottom:10px;">
                         <span class="label label-success">Sesuai: <?= (int) ($summary_banding['sesuai'] ?? 0) ?></span>
                         <span class="label label-danger">Berbeda: <?= (int) ($summary_banding['berbeda'] ?? 0) ?></span>
-                        <span class="label label-warning">SISKA belum ada nilai: <?= (int) ($summary_banding['siska_kosong'] ?? 0) ?></span>
+                        <span class="label label-warning">SIAKAD belum ada nilai: <?= (int) ($summary_banding['siska_kosong'] ?? 0) ?></span>
                         <span class="label label-info">Feeder belum ada nilai: <?= (int) ($summary_banding['feeder_kosong'] ?? 0) ?></span>
-                        <span class="label label-warning">Tidak ada di SISKA: <?= (int) ($summary_banding['tidak_ada_siska'] ?? 0) ?></span>
+                        <span class="label label-warning">Tidak ada di SIAKAD: <?= (int) ($summary_banding['tidak_ada_siska'] ?? 0) ?></span>
                         <span class="label label-info">Tidak ada di Feeder: <?= (int) ($summary_banding['tidak_ada_feeder'] ?? 0) ?></span>
                     </div>
                     <?php if (empty($perbandingan_grup)) : ?>
@@ -199,7 +199,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-search"></i> Pencarian Nilai Dummy SISKA</h4>
+                <h4 class="modal-title"><i class="fa fa-search"></i> Pencarian Nilai Dummy SIAKAD</h4>
             </div>
             <div class="modal-body" id="modal-dummy-body"></div>
             <div class="modal-footer">

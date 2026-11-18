@@ -30,7 +30,7 @@ $v = $warna[$k];
             <div class="col-md-12 col-xs-12">
                 <div class="callout callout-warning">
                     <h4><i class="fa fa-ban"></i> Peringatan</h4>
-                    <p>Penginputan nilai UTS mahasiswa belum bisa dilakukan. Karena anda belum menyambungkan aplikasi siska dengan aplikasi telegram, silahkan ikuti langkah-langkah yang terdapat pada menu notifikasi telegram.</p>
+                    <p>Penginputan nilai UTS mahasiswa belum bisa dilakukan. Karena anda belum menyambungkan aplikasi siakad dengan aplikasi telegram, silahkan ikuti langkah-langkah yang terdapat pada menu notifikasi telegram.</p>
                 </div>
             </div>
         <?php endif; ?>

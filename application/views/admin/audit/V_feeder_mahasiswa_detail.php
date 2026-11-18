@@ -3,7 +3,7 @@
         <!-- Informasi Header Mahasiswa (Model Desain Modern) -->
         <div style="background: #ffffff; border: 1px solid #e5e9f2; border-radius: 14px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04); padding: 22px 26px; margin-bottom: 22px;">
             <div class="row" style="display: flex; align-items: center; flex-wrap: wrap;">
-                <!-- Kolom Kiri: Identitas Mahasiswa SISKA vs Feeder -->
+                <!-- Kolom Kiri: Identitas Mahasiswa SIAKAD vs Feeder -->
                 <div class="col-sm-7 col-xs-12" style="border-right: 1px solid #edf2f7; padding-right: 24px;">
                     <!-- Baris Atas: NIM & Badge Status -->
                     <div style="display: flex; align-items: center; margin-bottom: 16px;">
@@ -15,14 +15,14 @@
                                 ? '<span style="background: #00b050; color: #ffffff; font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 50px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,176,80,0.22); margin-left: 14px;"><i class="fa fa-check-circle"></i> Mahasiswa Aktif</span>' 
                                 : '<span style="background: #94a3b8; color: #ffffff; font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 50px; display: inline-flex; align-items: center; gap: 6px; margin-left: 14px;"><i class="fa fa-info-circle"></i> Non-Aktif</span>' ?>
                         <?php else : ?>
-                            <span style="background: #ef4444; color: #ffffff; font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 50px; display: inline-flex; align-items: center; gap: 6px; margin-left: 14px;"><i class="fa fa-times-circle"></i> Tidak Ada di SISKA</span>
+                            <span style="background: #ef4444; color: #ffffff; font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 50px; display: inline-flex; align-items: center; gap: 6px; margin-left: 14px;"><i class="fa fa-times-circle"></i> Tidak Ada di SIAKAD</span>
                         <?php endif; ?>
                     </div>
 
                     <!-- Baris Bawah: Dua Kolom Nama Sejajar dengan Pembatas -->
                     <div style="display: flex; align-items: center;">
                         <div style="flex: 1; padding-right: 16px;">
-                            <div style="font-size: 13px; font-weight: 500; color: #64748b; margin-bottom: 4px;">Nama di SISKA (Lokal)</div>
+                            <div style="font-size: 13px; font-weight: 500; color: #64748b; margin-bottom: 4px;">Nama di SIAKAD (Lokal)</div>
                             <div style="font-size: 16px; font-weight: 700; color: #0a0e1a; line-height: 1.3;">
                                 <?= $siska ? e($siska->nama_mahasiswa) : '<span class="text-danger"><i>(Tidak ditemukan)</i></span>' ?>
                             </div>
@@ -48,8 +48,8 @@
                                 <?= e($summary_audit['persen']) ?>%
                             </div>
                             <?php if ($syncable > 0) : ?>
-                                <button type="button" class="btn btn-sync-feeder-action" data-nim="<?= e($nim) ?>" data-key="all" style="background: #00b050; border: none; color: #ffffff; padding: 10px 22px; font-size: 14px; font-weight: 600; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0, 176, 80, 0.28); transition: all 0.2s ease; cursor: pointer;" title="Sinkronkan seluruh data selisih dari Feeder ke SISKA">
-                                    <i class="fa fa-refresh" style="font-size: 15px;"></i> Sinkronkan Semua ke SISKA (<?= $syncable ?>)
+                                <button type="button" class="btn btn-sync-feeder-action" data-nim="<?= e($nim) ?>" data-key="all" style="background: #00b050; border: none; color: #ffffff; padding: 10px 22px; font-size: 14px; font-weight: 600; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0, 176, 80, 0.28); transition: all 0.2s ease; cursor: pointer;" title="Sinkronkan seluruh data selisih dari Feeder ke SIAKAD">
+                                    <i class="fa fa-refresh" style="font-size: 15px;"></i> Sinkronkan Semua ke SIAKAD (<?= $syncable ?>)
                                 </button>
                             <?php else : ?>
                                 <button type="button" class="btn" disabled style="background: #f1f5f9; border: 1px solid #e2e8f0; color: #00b050; padding: 10px 22px; font-size: 14px; font-weight: 600; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: default;">
@@ -68,10 +68,10 @@
                 <thead>
                     <tr class="active">
                         <th width="170">Atribut Biodata</th>
-                        <th width="30%">Data di SISKA (Lokal)</th>
+                        <th width="30%">Data di SIAKAD (Lokal)</th>
                         <th width="30%">Data di Feeder (Web Service)</th>
                         <th width="110" class="text-center">Kecocokan</th>
-                        <th width="130" class="text-center">Sinkron ke SISKA</th>
+                        <th width="130" class="text-center">Sinkron ke SIAKAD</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,7 +101,7 @@
                             <?php elseif (!$has_feeder_val) : ?>
                                 <span class="text-muted" style="font-size: 11px;" title="Feeder tidak memiliki nilai untuk atribut ini"><i class="fa fa-ban"></i> Feeder Kosong</span>
                             <?php elseif ($is_syncable_field) : ?>
-                                <button type="button" class="btn btn-xs btn-primary flat btn-sync-feeder-action" data-nim="<?= e($nim) ?>" data-key="<?= e($key) ?>" title="Perbarui nilai di database SISKA menggunakan data dari Feeder">
+                                <button type="button" class="btn btn-xs btn-primary flat btn-sync-feeder-action" data-nim="<?= e($nim) ?>" data-key="<?= e($key) ?>" title="Perbarui nilai di database SIAKAD menggunakan data dari Feeder">
                                     <i class="fa fa-download"></i> Sinkron
                                 </button>
                             <?php else : ?>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>404 - Halaman Tidak Ditemukan | SISKA Universitas Bumigora</title>
+    <title>404 - Halaman Tidak Ditemukan | SIAKAD Universitas Bumigora</title>
 
     <link rel="icon" type="image/png" href="<?= app_logo() ?>">
 
@@ -35,7 +35,7 @@
                 <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora" class="h-11 w-11 object-contain rounded-lg border border-slate-200 bg-white p-1">
                 <div class="text-left leading-tight">
                     <div class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Universitas Bumigora</div>
-                    <div class="text-base font-bold text-slate-900 tracking-tight">SISKA</div>
+                    <div class="text-base font-bold text-slate-900 tracking-tight">SIAKAD</div>
                 </div>
             </a>
 
@@ -60,7 +60,7 @@
         </div>
 
         <p class="mt-5 text-center text-[11px] text-slate-400">
-            &copy; <?= date('Y') ?> Universitas Bumigora &middot; Sistem Informasi Akademik (SISKA)
+            &copy; <?= date('Y') ?> Universitas Bumigora &middot; Sistem Informasi Akademik (SIAKAD)
         </p>
     </main>
 

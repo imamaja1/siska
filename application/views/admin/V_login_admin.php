@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Admin Login | SISKA - Universitas Bumigora</title>
+    <title>Admin Login | SIAKAD - Universitas Bumigora</title>
     <link rel="icon" href="<?= app_favicon() ?>">
 
     <!-- Google Font: Roboto -->
@@ -56,7 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora" class="h-16 w-auto object-contain">
                     </div>
                     <h3 class="text-xl font-bold text-slate-900">Masuk Akun Administrator</h3>
-                    <p class="text-xs text-slate-500 mt-1">Silakan masukkan kredensial administrator SISKA</p>
+                    <p class="text-xs text-slate-500 mt-1">Silakan masukkan kredensial administrator SIAKAD</p>
                 </div>
 
                 <!-- Flash Message / Alert Notification -->
@@ -131,7 +131,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <p class="text-slate-400">
                         Jl. Ismail Marzuki No. 22, Cilinaya, Kec. Cakranegara, Kota Mataram, NTB 83127
                     </p>
-                    <p class="text-slate-400">SISKA v2.0 Terintegrasi</p>
+                    <p class="text-slate-400">SIAKAD v2.0 Terintegrasi</p>
                 </div>
 
             </div>

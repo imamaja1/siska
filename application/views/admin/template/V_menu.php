@@ -14,7 +14,7 @@ function has_access($acc, $controllers, $role = 0) {
         <div class="sidebar-brand">
             <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora">
             <div class="sidebar-brand-meta">
-                <span class="sidebar-brand-title">SISKA</span>
+                <span class="sidebar-brand-title">SIAKAD</span>
                 <span class="sidebar-brand-sub">Universitas Bumigora</span>
             </div>
         </div>
@@ -299,10 +299,10 @@ function has_access($acc, $controllers, $role = 0) {
                     <li><a href="<?= site_url('admin/audit/nilai_dosen_khs'); ?>"><i class="fa fa-circle-o"></i> Nilai Dosen dan KHS</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Audit_kelas')): ?>
-                    <li><a href="<?= site_url('admin/audit/kelas'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SISKA Kelas</a></li>
+                    <li><a href="<?= site_url('admin/audit/kelas'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SIAKAD Kelas</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, ['Audit_kpat', 'Audit_kelas'])): ?>
-                    <li><a href="<?= site_url('admin/audit/kpat'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SISKA KPAT</a></li>
+                    <li><a href="<?= site_url('admin/audit/kpat'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SIAKAD KPAT</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Audit_petikan')): ?>
                     <li><a href="<?= site_url('admin/audit/petikan'); ?>"><i class="fa fa-circle-o"></i> Feeder Petikan Nilai</a></li>

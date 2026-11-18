@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <?php if (isset($judul) || isset($sub_judul)): ?>
-            <title>SISKA STMIK BG | <?php echo $judul . " - " . $sub_judul; ?></title>
+            <title>SIAKAD Universitas Bumigora | <?php echo $judul . " - " . $sub_judul; ?></title>
         <?php else: ?>
-            <title>SISKA STMIK BG</title>
+            <title>SIAKAD Universitas Bumigora</title>
         <?php endif; ?>
 
         <link rel="icon" href="<?= app_favicon() ?>" />

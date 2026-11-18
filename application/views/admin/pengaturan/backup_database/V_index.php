@@ -7,7 +7,7 @@
                 <h3 class="box-title"><i class="fa fa-download"></i> Export Database</h3>
             </div>
             <div class="box-body">
-                <p>Unduh backup penuh seluruh database SISKA (struktur + data) dalam format <code>.sql</code>.</p>
+                <p>Unduh backup penuh seluruh database SIAKAD (struktur + data) dalam format <code>.sql</code>.</p>
                 <a href="<?= site_url('admin/pengaturan/backup_database/export'); ?>" class="btn btn-primary flat">
                     <i class="fa fa-download"></i> Download Backup Database
                 </a>

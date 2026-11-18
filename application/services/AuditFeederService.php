@@ -1040,7 +1040,7 @@ class AuditFeederService extends MY_Service {
 
             if ($f !== NULL && $s_best !== NULL) {
                 if ($s_angka === NULL && $s_huruf === '') {
-                    $status = 'SISKA belum ada nilai';
+                    $status = 'SIAKAD belum ada nilai';
                     $summary_banding['siska_kosong']++;
                 } elseif ($f_angka === NULL && $f_huruf === '') {
                     $status = 'Feeder belum ada nilai';
@@ -1066,7 +1066,7 @@ class AuditFeederService extends MY_Service {
                     $summary_banding['berbeda']++;
                 }
             } elseif ($f !== NULL) {
-                $status = 'Tidak ada di SISKA';
+                $status = 'Tidak ada di SIAKAD';
                 $summary_banding['tidak_ada_siska']++;
             } else {
                 $status = 'Tidak ada di Feeder';
@@ -1106,15 +1106,15 @@ class AuditFeederService extends MY_Service {
             ];
         }
 
-        // Urutkan: Berbeda → SISKA belum ada nilai → Tidak ada di Feeder →
-        // Tidak ada di SISKA → Feeder belum ada nilai → Sesuai (paling bawah).
+        // Urutkan: Berbeda → SIAKAD belum ada nilai → Tidak ada di Feeder →
+        // Tidak ada di SIAKAD → Feeder belum ada nilai → Sesuai (paling bawah).
         $urutan_status = [
-            'Berbeda'                => 1,
-            'SISKA belum ada nilai'  => 2,
-            'Tidak ada di Feeder'    => 3,
-            'Tidak ada di SISKA'     => 4,
-            'Feeder belum ada nilai' => 5,
-            'Sesuai'                 => 6,
+            'Berbeda'                 => 1,
+            'SIAKAD belum ada nilai'  => 2,
+            'Tidak ada di Feeder'     => 3,
+            'Tidak ada di SIAKAD'     => 4,
+            'Feeder belum ada nilai'  => 5,
+            'Sesuai'                  => 6,
         ];
         usort($perbandingan, function ($a, $b) use ($urutan_status) {
             $pa = isset($urutan_status[$a['status']]) ? $urutan_status[$a['status']] : 99;
@@ -1188,7 +1188,7 @@ class AuditFeederService extends MY_Service {
             $huruf_siska = $this->nilaiHurufSiska($nim, $r->semester ?? NULL, $nilai_siska);
 
             if ($nilai_siska === NULL || $nilai_siska === '') {
-                $status = 'Nilai SISKA kosong';
+                $status = 'Nilai SIAKAD kosong';
                 $summary['kosong']++;
             } elseif ($f === NULL) {
                 $status = 'Tidak ada di Feeder';
@@ -1243,7 +1243,7 @@ class AuditFeederService extends MY_Service {
                     'nilai_huruf_siska' => 'null',
                     'nilai_angka'     => $this->formatNilaiTampil($f['angka'] ?? NULL),
                     'nilai_huruf'     => (!isset($f['huruf']) || $f['huruf'] === NULL || $f['huruf'] === '') ? 'null' : $f['huruf'],
-                    'status'          => 'Tidak ada di SISKA',
+                    'status'          => 'Tidak ada di SIAKAD',
                     'kode_feeder'     => $f['kode'] ?? '',
                     'nama_mk_feeder'  => $f['nama_mk'] ?? '',
                     'kelas_feeder'    => $f['nama_kelas'] ?? '',
@@ -1441,7 +1441,7 @@ class AuditFeederService extends MY_Service {
             } elseif ($in_siska && !$in_feeder) {
                 $persen = 0;
                 $status_class = 'danger';
-                $status_keterangan = 'Hanya di SISKA';
+                $status_keterangan = 'Hanya di SIAKAD';
                 $summary['total_hanya_siska']++;
                 $summary['total_merah']++;
             } elseif (!$in_siska && $in_feeder) {
@@ -1674,7 +1674,7 @@ class AuditFeederService extends MY_Service {
         }
 
         if (!$siska && !$feeder_list && !$feeder_bio) {
-            return ['error' => "Data mahasiswa dengan NIM {$nim} tidak ditemukan di SISKA maupun di Feeder."];
+            return ['error' => "Data mahasiswa dengan NIM {$nim} tidak ditemukan di SIAKAD maupun di Feeder."];
         }
 
         // Susun 13 atribut komparasi

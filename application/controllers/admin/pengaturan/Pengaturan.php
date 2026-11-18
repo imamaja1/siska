@@ -380,7 +380,7 @@ class Pengaturan extends CI_Controller
         ];
 
         $this->email->initialize($config);
-        $this->email->from($smtp['smtp_user'], 'SISKA UBG');
+        $this->email->from($smtp['smtp_user'], 'SIAKAD UBG');
         $this->email->to($to);
         $this->email->subject('Test Email Konfigurasi SMTP');
         $this->email->message('<p>Test email berhasil dikirim. Konfigurasi SMTP Anda berfungsi dengan baik.</p>');

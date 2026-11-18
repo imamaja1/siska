@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= isset($judul) ? e($judul) . ' - ' : '' ?>SISKA Universitas Bumigora</title>
+    <title><?= isset($judul) ? e($judul) . ' - ' : '' ?>SIAKAD Universitas Bumigora</title>
     <link rel="icon" href="<?= app_favicon() ?>">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -140,7 +140,7 @@
     </div>
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>SISKA v2.0</b> Terintegrasi
+            <b>SIAKAD v2.0</b> Terintegrasi
         </div>
         <strong>&copy; <?= date('Y') ?> Universitas Bumigora</strong>
     </footer>

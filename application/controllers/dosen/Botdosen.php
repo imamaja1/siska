@@ -51,7 +51,7 @@ class Botdosen extends CI_Controller {
         $kode_dosen = $this->session->userdata('kode_dosen');
         $kode_chat = $this->dosenservice->getChatIdDosenByKode($kode_dosen);
 
-        $message_text = "*[SISKA UNIVERSITAS BUMIGORA]*";
+        $message_text = "*[SIAKAD UNIVERSITAS BUMIGORA]*";
         kirim_ke_telegram($kode_chat['chatid'], $message_text);
 
         $kirim_pesan = $this->session->set_flashdata('infoxy', '<script>swal("Sukses!","Pesan sudah terkirim, mohon periksa aplikasi telegram anda, pada akun Universitas Bumigora","success")</script>');

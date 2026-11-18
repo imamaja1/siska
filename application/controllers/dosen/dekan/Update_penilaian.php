@@ -104,7 +104,7 @@ class Update_penilaian extends CI_Controller {
 
         $query_fakultas = $this->dekanservice->get_query_fakultas_dekan($kelas_id);
 
-        $message_text = "*SISKA UBG* - Catatan " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . " untuk nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
+        $message_text = "*SIAKAD UBG* - Catatan " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . " untuk nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
         kirim_ke_telegram($query_prodi['chatid'], $message_text);
 
@@ -156,7 +156,7 @@ class Update_penilaian extends CI_Controller {
 
         $query_fakultas = $this->dekanservice->get_query_fakultas_dekan($kelas_id);
 
-        $message_text = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", nilai per matakuliah dapat dicetak pada menu penilaian untuk keperluan BKD/Lainnya, Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
+        $message_text = "*SIAKAD UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", nilai per matakuliah dapat dicetak pada menu penilaian untuk keperluan BKD/Lainnya, Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
         $massage1 = array('kelas_id' => $kelas_id, 
@@ -193,7 +193,7 @@ class Update_penilaian extends CI_Controller {
 
         $query_fakultas = $this->dekanservice->get_query_fakultas_dekan($kelas_id);
 
-        $message_text = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", nilai per matakuliah dapat dicetak pada menu penilaian untuk keperluan BKD/Lainnya, Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
+        $message_text = "*SIAKAD UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", nilai per matakuliah dapat dicetak pada menu penilaian untuk keperluan BKD/Lainnya, Kode Kelas *[". $query_dosen_kelas['kelas_id'] ."]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
         $massage1 = array('kelas_id' => $kelas_id, 

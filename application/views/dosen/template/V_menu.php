@@ -3,7 +3,7 @@
         <div class="sidebar-brand">
             <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora">
             <div class="sidebar-brand-meta">
-                <span class="sidebar-brand-title">SISKA</span>
+                <span class="sidebar-brand-title">SIAKAD</span>
                 <span class="sidebar-brand-sub">Universitas Bumigora</span>
             </div>
         </div>

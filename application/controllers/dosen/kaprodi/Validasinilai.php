@@ -184,7 +184,7 @@ class Validasinilai extends CI_Controller {
 
         $query_prodi = $this->kaprodiservice->get_query_prodi($kelas_id);
 
-        $message_text = "*SISKA UBG* - Catatan " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " untuk nilai UAS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+        $message_text = "*SIAKAD UBG* - Catatan " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " untuk nilai UAS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
         $massage1 = array('kelas_id' => $kelas_id,
@@ -213,7 +213,7 @@ class Validasinilai extends CI_Controller {
 
         $query_prodi = $this->kaprodiservice->get_query_prodi($kelas_id);
 
-        $message_text = "*SISKA UBG* - Catatan " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " untuk nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+        $message_text = "*SIAKAD UBG* - Catatan " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " untuk nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", yaitu: " . $note . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
 
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text);
 
@@ -268,10 +268,10 @@ class Validasinilai extends CI_Controller {
 
         $query_fakultas = $this->kaprodiservice->get_query_fakultas($kelas_id);
 
-        $message_text1 = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " selanjutnya menunggu validasi dari Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+        $message_text1 = "*SIAKAD UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " selanjutnya menunggu validasi dari Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text1);
 
-        $message_text2 = "*SISKA UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", menunggu validasi dari" . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+        $message_text2 = "*SIAKAD UBG* - Nilai akhir matakuliah " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", menunggu validasi dari" . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_fakultas['chatid'], $message_text2);
 
         return redirect(safe_referer(site_url('dosen')));
@@ -287,10 +287,10 @@ class Validasinilai extends CI_Controller {
 
         $query_fakultas = $this->kaprodiservice->get_query_fakultas($kelas_id);
 
-        $message_text1 = "*SISKA UBG* - Nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " selanjutnya menunggu validasi dari Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+        $message_text1 = "*SIAKAD UBG* - Nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", sudah disetujui oleh " . $query_prodi['nama_dosen'] . " selaku Ketua Program Studi " . $query_prodi['nama_program_studi'] . " selanjutnya menunggu validasi dari Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_dosen_kelas['chatid'], $message_text1);
 
-        $message_text2 = "*SISKA UBG* - Nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", menunggu validasi dari" . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
+        $message_text2 = "*SIAKAD UBG* - Nilai UTS " . $query_dosen_kelas['kdmk'] . " - " . $query_dosen_kelas['nama_matakuliah'] . " Kelas " . $query_dosen_kelas['nama_kelas'] . " Semester " . $query_dosen_kelas['semester'] . ", menunggu validasi dari" . $query_fakultas['nama_dosen'] . " selaku Dekan " . $query_fakultas['nama_fakultas'] . ", Kode Kelas *[" . $query_dosen_kelas['kelas_id'] . "]*";
         kirim_ke_telegram($query_fakultas['chatid'], $message_text2);
 
         return redirect(safe_referer(site_url('dosen')));

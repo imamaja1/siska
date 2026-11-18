@@ -133,7 +133,7 @@
                 <div class="timeline-item">
                     <h3 class="timeline-header"><a href="#">Langkah 5</a></h3>
                     <div class="timeline-body">
-                        Tekan tombol <b>Mulai</b> yang dibawah ini untuk menyambungkan siska dengan telegram anda, jika sudah tersambung maka tombol <b>Mulai</b> akan berubah menjadi tombol <b>Tersambung</b>
+                        Tekan tombol <b>Mulai</b> yang dibawah ini untuk menyambungkan siakad dengan telegram anda, jika sudah tersambung maka tombol <b>Mulai</b> akan berubah menjadi tombol <b>Tersambung</b>
                         <br>
                         <p>
                             <?php
@@ -160,7 +160,7 @@
 
                         <div class="row">
                             <div class="col-md-10">
-                                Tekan tombol <b>Kirim Pesan</b> untuk mencoba mengirim pesan dari siska ke telegram anda (Isi pesan yang dikirim yaitu: "<b>SISKA UNIVERSITAS BUMIGORA</b>"), tahap ini merupakan tahapan uji coba untuk meyakinkan apakah website siska tersambung dengan aplikasi telegram dan dapat menerima pesan notifikasi dengan baik.
+                                Tekan tombol <b>Kirim Pesan</b> untuk mencoba mengirim pesan dari siakad ke telegram anda (Isi pesan yang dikirim yaitu: "<b>SIAKAD UNIVERSITAS BUMIGORA</b>"), tahap ini merupakan tahapan uji coba untuk meyakinkan apakah website siakad tersambung dengan aplikasi telegram dan dapat menerima pesan notifikasi dengan baik.
                                 <br>
                                 <p>
                                     <a href="<?= site_url('dosen/botdosen/kirimpesan') ?>" class="btn btn-info">Kirim Pesan</a>&nbsp;&nbsp;<small class="text-danger"></small>

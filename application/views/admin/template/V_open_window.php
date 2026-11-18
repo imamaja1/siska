@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SISKA STMIK BG</title>
+    <title>SIAKAD Universitas Bumigora</title>
     <link rel="icon" href="<?= app_favicon() ?>"/>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 

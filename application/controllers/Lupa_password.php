@@ -83,7 +83,7 @@ class Lupa_password extends CI_Controller
             //konfigurasi pengiriman
             $this->email->from($config['smtp_user'], 'Software Development Center');
             $this->email->to($email);
-            $this->email->subject("Reset Password Siska");
+            $this->email->subject("Reset Password SIAKAD");
 
             // $message = "<p>Anda melakukan permintaan reset password</p>";
             // $message .= "<a href='" . site_url('welcome/reset_password/' . $reset_key) . "'>klik reset password</a>";

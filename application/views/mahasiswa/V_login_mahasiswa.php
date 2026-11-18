@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Mahasiswa Login | SISKA - Universitas Bumigora</title>
+    <title>Mahasiswa Login | SIAKAD - Universitas Bumigora</title>
     <link rel="icon" href="<?= app_favicon() ?>">
 
     <!-- Google Font: Plus Jakarta Sans -->
@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <img src="<?= app_logo() ?>" alt="Logo Universitas Bumigora" class="h-16 w-auto object-contain">
                     </div>
                     <h3 class="text-xl font-bold text-[#303841]">Masuk Akun Mahasiswa</h3>
-                    <p class="text-xs text-[#3A4750]/70 mt-1">Silakan masukkan NIM dan kata sandi SISKA Anda</p>
+                    <p class="text-xs text-[#3A4750]/70 mt-1">Silakan masukkan NIM dan kata sandi SIAKAD Anda</p>
                 </div>
 
                 <!-- Flash Message / Alert Notification -->
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <?php else: ?>
                             <p class="text-[11px] font-medium text-[#3A4750]/70 flex items-center gap-1 mt-1">
                                 <i class="fa-solid fa-circle-info text-[#303841] text-[11px]"></i>
-                                Gunakan NIM yang terdaftar pada SISKA
+                                Gunakan NIM yang terdaftar pada SIAKAD
                             </p>
                         <?php endif; ?>
                     </div>
@@ -134,7 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <p class="text-slate-400">
                         Jl. Ismail Marzuki No. 22, Cilinaya, Kec. Cakranegara, Kota Mataram, NTB 83127
                     </p>
-                    <p class="text-slate-400">SISKA v2.0 Terintegrasi</p>
+                    <p class="text-slate-400">SIAKAD v2.0 Terintegrasi</p>
                 </div>
 
             </div>

@@ -20,7 +20,7 @@
                 <b style="font-size: 20px;"><img width="30px" height="30px" src="<?= base_url('assets/gambar/dosen.png'); ?>">&nbsp;&nbsp;LOGIN DOSEN</b>
             </div>
             <div class="login-box-body " style="padding-top: 0px;">
-                <p class="login-box-msg" style="font-size: 18px"> <br>Sistem Informasi Akademik <b>(SISKA)</b></p>
+                <p class="login-box-msg" style="font-size: 18px"> <br>Sistem Informasi Akademik <b>(SIAKAD)</b></p>
 
                 <form action="<?= site_url('dosen/login_dosen/login'); ?>" method="post">
                     <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">

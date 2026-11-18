@@ -58,7 +58,7 @@
                         <a href="<?= site_url('admin/pengaturan/api_tokens/edit/' . $token->id) ?>" class="btn btn-xs btn-info flat" title="Edit">
                             <i class="fa fa-pencil"></i>
                         </a>
-                        <button type="button" class="btn btn-xs btn-primary flat btn-check" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Cek Perbedaan Data PMB vs SISKA">
+                        <button type="button" class="btn btn-xs btn-primary flat btn-check" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Cek Perbedaan Data PMB vs SIAKAD">
                             <i class="fa fa-search"></i> Cek
                         </button>
                         <button type="button" class="btn btn-xs btn-success flat btn-import" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Import: tambah mahasiswa baru saja (tanpa update)">
@@ -213,7 +213,7 @@
                                 <th width="40">No</th>
                                 <th width="130">NIM</th>
                                 <th>Nama PMB</th>
-                                <th>Nama SISKA</th>
+                                <th>Nama SIAKAD</th>
                                 <th width="80">Status</th>
                                 <th width="90">Aksi</th>
                             </tr>
@@ -301,7 +301,7 @@ function cekEmptyState() {
 
 function runCheck(id, nama) {
     $('#modalCek').modal('show');
-    $('#cek-summary').html('<i class="fa fa-spinner fa-spin"></i> Mengambil data dari ' + (nama || 'PMB') + ' lalu membandingkan dengan SISKA, mohon tunggu...');
+    $('#cek-summary').html('<i class="fa fa-spinner fa-spin"></i> Mengambil data dari ' + (nama || 'PMB') + ' lalu membandingkan dengan SIAKAD, mohon tunggu...');
     $('#cek-detail-body').html('<tr><td colspan="6" class="text-center"><i class="fa fa-spinner fa-spin"></i> Memuat data...</td></tr>');
 
     $.ajax({
@@ -346,7 +346,7 @@ function runCheck(id, nama) {
             }
 
             if (res.baru.length > 0) {
-                html += '<tr><td colspan="6" class="text-left"><strong>Mahasiswa baru (belum ada di SISKA):</strong></td></tr>';
+                html += '<tr><td colspan="6" class="text-left"><strong>Mahasiswa baru (belum ada di SIAKAD):</strong></td></tr>';
                 var no = 1;
                 for (var j = 0; j < res.baru.length; j++) {
                     var b = res.baru[j];
@@ -362,7 +362,7 @@ function runCheck(id, nama) {
 
             var prodiBaru = res.prodi_baru || [];
             if (prodiBaru.length > 0) {
-                html += '<tr><td colspan="6" class="text-left"><strong>Program Studi baru (belum ada di SISKA):</strong></td></tr>';
+                html += '<tr><td colspan="6" class="text-left"><strong>Program Studi baru (belum ada di SIAKAD):</strong></td></tr>';
                 var pno = 1;
                 for (var k = 0; k < prodiBaru.length; k++) {
                     var p = prodiBaru[k];
@@ -465,7 +465,7 @@ $(document).ready(function() {
         var nama = $(this).data('nama');
         swal({
             title: 'Cek Perbedaan Data',
-            text: 'Bandingkan data mahasiswa PMB dengan SISKA (' + nama + ')?',
+            text: 'Bandingkan data mahasiswa PMB dengan SIAKAD (' + nama + ')?',
             icon: 'info',
             buttons: true,
             dangerMode: false,
@@ -734,7 +734,7 @@ $(document).on('click', '.btn-tambah-prodi', function() {
 
     swal({
         title: 'Tambah Program Studi',
-        text: 'Tambahkan program studi ' + kode + ' (' + nama + ') ke SISKA?',
+        text: 'Tambahkan program studi ' + kode + ' (' + nama + ') ke SIAKAD?',
         icon: 'warning',
         buttons: true,
         dangerMode: false,

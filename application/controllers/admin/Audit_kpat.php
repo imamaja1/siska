@@ -27,7 +27,7 @@ class Audit_kpat extends CI_Controller {
     public function index()
     {
         $data['judul'] = 'Audit Nilai';
-        $data['sub_judul'] = 'Feeder & SISKA KPAT';
+        $data['sub_judul'] = 'Feeder & SIAKAD KPAT';
         $data['content'] = 'admin/audit/V_feeder_kpat';
         $data['tahun_akademik'] = $this->Audit_feeder_model->getDistinctTahunAkademik();
         $data['prodi'] = $this->Nama_jurusan_model->get();

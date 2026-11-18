@@ -35,7 +35,7 @@ class Login extends CI_Controller
 
                     $mah = $this->authservice->getMahasiswaByNim($nim);
                     if (!$mah) {
-                        $this->session->set_flashdata('pesan', 'NIM yang anda masukkan belum terdaftar pada aplikasi SISKA. Silahkan cek NIM anda dengan benar.');
+                        $this->session->set_flashdata('pesan', 'NIM yang anda masukkan belum terdaftar pada aplikasi SIAKAD. Silahkan cek NIM anda dengan benar.');
                         redirect(site_url('login'));
                     }
 

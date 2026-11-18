@@ -38,7 +38,7 @@
             $siska_kosong_rows = [];
             if (!empty($tampil_null)) {
                 foreach ($hasil['rows'] as $r) {
-                    if ($r->status === 'Nilai SISKA kosong') {
+                    if ($r->status === 'Nilai SIAKAD kosong') {
                         $siska_kosong_rows[] = $r;
                     }
                 }
@@ -56,7 +56,7 @@
                 </li>
                 <li role="presentation">
                     <a href="#tab-audit-null-siska" role="tab" data-toggle="tab">
-                        <i class="fa fa-cloud"></i> Cek Data Null SISKA (<?= count($siska_kosong_rows) ?>)
+                        <i class="fa fa-cloud"></i> Cek Data Null SIAKAD (<?= count($siska_kosong_rows) ?>)
                     </a>
                 </li>
             </ul>
@@ -76,8 +76,8 @@
                                     <?php if (empty($is_kpat)) : ?>
                                         <th>Kelas</th>
                                     <?php endif; ?>
-                                    <th>Nilai SISKA (Angka)</th>
-                                    <th>Nilai SISKA (Huruf)</th>
+                                    <th>Nilai SIAKAD (Angka)</th>
+                                    <th>Nilai SIAKAD (Huruf)</th>
                                     <th>Nilai Feeder (Angka)</th>
                                     <th>Nilai Feeder (Huruf)</th>
                                     <th>Status</th>
@@ -139,8 +139,8 @@
                                             <span class="label label-danger">Berbeda (Kode Berubah)</span>
                                         <?php elseif ($row->status == 'Tidak ada di Feeder') : ?>
                                             <span class="label label-warning">Tidak ada di Feeder</span>
-                                        <?php elseif ($row->status == 'Tidak ada di SISKA') : ?>
-                                            <span class="label label-info">Tidak ada di SISKA</span>
+                                        <?php elseif ($row->status == 'Tidak ada di SIAKAD') : ?>
+                                            <span class="label label-info">Tidak ada di SIAKAD</span>
                                         <?php else : ?>
                                             <span class="label label-default"><?= e($row->status) ?></span>
                                         <?php endif; ?>
@@ -221,9 +221,9 @@
                 </div><!-- /#tab-audit-null -->
 
                 <div role="tabpanel" class="tab-pane" id="tab-audit-null-siska">
-                    <h4><i class="fa fa-cloud"></i> Daftar Null SISKA (status "Nilai SISKA kosong")</h4>
+                    <h4><i class="fa fa-cloud"></i> Daftar Null SIAKAD (status "Nilai SIAKAD kosong")</h4>
                     <?php if (empty($siska_kosong_rows)) : ?>
-                        <div class="callout callout-success flat"><p>Tidak ada data berstatus "Nilai SISKA kosong".</p></div>
+                        <div class="callout callout-success flat"><p>Tidak ada data berstatus "Nilai SIAKAD kosong".</p></div>
                     <?php else : ?>
                     <div style="margin-bottom: 10px;">
                         <button type="button" class="btn btn-primary flat" id="btn-cek-all-siska">

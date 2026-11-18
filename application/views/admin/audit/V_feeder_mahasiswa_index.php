@@ -2,9 +2,9 @@
     <div class="col-md-12">
         <div class="box box-primary flat">
             <div class="box-header with-border">
-                <h4><i class="fa fa-users"></i> Audit Mahasiswa: Neo Feeder vs SISKA</h4>
+                <h4><i class="fa fa-users"></i> Audit Mahasiswa: Neo Feeder vs SIAKAD</h4>
                 <p class="text-muted" style="margin-bottom:0;">
-                    Bandingkan data NIM dan Mahasiswa per Program Studi &amp; Angkatan antara Neo Feeder dengan Database SISKA Lokal, serta telusuri biodata lengkap per NIM.
+                    Bandingkan data NIM dan Mahasiswa per Program Studi &amp; Angkatan antara Neo Feeder dengan Database SIAKAD Lokal, serta telusuri biodata lengkap per NIM.
                 </p>
             </div>
             <div class="box-body">
@@ -71,12 +71,12 @@
                                 <label class="control-label col-sm-2">NIM Mahasiswa <span class="text-danger">*</span></label>
                                 <div class="col-sm-4 col-xs-12">
                                     <input required type="text" name="nim" id="input-nim-cepat" class="form-control" placeholder="Contoh: 210101001">
-                                    <small class="text-muted">Langsung menampilkan perbandingan biodata lokal SISKA vs Feeder.</small>
+                                    <small class="text-muted">Langsung menampilkan perbandingan biodata lokal SIAKAD vs Feeder.</small>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-4">
-                                    <button type="submit" class="btn btn-info flat"><i class="fa fa-id-card-o"></i> Lihat Biodata Feeder &amp; SISKA</button>
+                                    <button type="submit" class="btn btn-info flat"><i class="fa fa-id-card-o"></i> Lihat Biodata Feeder &amp; SIAKAD</button>
                                 </div>
                             </div>
                         </form>
@@ -95,7 +95,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modalBiodataLabel"><i class="fa fa-id-card-o"></i> Detail Biodata Mahasiswa (SISKA vs Feeder)</h4>
+                <h4 class="modal-title" id="modalBiodataLabel"><i class="fa fa-id-card-o"></i> Detail Biodata Mahasiswa (SIAKAD vs Feeder)</h4>
             </div>
             <div class="modal-body" id="modal-biodata-content">
                 <p class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>Memuat data biodata...</p>
@@ -143,7 +143,7 @@
     // Fungsi Buka Modal Detail Biodata per NIM
     function bukaModalBiodata(nim) {
         $("#modal-biodata").modal('show');
-        $("#modal-biodata-content").html("<div class='text-center' style='padding:40px;'><i class='fa fa-spinner fa-spin fa-2x'></i><br><span class='text-muted'>Mengambil biodata NIM " + nim + " dari Feeder &amp; SISKA...</span></div>");
+        $("#modal-biodata-content").html("<div class='text-center' style='padding:40px;'><i class='fa fa-spinner fa-spin fa-2x'></i><br><span class='text-muted'>Mengambil biodata NIM " + nim + " dari Feeder &amp; SIAKAD...</span></div>");
 
         var postData = {};
         postData[csrfName] = csrfHash;

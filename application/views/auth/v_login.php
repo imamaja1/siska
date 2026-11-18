@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>SISKA - Universitas Bumigora | Sistem Informasi Akademik</title>
+    <title>SIAKAD - Universitas Bumigora | Sistem Informasi Akademik</title>
     <link rel="icon" href="<?= app_favicon() ?>">
 
     <!-- Google Font: Inter & Roboto -->
@@ -45,7 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body class="min-h-screen bg-[#f1f5f9] font-sans text-slate-800 flex items-center justify-center p-3 sm:p-5 lg:p-8 selection:bg-blue-600 selection:text-white">
 
-    <!-- BEGIN: Main App Container (Figma: Desktop / SISKA Login Modern v3) -->
+    <!-- BEGIN: Main App Container (Figma: Desktop / SIAKAD Login Modern v3) -->
     <main class="w-full max-w-[1360px] bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden p-4 sm:p-5 lg:p-6 my-auto">
         <div class="flex flex-col lg:flex-row gap-5 lg:gap-8 items-stretch justify-between">
 
@@ -60,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm font-bold tracking-tight text-slate-900 leading-tight">UNIVERSITAS BUMIGORA</span>
-                            <span class="text-xs text-slate-500 font-medium leading-tight">Sistem Informasi Akademik (SISKA)</span>
+                            <span class="text-xs text-slate-500 font-medium leading-tight">Sistem Informasi Akademik (SIAKAD)</span>
                         </div>
                     </div>
 
@@ -154,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <!-- Button / Log In -->
                             <button class="w-full h-[46px] py-2.5 px-4 rounded-lg bg-[#2563eb] hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit" name="submit" value="Log In">
                                 <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
-                                <span>Log In ke SISKA</span>
+                                <span>Log In ke SIAKAD</span>
                             </button>
 
                             <!-- Button / Validasi -->
@@ -181,7 +181,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <!-- Footer Meta -->
                     <div class="flex items-center justify-between text-[11px] text-slate-400 px-0.5">
                         <span>&copy; <?= date('Y') ?> Universitas Bumigora</span>
-                        <span class="hidden sm:inline">SISKA v2.0 Terintegrasi</span>
+                        <span class="hidden sm:inline">SIAKAD v2.0 Terintegrasi</span>
                     </div>
                 </div>
 

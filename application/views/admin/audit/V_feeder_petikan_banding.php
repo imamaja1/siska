@@ -1,8 +1,8 @@
 <?php
 /**
- * Partial tabel Perbandingan SISKA vs Feeder yang dikelompokkan per
+ * Partial tabel Perbandingan SIAKAD vs Feeder yang dikelompokkan per
  * tahun akademik + semester Feeder. Setiap nomor menampilkan 2 baris:
- * baris 1 = Feeder, baris 2 = SISKA.
+ * baris 1 = Feeder, baris 2 = SIAKAD.
  *
  * Variabel:
  *   $grup : ['tahun_akademik' => string, 'rows' => array]
@@ -67,18 +67,18 @@
                         <span class="label label-success">Sesuai</span>
                     <?php elseif ($b['status'] === 'Berbeda') : ?>
                         <span class="label label-danger">Berbeda</span>
-                    <?php elseif ($b['status'] === 'SISKA belum ada nilai') : ?>
-                        <span class="label label-warning">SISKA belum ada nilai</span>
+                    <?php elseif ($b['status'] === 'SIAKAD belum ada nilai') : ?>
+                        <span class="label label-warning">SIAKAD belum ada nilai</span>
                     <?php elseif ($b['status'] === 'Feeder belum ada nilai') : ?>
                         <span class="label label-info">Feeder belum ada nilai</span>
-                    <?php elseif ($b['status'] === 'Tidak ada di SISKA') : ?>
-                        <span class="label label-warning">Tidak ada di SISKA</span>
+                    <?php elseif ($b['status'] === 'Tidak ada di SIAKAD') : ?>
+                        <span class="label label-warning">Tidak ada di SIAKAD</span>
                     <?php elseif ($b['status'] === 'Tidak ada di Feeder') : ?>
                         <span class="label label-info">Tidak ada di Feeder</span>
                     <?php else : ?>
                         <span class="label label-info"><?= e($b['status']) ?></span>
                     <?php endif; ?>
-                    <?php if ($b['status'] === 'SISKA belum ada nilai' && $b['siska_kode'] !== '' && $b['siska_kode_tahun_akademik'] !== '') : ?>
+                    <?php if ($b['status'] === 'SIAKAD belum ada nilai' && $b['siska_kode'] !== '' && $b['siska_kode_tahun_akademik'] !== '') : ?>
                         <br>
                         <button type="button" class="btn btn-xs btn-info flat btn-cek-dummy"
                             data-nim="<?= e(isset($nim) ? $nim : '') ?>"
@@ -90,7 +90,7 @@
                 </td>
             </tr>
             <tr class="<?= $row_class ?>">
-                <td class="text-center"><span class="label label-warning">SISKA</span></td>
+                <td class="text-center"><span class="label label-warning">SIAKAD</span></td>
                 <td class="text-center"><?= $b['siska_kode'] !== '' ? e($b['siska_kode']) : '-' ?></td>
                 <td>
                     <?php if ($b['siska_nama'] !== '') : ?>

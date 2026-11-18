@@ -34,7 +34,7 @@
             <div class="col-xs-12 col-md-8 col-lg-4">
                 <div class="login-box ">
                     <div class="login-logo text-green">
-                        <b>SISKA</b><br/>
+                        <b>SIAKAD</b><br/>
                         <small>UNIVERSITAS BUMIGORA</small>
                     </div><!-- /.login-logo -->
                     <div class="login-box-body">

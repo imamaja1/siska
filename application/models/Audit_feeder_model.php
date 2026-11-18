@@ -79,7 +79,13 @@ class Audit_feeder_model extends CI_Model {
                   LEFT JOIN khs_detail kd ON kd.kode_krs_detail = krd.kode_krs_detail
                  WHERE k.kode_tahun_akademik = ?
                    AND m.program_studi_kode = ?
-                   AND krd.id_matakuliah = ?";
+                   AND krd.id_matakuliah = ?
+                   AND (krd.status IS NULL OR krd.status != 'K')
+                   AND NOT EXISTS (
+                       SELECT 1
+                         FROM kelas_mahasiswa_kpat kmk
+                        WHERE kmk.kode_krs_detail = krd.kode_krs_detail
+                   )";
 
         $params = [$kode_tahun_akademik, $kode_program_studi, $id_matakuliah];
 
@@ -110,6 +116,7 @@ class Audit_feeder_model extends CI_Model {
             ->join('matakuliah mk', 'mk.id_matakuliah = krd.id_matakuliah')
             ->where('k.kode_tahun_akademik', $kode_tahun_akademik)
             ->where('m.program_studi_kode', $kode_program_studi)
+            ->where("(krd.status IS NULL OR krd.status != 'K')")
             ->order_by('mk.nama_matakuliah', 'ASC')
             ->get()->result_object();
     }
@@ -152,6 +159,94 @@ class Audit_feeder_model extends CI_Model {
             ->where('kl.id_matakuliah', $id_matakuliah)
             ->order_by('nk.nama_kelas', 'ASC')
             ->get()->result_object();
+    }
+
+    public function getDistinctTahunAkademik()
+    {
+        return $this->db->select('DISTINCT(tahun_akademik) AS tahun_akademik')
+            ->from('tahun_akademik')
+            ->order_by('tahun_akademik', 'DESC')
+            ->get()->result_object();
+    }
+
+    public function getMatakuliahKpatByProdiTa($tahun_akademik, $kode_program_studi)
+    {
+        $sql = "SELECT DISTINCT mk.id_matakuliah, mk.kode_matakuliah, mk.nama_matakuliah
+                  FROM krs k
+                  JOIN tahun_akademik ta ON ta.kode_tahun_akademik = k.kode_tahun_akademik
+                  JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
+                  JOIN mahasiswa m ON m.nim = k.nim
+                  JOIN matakuliah mk ON mk.id_matakuliah = krd.id_matakuliah
+                 WHERE (ta.tahun_akademik = ? OR k.kode_tahun_akademik = ?)
+                   AND m.program_studi_kode = ?
+                   AND (krd.status = 'K' OR EXISTS (
+                       SELECT 1 FROM kelas_mahasiswa_kpat kmk WHERE kmk.kode_krs_detail = krd.kode_krs_detail
+                   ))
+                 ORDER BY mk.nama_matakuliah ASC";
+
+        return $this->db->query($sql, [$tahun_akademik, $tahun_akademik, $kode_program_studi])->result_object();
+    }
+
+    public function getKelasKpatByMatakuliah($tahun_akademik, $kode_program_studi, $id_matakuliah)
+    {
+        return $this->db->select('kp.kelas_id, kp.nama_kelas_id, nk.nama_kelas')
+            ->from('kelas_kpat kp')
+            ->join('tahun_akademik ta', 'ta.kode_tahun_akademik = kp.kode_tahun_akademik', 'left')
+            ->join('nama_kelas nk', 'nk.nama_kelas_id = kp.nama_kelas_id')
+            ->where('(ta.tahun_akademik = ' . $this->db->escape($tahun_akademik) . ' OR kp.kode_tahun_akademik = ' . $this->db->escape($tahun_akademik) . ')')
+            ->where('kp.kode_program_studi', $kode_program_studi)
+            ->where('kp.id_matakuliah', $id_matakuliah)
+            ->order_by('nk.nama_kelas', 'ASC')
+            ->get()->result_object();
+    }
+
+    public function getNilaiSiskaByKpat($tahun_akademik, $kode_program_studi, $id_matakuliah, $nama_kelas_id = NULL)
+    {
+        $sql = "SELECT m.nim, m.nama_mahasiswa, mk.kode_matakuliah, mk.nama_matakuliah,
+                       (mk.sks_teori + mk.sks_praktek + mk.sks_praktikum) AS sks,
+                       (SELECT nk.nama_kelas
+                          FROM kelas_mahasiswa_kpat kmk
+                          JOIN kelas_kpat klk ON klk.kelas_id = kmk.kelas_id
+                          JOIN nama_kelas nk ON nk.nama_kelas_id = klk.nama_kelas_id
+                         WHERE kmk.kode_krs_detail = krd.kode_krs_detail
+                         LIMIT 1) AS nama_kelas,
+                       (SELECT klk.semester
+                          FROM kelas_mahasiswa_kpat kmk
+                          JOIN kelas_kpat klk ON klk.kelas_id = kmk.kelas_id
+                         WHERE kmk.kode_krs_detail = krd.kode_krs_detail
+                         LIMIT 1) AS semester_kpat,
+                       ta.semester AS semester_ta, ta.tahun_akademik,
+                       k.semester, MAX(kd.nilai_akhir) AS nilai_akhir
+                  FROM krs k
+                  JOIN tahun_akademik ta ON ta.kode_tahun_akademik = k.kode_tahun_akademik
+                  JOIN krs_detail krd ON krd.kode_krs = k.kode_krs
+                  JOIN mahasiswa m ON m.nim = k.nim
+                  JOIN matakuliah mk ON mk.id_matakuliah = krd.id_matakuliah
+                  LEFT JOIN khs_detail kd ON kd.kode_krs_detail = krd.kode_krs_detail
+                 WHERE (ta.tahun_akademik = ? OR k.kode_tahun_akademik = ?)
+                   AND m.program_studi_kode = ?
+                   AND krd.id_matakuliah = ?
+                   AND (krd.status = 'K' OR EXISTS (
+                       SELECT 1 FROM kelas_mahasiswa_kpat kmk WHERE kmk.kode_krs_detail = krd.kode_krs_detail
+                   ))";
+
+        $params = [$tahun_akademik, $tahun_akademik, $kode_program_studi, $id_matakuliah];
+
+        if ($nama_kelas_id !== NULL && $nama_kelas_id !== '') {
+            $sql .= " AND EXISTS (
+                        SELECT 1
+                          FROM kelas_mahasiswa_kpat kmk2
+                          JOIN kelas_kpat klk2 ON klk2.kelas_id = kmk2.kelas_id
+                         WHERE kmk2.kode_krs_detail = krd.kode_krs_detail
+                           AND klk2.nama_kelas_id = ?
+                      )";
+            $params[] = $nama_kelas_id;
+        }
+
+        $sql .= " GROUP BY m.nim, krd.id_matakuliah";
+        $sql .= " ORDER BY m.nim";
+
+        return $this->db->query($sql, $params)->result_object();
     }
 
     public function getTahunAkademikFrom($start_tahun_akademik)
@@ -211,7 +306,7 @@ class Audit_feeder_model extends CI_Model {
         $prefix = strlen((string) $angkatan) === 4 ? substr((string) $angkatan, 2, 2) : (string) $angkatan;
 
         $this->db->select('m.nim, m.nama_mahasiswa, m.status, m.jenis_kelamin, m.tempat_lahir, m.tanggal_lahir,
-                           m.nik, m.nisn, m.telepon, m.email, m.nama_ibu, m.nama_ayah,
+                           m.nik, m.nisn, m.telepon, m.email, m.nama_ibu, m.nama_ayah, m.agama,
                            ps.kode_program_studi, ps.nama_program_studi')
             ->from('mahasiswa m')
             ->join('program_studi ps', 'ps.kode_program_studi = m.program_studi_kode', 'left');
@@ -234,5 +329,13 @@ class Audit_feeder_model extends CI_Model {
             ->join('program_studi ps', 'ps.kode_program_studi = m.program_studi_kode', 'left')
             ->where('m.nim', $nim)
             ->get()->row_object();
+    }
+
+    public function updateBiodataMahasiswaFromFeeder($nim, array $data)
+    {
+        if (empty($data)) {
+            return FALSE;
+        }
+        return $this->db->where('nim', (string) $nim)->update('mahasiswa', $data);
     }
 }

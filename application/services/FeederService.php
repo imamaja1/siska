@@ -425,15 +425,17 @@ class FeederService extends MY_Service {
 
                 $key = strtoupper(trim((string) $nim)) . '|' . strtoupper(trim((string) $kode));
                 $map[$key] = [
-                    'nim'        => trim((string) $nim),
-                    'nama'       => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
-                    'kode'       => trim((string) $kode),
-                    'nama_mk'    => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
-                    'nama_kelas' => (string) $this->pick($row, ['nama_kelas_kuliah', 'nama_kelas', 'nm_kelas', 'kelas']),
-                    'prodi'      => (string) $this->pick($row, ['nama_program_studi', 'nama_jurusan', 'jurusan', 'prodi']),
-                    'sks'        => $this->pick($row, ['sks_mata_kuliah', 'sks']),
-                    'angka'      => $this->pick($row, ['nilai_angka', 'nilai', 'NA']),
-                    'huruf'      => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
+                    'nim'           => trim((string) $nim),
+                    'nama'          => (string) $this->pick($row, ['nama_mahasiswa', 'nama']),
+                    'kode'          => trim((string) $kode),
+                    'nama_mk'       => (string) $this->pick($row, ['nama_mata_kuliah', 'nama_matakuliah']),
+                    'nama_kelas'    => (string) $this->pick($row, ['nama_kelas_kuliah', 'nama_kelas', 'nm_kelas', 'kelas']),
+                    'prodi'         => (string) $this->pick($row, ['nama_program_studi', 'nama_jurusan', 'jurusan', 'prodi']),
+                    'sks'           => $this->pick($row, ['sks_mata_kuliah', 'sks']),
+                    'angka'         => $this->pick($row, ['nilai_angka', 'nilai', 'NA']),
+                    'huruf'         => $this->pick($row, ['nilai_huruf', 'nilai_huruf_mutu', 'huruf']),
+                    'id_semester'   => (string) $this->pick($row, ['id_semester']),
+                    'nama_semester' => (string) $this->pick($row, ['nama_semester']),
                 ];
                 $total++;
             }
@@ -691,6 +693,53 @@ class FeederService extends MY_Service {
         }
 
         return ['data' => is_array($rows) ? $rows : NULL, 'error' => ''];
+    }
+
+    public function getBiodataMahasiswaBatch(array $id_mahasiswa_list)
+    {
+        $id_list = [];
+        foreach ($id_mahasiswa_list as $id) {
+            $id = trim((string) $id);
+            if ($id !== '') {
+                $id_list[] = $id;
+            }
+        }
+        $id_list = array_values(array_unique($id_list));
+        if (empty($id_list)) {
+            return ['data' => [], 'error' => ''];
+        }
+
+        $result_map = [];
+        $chunks = array_chunk($id_list, 50);
+
+        foreach ($chunks as $chunk) {
+            $escaped = array_map(function($val) {
+                return "'" . str_replace("'", "\\'", $val) . "'";
+            }, $chunk);
+            $filter = "id_mahasiswa in (" . implode(',', $escaped) . ")";
+
+            $res = $this->request('GetBiodataMahasiswa', [
+                'filter' => $filter,
+                'order'  => '',
+                'limit'  => (string) (count($chunk) + 10),
+                'offset' => '0',
+            ]);
+
+            if (!empty($res['error'])) {
+                continue;
+            }
+
+            $rows = $res['data'] ?? [];
+            if (is_array($rows)) {
+                foreach ($rows as $row) {
+                    if (is_array($row) && isset($row['id_mahasiswa'])) {
+                        $result_map[trim((string) $row['id_mahasiswa'])] = $row;
+                    }
+                }
+            }
+        }
+
+        return ['data' => $result_map, 'error' => ''];
     }
 
     public function getProdiFeeder()

@@ -73,7 +73,9 @@
                                     <th>Nama</th>
                                     <?php if (!empty($tampil_ta)) : ?><th>Tahun Akademik</th><?php endif; ?>
                                     <th>Matakuliah</th>
-                                    <th>Kelas</th>
+                                    <?php if (empty($is_kpat)) : ?>
+                                        <th>Kelas</th>
+                                    <?php endif; ?>
                                     <th>Nilai SISKA (Angka)</th>
                                     <th>Nilai SISKA (Huruf)</th>
                                     <th>Nilai Feeder (Angka)</th>
@@ -87,15 +89,29 @@
                                     <td align="center"><?= $no++ ?></td>
                                     <td><?= e($row->nim) ?></td>
                                     <td><?= e($row->nama_mahasiswa) ?></td>
-                                    <?php if (!empty($tampil_ta)) : ?><td><?= e($row->tahun_akademik) ?> - <?= e($row->semester_label) ?></td><?php endif; ?>
-                                    <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?>
-                                        <?php
-                                        $kode_feeder = isset($row->kode_feeder) ? (string) $row->kode_feeder : '';
-                                        if ($kode_feeder !== '' && $kode_feeder !== (string) $row->kode_matakuliah) :
-                                        ?>
-                                            <br><small class="text-muted"><i class="fa fa-exchange"></i> Feeder: <?= e($kode_feeder) ?> - <?= e($row->nama_mk_feeder ?? '') ?></small>
+                                    <?php if (!empty($tampil_ta)) : ?>
+                                    <td>
+                                        <?= e($row->tahun_akademik) ?> - <?= e($row->semester_label) ?>
+                                        <?php if (!empty($row->semester_feeder)) : ?>
+                                            <br><small class="text-muted"><i class="fa fa-university"></i> Feeder: <?= e($row->semester_feeder) ?></small>
+                                        <?php elseif ($row->status === 'Tidak ada di Feeder') : ?>
+                                            <br><small class="text-muted"><i class="fa fa-times-circle text-danger"></i> Feeder: -</small>
                                         <?php endif; ?>
                                     </td>
+                                    <?php endif; ?>
+                                    <td>
+                                        <?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?>
+                                        <?php
+                                        $kode_feeder = isset($row->kode_feeder) ? trim((string) $row->kode_feeder) : '';
+                                        $nama_feeder = isset($row->nama_mk_feeder) ? trim((string) $row->nama_mk_feeder) : '';
+                                        if ($nama_feeder !== '' || $kode_feeder !== '') :
+                                        ?>
+                                            <br><small class="text-muted"><i class="fa fa-university"></i> Feeder: <?= e($kode_feeder ?: $row->kode_matakuliah) ?> - <?= e($nama_feeder) ?></small>
+                                        <?php elseif ($row->status === 'Tidak ada di Feeder') : ?>
+                                            <br><small class="text-muted"><i class="fa fa-times-circle text-danger"></i> Feeder: -</small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <?php if (empty($is_kpat)) : ?>
                                     <td>
                                         <?= !empty($row->nama_kelas) ? e($row->nama_kelas) : '-' ?>
                                         <?php
@@ -105,12 +121,15 @@
                                             <br><small class="text-muted">Feeder: <?= e($kelas_feeder) ?></small>
                                         <?php endif; ?>
                                     </td>
+                                    <?php endif; ?>
                                     <td align="center"><?= e($row->nilai_siska) ?></td>
                                     <td align="center"><?= e($row->nilai_huruf_siska) ?></td>
                                     <td align="center"><?= e($row->nilai_angka) ?></td>
                                     <td align="center"><?= e($row->nilai_huruf) ?></td>
                                     <td align="center">
-                                        <?php if ($row->status == 'Sesuai') : ?>
+                                        <?php if ($row->status == 'Tidak Sesuai') : ?>
+                                            <span class="label label-danger"><?= !empty($row->status_keterangan) ? e($row->status_keterangan) : 'Tidak Sesuai' ?></span>
+                                        <?php elseif ($row->status == 'Sesuai') : ?>
                                             <span class="label label-success">Sesuai</span>
                                         <?php elseif ($row->status == 'Sesuai (Kode Berubah)') : ?>
                                             <span class="label label-info">Sesuai (Kode Berubah)</span>
@@ -163,7 +182,7 @@
                             </thead>
                             <tbody>
                                 <?php $no = 1; foreach ($null_rows as $nr) : ?>
-                                <tr class="siska-row" data-nim="<?= e($nr->nim) ?>">
+                                <tr class="siska-row" data-nim="<?= e($nr->nim) ?>" data-nama-mk="<?= e($nr->nama_matakuliah) ?>">
                                     <td class="text-center"><?= $no++ ?></td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-xs btn-primary flat btn-cek-row" data-nim="<?= e($nr->nim) ?>">
@@ -171,7 +190,12 @@
                                         </button>
                                     </td>
                                     <td><?= e($nr->nim) ?></td>
-                                    <td><?= e($nr->nama_matakuliah) ?></td>
+                                    <td>
+                                        <?= e($nr->nama_matakuliah) ?>
+                                        <?php if (!empty($nr->tahun_akademik)) : ?>
+                                            <br><small class="text-muted"><i class="fa fa-calendar"></i> <?= e($nr->tahun_akademik) ?><?= !empty($nr->semester_label) ? ' ' . e($nr->semester_label) : '' ?></small>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= e($nr->kode_matakuliah) ?></td>
                                     <td class="text-center"><?= e(!empty($nr->nama_kelas) ? $nr->nama_kelas : '-') ?></td>
                                     <td class="text-center"><?= e((isset($nr->sks) && $nr->sks !== '') ? (string) $nr->sks : '-') ?></td>
@@ -251,7 +275,12 @@
                                     <td><?= e($sk->nim) ?></td>
                                     <td><?= e($sk->nama_mahasiswa) ?></td>
                                     <td><?= e($sk_kode) ?></td>
-                                    <td><?= e($sk_nama) ?></td>
+                                    <td>
+                                        <?= e($sk_nama) ?>
+                                        <?php if (!empty($sk->tahun_akademik)) : ?>
+                                            <br><small class="text-muted"><i class="fa fa-calendar"></i> <?= e($sk->tahun_akademik) ?><?= !empty($sk->semester_label) ? ' ' . e($sk->semester_label) : '' ?></small>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="text-center"><?= e(!empty($sk_kelas) ? $sk_kelas : '-') ?></td>
                                     <td class="text-center"><?= e(isset($sk->sks) && $sk->sks !== '' ? (string) $sk->sks : '-') ?></td>
                                     <td class="text-center"><?= e($sk->nilai_angka) ?></td>
@@ -271,7 +300,8 @@
                     return $('<div>').text(v == null ? '' : String(v)).html();
                 }
 
-                var URL_KANDIDAT = '<?= site_url('admin/audit/kelas/kandidat_null_feeder') ?>';
+                <?php $audit_segment = (strtolower($this->router->fetch_class()) === 'audit_kpat') ? 'kpat' : 'kelas'; ?>
+                var URL_KANDIDAT = '<?= site_url("admin/audit/{$audit_segment}/kandidat_null_feeder") ?>';
                 var CSRF_NAME    = '<?= $this->security->get_csrf_token_name() ?>';
                 var CSRF_HASH    = '<?= $this->security->get_csrf_hash() ?>';
                 var KODE_TA      = '<?= e($kode_tahun_akademik) ?>';
@@ -284,10 +314,11 @@
                     $feeder.removeClass('success warning');
                     $feeder.find('.f-nama, .f-kode, .f-kelas, .f-sks, .f-angka, .f-huruf').html('<i class="fa fa-spinner fa-spin"></i>');
 
+                    var row_nama_mk             = $siskaRow.attr('data-nama-mk') || NAMA_MK;
                     var payload                 = {};
                     payload[CSRF_NAME]          = CSRF_HASH;
                     payload.kode_tahun_akademik = KODE_TA;
-                    payload.nama_matakuliah     = NAMA_MK;
+                    payload.nama_matakuliah     = row_nama_mk;
                     payload.nims                = [nim];
 
                     return $.ajax({
@@ -307,7 +338,13 @@
                         }
 
                         var r = res.rows[0];
-                        $feeder.find('.f-nama').text(r.nama_mk ? r.nama_mk : '-');
+                        var txtNama = r.nama_mk ? esc(r.nama_mk) : '-';
+                        if (r.nama_semester) {
+                            txtNama += '<br><small class="text-muted"><i class="fa fa-calendar"></i> ' + esc(r.nama_semester) + '</small>';
+                        } else if (r.id_semester) {
+                            txtNama += '<br><small class="text-muted"><i class="fa fa-calendar"></i> ' + esc(r.id_semester) + '</small>';
+                        }
+                        $feeder.find('.f-nama').html(txtNama);
                         $feeder.find('.f-kode').text(r.kode ? r.kode : '-');
                         $feeder.find('.f-kelas').text(r.kelas ? r.kelas : '-');
                         $feeder.find('.f-sks').text((r.sks !== '' && r.sks !== null) ? r.sks : '-');
@@ -402,7 +439,7 @@
                     payload.nim                 = nim;
 
                     return $.ajax({
-                        url: '<?= site_url('admin/audit/kelas/cek_null_siska') ?>',
+                        url: '<?= site_url("admin/audit/{$audit_segment}/cek_null_siska") ?>',
                         type: 'POST',
                         data: payload,
                         dataType: 'json'

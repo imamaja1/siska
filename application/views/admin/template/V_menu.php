@@ -287,7 +287,7 @@ function has_access($acc, $controllers, $role = 0) {
             <?php endif; ?>
 
             <!-- Audit Nilai -->
-            <?php if (has_access($acc, ['Audit', 'Audit_kelas', 'Audit_petikan', 'Pure_feeder', 'Audit_mahasiswa'])): ?>
+            <?php if (has_access($acc, ['Audit', 'Audit_kelas', 'Audit_kpat', 'Audit_petikan', 'Pure_feeder', 'Audit_mahasiswa'])): ?>
             <li class="<?= (isset($judul) && $judul == 'Audit Nilai') ? 'active' : ''; ?> treeview">
                 <a href="#">
                     <i class="fa fa-check-square-o"></i>
@@ -300,6 +300,9 @@ function has_access($acc, $controllers, $role = 0) {
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Audit_kelas')): ?>
                     <li><a href="<?= site_url('admin/audit/kelas'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SISKA Kelas</a></li>
+                    <?php endif; ?>
+                    <?php if (has_access($acc, ['Audit_kpat', 'Audit_kelas'])): ?>
+                    <li><a href="<?= site_url('admin/audit/kpat'); ?>"><i class="fa fa-circle-o"></i> Feeder &amp; SISKA KPAT</a></li>
                     <?php endif; ?>
                     <?php if (has_access($acc, 'Audit_petikan')): ?>
                     <li><a href="<?= site_url('admin/audit/petikan'); ?>"><i class="fa fa-circle-o"></i> Feeder Petikan Nilai</a></li>

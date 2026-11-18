@@ -1,0 +1,99 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Audit_kpat extends CI_Controller {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->service('AuditFeederService');
+        $this->load->model(array(
+            'jurusan/m_tahun_akademik',
+            'jurusan/program_studi/Nama_jurusan_model',
+            'Audit_feeder_model',
+        ));
+
+        $class = $this->router->fetch_class();
+        if (!$this->session->userdata('nama_login')) {
+            redirect('login/admin');
+        } else {
+            $id_user = $this->session->userdata('id');
+            $cek = rbac_cek($class, $id_user);
+            if (!$cek) {
+                redirect(site_url('denied'));
+            }
+        }
+    }
+
+    public function index()
+    {
+        $data['judul'] = 'Audit Nilai';
+        $data['sub_judul'] = 'Feeder & SISKA KPAT';
+        $data['content'] = 'admin/audit/V_feeder_kpat';
+        $data['tahun_akademik'] = $this->Audit_feeder_model->getDistinctTahunAkademik();
+        $data['prodi'] = $this->Nama_jurusan_model->get();
+
+        $this->load->view('admin/template/V_main', $data);
+    }
+
+    public function hasil()
+    {
+        $kode_tahun_akademik = $this->input->post('tahun_akademik') ?: $this->input->post('kode_tahun_akademik');
+        $kode_program_studi = $this->input->post('kode_program_studi');
+        $id_matakuliah = $this->input->post('id_matakuliah');
+        $kode_matakuliah = $this->input->post('kode_matakuliah');
+        $nama_kelas_id = $this->input->post('nama_kelas_id');
+
+        $data = $this->auditfeederservice->hasilKpat($kode_tahun_akademik, $kode_program_studi, $id_matakuliah, $kode_matakuliah, $nama_kelas_id);
+        if (isset($data['error'])) {
+            echo '<div class="callout callout-danger flat"><p>' . html_escape($data['error']) . '</p></div>';
+            return;
+        }
+
+        $this->load->view('admin/audit/V_feeder_hasil', $data);
+    }
+
+    public function get_matakuliah($kode_tahun_akademik = NULL, $kode_program_studi = NULL)
+    {
+        $ta = $this->input->post('tahun_akademik') ?: $this->input->post('kode_tahun_akademik') ?: $kode_tahun_akademik;
+        $prodi = $this->input->post('kode_program_studi') ?: $kode_program_studi;
+
+        $rows = $this->Audit_feeder_model->getMatakuliahKpatByProdiTa($ta, $prodi);
+        echo json_encode($rows);
+    }
+
+    public function get_kelas($kode_tahun_akademik = NULL, $kode_program_studi = NULL, $id_matakuliah = NULL)
+    {
+        $ta = $this->input->post('tahun_akademik') ?: $this->input->post('kode_tahun_akademik') ?: $kode_tahun_akademik;
+        $prodi = $this->input->post('kode_program_studi') ?: $kode_program_studi;
+        $id_mk = $this->input->post('id_matakuliah') ?: $id_matakuliah;
+
+        $rows = $this->Audit_feeder_model->getKelasKpatByMatakuliah($ta, $prodi, $id_mk);
+        echo json_encode($rows);
+    }
+
+    public function kandidat_null_feeder()
+    {
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $nama_matakuliah     = $this->input->post('nama_matakuliah');
+        $nims                = $this->input->post('nims');
+
+        $data = $this->auditfeederservice->kandidatNullFeeder($kode_tahun_akademik, $nama_matakuliah, $nims, TRUE);
+        echo json_encode($data);
+    }
+
+    public function cek_null_siska()
+    {
+        $nim                 = $this->input->post('nim');
+        $kode_tahun_akademik = $this->input->post('kode_tahun_akademik');
+        $kode_matakuliah     = $this->input->post('kode_matakuliah');
+
+        $data = $this->Audit_feeder_model->getKhsDanDummyByNimMatakuliah($nim, $kode_tahun_akademik, $kode_matakuliah);
+
+        echo json_encode([
+            'khs'         => $data['khs'],
+            'dummy'       => $data['dummy'],
+            'dummy_nilai' => $data['dummy_nilai'],
+            'hanya_khs'   => !empty($data['hanya_khs']),
+        ]);
+    }
+}

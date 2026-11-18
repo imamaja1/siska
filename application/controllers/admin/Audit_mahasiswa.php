@@ -52,13 +52,26 @@ class Audit_mahasiswa extends CI_Controller {
     public function detail_nim()
     {
         $nim = $this->input->post('nim');
+        $from_sync = (bool) $this->input->post('from_sync');
 
-        $data = $this->auditfeederservice->auditBiodataNim($nim);
+        $data = $this->auditfeederservice->auditBiodataNim($nim, $from_sync);
         if (isset($data['error'])) {
             echo '<div class="callout callout-danger flat"><p><i class="fa fa-exclamation-triangle"></i> ' . html_escape($data['error']) . '</p></div>';
             return;
         }
 
         $this->load->view('admin/audit/V_feeder_mahasiswa_detail', $data);
+    }
+
+    public function sinkron_feeder_ke_siska()
+    {
+        $nim = $this->input->post('nim');
+        $field_key = $this->input->post('field_key') ?: 'all';
+
+        $res = $this->auditfeederservice->sinkronBiodataFeederKeSiska($nim, $field_key);
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($res));
     }
 }

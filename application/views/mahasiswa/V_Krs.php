@@ -23,6 +23,8 @@ if (count($nama_words) >= 2) {
 $angkatan = substr($data_mahasiswa->nim ?? $nim, 0, 2);
 $is_approved = !empty($aktif_dosen);
 $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
+$krs_buka = isset($akses_krs['status']) ? (bool) $akses_krs['status'] : false;
+$periode_krs = isset($akses_krs['periode']) ? $akses_krs['periode'] : null;
 ?>
 
 <div class="krs-wrapper">
@@ -34,6 +36,13 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
                 <h2 class="krs-header-title">KRS | <?= ($semester == 'K') ? 'Konversi' : 'Semester ' . e($semester) ?></h2>
                 <p class="krs-header-sub">
                     Semester <?= ($semester == 'K') ? 'Konversi' : e($semester) ?> TA. <?= isset($tahun_akademik->tahun_akademik) ? e($tahun_akademik->tahun_akademik) : '' ?><?php if (!empty($prodi->nama_program_studi)) : ?> | <?= e($prodi->nama_program_studi) ?><?php endif; ?>
+                    <?php if ($ta == $tahun_akademik->kode_tahun_akademik && $periode_krs && ((!empty($periode_krs->tgl_awal_krs) && $periode_krs->tgl_awal_krs !== '0000-00-00') || (!empty($periode_krs->tgl_batas_krs) && $periode_krs->tgl_batas_krs !== '0000-00-00'))) : ?>
+                        <br><small>Jadwal KRS:
+                            <?= (!empty($periode_krs->tgl_awal_krs) && $periode_krs->tgl_awal_krs !== '0000-00-00') ? e(tgl_indo($periode_krs->tgl_awal_krs)) : '-' ?>
+                            s/d
+                            <?= (!empty($periode_krs->tgl_batas_krs) && $periode_krs->tgl_batas_krs !== '0000-00-00') ? e(tgl_indo($periode_krs->tgl_batas_krs)) : '-' ?>
+                        </small>
+                    <?php endif; ?>
                 </p>
             </div>
         </div>
@@ -52,14 +61,26 @@ $maks_sks = isset($beban_sks['beban_sks']) ? $beban_sks['beban_sks'] : 24;
 
             <?php if ($ta == $tahun_akademik->kode_tahun_akademik) : ?>
                 <?php if (empty($aktif_dosen) && empty($bayar_sks)) : ?>
-                    <a href="<?= site_url('mahasiswa/krs/edit_krs') ?>" class="krs-btn-outline">
-                        <i class="fa fa-edit"></i> Ubah KRS
-                    </a>
-                <?php else : ?>
-                    <?php if (empty($aktif_dosen) && $angkatan > 24) : ?>
+                    <?php if ($krs_buka) : ?>
                         <a href="<?= site_url('mahasiswa/krs/edit_krs') ?>" class="krs-btn-outline">
                             <i class="fa fa-edit"></i> Ubah KRS
                         </a>
+                    <?php else : ?>
+                        <span class="krs-status-pending" style="background:#FEE2E2; color:#991B1B; border-color:#FECACA;">
+                            <i class="fa fa-lock"></i> Periode KRS Ditutup
+                        </span>
+                    <?php endif; ?>
+                <?php else : ?>
+                    <?php if (empty($aktif_dosen) && $angkatan > 24) : ?>
+                        <?php if ($krs_buka) : ?>
+                            <a href="<?= site_url('mahasiswa/krs/edit_krs') ?>" class="krs-btn-outline">
+                                <i class="fa fa-edit"></i> Ubah KRS
+                            </a>
+                        <?php else : ?>
+                            <span class="krs-status-pending" style="background:#FEE2E2; color:#991B1B; border-color:#FECACA;">
+                                <i class="fa fa-lock"></i> Periode KRS Ditutup
+                            </span>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <?php if (!empty($aktif_dosen) && $angkatan > 24) : ?>
                         <a href="<?= site_url('mahasiswa/krs/print_view') ?>" target="_blank" class="krs-btn-outline">

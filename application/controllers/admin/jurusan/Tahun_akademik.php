@@ -95,6 +95,20 @@ class Tahun_akademik extends CI_Controller {
         redirect('admin/jurusan/tahun_akademik');
     }
 
+    public function ubah_status_krs($id, $status) {
+        $res = $this->akademiksetupservice->ubahStatusKrsTahunAkademik($id, $status);
+        if ($this->input->is_ajax_request()) {
+            echo json_encode($res);
+            return;
+        }
+        if ($res['status']) {
+            $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');
+        } else {
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", "'.$res['msg'].'", "error");</script>');
+        }
+        redirect('admin/jurusan/tahun_akademik');
+    }
+
     public function render_tabel() {
         $data['data'] = $this->akademiksetupservice->getTahunAkademikLengkap();
         $this->load->view('admin/jurusan/V_tabel_tahun_akademik', $data);

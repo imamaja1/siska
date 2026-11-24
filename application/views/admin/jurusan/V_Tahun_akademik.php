@@ -56,6 +56,34 @@
                             </div>
                         </div>
                     </div>
+                    <hr style="margin: 10px 0;">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Tanggal Awal KRS</label>
+                        <div class="col-sm-5">
+                            <div class="input-group date">
+                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                <input type="text" name="tgl_awal_krs" placeholder="YYYY-MM-DD (Opsional)" class="form-control datepicker" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Batas Akhir KRS</label>
+                        <div class="col-sm-5">
+                            <div class="input-group date">
+                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                <input type="text" name="tgl_batas_krs" placeholder="YYYY-MM-DD (Opsional)" class="form-control datepicker" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Status KRS</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="status_krs">
+                                <option value="N">Nonaktif</option>
+                                <option value="A">Aktif</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default flat" data-dismiss="modal"><i class="fa fa-times-circle"></i> Close</button>
@@ -76,7 +104,8 @@
 <script>
     $(function () {
         $(".datepicker").datepicker({
-            format: "yyyy/mm/dd",
+            format: "yyyy-mm-dd",
+            autoclose: true
         });
     });
 
@@ -124,7 +153,8 @@
                 $("#content-edit").html(res);
                 $("#modal-edit").modal('show');
                 $(".datepicker").datepicker({
-                    format: "yyyy/mm/dd",
+                    format: "yyyy-mm-dd",
+                    autoclose: true
                 });
                 $("#form-edit").submit(function(e) {
                     e.preventDefault();
@@ -195,6 +225,38 @@
     function nonaktif(id) {
         $.ajax({
             url: "<?= site_url('admin/jurusan/tahun_akademik/ubah_status/') ?>" + id + "/N",
+            type: "GET",
+            dataType: "json",
+            success: function (res) {
+                if (res.status) {
+                    swal('Success!', res.msg, 'success');
+                    reloadTabel();
+                } else {
+                    swal('Gagal!', res.msg, 'error');
+                }
+            }
+        });
+    }
+
+    function aktifKrs(id) {
+        $.ajax({
+            url: "<?= site_url('admin/jurusan/tahun_akademik/ubah_status_krs/') ?>" + id + "/A",
+            type: "GET",
+            dataType: "json",
+            success: function (res) {
+                if (res.status) {
+                    swal('Success!', res.msg, 'success');
+                    reloadTabel();
+                } else {
+                    swal('Gagal!', res.msg, 'error');
+                }
+            }
+        });
+    }
+
+    function nonaktifKrs(id) {
+        $.ajax({
+            url: "<?= site_url('admin/jurusan/tahun_akademik/ubah_status_krs/') ?>" + id + "/N",
             type: "GET",
             dataType: "json",
             success: function (res) {

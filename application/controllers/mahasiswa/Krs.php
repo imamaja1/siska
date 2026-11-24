@@ -15,6 +15,7 @@ class Krs extends CI_Controller
         $this->load->model(
             array(
                 'jurusan/m_tahun_akademik',
+                'jurusan/M_periode_krs',
                 'jurusan/program_studi/Nama_jurusan_model',
                 'jurusan/program_studi/Jenjang_model',
                 'jurusan/program_studi/Kode_jurusan_model',
@@ -39,6 +40,26 @@ class Krs extends CI_Controller
         }
         $this->semester = $this->semester_saat_ini();
         $this->cek_kuisioner();
+    }
+
+    private function pastikan_periode_krs_buka()
+    {
+        $kode_ta = $this->m_tahun_akademik->get_aktif();
+        $akses = $this->M_periode_krs->cek_akses_krs($kode_ta);
+        if (!$akses['status']) {
+            $this->session->set_flashdata('info', '<div class="callout callout-danger flat">
+                <h4><i class="fa fa-calendar-times-o"></i> Akses Pengisian / Perubahan KRS Ditutup!</h4>
+                <p>' . $akses['msg'] . '</p>
+            </div>');
+            $nim = $this->session->userdata('nim');
+            $cek_exis = $kode_ta ? $this->Krs_model->cek_krs_exis($nim, $kode_ta) : null;
+            if ($cek_exis !== null) {
+                redirect('mahasiswa/krs');
+            } else {
+                redirect('home/Access_krs_denied');
+            }
+        }
+        return $akses;
     }
 
     public function old($semester){
@@ -78,20 +99,27 @@ class Krs extends CI_Controller
         $data['ta'] = $ta;
         $data['ta_selected'] = $tahun_akademik;
         $data['is_old_krs'] = true;
+        $data['akses_krs'] = array('status' => false, 'msg' => '', 'periode' => null);
         $data['hide_page_header'] = true;
         $this->load->view('mahasiswa/template/V_main', $data);
     }
 
     public function index()
     {
-        $this->starter();
         $tahun_akademik = $this->m_tahun_akademik->get_aktif();
-        $data['ta'] = $this->m_tahun_akademik->get_aktif();
+        $nim = $this->session->userdata('nim');
+        $cek_exis = $this->Krs_model->cek_krs_exis($nim, $tahun_akademik);
+        $akses_krs = $this->M_periode_krs->cek_akses_krs($tahun_akademik);
+        if ($cek_exis === null) {
+            $this->pastikan_periode_krs_buka();
+        }
+
+        $this->starter();
+        $data['ta'] = $tahun_akademik;
         $data['ta_selected'] = $data['ta'];
         $data['is_old_krs'] = false;
-        $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($this->session->userdata('nim'));
-        $cek_exis = $this->Krs_model->cek_krs_exis($this->session->userdata('nim'), $tahun_akademik);
-        $nim = $this->session->userdata('nim');
+        $data['akses_krs'] = $akses_krs;
+        $dosen_wali = $this->Perwalian_model->get_perwalian_by_nim($nim);
         $kode_jejang = substr($nim, 4, 1);
         $gelombang = substr($nim, 5, 1);
         $kode_jurusan = substr($nim, 2, 2);
@@ -352,6 +380,7 @@ class Krs extends CI_Controller
 
     public function simpan_krs()
     {
+        $this->pastikan_periode_krs_buka();
         $krs_lalu = $this->Krs_model->get_kodemk_krs($this->session->userdata('nim'));
         $data_baru = $this->input->post('baru');
         $data_ulang = $this->input->post('ulang');
@@ -482,6 +511,7 @@ class Krs extends CI_Controller
 
     public function edit_krs()
     {
+        $this->pastikan_periode_krs_buka();
         $this->starter();
         $nim = $this->session->userdata('nim');
         $tahun_akademik = ta_kode();
@@ -1172,6 +1202,7 @@ class Krs extends CI_Controller
 
     public function simpan_ubah()
     {
+        $this->pastikan_periode_krs_buka();
         $krs_lalu = $this->Krs_model->get_kodemk_krs($this->session->userdata('nim'));
         $kode_tahun_akademik = $this->m_tahun_akademik->get_aktif();
         $kode_krs = $this->Krs_model->get_kode_krs($this->session->userdata('nim'), $kode_tahun_akademik);
@@ -1293,6 +1324,7 @@ class Krs extends CI_Controller
 
     public function matakuliah_awal()
     {
+        $this->pastikan_periode_krs_buka();
         $nim = $this->session->userdata('nim');
         $kode_nama_kurikulum = $this->session->userdata('kode_nama_kurikulum');
 
@@ -1320,6 +1352,7 @@ class Krs extends CI_Controller
     //    fungsi untuk menyimpan matakuliah awal mahasiswa.
     public function add_one()
     {
+        $this->pastikan_periode_krs_buka();
         $nim = $this->session->userdata('nim');
         $matakuiah_awal = $this->input->post('id_matakuliah');
 

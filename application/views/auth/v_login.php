@@ -1,5 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+$hero_img_path = 'assets/siska/img/gedung_ubg_hero.jpg';
+$hero_img_ver = file_exists(FCPATH . $hero_img_path) ? filemtime(FCPATH . $hero_img_path) : '1';
+$hero_img_url = base_url($hero_img_path) . '?v=' . $hero_img_ver;
+
+$default_role = !empty($remembered_role) ? $remembered_role : 'mahasiswa';
+$selected_role = set_value('status', $default_role);
+if ($selected_role !== 'dosen') {
+    $selected_role = 'mahasiswa';
+}
+
+$default_username = !empty($remembered_username) ? $remembered_username : '';
+$username_value = set_value('username', $default_username);
+$is_remembered = $this->input->post('submit') ? (bool) $this->input->post('remember') : !empty($remembered_username);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -45,14 +59,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body class="min-h-screen bg-[#f1f5f9] font-sans text-slate-800 flex items-center justify-center p-3 sm:p-5 lg:p-8 selection:bg-blue-600 selection:text-white">
 
-    <!-- BEGIN: Main App Container (Figma: Desktop / SIAKAD Login Modern v3) -->
+    <!-- BEGIN: Main App Container -->
     <main class="w-full max-w-[1360px] bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden p-4 sm:p-5 lg:p-6 my-auto">
         <div class="flex flex-col lg:flex-row gap-5 lg:gap-8 items-stretch justify-between">
 
             <!-- BEGIN: Left Column (Col / Auth Form) -->
             <section class="w-full lg:w-[480px] xl:w-[540px] flex flex-col justify-between p-2 sm:p-6 lg:p-8 flex-shrink-0" data-purpose="login-auth-form">
-                
+
                 <div>
+                    <!-- Compact Mobile Campus Banner -->
+                    <div class="lg:hidden relative h-32 sm:h-40 rounded-2xl overflow-hidden bg-slate-900 mb-5 shadow-sm">
+                        <img src="<?= $hero_img_url ?>" alt="Gedung Kampus Universitas Bumigora" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-transparent"></div>
+                    </div>
+
                     <!-- Top Section: Brand Row -->
                     <div class="flex items-center gap-3">
                         <div class="w-11 h-11 rounded-full bg-slate-50 border border-slate-200/80 flex items-center justify-center p-1.5 shadow-sm overflow-hidden flex-shrink-0">
@@ -84,16 +104,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     <!-- Form Content -->
                     <?= form_open('login', array('id' => 'siska-login-form', 'class' => 'mt-6 space-y-4')); ?>
-                        
+
+                        <!-- Field / Hak Akses (Role Switcher Pill) -->
+                        <div class="space-y-1.5" data-purpose="input-group-role">
+                            <label class="block text-xs font-bold text-slate-800">
+                                Masuk Sebagai
+                            </label>
+                            <input type="hidden" id="userRole" name="status" value="<?= html_escape($selected_role) ?>">
+                            <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200/80" role="tablist" aria-label="Pilih Hak Akses">
+                                <button type="button" data-role="mahasiswa" class="role-pill py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer <?= $selected_role === 'mahasiswa' ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/80' : 'text-slate-600 hover:text-slate-900' ?>">
+                                    <i class="fa-solid fa-graduation-cap text-xs"></i>
+                                    <span>Mahasiswa</span>
+                                </button>
+                                <button type="button" data-role="dosen" class="role-pill py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer <?= $selected_role === 'dosen' ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/80' : 'text-slate-600 hover:text-slate-900' ?>">
+                                    <i class="fa-solid fa-chalkboard-user text-xs"></i>
+                                    <span>Dosen / Pengajar</span>
+                                </button>
+                            </div>
+                            <?php if (form_error('status')): ?>
+                                <p class="text-[11px] font-medium text-rose-600 mt-1"><?= form_error('status'); ?></p>
+                            <?php endif; ?>
+                        </div>
+
                         <!-- Field / Username -->
                         <div class="space-y-1.5" data-purpose="input-group-username">
-                            <label class="block text-xs font-bold text-slate-800" for="username">
-                                Username
+                            <label class="block text-xs font-bold text-slate-800" for="username" id="usernameLabel">
+                                <?= $selected_role === 'dosen' ? 'Email Dosen' : 'Nomor Induk Mahasiswa (NIM)' ?>
                             </label>
                             <div class="relative">
-                                <input class="w-full h-11 pl-3.5 pr-10 rounded-lg border <?= form_error('username') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-900 bg-white text-sm focus:ring-1 transition-all outline-none" id="username" name="username" placeholder="Masukkan NIM atau NIDN..." required type="text" autocomplete="off" value="<?= set_value('username') ?>">
+                                <input class="w-full h-11 pl-3.5 pr-10 rounded-lg border <?= form_error('username') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-900 bg-white text-sm focus:ring-1 transition-all outline-none" id="username" name="username" placeholder="<?= $selected_role === 'dosen' ? 'Masukkan alamat email dosen...' : 'Masukkan NIM Anda...' ?>" required type="text" autocomplete="username" value="<?= html_escape($username_value) ?>">
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
-                                    <i class="fa-regular fa-user text-sm"></i>
+                                    <i class="fa-regular <?= $selected_role === 'dosen' ? 'fa-envelope' : 'fa-user' ?> text-sm" id="usernameIcon"></i>
                                 </div>
                             </div>
                             <?php if (form_error('username')): ?>
@@ -112,11 +153,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </a>
                             </div>
                             <div class="relative">
-                                <input class="w-full h-11 pl-3.5 pr-10 rounded-lg border <?= form_error('password') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-900 bg-white text-sm focus:ring-1 transition-all outline-none" id="password" name="password" placeholder="••••••••••••••" required type="password" value="<?= set_value('password') ?>">
+                                <input class="w-full h-11 pl-3.5 pr-10 rounded-lg border <?= form_error('password') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-900 bg-white text-sm focus:ring-1 transition-all outline-none" id="password" name="password" placeholder="••••••••••••••" required type="password" autocomplete="current-password" value="<?= set_value('password') ?>">
                                 <button aria-label="Lihat kata sandi" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600 transition-colors" id="togglePassword" type="button">
                                     <i class="fa-solid fa-lock text-sm" id="lockIcon"></i>
                                 </button>
                             </div>
+                            <p id="capsLockWarning" class="hidden text-[11px] font-medium text-amber-600 mt-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Caps Lock sedang aktif</span>
+                            </p>
                             <?php if (form_error('password')): ?>
                                 <p class="text-[11px] font-medium text-rose-600 mt-1"><?= form_error('password'); ?></p>
                             <?php endif; ?>
@@ -125,42 +170,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <!-- Utility Row (Remember Me) -->
                         <div class="flex items-center justify-between pt-0.5">
                             <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-                                <input type="checkbox" name="remember" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 transition">
+                                <input type="checkbox" name="remember" value="1" <?= $is_remembered ? 'checked' : '' ?> class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 transition">
                                 <span class="text-xs font-medium text-slate-700">Ingat saya</span>
                             </label>
                         </div>
 
-                        <!-- Field / Hak Akses -->
-                        <div class="space-y-1.5" data-purpose="input-group-role">
-                            <label class="block text-xs font-bold text-slate-800" for="userRole">
-                                Hak Akses / Peran
-                            </label>
-                            <div class="relative">
-                                <select class="w-full h-11 py-2.5 pl-3.5 pr-10 rounded-lg border <?= form_error('status') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-500' : 'border-slate-200 hover:border-slate-300 focus:border-blue-600 focus:ring-blue-600' ?> text-slate-800 bg-white text-sm focus:ring-1 appearance-none transition-all outline-none cursor-pointer" id="userRole" name="status" required>
-                                    <option value="mahasiswa" <?= (set_value('status', 'mahasiswa') == 'mahasiswa') ? 'selected' : '' ?>>Mahasiswa</option>
-                                    <option value="dosen" <?= (set_value('status') == 'dosen') ? 'selected' : '' ?>>Dosen / Tenaga Pengajar</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
-                                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                                </div>
-                            </div>
-                            <?php if (form_error('status')): ?>
-                                <p class="text-[11px] font-medium text-rose-600 mt-1"><?= form_error('status'); ?></p>
-                            <?php endif; ?>
-                        </div>
-
                         <!-- Action Buttons -->
                         <div class="pt-3 space-y-2.5">
-                            <!-- Button / Log In -->
-                            <button class="w-full h-[46px] py-2.5 px-4 rounded-lg bg-[#2563eb] hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit" name="submit" value="Log In">
-                                <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
-                                <span>Log In ke SIAKAD</span>
+                            <!-- Primary CTA: Log In -->
+                            <button id="btn-login-submit" class="w-full h-[46px] py-2.5 px-4 rounded-lg bg-[#2563eb] hover:bg-blue-700 active:bg-blue-800 disabled:opacity-75 disabled:cursor-not-allowed text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer" type="submit" name="submit" value="Log In">
+                                <i class="fa-solid fa-arrow-right-to-bracket text-sm" id="btn-login-icon"></i>
+                                <span id="btn-login-text">Log In ke SIAKAD</span>
                             </button>
 
-                            <!-- Button / Validasi -->
-                            <button type="button" onclick="openPaymentModal()" class="w-full h-[46px] py-2.5 px-4 rounded-lg bg-[#ef4444] hover:bg-red-600 active:bg-red-700 text-white text-[15px] font-bold tracking-wide shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer text-center">
+                            <!-- Secondary Soft-Tinted CTA: Cek Validasi Pembayaran -->
+                            <button type="button" onclick="openPaymentModal()" class="w-full h-[44px] py-2.5 px-4 rounded-lg bg-rose-50 hover:bg-rose-100 active:bg-rose-200 border border-rose-200 text-rose-600 text-sm font-bold tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer text-center">
                                 <i class="fa-solid fa-receipt text-sm"></i>
-                                <span>Cek Validasi Pembayaran!</span>
+                                <span>Cek Validasi Pembayaran</span>
                             </button>
                         </div>
 
@@ -190,7 +216,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <!-- BEGIN: Right Column (Col / Hero Showcase) -->
             <aside class="hidden lg:flex flex-1 relative rounded-[20px] overflow-hidden bg-slate-900 min-h-[580px] xl:min-h-[720px] shadow-inner" aria-label="Gedung Universitas Bumigora">
-                <img src="<?= base_url('assets/siska/img/gedung_ubg_hero.jpg') ?>?v=<?= file_exists(FCPATH . 'assets/siska/img/gedung_ubg_hero.jpg') ? filemtime(FCPATH . 'assets/siska/img/gedung_ubg_hero.jpg') : '1' ?>" alt="Gedung Kampus Universitas Bumigora" class="absolute inset-0 w-full h-full object-cover">
+                <img src="<?= $hero_img_url ?>" alt="Gedung Kampus Universitas Bumigora" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
             </aside>
             <!-- END: Right Column -->
@@ -252,12 +278,89 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             });
         }
 
+        // Caps Lock Warning Detector
+        const capsWarning = document.getElementById('capsLockWarning');
+        if (passwordInput && capsWarning) {
+            const checkCapsLock = (e) => {
+                if (typeof e.getModifierState === 'function') {
+                    capsWarning.classList.toggle('hidden', !e.getModifierState('CapsLock'));
+                }
+            };
+            passwordInput.addEventListener('keydown', checkCapsLock);
+            passwordInput.addEventListener('keyup', checkCapsLock);
+            passwordInput.addEventListener('blur', () => capsWarning.classList.add('hidden'));
+        }
+
+        // Role Switcher Pill
+        const roleInput = document.getElementById('userRole');
+        const roleButtons = document.querySelectorAll('.role-pill');
+        const usernameLabel = document.getElementById('usernameLabel');
+        const usernameInput = document.getElementById('username');
+        const usernameIcon = document.getElementById('usernameIcon');
+
+        const activePillClasses = ['bg-white', 'text-blue-600', 'shadow-sm', 'ring-1', 'ring-slate-200/80'];
+        const inactivePillClasses = ['text-slate-600', 'hover:text-slate-900'];
+
+        function setRole(role) {
+            if (!roleInput) return;
+            roleInput.value = role;
+            roleButtons.forEach((btn) => {
+                const isSelected = btn.getAttribute('data-role') === role;
+                btn.classList.remove(...activePillClasses, ...inactivePillClasses);
+                btn.classList.add(...(isSelected ? activePillClasses : inactivePillClasses));
+            });
+            if (role === 'dosen') {
+                if (usernameLabel) usernameLabel.textContent = 'Email Dosen';
+                if (usernameInput) usernameInput.placeholder = 'Masukkan alamat email dosen...';
+                if (usernameIcon) {
+                    usernameIcon.classList.remove('fa-user');
+                    usernameIcon.classList.add('fa-envelope');
+                }
+            } else {
+                if (usernameLabel) usernameLabel.textContent = 'Nomor Induk Mahasiswa (NIM)';
+                if (usernameInput) usernameInput.placeholder = 'Masukkan NIM Anda...';
+                if (usernameIcon) {
+                    usernameIcon.classList.remove('fa-envelope');
+                    usernameIcon.classList.add('fa-user');
+                }
+            }
+        }
+
+        roleButtons.forEach((btn) => {
+            btn.addEventListener('click', () => setRole(btn.getAttribute('data-role')));
+        });
+
+        // Submit Loading State (prevent double submit while preserving submit=Log In POST value)
+        const loginForm = document.getElementById('siska-login-form');
+        const loginBtn = document.getElementById('btn-login-submit');
+        const loginIcon = document.getElementById('btn-login-icon');
+        const loginText = document.getElementById('btn-login-text');
+
+        if (loginForm && loginBtn) {
+            loginForm.addEventListener('submit', () => {
+                if (loginBtn.disabled) return;
+                const hiddenSubmit = document.createElement('input');
+                hiddenSubmit.type = 'hidden';
+                hiddenSubmit.name = 'submit';
+                hiddenSubmit.value = 'Log In';
+                loginForm.appendChild(hiddenSubmit);
+
+                loginBtn.disabled = true;
+                if (loginIcon) {
+                    loginIcon.className = 'fa-solid fa-spinner fa-spin text-sm';
+                }
+                if (loginText) {
+                    loginText.textContent = 'Memproses...';
+                }
+            });
+        }
+
         // Modal Cek Validasi Pembayaran
         function openPaymentModal() {
             const modal = document.getElementById('modal-cek-validasi');
             if (modal) {
                 modal.classList.remove('hidden');
-                document.getElementById('input-nim').focus();
+                document.getElementById('input-nim')?.focus();
             }
         }
 
@@ -265,15 +368,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             const modal = document.getElementById('modal-cek-validasi');
             if (modal) {
                 modal.classList.add('hidden');
-                document.getElementById('landing-result').innerHTML = '';
+                const res = document.getElementById('landing-result');
+                if (res) res.innerHTML = '';
             }
         }
 
         // Close modal when clicking on backdrop
         document.getElementById('modal-cek-validasi')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePaymentModal();
-            }
+            if (e.target === this) closePaymentModal();
         });
 
         // Close modal on ESC key

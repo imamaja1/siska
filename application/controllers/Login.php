@@ -19,6 +19,45 @@ class Login extends CI_Controller
         $this->load->service('AuthService');
     }
 
+    private function render_login_view()
+    {
+        $data = array(
+            'remembered_username' => $this->input->cookie('siska_remember_username', TRUE) ?: '',
+            'remembered_role'     => $this->input->cookie('siska_remember_role', TRUE) ?: 'mahasiswa',
+        );
+
+        $this->load->view('auth/v_login', $data);
+    }
+
+    private function handle_remember_me($username, $role)
+    {
+        $is_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+        if ($this->input->post('remember')) {
+            $expire = 2592000;
+            $this->input->set_cookie(array(
+                'name'     => 'siska_remember_username',
+                'value'    => $username,
+                'expire'   => $expire,
+                'path'     => '/',
+                'secure'   => $is_secure,
+                'httponly' => TRUE,
+                'samesite' => 'Lax',
+            ));
+            $this->input->set_cookie(array(
+                'name'     => 'siska_remember_role',
+                'value'    => ($role === 'dosen') ? 'dosen' : 'mahasiswa',
+                'expire'   => $expire,
+                'path'     => '/',
+                'secure'   => $is_secure,
+                'httponly' => TRUE,
+                'samesite' => 'Lax',
+            ));
+        } else {
+            $this->input->set_cookie('siska_remember_username', '', -3600, '', '/');
+            $this->input->set_cookie('siska_remember_role', '', -3600, '', '/');
+        }
+    }
+
     function index()
     {
         if ($this->input->post('submit')) {
@@ -27,7 +66,7 @@ class Login extends CI_Controller
             $this->form_validation->set_rules('status', 'Status', 'required', array('required' => 'Field Status harus dipilih'));
 
             if ($this->form_validation->run() == false) {
-                $this->load->view('auth/v_login');
+                $this->render_login_view();
             } else {
                 $nim = $this->input->post('username');
                 $sandi_pengguna = $this->input->post('password');
@@ -78,6 +117,7 @@ class Login extends CI_Controller
                             }
                         }
 
+                            $this->handle_remember_me($nim, 'mahasiswa');
                             $this->session->set_userdata($data_user);
                             $this->session->sess_regenerate(TRUE);
                             redirect(site_url('home'));
@@ -122,6 +162,7 @@ class Login extends CI_Controller
                             }
                         }
 
+                        $this->handle_remember_me($alamat_email, 'dosen');
                         $this->session->set_userdata($data);
                         $this->session->sess_regenerate(TRUE);
                         redirect('home/dosen');
@@ -132,7 +173,7 @@ class Login extends CI_Controller
                 }
             }
         } else {
-            $this->load->view('auth/v_login');
+            $this->render_login_view();
         }
     }
 

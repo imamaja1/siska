@@ -150,7 +150,7 @@ class MahasiswaService extends MY_Service {
                 $sandi .= $chars[random_int(0, strlen($chars) - 1)];
             }
             
-            $data = array('sandi' => $sandi);
+            $data = array('sandi' => password_hash($sandi, PASSWORD_BCRYPT));
             $this->mahasiswa_model->update($nim, $data);
             
             $user_id = $this->getUserIdByKeyRef($nim);

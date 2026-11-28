@@ -109,6 +109,7 @@
         if(conf){
             $.ajax({
                 url : url,
+                type : 'POST',
                 success : function () {
                     autoload();
                 }

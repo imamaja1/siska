@@ -37,6 +37,10 @@ class Kuisioner extends CI_Controller
 
     public function aktif()
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/kuisioner/kuisioner'));
+            return;
+        }
         $data_ubah = array(
             'aktif_kuisioner' => 'A',
         );
@@ -47,6 +51,10 @@ class Kuisioner extends CI_Controller
 
     public function nonaktif()
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/kuisioner/kuisioner'));
+            return;
+        }
         $data_ubah = array(
             'aktif_kuisioner' => 'N',
         );

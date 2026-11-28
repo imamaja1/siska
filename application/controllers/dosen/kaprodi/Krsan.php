@@ -1,6 +1,6 @@
 <?php
 
-class KRSAN extends CI_Controller
+class Krsan extends CI_Controller
 {
     public function __construct()
     {

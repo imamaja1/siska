@@ -224,6 +224,7 @@
             // window.location.href = url;
             $.ajax({
                 url: url,
+                type: 'POST',
                 success: function (res) {
                     var obj = JSON.parse(res);
                     if (!obj.status) {
@@ -292,6 +293,7 @@
         }).then(function () {
             $.ajax({
                 url: url,
+                type: 'POST',
                 success: function () {
                     load_pegampu();
                 }

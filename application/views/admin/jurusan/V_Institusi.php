@@ -161,7 +161,7 @@
             cancelButtonText: 'Tidak',
             confirmButtonText: 'Ya'
         }).then(function () {
-            window.location.href = url;
+            siskaPostAction(url);
         });
 
     }

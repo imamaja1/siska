@@ -62,6 +62,11 @@ class Kurikulum_angkatan extends CI_Controller
 
     public function hapus($id)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+            return;
+        }
         $res = $this->kurikulumservice->hapusKurikulumAngkatan($id);
         echo json_encode($res);
     }

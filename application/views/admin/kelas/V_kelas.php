@@ -38,10 +38,10 @@
                         <div class="pull-right">
                             <a href="<?= site_url('admin/kuisioner/kelas/aktivasi_nilai'); ?>" class="btn btn-sm btn-primary"><i class="fa fa-file-text"></i> Aktivasi Nilai</a>
                             <?php if ($setting->aktif_kuisioner == 'A'): ?>
-                                <a href="<?= site_url('admin/kuisioner/kelas/nonaktif') ?>" class="btn btn-sm btn-success"
+                                <a href="#" onclick="siskaPostAction('<?= site_url('admin/kuisioner/kelas/nonaktif') ?>'); return false;" class="btn btn-sm btn-success"
                                    title="Pengisian Nilai Aktif"><i class="fa fa-check-square-o"></i> Aktif</a>
                                <?php else: ?>
-                                <a href="<?= site_url('admin/kuisioner/kelas/aktif') ?>" class="btn btn-sm btn-danger"
+                                <a href="#" onclick="siskaPostAction('<?= site_url('admin/kuisioner/kelas/aktif') ?>'); return false;" class="btn btn-sm btn-danger"
                                    title="Pengisian Nilai nonAktif"><i class="fa fa-check-square-o"></i> Non Aktif</a>
                                <?php endif; ?>
                         </div>

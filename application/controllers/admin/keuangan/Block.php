@@ -43,6 +43,11 @@ class Block extends CI_Controller
     }
 
     public function delete($id){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+            return;
+        }
         $this->keuanganservice->deleteBlock($id);
     }
 }

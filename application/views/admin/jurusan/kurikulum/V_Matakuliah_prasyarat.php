@@ -134,7 +134,7 @@
         }).then(function () {
             $.ajax({
                 url: url,
-                type: "get",
+                type: "POST",
                 success: function (data) {
                     ambil();
                 },

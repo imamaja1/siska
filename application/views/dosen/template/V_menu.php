@@ -114,8 +114,8 @@
                 <li class="<?= isset($a_bidang_ilmu_kaprodi) ? $a_bidang_ilmu_kaprodi : '' ?>"><a href="<?= site_url('dosen/bidang_ilmu/info_bidang_ilmu_for_kaprodi') ?>"><i class="fa fa-user"></i> <span>Data Bidang Ilmu Dosen</span></a></li>
 
                 <li hidden><a href="#"><i class="fa fa-sort-numeric-desc"></i> <span>Hasil Pengajaran Dosen</span></a></li>
-                <li><a href="<?= site_url('dosen/kaprodi/MBKM') ?>"><i class="glyphicon glyphicon-th-list"></i>MBKM</a></li>
-          		<li><a href="<?= site_url('dosen/kaprodi/KRSAN') ?>"><i class="glyphicon glyphicon-th-list"></i>Mahasiswa KRS</a></li>
+                <li><a href="<?= site_url('dosen/kaprodi/mbkm') ?>"><i class="glyphicon glyphicon-th-list"></i>MBKM</a></li>
+          		<li><a href="<?= site_url('dosen/kaprodi/krsan') ?>"><i class="glyphicon glyphicon-th-list"></i>Mahasiswa KRS</a></li>
                 <li><a href="<?= site_url('dosen/kaprodi/Kelas') ?>"><i class="glyphicon glyphicon-th-list"></i>Kelas Mahasiswa</a></li>
                 <li class=" treeview" hidden>
                     <a href="#">

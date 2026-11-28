@@ -123,6 +123,7 @@
         }).then(function () {
             $.ajax({
                 url: url,
+                type: 'POST',
                 beforeSend: function () {
                     $("#landing-kelas").html(default_landing);
                 },

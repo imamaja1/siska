@@ -61,6 +61,10 @@ class Kompetensi extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/jurusan/program_studi/Kompetensi');
+            return;
+        }
         if ($this->programstudiservice->hapusKompetensi($id)) {
             $this->session->set_flashdata(
                     'info', '<script>swal("Success!", "Data berhasil dihapus", "success");</script>');

@@ -253,6 +253,11 @@ class Kelas extends CI_Controller {
     }
 
     public function hapus($kelas_mahasiswa_id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'message' => 'Method not allowed'));
+            return;
+        }
         $hapus = $this->kelas_model->hapus($kelas_mahasiswa_id);
 
         if ($hapus) {
@@ -292,6 +297,15 @@ class Kelas extends CI_Controller {
     }
 
     public function hapus_kelas($kelas_id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_status_header(405);
+                echo json_encode(array('status' => 0, 'message' => 'Method not allowed'));
+                return;
+            }
+            redirect(site_url('admin/kuisioner/kelas'));
+            return;
+        }
         $hapus = $this->kuisionerservice->deleteKelas($kelas_id);
 
         if ($hapus) {
@@ -304,11 +318,19 @@ class Kelas extends CI_Controller {
     }
 
     public function aktif() {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/kuisioner/kelas'));
+            return;
+        }
         $ubah = $this->kuisionerservice->updateSettingKuisioner(2, array('aktif_kuisioner' => 'A'));
         redirect(site_url('admin/kuisioner/kelas'));
     }
 
     public function nonaktif() {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/kuisioner/kelas'));
+            return;
+        }
         $ubah = $this->kuisionerservice->updateSettingKuisioner(2, array('aktif_kuisioner' => 'N'));
         redirect(site_url('admin/kuisioner/kelas'));
     }
@@ -363,6 +385,15 @@ class Kelas extends CI_Controller {
     }
 
     public function hapus_pengampu($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_status_header(405);
+                echo json_encode(array('status' => 0, 'message' => 'Method not allowed'));
+                return;
+            }
+            redirect(site_url('admin/kuisioner/mengajar'));
+            return;
+        }
         $hapus = $this->mengajar_model->hapus($id);
 
         if ($hapus) {

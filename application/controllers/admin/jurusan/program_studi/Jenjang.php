@@ -64,6 +64,10 @@ class Jenjang extends CI_Controller {
     }
 
     public function hapus($id_jenjang) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/jurusan/program_studi/jenjang');
+            return;
+        }
         if ($this->programstudiservice->hapusJenjang($id_jenjang)) {
             $this->session->set_flashdata(
                 'info', '<script>swal("Sukses!","Hapus Data Jenjang Berhasil","success")</script>'

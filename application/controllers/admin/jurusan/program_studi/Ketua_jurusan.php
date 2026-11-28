@@ -73,6 +73,10 @@ class Ketua_jurusan extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/jurusan/program_studi/Ketua_jurusan');
+            return;
+        }
         if ($this->programstudiservice->hapusKetuaJurusan($id)) {
             $this->session->set_flashdata(
                 'info', '<script>swal("Success!", "Data Kaprodi berhasil dihapus", "success");</script>'

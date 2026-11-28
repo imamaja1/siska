@@ -57,6 +57,9 @@ class Konsentrasi extends CI_Controller {
     }
 
     public function delete_matakuliah($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            return redirect(safe_referer(site_url('admin/jurusan/konsentrasi')));
+        }
         $this->programstudiservice->hapusMatakuliahKonsentrasi($id);
         $this->session->set_flashdata('info', 'Data berhasil dihapus');
         return redirect(safe_referer(site_url('admin/jurusan/konsentrasi')));

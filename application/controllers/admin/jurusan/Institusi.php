@@ -57,6 +57,10 @@ class Institusi extends CI_Controller {
     }
 
     public function hapus($kode) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/jurusan/institusi');
+            return;
+        }
         $res = $this->universitasservice->hapusInstitusi($kode);
 
         if ($res['status']) {

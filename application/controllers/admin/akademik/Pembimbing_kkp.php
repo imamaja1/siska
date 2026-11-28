@@ -165,6 +165,10 @@ class Pembimbing_kkp extends CI_Controller
 
     public function hapus($id)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/akademik/pembimbing_kkp'));
+            return;
+        }
         $delete = $this->pembimbingkkpservice->hapusPembimbing($id);
         if ($delete)
         {

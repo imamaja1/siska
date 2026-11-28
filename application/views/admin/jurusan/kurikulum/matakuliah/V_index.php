@@ -268,7 +268,7 @@
             cancelButtonText: 'Tidak', confirmButtonText: 'Ya'
         }).then(function () {
             $.ajax({
-                url: url, success: function (res) {
+                url: url, type: 'POST', success: function (res) {
                     try {
                         var obj = JSON.parse(res);
                         if (obj.status) { all(); swal('Success!', obj.msg, 'success');

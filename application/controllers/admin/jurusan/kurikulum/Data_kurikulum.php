@@ -126,6 +126,15 @@ class Data_kurikulum extends CI_Controller {
     }
 
     public function hapus($id, $kode_nama_kurikulum) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_status_header(405);
+                echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+                return;
+            }
+            redirect(site_url('admin/jurusan/kurikulum/data_kurikulum/tampil_filter/' . $kode_nama_kurikulum));
+            return;
+        }
         $result = $this->kurikulumservice->hapusDataKurikulum($id);
         if ($this->input->is_ajax_request()) {
             echo json_encode(array('status' => $result, 'msg' => $result ? 'Data berhasil dihapus' : 'Data gagal dihapus'));

@@ -1,6 +1,6 @@
 <?php
 
-class MBKM extends CI_Controller
+class Mbkm extends CI_Controller
 {
     public function __construct()
     {

@@ -68,6 +68,15 @@ class Tahun_akademik extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_status_header(405);
+                echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+                return;
+            }
+            redirect('admin/jurusan/tahun_akademik');
+            return;
+        }
         $res = $this->akademiksetupservice->hapusTahunAkademik($id);
         if ($this->input->is_ajax_request()) {
             echo json_encode($res);

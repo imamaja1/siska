@@ -62,6 +62,10 @@ class Kode_jurusan extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/jurusan/program_studi/Kode_jurusan');
+            return;
+        }
         if ($this->programstudiservice->hapusKodeJurusan($id)) {
             $this->session->set_flashdata(
                 'info', '<script>swal("Success!", "Data Jurusan berhasil dihapus", "success");</script>');

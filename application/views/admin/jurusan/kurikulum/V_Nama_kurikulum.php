@@ -109,7 +109,7 @@
         }).then(function () {
             $.ajax({
                 url: "<?= site_url('admin/jurusan/kurikulum/nama_kurikulum/hapus') ?>/" + id,
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 success: function(res) {
                     if (res.status) {

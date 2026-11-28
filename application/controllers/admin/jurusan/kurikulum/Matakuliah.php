@@ -148,6 +148,11 @@ class Matakuliah extends CI_Controller
 
     public function hapus($id)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+            return;
+        }
         $res = $this->matakuliahservice->hapusMatakuliah($id);
         echo json_encode($res);
     }

@@ -115,7 +115,7 @@
         }).then(function () {
             $.ajax({
                 url: "<?= site_url('admin/jurusan/kurikulum/data_kurikulum/hapus') ?>/" + id + "/" + kode_nama_kurikulum,
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 success: function(res) {
                     if (res.status) {

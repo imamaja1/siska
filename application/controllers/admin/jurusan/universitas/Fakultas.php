@@ -66,6 +66,9 @@ class Fakultas extends CI_Controller {
     }
     
     function delete($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            return redirect(site_url('admin/jurusan/universitas/fakultas'));
+        }
         $res = $this->universitasservice->hapusFakultas($id);
         if ($res['status']) {
             $this->session->set_flashdata('info', '<script>swal("Success!","' . $res['msg'] . '", "success")</script>');

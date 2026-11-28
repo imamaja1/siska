@@ -113,7 +113,7 @@
             cancelButtonText: 'Tidak', confirmButtonText: 'Ya'
         }).then(function () {
             $.ajax({
-                url : url, success : function (res) {
+                url : url, type: 'POST', success : function (res) {
                     var obj = JSON.parse(res);
                     if (obj.status) { all(); swal('Success!',obj.msg, 'success'); }else{ swal('Gagal!',obj.msg, 'error'); }
                 }

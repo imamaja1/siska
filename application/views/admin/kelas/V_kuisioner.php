@@ -1,9 +1,9 @@
 <div class="box box-solid">
     <div class="box-body">
         <?php if ($status == 'N') : ?>
-        <a href="<?= site_url('admin/kuisioner/kuisioner/aktif') ?>" class="btn btn-danger flat pull-right"><i class="fa fa-times"></i> Tidak Aktif</a>
+        <a href="#" onclick="siskaPostAction('<?= site_url('admin/kuisioner/kuisioner/aktif') ?>'); return false;" class="btn btn-danger flat pull-right"><i class="fa fa-times"></i> Tidak Aktif</a>
         <?php else:?>
-        <a href="<?= site_url('admin/kuisioner/kuisioner/nonaktif') ?>" class="btn btn-success flat pull-right"><i class="fa fa-check-square-o"></i> Aktif</a>
+        <a href="#" onclick="siskaPostAction('<?= site_url('admin/kuisioner/kuisioner/nonaktif') ?>'); return false;" class="btn btn-success flat pull-right"><i class="fa fa-check-square-o"></i> Aktif</a>
         <?php endif;?>
     </div>
 </div>

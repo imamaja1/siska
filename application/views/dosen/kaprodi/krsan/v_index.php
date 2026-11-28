@@ -57,7 +57,7 @@
         var ta = $('#ta').val();
         var angkatan = $('#angkatan').val();
         $.ajax({
-            url: '<?= site_url('dosen/kaprodi/KRSAN/get_mahasiswa/') ?>/'+ta+'/'+angkatan,
+            url: '<?= site_url('dosen/kaprodi/krsan/get_mahasiswa/') ?>/'+ta+'/'+angkatan,
             type: 'get',
             beforeSend: function () {
                 $('#landing-mahasiswa').html(loader);

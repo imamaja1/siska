@@ -386,7 +386,7 @@ if (!function_exists('safe_referer')) {
 }
 
 if (!function_exists('log_aktivitas_nilai')) {
-    function log_aktivitas_nilai($aksi, $kolom = null, $nilai_lama = null, $nilai_baru = null, $sumber = 'perubahan', $kode_khs_detail = null, $kode_krs_detail = null, $kode_krs = null)
+    function log_aktivitas_nilai($aksi, $kolom = null, $nilai_lama = null, $nilai_baru = null, $sumber = 'perubahan', $kode_khs_detail = null, $kode_krs_detail = null, $kode_krs = null, $nim_override = null, $kode_ta_override = null)
     {
         $CI = get_instance();
         $nim = null;
@@ -433,6 +433,13 @@ if (!function_exists('log_aktivitas_nilai')) {
                 $nim = $row->nim;
                 $kode_tahun_akademik = $row->kode_tahun_akademik;
             }
+        }
+
+        if ($nim === null && $nim_override !== null) {
+            $nim = $nim_override;
+        }
+        if ($kode_tahun_akademik === null && $kode_ta_override !== null) {
+            $kode_tahun_akademik = $kode_ta_override;
         }
 
         if (is_array($kolom)) {

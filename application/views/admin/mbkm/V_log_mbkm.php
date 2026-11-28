@@ -33,7 +33,7 @@
                             <td><?= e($row->created_at) ?></td>
                             <td><?= e($row->nim) ?></td>
                             <td><?= e($row->nama_mahasiswa) ?></td>
-                            <td><?= e($row->kode_matakuliah) ?> - <?= e($row->nama_matakuliah) ?></td>
+                            <td><?= !empty($row->kode_matakuliah) || !empty($row->nama_matakuliah) ? e($row->kode_matakuliah) . ' - ' . e($row->nama_matakuliah) : ($row->kolom === 'mbkm' ? '<span class="text-muted">Kepesertaan MBKM</span>' : '-') ?></td>
                             <td>
                                 <?php if (!empty($row->nama_tahun_akademik)): ?>
                                     <?= e($row->nama_tahun_akademik) ?> (<?= $row->semester_ta == '1' ? 'Ganjil' : ($row->semester_ta == '2' ? 'Genap' : 'Pendek') ?>)
@@ -42,20 +42,26 @@
                                 <?php endif; ?>
                             </td>
                             <td align="center">
-                                <?php if ($row->aksi == 'update') : ?>
+                                <?php if ($row->aksi == 'insert' || $row->aksi == 'tambah') : ?>
+                                    <span class="label label-success">Tambah</span>
+                                <?php elseif ($row->aksi == 'update') : ?>
                                     <span class="label label-info">Update</span>
                                 <?php elseif ($row->aksi == 'delete') : ?>
-                                    <span class="label label-danger">Delete</span>
+                                    <span class="label label-danger">Hapus</span>
                                 <?php elseif ($row->aksi == 'soft_delete') : ?>
                                     <span class="label label-warning">Soft Delete</span>
                                 <?php elseif ($row->aksi == 'restore') : ?>
-                                    <span class="label label-success">Restore</span>
+                                    <span class="label label-primary">Restore</span>
                                 <?php else : ?>
                                     <span class="label label-default"><?= e($row->aksi) ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if (is_array($lama_json) && is_array($baru_json)) : ?>
+                                <?php if ($row->kolom === 'mbkm' && ($row->aksi == 'insert' || $row->aksi == 'tambah')) : ?>
+                                    - &rarr; <strong>Terdaftar MBKM</strong><?= $row->nilai_baru !== null ? ' (ID: ' . e($row->nilai_baru) . ')' : '' ?>
+                                <?php elseif ($row->kolom === 'mbkm' && $row->aksi == 'delete') : ?>
+                                    <strong>Terdaftar MBKM</strong><?= $row->nilai_lama !== null ? ' (ID: ' . e($row->nilai_lama) . ')' : '' ?> &rarr; Dihapus
+                                <?php elseif (is_array($lama_json) && is_array($baru_json)) : ?>
                                     <?php foreach ($lama_json as $field => $v) : ?>
                                         <?php $b = array_key_exists($field, $baru_json) ? $baru_json[$field] : null; ?>
                                         <?php $label = ucwords(str_replace(['nilai_', '_'], ['', ' '], $field)); ?>

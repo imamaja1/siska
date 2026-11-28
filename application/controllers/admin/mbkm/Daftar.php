@@ -76,7 +76,9 @@ class Daftar extends CI_Controller {
         // echo json_encode($data);
     }
 
-    public function search_mahasiswa($nim, $ta) {
+    public function search_mahasiswa($nim = '', $ta = '') {
+        $nim = trim((string) $nim);
+        $ta = trim((string) $ta);
         $cek_mahasiswa = $this->mbkmservice->searchMahasiswaMbkm($nim, $ta);
 
         $data['ta'] =  $this->m_tahun_akademik->get_tahun_akademik_by_kode_one($ta);
@@ -86,15 +88,28 @@ class Daftar extends CI_Controller {
             $data['cek'] = 1;
         }else{
             $data['mahasiswa'] = $this->mbkmservice->searchMahasiswaOnly($nim);
-            $data['cek'] = 0;
+            $data['cek'] = !empty($data['mahasiswa']) ? 0 : 3;
         }
-        if (!(strlen($nim) == 10 || strlen($nim) == 11)) {
+        if (!(strlen($nim) == 10 || strlen($nim) == 11) || !$data['ta']) {
             $data['cek'] = 3;
         }
         $this->load->view('admin/mbkm/V_search_mhs',$data);
     }
 
-    public function tambah_mhs_mbkm($nim, $ta){
+    public function tambah_mhs_mbkm($nim = '', $ta = ''){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'msg' => 'Method not allowed'));
+            return;
+        }
+        $nim = trim((string) $nim);
+        $ta = trim((string) $ta);
+        $mhs = $this->mbkmservice->searchMahasiswaOnly($nim);
+        $ta_row = $this->m_tahun_akademik->get_tahun_akademik_by_kode_one($ta);
+        if (empty($mhs) || !$ta_row) {
+            echo json_encode(array('status' => 0, 'msg' => 'Data mahasiswa atau tahun akademik tidak ditemukan'));
+            return;
+        }
         $cek = $this->mbkmservice->cekMbkm($nim, $ta);
         if (!$cek) {
             $data_insert = array(
@@ -114,7 +129,12 @@ class Daftar extends CI_Controller {
         }
     }
 
-    public function hapus_mhs_mbkm($id){
+    public function hapus_mhs_mbkm($id = null){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'msg' => 'Method not allowed'));
+            return;
+        }
         $hapus = $this->mbkmservice->hapusMbkm($id);
         if ($hapus) {
             $res['status'] = 1;
@@ -145,6 +165,11 @@ class Daftar extends CI_Controller {
         }
     }
     public function nilai_mhs($id,$nilai){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'msg' => 'Method not allowed'));
+            return;
+        }
         $update = $this->mbkmservice->updateNilaiMhs($id, $nilai);
 
         if ($update) {
@@ -175,6 +200,11 @@ class Daftar extends CI_Controller {
         echo json_encode($res);
     }
     public function status($id){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'msg' => 'Method not allowed'));
+            return;
+        }
         $tmp = $this->mbkmservice->getStatusMbkm($id);
 
         if (!$tmp || !isset($tmp->kode_krs_detail)) {

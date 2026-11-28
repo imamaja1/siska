@@ -152,7 +152,7 @@
         na = $('#' + key).val();
         $.ajax({
             url: '<?= site_url('admin/mbkm/daftar/nilai_mhs') ?>/' + id + '/' + na,
-            type: 'get',
+            type: 'post',
             success: function (data) {
               console.log(data)
                 if (jQuery.parseJSON(data).status) {
@@ -178,7 +178,7 @@
 
         $.ajax({
             url: '<?= site_url('admin/mbkm/daftar/status') ?>/' + id,
-            type: 'get',
+            type: 'post',
             success: function (data) {
                 if (jQuery.parseJSON(data).status == 1) {
                     $("#status" + params).addClass("btn-success");

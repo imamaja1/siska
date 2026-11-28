@@ -45,23 +45,44 @@ class MbkmService extends MY_Service {
     }
 
     public function tambahMbkm($data) {
-        return $this->db->insert('mbkm', $data);
+        $insert = $this->db->insert('mbkm', $data);
+        if ($insert) {
+            $insert_id = $this->db->insert_id();
+            $nim = isset($data['nim']) ? $data['nim'] : null;
+            $kode_ta = isset($data['kode_ta']) ? $data['kode_ta'] : null;
+            $kode_krs = null;
+            if ($nim && $kode_ta) {
+                $krs = $this->db->select('kode_krs')
+                    ->where('nim', $nim)
+                    ->where('kode_tahun_akademik', $kode_ta)
+                    ->get('krs')->row_object();
+                if ($krs) {
+                    $kode_krs = $krs->kode_krs;
+                }
+            }
+            log_aktivitas_nilai('insert', 'mbkm', null, $insert_id ?: $nim, 'mbkm', null, null, $kode_krs, $nim, $kode_ta);
+        }
+        return $insert;
     }
 
     public function hapusMbkm($id) {
         $mbkm = $this->db->where('id', $id)->get('mbkm')->row_object();
-        $kode_krs = null;
-        if ($mbkm) {
-            $krs = $this->db->select('kode_krs')
-                ->where('nim', $mbkm->nim)
-                ->where('kode_tahun_akademik', $mbkm->kode_ta)
-                ->get('krs')->row_object();
-            if ($krs) {
-                $kode_krs = $krs->kode_krs;
-            }
-            log_aktivitas_nilai('delete', 'mbkm', $id, null, 'mbkm', null, null, $kode_krs);
+        if (!$mbkm) {
+            return false;
         }
-        return $this->db->where('id', $id)->delete('mbkm');
+        $kode_krs = null;
+        $krs = $this->db->select('kode_krs')
+            ->where('nim', $mbkm->nim)
+            ->where('kode_tahun_akademik', $mbkm->kode_ta)
+            ->get('krs')->row_object();
+        if ($krs) {
+            $kode_krs = $krs->kode_krs;
+        }
+        $deleted = $this->db->where('id', $id)->delete('mbkm');
+        if ($deleted) {
+            log_aktivitas_nilai('delete', 'mbkm', $id, null, 'mbkm', null, null, $kode_krs, $mbkm->nim, $mbkm->kode_ta);
+        }
+        return $deleted;
     }
 
     public function getNilaiMahasiswa($id, $ta) {

@@ -1,8 +1,8 @@
 <?php if ($cek == 2) : ?>
     <div class="alert alert-danger center" role="alert">
-        Data Mahasiswa Tersebut Bukan Termasuk Prodi <?= e($prodi->nama_program_studi) ?>
+        Data Mahasiswa Tersebut Bukan Termasuk Prodi <?= !empty($prodi->nama_program_studi) ? e($prodi->nama_program_studi) : '-' ?>
     </div>
-<?php elseif ($cek == 3) : ?>
+<?php elseif ($cek == 3 || empty($mahasiswa)) : ?>
     <div class="alert alert-danger center" role="alert">
         NIM tidak Terdaftar, Mohon periksa kembali
     </div>
@@ -10,12 +10,12 @@
     <table class="table demo-table ">
         <thead>
             <tr>
-                <th>no</th>
-                <th>Nim</th>
+                <th>No</th>
+                <th>NIM</th>
                 <th>Nama</th>
                 <th>Prodi</th>
                 <th>Tahun Akademik MBKM</th>
-                <th>Tindakan<?= e(is_object($ta) ? ($ta->tahun_akademik ?? '') : '') ?></th>
+                <th>Tindakan</th>
             </tr>
         </thead>
         <tbody>
@@ -25,10 +25,10 @@
                         <td><?= !empty($value->nim) ? e($value->nim) : '-' ?></td>
                         <td><?= !empty($value->nama_mahasiswa) ? e($value->nama_mahasiswa) : '-' ?></td>
                         <td><?= !empty($value->nama_program_studi) ? e($value->nama_program_studi) : '-' ?></td>
-                        <td><?= $ta->semester == 1 ? "Ganjil":"Genap" ?>, <?= e($ta->tahun_akademik) ?></td>
+                        <td><?= is_object($ta) ? ($ta->semester == 1 ? "Ganjil" : "Genap") . ', ' . e($ta->tahun_akademik) : '-' ?></td>
                         <td>
                             <?php if ($cek == 0) : ?>
-                                <button type="button" class="btn btn-success btn-sm" onclick="update(<?= e($value->nim) ?>)">Verifikasi</button>
+                                <button type="button" class="btn btn-success btn-sm" onclick="update('<?= e($value->nim) ?>')">Verifikasi</button>
                             <?php else: ?>
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Terdaftar</button>
                             <?php endif; ?>

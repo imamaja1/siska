@@ -36,6 +36,12 @@ class Auth extends CI_Controller {
     }
 
     public function pengguna() {
+        if (!$this->ion_auth->logged_in()) {
+            redirect('auth/login', 'refresh');
+        } elseif (!$this->ion_auth->is_admin()) {
+            return show_error('Anda harus menjadi administrator untuk menampilkan halaman ini.');
+        }
+
         $data['content'] = "auth/index";
         $data['judul'] = "Pengguna";
         $data['sub_judul'] = "Pengguna";

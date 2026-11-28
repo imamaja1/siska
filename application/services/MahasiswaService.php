@@ -38,7 +38,7 @@ class MahasiswaService extends MY_Service {
             'nik' => $post_data['nik'],
             'status' => $post_data['status'],
             'status_pendaftaran' => $post_data['status_pendaftaran'],
-            'sandi' => md5($post_data['password']),
+            'sandi' => password_hash($post_data['password'], PASSWORD_BCRYPT),
             'nim' => $post_data['nim'],
             'npm' => $post_data['npm'],
             'nomor_pendaftaran' => $post_data['no_pendaftaran'],
@@ -92,7 +92,6 @@ class MahasiswaService extends MY_Service {
             'nik' => $post_data['nik'],
             'status' => $post_data['status'],
             'status_pendaftaran' => $post_data['status_pendaftaran'],
-            'sandi' => md5($post_data['password']),
             'npm' => $post_data['npm'],
             'nomor_pendaftaran' => $post_data['no_pendaftaran'],
             'nomor_pendaftaran_ulang' => $post_data['no_pendaftaran_ulang'],
@@ -120,6 +119,9 @@ class MahasiswaService extends MY_Service {
             'telepon_orangtua' => $post_data['telepon_orangtua'],
             'program_studi_kode' => $post_data['program_studi_kode']
         );
+        if (!empty($post_data['password'])) {
+            $data['sandi'] = password_hash($post_data['password'], PASSWORD_BCRYPT);
+        }
 
         if ($this->mahasiswa_model->update($nim, $data)) {
             $user_id = $this->getUserIdByKeyRef($nim);

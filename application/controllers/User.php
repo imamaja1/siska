@@ -87,12 +87,12 @@ class User extends CI_Controller
 
         $login_error = $this->userservice->checkDuplicateLogin($this->input->post('nama_login'));
         if ($login_error) {
-            $this->session->set_flashdata('pesan', '<script>swal("Gagal!","' . $login_error . '","error")</script>');
+            $this->session->set_flashdata('pesan', '<script>swal("Gagal!",' . json_encode($login_error) . ',"error")</script>');
             return $this->tambah();
         }
 
         $res = $this->userservice->createUser($this->input->post());
-        $this->session->set_flashdata('pesan', '<script>swal("Sukses!","' . $res['msg'] . '","success")</script>');
+        $this->session->set_flashdata('pesan', '<script>swal("Sukses!",' . json_encode($res['msg']) . ',"success")</script>');
         redirect('user');
     }
 
@@ -125,12 +125,12 @@ class User extends CI_Controller
 
         $login_error = $this->userservice->checkDuplicateLogin($this->input->post('nama_login'), $kode);
         if ($login_error) {
-            $this->session->set_flashdata('pesan', '<script>swal("Gagal!","' . $login_error . '","error")</script>');
+            $this->session->set_flashdata('pesan', '<script>swal("Gagal!",' . json_encode($login_error) . ',"error")</script>');
             return $this->edit($kode);
         }
 
         $res = $this->userservice->updateUser($kode, $this->input->post());
-        $this->session->set_flashdata('pesan', '<script>swal("Sukses!","' . $res['msg'] . '","success")</script>');
+        $this->session->set_flashdata('pesan', '<script>swal("Sukses!",' . json_encode($res['msg']) . ',"success")</script>');
         redirect('user');
     }
 
@@ -147,19 +147,19 @@ class User extends CI_Controller
 
         $sandi_error = $this->userservice->validatePasswordComplexity($this->input->post('sandi_pengguna'));
         if ($sandi_error) {
-            $this->session->set_flashdata('pesan', '<script>swal("Gagal!","' . $sandi_error . '","error")</script>');
+            $this->session->set_flashdata('pesan', '<script>swal("Gagal!",' . json_encode($sandi_error) . ',"error")</script>');
             return $this->edit($kode);
         }
 
         $res = $this->userservice->updatePassword($kode, $this->input->post('sandi_pengguna'));
-        $this->session->set_flashdata('pesan', '<script>swal("Sukses!","' . $res['msg'] . '","success")</script>');
+        $this->session->set_flashdata('pesan', '<script>swal("Sukses!",' . json_encode($res['msg']) . ',"success")</script>');
         redirect('user');
     }
 
     public function hapus($kode)
     {
         $res = $this->userservice->deleteUser($kode);
-        $this->session->set_flashdata('pesan', '<script>swal("Sukses!","' . $res['msg'] . '","success")</script>');
+        $this->session->set_flashdata('pesan', '<script>swal("Sukses!",' . json_encode($res['msg']) . ',"success")</script>');
         redirect('user');
     }
 

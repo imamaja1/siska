@@ -188,8 +188,8 @@ class DosenService extends MY_Service {
         }
         $string = implode($password);
 
-        $password_baru = md5($string);
         $password_api = password_hash($string, PASSWORD_BCRYPT);
+        $password_baru = $password_api;
         
         $this->db->trans_start();
         $sukses = $this->m_dosen->update($kode_dosen, array('sandi_pengguna' => $password_baru));

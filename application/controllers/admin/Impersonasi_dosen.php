@@ -84,6 +84,10 @@ class Impersonasi_dosen extends CI_Controller
 
     public function menyamar($kode_dosen)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/impersonasi_dosen');
+            return;
+        }
         $dosen = $this->m_dosen->get_dosen_by_kode($kode_dosen);
         if (!$dosen) {
             show_404();
@@ -116,6 +120,7 @@ class Impersonasi_dosen extends CI_Controller
 
         $this->session->unset_userdata('is_impersonating');
         $this->session->unset_userdata('original_admin');
+        $this->session->unset_userdata(['kode_dosen', 'nama_dosen', 'alamat_email']);
 
         $this->session->set_userdata($original);
 

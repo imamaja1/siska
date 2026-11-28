@@ -41,7 +41,7 @@
                     <td><?= $i++ ?></td>
                     <td style="text-align: left;"><?= !empty($row->nama_dosen) ? e($row->nama_dosen) : '-' ?></td>
                     <td>
-                        <a href="<?= site_url('admin/impersonasi_dosen/menyamar/' . $row->kode_dosen) ?>" class="btn btn-warning btn-xs flat" onclick="return confirm('Menyamar sebagai <?= e($row->nama_dosen) ?>?')">
+                        <a href="#" class="btn btn-warning btn-xs flat" onclick="if (confirm('Menyamar sebagai <?= e($row->nama_dosen) ?>?')) { siskaPostAction('<?= site_url('admin/impersonasi_dosen/menyamar/' . rawurlencode($row->kode_dosen)) ?>'); } return false;">
                             <i class="fa fa-user-secret"></i> Menyamar
                         </a>
                     </td>

@@ -110,22 +110,22 @@
         })
     }
     function Search(){
-        $nim = $('#search-nim').val();
-        $ta = $('#ta').val();
+        var nim = $.trim($('#search-nim').val());
+        var ta = $('#ta').val();
+        if (!nim) {
+            $('#search-mhs').html('<div class="alert alert-warning center" role="alert">Silakan masukkan NIM terlebih dahulu.</div>');
+            return;
+        }
         $.ajax({
-            //url : '<? //= site_url('admin/kuisioner/kelas/dropdown_makul') ?>///'+id,
-            url: '<?= site_url('dosen/kaprodi/mbkm/search_mahasiswa') ?>/'+$nim +'/'+$ta,
+            url: '<?= site_url('dosen/kaprodi/mbkm/search_mahasiswa') ?>/' + encodeURIComponent(nim) + '/' + encodeURIComponent(ta),
             type: 'get',
             beforeSend: function () {
                 $('#search-mhs').html(loader);
             },
             success: function (data) {
-                // $('#kd_makul').html(data);
                 $('#search-mhs').html(data);
-                // $('#landing-kelas').html(default_landing);
             },
             error: function () {
-                // alert('kamu cemen');
                 console.log('gagal');
             }
         })
@@ -133,15 +133,13 @@
     function update(nim){
         var ta = $('#ta').val();
         $.ajax({
-            //url : '<? //= site_url('admin/kuisioner/kelas/dropdown_makul') ?>///'+id,
-            url: '<?= site_url('dosen/kaprodi/mbkm/tambah_mhs_mbkm') ?>/'+nim +'/'+ta,
-            type: 'get',
+            url: '<?= site_url('dosen/kaprodi/mbkm/tambah_mhs_mbkm') ?>/' + encodeURIComponent(nim) + '/' + encodeURIComponent(ta),
+            type: 'post',
             success: function (data) {
                 Search();
                 mhs_ta();
             },
             error: function () {
-                // alert('kamu cemen');
                 console.log('gagal');
             }
         })
@@ -149,15 +147,13 @@
     function hapus(id){
         if (!confirm('Apakah anda yakin ingin menghapus mahasiswa MBKM ini?')) return;
         $.ajax({
-            //url : '<? //= site_url('admin/kuisioner/kelas/dropdown_makul') ?>///'+id,
-            url: '<?= site_url('dosen/kaprodi/mbkm/hapus_mhs_mbkm') ?>/'+id ,
-            type: 'get',
+            url: '<?= site_url('dosen/kaprodi/mbkm/hapus_mhs_mbkm') ?>/' + encodeURIComponent(id),
+            type: 'post',
             success: function (data) {
                 
                 mhs_ta();
             },
             error: function () {
-                // alert('kamu cemen');
                 console.log('gagal');
             }
         })

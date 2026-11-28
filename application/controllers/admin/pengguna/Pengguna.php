@@ -92,7 +92,7 @@ class pengguna extends CI_Controller
         $data = [
             'nama_pengguna'  => $this->input->post('nama_pengguna'),
             'nama_login'     => $this->input->post('nama_login'),
-            'sandi_pengguna' => md5($this->input->post('sandi_pengguna')),
+            'sandi_pengguna' => password_hash($this->input->post('sandi_pengguna'), PASSWORD_BCRYPT),
             'id_role'        => $this->input->post('id_role'),
         ];
 
@@ -128,6 +128,10 @@ class pengguna extends CI_Controller
 
     function hapus($kode)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/pengguna/pengguna');
+            return;
+        }
         if ($this->pengguna_model->del($kode)) {
             $this->session->set_flashdata('pesan', '<script>swal("Sukses!","Hapus data berhasil","success")</script>');
             redirect('admin/pengguna/pengguna');
@@ -136,6 +140,10 @@ class pengguna extends CI_Controller
 
     function menyamar($kode)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/pengguna/pengguna');
+            return;
+        }
         $pengguna = $this->pengguna_model->edit($kode);
         if (!$pengguna) {
             show_404();
@@ -246,7 +254,7 @@ class pengguna extends CI_Controller
         }
 
         $this->pengguna_model->update($kode_pengguna, [
-            'sandi_pengguna' => md5($this->input->post('sandi_pengguna')),
+            'sandi_pengguna' => password_hash($this->input->post('sandi_pengguna'), PASSWORD_BCRYPT),
         ]);
 
         $this->session->set_flashdata('pesan', '<script>swal("Sukses!","Ubah sandi berhasil","success")</script>');

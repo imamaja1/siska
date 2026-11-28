@@ -67,6 +67,7 @@ class Login_mahasiswa extends CI_Controller
                     );
 
                     $this->session->set_userdata($data_user);
+                    $this->session->sess_regenerate(TRUE);
                     redirect(site_url('home'));
                 } else {
                     $this->session->set_flashdata('pesan', 'Maaf, NIM dan atau Sandi anda salah');

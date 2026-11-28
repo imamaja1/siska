@@ -46,6 +46,10 @@ class Hapus_mak extends CI_Controller {
     }
 
     public function hapus($nim, $kode_matakuliah, $kode_krs_detail) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/akademik/hapus_mak/cari/'.rawurlencode($this->session->userdata('sess_nim_cari'))));
+            return;
+        }
         $res = $this->nilaiservice->hapus_mak($nim, $kode_matakuliah, $kode_krs_detail);
         
         $type = $res['status'] ? 'success' : 'warning';

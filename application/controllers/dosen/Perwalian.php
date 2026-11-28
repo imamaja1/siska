@@ -65,10 +65,10 @@ class Perwalian extends CI_Controller {
             $tahun_akademik = $this->m_tahun_akademik->get_tahun_akademik_aktif();
             $kode_tahun_akademik = $tahun_akademik ? $tahun_akademik->kode_tahun_akademik : null;
             if ($this->input->post('berdasarkan') == 'nim') {
-                $data['perwalian'] = $this->perwalian_model->get_perwalian_by_nim_dan_kode_dosen($this->input->post('kata_kunci'), $this->session->userdata('auth_kode_dosen'), $kode_tahun_akademik);
+                $data['perwalian'] = $this->perwalian_model->get_perwalian_by_nim_dan_kode_dosen($this->input->post('kata_kunci'), $this->session->userdata('kode_dosen'), $kode_tahun_akademik);
                 $this->load->view('dosen/template/V_main', $data);
             } else {
-                $data['perwalian'] = $this->perwalian_model->get_perwalian_by_nama_dan_kode_dosen($this->input->post('kata_kunci'), $this->session->userdata('auth_kode_dosen'), $kode_tahun_akademik);
+                $data['perwalian'] = $this->perwalian_model->get_perwalian_by_nama_dan_kode_dosen($this->input->post('kata_kunci'), $this->session->userdata('kode_dosen'), $kode_tahun_akademik);
                 $this->load->view('dosen/template/V_main', $data);
             }
         } else {

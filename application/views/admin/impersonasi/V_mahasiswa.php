@@ -53,7 +53,7 @@
                     <td style="text-align: left;"><?= !empty($row->nama_mahasiswa) ? e($row->nama_mahasiswa) : '-' ?></td>
                     <td><?= isset($row->nama_program_studi) ? e($row->nama_program_studi) : '-' ?></td>
                     <td>
-                        <a href="<?= site_url('admin/impersonasi_mahasiswa/menyamar/' . $row->nim) ?>" class="btn btn-warning btn-xs flat" onclick="return confirm('Menyamar sebagai <?= e($row->nama_mahasiswa) ?>?')">
+                        <a href="#" class="btn btn-warning btn-xs flat" onclick="if (confirm('Menyamar sebagai <?= e($row->nama_mahasiswa) ?>?')) { siskaPostAction('<?= site_url('admin/impersonasi_mahasiswa/menyamar/' . rawurlencode($row->nim)) ?>'); } return false;">
                             <i class="fa fa-user-secret"></i> Menyamar
                         </a>
                     </td>

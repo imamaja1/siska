@@ -90,7 +90,7 @@ class ApiService extends MY_Service {
                     'Accept: application/json',
                 ],
                 CURLOPT_TIMEOUT => 60,
-                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYPEER => true,
             ]);
 
             $response = curl_exec($ch);
@@ -265,7 +265,7 @@ class ApiService extends MY_Service {
                 'Accept: application/json',
             ],
             CURLOPT_TIMEOUT => 60,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,
         ]);
 
         $response = curl_exec($ch);

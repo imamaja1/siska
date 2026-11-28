@@ -13,6 +13,20 @@ class Penilaian extends CI_Controller {
         $this->load->service('DosenAkademikService');
     }
 
+    private function _authorize_kelas($kelas_id, $is_json = false) {
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        if ($this->dosenakademikservice->canAccessKelas($kode_dosen, $kelas_id)) {
+            return true;
+        }
+        if ($is_json) {
+            $this->output->set_status_header(403);
+            echo json_encode(array('status' => false, 'msg' => 'Akses ditolak untuk kelas ini.'));
+            return false;
+        }
+        show_error('Anda tidak memiliki wewenang untuk mengakses kelas ini.', 403);
+        return false;
+    }
+
     public function presentasi_penilaian() {
         $data['content'] = 'dosen/penilaian/V_presentasi_penilaian';
         $data['judul'] = 'Presentasi Penilaian';
@@ -35,6 +49,7 @@ class Penilaian extends CI_Controller {
     }
 
     public function isi_default($id) {
+        if (!$this->_authorize_kelas($id)) return;
         $query = $this->dosenakademikservice->insertPersentasiNilaiDefault($id);
 
         if ($query) {
@@ -1099,6 +1114,7 @@ class Penilaian extends CI_Controller {
         $id = $this->input->POST('id');
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas, true)) return;
         $persentase = $this->dosenakademikservice->getPersentaseFrom('persentasi_nilai_dosen', $kelas);
         if (!$persentase) {
             echo json_encode(array(
@@ -1164,6 +1180,7 @@ class Penilaian extends CI_Controller {
         $kelas = $this->input->POST('kelas');
         $jum = $this->input->POST('jum');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas, true)) return;
         $persentase = $this->dosenakademikservice->getPersentaseFrom('persentasi_nilai_dosen', $kelas);
         if (!$persentase) {
             echo json_encode(array('status' => false, 'msg' => 'Persentase penilaian belum diisi'));
@@ -1192,12 +1209,14 @@ class Penilaian extends CI_Controller {
         echo json_encode(array('status' => true));
     }
     public function revisi_dosen_update($id){
+         if (!$this->_authorize_kelas($id)) return;
          $this->dosenakademikservice->updateDosenKelasRevisi($id);
          redirect('dosen/penilaian/nilai_mahasiswa_uas_revisi/'.$id);
     }
     public function revisi_new_penilaian(){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas, true)) return;
         $new_data = array(
             'id_kelas' => $kelas,
             'level' => $level+1,
@@ -1212,6 +1231,7 @@ class Penilaian extends CI_Controller {
     public function revisi_pebatalan_penilaian(){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas, true)) return;
         $this->dosenakademikservice->deleteDummyUpdateKelas($kelas, $level);
         $this->dosenakademikservice->deleteDummyUpdateNilai($kelas, $level);
         echo json_encode(array('status' => 'success'));
@@ -1219,6 +1239,7 @@ class Penilaian extends CI_Controller {
     public function revisi_nilai_mahasiswa($ta = null){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas)) return;
         $tahun_akademik = ta_kode();
         $ta = ($ta) ? $ta : $tahun_akademik;
         $kelas_mahasiswa = $this->dosenakademikservice->getRevisiNilaiMahasiswa($kelas, $level, $ta);
@@ -1265,6 +1286,7 @@ class Penilaian extends CI_Controller {
         $id = $this->input->POST('id');
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas, true)) return;
 
         $data = $this->dosenakademikservice->getDummyUpdateNilaiKet($id, $kelas, $level);
         if (!$data) {
@@ -1277,6 +1299,7 @@ class Penilaian extends CI_Controller {
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
         $ket = $this->input->POST('ket');
+        if (!$this->_authorize_kelas($kelas, true)) return;
 
         $data = $this->dosenakademikservice->getDummyUpdateNilaiData($id, $level);
 
@@ -1446,6 +1469,7 @@ class Penilaian extends CI_Controller {
     }
 
     public function revisi_final($kelas_id, $ta = null) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $this->session->set_userdata(array('sess_kelas_id' => $kelas_id));
         $tahun_akademik = ta_kode();
         $ta = ($ta) ? $ta : $tahun_akademik;

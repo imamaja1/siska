@@ -67,7 +67,7 @@
                         <button type="button" class="btn btn-xs btn-warning flat btn-sync" data-id="<?= $token->id ?>" data-nama="<?= e($token->nama_aplikasi) ?>" title="Sync: update semua sekaligus tambah data">
                             <i class="fa fa-refresh"></i> Sync
                         </button>
-                        <a href="<?= site_url('admin/pengaturan/api_tokens/hapus/' . $token->id) ?>" class="btn btn-xs btn-danger flat" onclick="return confirm('Hapus token ini?')" title="Hapus">
+                        <a href="#" class="btn btn-xs btn-danger flat" onclick="if (confirm('Hapus token ini?')) { siskaPostAction('<?= site_url('admin/pengaturan/api_tokens/hapus/' . $token->id) ?>'); } return false;" title="Hapus">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
@@ -411,7 +411,7 @@ $(document).ready(function() {
         var id = $(this).data('id');
         $.ajax({
             url: '<?= site_url("admin/pengaturan/api_tokens/toggle/") ?>' + id,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function(res) {
                 if (res.status) {

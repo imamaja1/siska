@@ -33,6 +33,7 @@ class Login_dosen extends CI_Controller {
                     );
 
                     $this->session->set_userdata($data);
+                    $this->session->sess_regenerate(TRUE);
 //                }
                 redirect('home/dosen');
             } else {

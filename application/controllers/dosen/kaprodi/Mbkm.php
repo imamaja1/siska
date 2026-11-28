@@ -1,6 +1,6 @@
 <?php
 
-class MBKM extends CI_Controller
+class Mbkm extends CI_Controller
 {
     public function __construct()
     {
@@ -78,6 +78,20 @@ class MBKM extends CI_Controller
     }
 
     public function tambah_mhs_mbkm($nim, $ta){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'msg' => 'Method not allowed'));
+            return;
+        }
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        $prodi_list = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
+        $kode_prodi = array_column($prodi_list, 'kode_program_studi');
+        $mhs = $this->db->select('program_studi_kode')->where('nim', $nim)->limit(1)->get('mahasiswa')->row();
+        if (!$mhs || !in_array($mhs->program_studi_kode, $kode_prodi)) {
+            $this->output->set_status_header(403);
+            echo json_encode(array('status' => 0, 'msg' => 'Akses ditolak'));
+            return;
+        }
         $cek = $this->kaprodiservice->cek_mbkm($nim, $ta);
         if (!$cek) {
             $data_insert = array(
@@ -98,6 +112,25 @@ class MBKM extends CI_Controller
     }
 
     public function hapus_mhs_mbkm($id){
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(array('status' => 0, 'msg' => 'Method not allowed'));
+            return;
+        }
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        $prodi_list = $this->kaprodiservice->get_kaprodi_prodi_array($kode_dosen);
+        $kode_prodi = array_column($prodi_list, 'kode_program_studi');
+        $row = $this->db->select('m.program_studi_kode')
+            ->from('mbkm')
+            ->join('mahasiswa as m', 'm.nim = mbkm.nim')
+            ->where('mbkm.id', $id)
+            ->limit(1)
+            ->get()->row();
+        if (!$row || !in_array($row->program_studi_kode, $kode_prodi)) {
+            $this->output->set_status_header(403);
+            echo json_encode(array('status' => 0, 'msg' => 'Akses ditolak'));
+            return;
+        }
         $hapus = $this->kaprodiservice->delete('mbkm', array('id' => $id));
         if ($hapus) {
             $res['status'] = 1;

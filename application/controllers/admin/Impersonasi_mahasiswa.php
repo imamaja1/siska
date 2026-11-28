@@ -89,6 +89,10 @@ class Impersonasi_mahasiswa extends CI_Controller
 
     public function menyamar($nim)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/impersonasi_mahasiswa');
+            return;
+        }
         $mahasiswa = $this->Mahasiswa_model->get_mahasiswa_by_nim($nim);
         if (!$mahasiswa) {
             show_404();

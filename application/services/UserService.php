@@ -39,7 +39,7 @@ class UserService extends MY_Service
         $payload = [
             'nama_pengguna'  => $data['nama_pengguna'],
             'nama_login'     => $data['nama_login'],
-            'sandi_pengguna' => md5($data['sandi_pengguna']),
+            'sandi_pengguna' => password_hash($data['sandi_pengguna'], PASSWORD_BCRYPT),
             'id_role'        => $data['id_role'],
         ];
 
@@ -65,7 +65,7 @@ class UserService extends MY_Service
 
     public function updatePassword($kode, $password)
     {
-        $payload = ['sandi_pengguna' => md5($password)];
+        $payload = ['sandi_pengguna' => password_hash($password, PASSWORD_BCRYPT)];
 
         if ($this->user_model->update($kode, $payload)) {
             return ['status' => true, 'msg' => 'Ubah sandi berhasil'];

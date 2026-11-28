@@ -82,7 +82,7 @@
         }).then(function () {
             $.ajax({
                 url: "<?= site_url('admin/jurusan/dosen/hapus') ?>/" + kode_dosen,
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 success: function(res) {
                     if (res.status) {
@@ -110,7 +110,7 @@
         }).then(function () {
             $.ajax({
                 url: "<?= site_url('admin/jurusan/dosen/generate_sandi') ?>/" + kode_dosen,
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 success: function(res) {
                     if (res.status) {

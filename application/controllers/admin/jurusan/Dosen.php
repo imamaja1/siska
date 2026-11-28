@@ -143,6 +143,15 @@ class Dosen extends CI_Controller {
     }
 
     public function generate_sandi($kode_dosen) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_status_header(405);
+                echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+                return;
+            }
+            redirect('admin/jurusan/dosen');
+            return;
+        }
         $res = $this->dosenservice->generateSandi($kode_dosen);
         
         if ($this->input->is_ajax_request()) {
@@ -181,6 +190,15 @@ class Dosen extends CI_Controller {
     }
 
     public function hapus($id) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            if ($this->input->is_ajax_request()) {
+                $this->output->set_status_header(405);
+                echo json_encode(array('status' => false, 'msg' => 'Method not allowed'));
+                return;
+            }
+            redirect('admin/jurusan/dosen');
+            return;
+        }
         $res = $this->dosenservice->hapusDosen($id);
         
         if ($this->input->is_ajax_request()) {
@@ -189,9 +207,9 @@ class Dosen extends CI_Controller {
         }
         
         if ($res['status']) {
-            $this->session->set_flashdata('info', '<script>swal("Success!", "'.$res['msg'].'", "success");</script>');
+            $this->session->set_flashdata('info', '<script>swal("Success!", ' . json_encode($res['msg']) . ', "success");</script>');
         } else {
-            $this->session->set_flashdata('info', '<script>swal("Gagal!", "'.$res['msg'].'", "error");</script>');
+            $this->session->set_flashdata('info', '<script>swal("Gagal!", ' . json_encode($res['msg']) . ', "error");</script>');
         }
         redirect('admin/jurusan/dosen');
     }

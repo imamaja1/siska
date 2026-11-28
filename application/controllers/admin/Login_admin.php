@@ -153,9 +153,14 @@ class login_admin extends CI_Controller
             }
 
             $ion_user = $this->nilaiservice->get_user_by_username($nama_login);
+            $legacy_valid = !empty($pengguna->sandi_pengguna) && (
+                password_get_info($pengguna->sandi_pengguna)['algo']
+                    ? password_verify($sandi_plain, $pengguna->sandi_pengguna)
+                    : hash_equals($pengguna->sandi_pengguna, md5($sandi_plain))
+            );
             if ($ion_user && password_verify($sandi_plain, $ion_user->password)) {
                 $auth_success = true;
-            } elseif (md5($sandi_plain) === $pengguna->sandi_pengguna) {
+            } elseif ($legacy_valid) {
                 $auth_success = true;
                 if (!$ion_user) {
                     $this->ion_auth->register($nama_login, $sandi_plain, 'pustik@universitasbumigora.ac.id', ['first_name' => $nama_login], ['1']);
@@ -174,6 +179,7 @@ class login_admin extends CI_Controller
                     'sekarang' => $hari . ", " . $tgl . " " . $bln . " " . $thn,
                 );
                 $this->session->set_userdata($data);
+                $this->session->sess_regenerate(TRUE);
                 redirect('home/admin');
             } else {
                 $this->session->set_flashdata('pesan', 'Maaf, Nama login dan atau sandi anda salah');

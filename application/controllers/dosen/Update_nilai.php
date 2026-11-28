@@ -13,6 +13,20 @@ class Update_nilai extends CI_Controller {
         $this->load->service('DosenAkademikService');
     }
 
+    private function _authorize_kelas($kelas_id, $is_json = false) {
+        $kode_dosen = $this->session->userdata('kode_dosen');
+        if ($this->dosenakademikservice->canAccessKelas($kode_dosen, $kelas_id)) {
+            return true;
+        }
+        if ($is_json) {
+            $this->output->set_status_header(403);
+            echo json_encode(array('status' => 'false', 'msg' => 'Akses ditolak untuk kelas ini.'));
+            return false;
+        }
+        show_error('Anda tidak memiliki wewenang untuk mengakses kelas ini.', 403);
+        return false;
+    }
+
     public function update_uts() {
         $kode_dosen = $this->session->userdata('kode_dosen');
         $ta = $this->m_tahun_akademik->get();
@@ -105,6 +119,7 @@ class Update_nilai extends CI_Controller {
         }
     }
     public function nilai_mahasiswa_uts($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $data_kelas = $this->dosenakademikservice->getKelasByIdWithUpdate($kelas_id);
 
         $cek = $this->dosenakademikservice->checkDummyUpdateKelas($kelas_id);
@@ -135,6 +150,9 @@ class Update_nilai extends CI_Controller {
         return $this->dosenakademikservice->addOrUpdateDummyUpdateNilai($kode_khs_detail, $data_add, $data_update);
     }
     public function uts($kode_khs_detail, $kode_krs_detail){
+        $km = $this->db->select('kelas_id')->where('kode_krs_detail', $kode_krs_detail)->limit(1)->get('kelas_mahasiswa')->row();
+        $kelas_id_cek = $km ? $km->kelas_id : $this->session->userdata('sess_kelas_id');
+        if (!$this->_authorize_kelas($kelas_id_cek, true)) return;
         $nilai_uts = $this->input->post('nilai_uts');
         $data_add = array(
             'kode_khs_detail' => $kode_khs_detail,
@@ -160,6 +178,7 @@ class Update_nilai extends CI_Controller {
         echo json_encode($res);
     }
     public function selesai_uts($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $query_dosen_kelas = $this->dosenakademikservice->getSelesaiUtsQueryDosenKelas($kelas_id);
         $query_prodi = $this->dosenakademikservice->getSelesaiUtsQueryProdi($kelas_id);
         
@@ -176,6 +195,7 @@ class Update_nilai extends CI_Controller {
     
     // pesan uts
     public function pesan_uts($kelas_id, $user1, $user2) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         if ($user1 == 'dosen' && $user2 == 'prodi') {
             $pesan = $this->dosenakademikservice->getUpdateCatatanRevisi($kelas_id, 'update_catatan_revisi', $user1, $user2);
             $this->dosenakademikservice->updateCatatanRevisiDosenBatch($kelas_id, 'update_catatan_revisi');
@@ -211,6 +231,7 @@ class Update_nilai extends CI_Controller {
         }
     }
     public function pesan_all($kelas_id, $user1, $param, $user2) {
+        if (!$this->_authorize_kelas($kelas_id, true)) return;
         $pesan = $this->input->post('pesan');
         if (!empty($pesan)) {
             $tgl = $this->input->post('tgl');
@@ -273,6 +294,7 @@ class Update_nilai extends CI_Controller {
     }
 
     public function uts_final($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $data_kelas = $this->dosenakademikservice->getKelasByIdWithUpdate($kelas_id);
         $cek = $this->dosenakademikservice->checkDummyUpdateKelas($kelas_id);
         if (!$cek) {

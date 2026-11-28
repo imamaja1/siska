@@ -21,6 +21,15 @@ class Cek extends CI_Controller {
               'akademik/Krs_kpat_model',
         ));
         $this->load->service('CekService');
+
+        $class = $this->router->fetch_class();
+        if (!$this->session->userdata('nama_login')) {
+            redirect('login/admin');
+        }
+        $id_user = $this->session->userdata('id');
+        if (!rbac_cek($class, $id_user)) {
+            redirect(site_url('denied'));
+        }
     }
   
   	public function gas(){
@@ -44,10 +53,10 @@ echo '<body>';
         echo '<tr><th>kode_khs</th><th>nilai dummy ke-1</th><th>nilai dummy ke-2</th></tr>';
 		foreach($data as $val){
                 echo '<tr>';
-                  echo '<td>' . $val->kode_khs_detail . '</td>';
-          		  echo '<td>' . $val->na . '</td>';
+                  echo '<td>' . e($val->kode_khs_detail) . '</td>';
+          		  echo '<td>' . e($val->na) . '</td>';
            			if($jj == $val->kode_khs_detail){
-                        echo '<td>' . $val->na . '</td>';
+                        echo '<td>' . e($val->na) . '</td>';
                       	continue;
                     }
           		  $jj = $val->kode_khs_detail;
@@ -80,8 +89,8 @@ echo '<body>';
         echo '<tr><th>kode_khs</th><th>nilai akhir</th><th>nilai</th></tr>';
 		foreach($data1 as $val){
                 echo '<tr>';
-          		  echo '<td>' . $val->kode_khs_detail . '</td>';
-                  echo '<td>' . $val->nilai_akhir . '</td>';
+          		  echo '<td>' . e($val->kode_khs_detail) . '</td>';
+                  echo '<td>' . e($val->nilai_akhir) . '</td>';
            			if($jj == $val->kode_khs_detail){
                       	continue;
                     }

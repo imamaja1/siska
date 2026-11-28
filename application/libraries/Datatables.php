@@ -199,7 +199,10 @@
 
       for($i = 0; $i < intval($this->ci->input->post('iSortingCols')); $i++)
         if(isset($mColArray[intval($this->ci->input->post('iSortCol_' . $i))]) && in_array($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $columns) && $this->ci->input->post('bSortable_'.intval($this->ci->input->post('iSortCol_' . $i))) == 'true')
-          $this->ci->db->order_by($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $this->ci->input->post('sSortDir_' . $i));
+        {
+          $sortDir = strtoupper((string) $this->ci->input->post('sSortDir_' . $i)) === 'DESC' ? 'DESC' : 'ASC';
+          $this->ci->db->order_by($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $sortDir);
+        }
     }
 
     /**
@@ -217,15 +220,16 @@
         $mColArray = $this->columns;
 
       $sWhere = '';
-      $sSearch = $this->ci->db->escape($this->ci->input->post('sSearch'));
+      $rawSearch = (string) $this->ci->input->post('sSearch');
+      $sSearch = $this->ci->db->escape_like_str($rawSearch);
 
       $mColArray = array_values(array_diff($mColArray, $this->unset_columns));
       $columns = array_values(array_diff($this->columns, $this->unset_columns));
 
-      if($sSearch != '')
+      if($rawSearch !== '')
         for($i = 0; $i < count($mColArray); $i++)
           if($this->ci->input->post('bSearchable_' . $i) == 'true' && in_array($mColArray[$i], $columns))
-            $sWhere .= $this->select[$mColArray[$i]] . " LIKE '%" . $sSearch . "%' OR ";
+            $sWhere .= $this->select[$mColArray[$i]] . " LIKE '%" . $sSearch . "%' ESCAPE '!' OR ";
 
       $sWhere = substr_replace($sWhere, '', -3);
 

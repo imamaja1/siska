@@ -21,6 +21,17 @@ class Verifikasi extends CI_Controller {
               'akademik/Krs_kpat_model',
         ));
         $this->load->service('VerifikasiService');
+
+        if ($this->router->fetch_method() !== 'nilai') {
+            $class = $this->router->fetch_class();
+            if (!$this->session->userdata('nama_login')) {
+                redirect('login/admin');
+            }
+            $id_user = $this->session->userdata('id');
+            if (!rbac_cek($class, $id_user)) {
+                redirect(site_url('denied'));
+            }
+        }
     }
   
   	public function validasi_penilaiaan_dekan($kelas){
@@ -246,7 +257,7 @@ class Verifikasi extends CI_Controller {
         $tahun_akademik = $kode_tahun_akademik;
         $query = $this->verifikasiservice->getMatakulaih($kode_program_studi, $tahun_akademik);
         $output = print_r($query, true);
-        echo "<pre>" . $output . "</pre>";
+        echo "<pre>" . e($output) . "</pre>";
     }
 
     public function generateqrcode() {
@@ -264,7 +275,7 @@ class Verifikasi extends CI_Controller {
     public function mhsmanajemen() {
         $query = $this->verifikasiservice->getMhsManajemen();
         $output = print_r($query, true);
-        echo "<pre>" . $output . "</pre>";
+        echo "<pre>" . e($output) . "</pre>";
     }
 
     public function tampildoang() {
@@ -280,8 +291,8 @@ class Verifikasi extends CI_Controller {
         foreach ($query_baru as $datax) {
             echo "<tr>";
             echo "<td>" . $nox++ . "</td>";
-            echo "<td>" . $datax->kelas_id . "</td>";
-            echo "<td>" . $datax->status_nilai . "</td>";
+            echo "<td>" . e($datax->kelas_id) . "</td>";
+            echo "<td>" . e($datax->status_nilai) . "</td>";
             echo "</tr>";
         }
         echo "<table>";
@@ -325,18 +336,18 @@ class Verifikasi extends CI_Controller {
         foreach ($query_baru as $datax) {
             echo "<tr>";
             echo "<td>" . $nox++ . "</td>";
-            echo "<td>" . $datax->kode_krs . "</td>";
-            echo "<td>" . $datax->semester . "</td>";
-            echo "<td>" . $datax->email . "</td>";
-            echo "<td>" . $datax->nim . "</td>";
-            echo "<td>" . date('dmY', strtotime($datax->tanggal_lahir)) . "</td>";
+            echo "<td>" . e($datax->kode_krs) . "</td>";
+            echo "<td>" . e($datax->semester) . "</td>";
+            echo "<td>" . e($datax->email) . "</td>";
+            echo "<td>" . e($datax->nim) . "</td>";
+            echo "<td>" . e(date('dmY', strtotime($datax->tanggal_lahir))) . "</td>";
 
             if ($datax->sandi == md5(date('dmY', strtotime($datax->tanggal_lahir)))) {
                 $KET = "OK";
             } else {
                 $KET = "PASSWORD SUDAH DISALIN";
             }
-            echo "<td>" . $KET . "</td>";
+            echo "<td>" . e($KET) . "</td>";
             echo "</tr>";
         }
         echo "<table>";
@@ -345,12 +356,20 @@ class Verifikasi extends CI_Controller {
     public function nilai($id) {
         $banding = $id;
         $get_id = $this->verifikasiservice->getKelasIdList();
+        $has_id = null;
 
         foreach ($get_id as $row) {
             $pembanding = hash("sha256", $row->kelas_id);
-            if ($pembanding == $banding) {
+            if (hash_equals($pembanding, (string) $banding)) {
                 $has_id = $row->kelas_id;
+                break;
             }
+        }
+
+        if ($has_id === null) {
+            $this->output->set_status_header('404');
+            $this->load->view('View_notfound');
+            return;
         }
 
         $data['query1'] = $this->verifikasiservice->getNilaiViewQuery1($has_id);
@@ -359,12 +378,7 @@ class Verifikasi extends CI_Controller {
         $data['query3'] = $this->verifikasiservice->getNilaiViewQuery3($has_id);
         $data['query4'] = $this->verifikasiservice->getNilaiViewQuery4($has_id);
 
-        if ($id != hash("sha256", $has_id)) {
-            $this->output->set_status_header('404');
-            $this->load->view('View_notfound');
-        } else {
-            $this->load->view("dosen/V_verifikasi", $data);
-        }
+        $this->load->view("dosen/V_verifikasi", $data);
     }
 
 }

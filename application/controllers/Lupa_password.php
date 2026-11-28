@@ -91,7 +91,7 @@ class Lupa_password extends CI_Controller
 
             if ($this->email->send()) {
                 $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h5>Berhasil.</h5>
-                        <h6>Link untuk reset password sudah dikirim ke email : <b>' . $this->input->post('email') . '</b><br>
+                        <h6>Link untuk reset password sudah dikirim ke email : <b>' . e($this->input->post('email')) . '</b><br>
                         Silahkan buka alamat email tersebut dan ikuti petunjuk selanjutnya.
                         </h6></div>');
             } else {

@@ -35,10 +35,9 @@ class Ganti_sandi extends CI_Controller {
         $this->form_validation->set_rules('ulangi_sandi_pengguna', 'Ulangi Sandi Pengguna', 'trim|required|min_length[8]|max_length[20]|callback_valid_password_complexity', array('required' => 'Field Ulangi Sandi harus diisi','min_length'=>'Field Ulangi Sandi minimal harus sebanyak 8 karakter','max_length'=>'Field Ulangi Sandi maksimal harus sebanyak 20 karakter'));
 
         if ($this->form_validation->run() == TRUE) {
-            // Melakukan one way hash menggunakan MD5 pada sandi pengguna
-            $sandi_pengguna = md5($this->input->post('sandi_pengguna'));
             $string = $this->input->post('sandi_pengguna');
-            $password_api = password_hash($string,PASSWORD_BCRYPT);
+            $password_api = password_hash($string, PASSWORD_BCRYPT);
+            $sandi_pengguna = $password_api;
 
             // Persiapan data
             $dosen = array('sandi_pengguna' => $sandi_pengguna);

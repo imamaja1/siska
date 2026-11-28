@@ -1509,4 +1509,92 @@ class DosenAkademikService extends MY_Service {
     public function updateDosenKelasRevisiKpat($id) {
         $this->db->where('id_kelas', $id)->update('dummy_update_kelas_kpat', array('status_dosen' => 'F'));
     }
+
+    /**
+     * Memastikan dosen yang login berwenang mengakses kelas reguler
+     * (sebagai pengampu, kaprodi program studi kelas, atau dekan fakultas kelas).
+     */
+    public function canAccessKelas($kode_dosen, $kelas_id) {
+        if (empty($kode_dosen) || empty($kelas_id)) {
+            return false;
+        }
+        $pengampu = $this->db->select('1', false)
+            ->from('mengajar')
+            ->where('kelas_id', $kelas_id)
+            ->where('kode_dosen', $kode_dosen)
+            ->limit(1)
+            ->get()->num_rows();
+        if ($pengampu > 0) {
+            return true;
+        }
+        $kelas = $this->db->select('ps.kode_program_studi, ps.kode_fakultas')
+            ->from('kelas as k')
+            ->join('program_studi as ps', 'ps.kode_program_studi = k.kode_program_studi')
+            ->where('k.kelas_id', $kelas_id)
+            ->limit(1)
+            ->get()->row();
+        if (!$kelas) {
+            return false;
+        }
+        $kaprodi = $this->db->select('1', false)
+            ->from('kaprodi')
+            ->where('kode_program_studi', $kelas->kode_program_studi)
+            ->where('kode_dosen', $kode_dosen)
+            ->limit(1)
+            ->get()->num_rows();
+        if ($kaprodi > 0) {
+            return true;
+        }
+        $dekan = $this->db->select('1', false)
+            ->from('fakultas')
+            ->where('kode_fakultas', $kelas->kode_fakultas)
+            ->where('dekan', $kode_dosen)
+            ->limit(1)
+            ->get()->num_rows();
+        return $dekan > 0;
+    }
+
+    /**
+     * Memastikan dosen yang login berwenang mengakses kelas KPAT
+     * (sebagai pengampu, kaprodi program studi kelas, atau dekan fakultas kelas).
+     */
+    public function canAccessKelasKpat($kode_dosen, $kelas_id) {
+        if (empty($kode_dosen) || empty($kelas_id)) {
+            return false;
+        }
+        $pengampu = $this->db->select('1', false)
+            ->from('mengajar_kpat')
+            ->where('kelas_id', $kelas_id)
+            ->where('kode_dosen', $kode_dosen)
+            ->limit(1)
+            ->get()->num_rows();
+        if ($pengampu > 0) {
+            return true;
+        }
+        $kelas = $this->db->select('ps.kode_program_studi, ps.kode_fakultas')
+            ->from('kelas_kpat as k')
+            ->join('program_studi as ps', 'ps.kode_program_studi = k.kode_program_studi')
+            ->where('k.kelas_id', $kelas_id)
+            ->limit(1)
+            ->get()->row();
+        if (!$kelas) {
+            return false;
+        }
+        $kaprodi = $this->db->select('1', false)
+            ->from('kaprodi')
+            ->where('kode_program_studi', $kelas->kode_program_studi)
+            ->where('kode_dosen', $kode_dosen)
+            ->limit(1)
+            ->get()->num_rows();
+        if ($kaprodi > 0) {
+            return true;
+        }
+        $dekan = $this->db->select('1', false)
+            ->from('fakultas')
+            ->where('kode_fakultas', $kelas->kode_fakultas)
+            ->where('dekan', $kode_dosen)
+            ->limit(1)
+            ->get()->num_rows();
+        return $dekan > 0;
+    }
 }

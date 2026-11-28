@@ -22,6 +22,24 @@ class ValidasiNilai extends CI_Controller {
         $this->load->library('pagination');
     }
 
+    private function _authorize_kelas($kelas_id, $is_json = false) {
+        if (!empty($kelas_id)) {
+            $dekan = $this->dekanservice->get_dekan_prodi($this->session->userdata('kode_dosen'));
+            $kode_prodi = array_column($dekan, 'kode_program_studi');
+            $kelas = $this->db->select('kode_program_studi')->where('kelas_id', $kelas_id)->limit(1)->get('kelas')->row();
+            if ($kelas && in_array($kelas->kode_program_studi, $kode_prodi)) {
+                return true;
+            }
+        }
+        if ($is_json) {
+            $this->output->set_status_header(403);
+            echo json_encode(array('status' => false, 'msg' => 'Akses ditolak untuk kelas ini.'));
+            return false;
+        }
+        show_error('Anda tidak memiliki wewenang untuk mengakses kelas ini.', 403);
+        return false;
+    }
+
     public function index() {
         $id_dekan = $this->session->userdata('kode_dosen');
 
@@ -67,6 +85,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function data_mahasiswa_uts($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $kelas_mahasiswa = $this->dekanservice->get_mahasiswa_uts_dekan($kelas_id);
         $data_kelas = $this->dekanservice->get_data_kelas_dekan($kelas_id);
         if (!$data_kelas) {
@@ -79,6 +98,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function data_mahasiswa_uas($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $kelas_mahasiswa = $this->dekanservice->get_mahasiswa_uas_dekan($kelas_id);
         $data_kelas = $this->dekanservice->get_data_kelas_dekan($kelas_id);
         if (!$data_kelas) {
@@ -91,6 +111,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function lihat_data_mahasiswa_uts($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $kelas_mahasiswa = $this->dekanservice->get_mahasiswa_uts_dekan($kelas_id);
         $data_kelas = $this->dekanservice->get_data_kelas_dekan($kelas_id);
         if (!$data_kelas) {
@@ -103,6 +124,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function lihat_data_mahasiswa_uas($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id)) return;
         $kelas_mahasiswa = $this->dekanservice->get_mahasiswa_uas_dekan($kelas_id);
         $data_kelas = $this->dekanservice->get_data_kelas_dekan($kelas_id);
         if (!$data_kelas) {
@@ -119,6 +141,7 @@ class ValidasiNilai extends CI_Controller {
         if ($kelas_id === null) {
             $kelas_id = htmlspecialchars($this->input->post('kelas_id'));
         }
+        if (!$this->_authorize_kelas($kelas_id)) return;
 
         $this->dekanservice->update('kelas', array('catatan_dekan' => $note, 'status_nilai' => 'R', 'validasi_dekan' => 'R', 'validasi_nilai' => 'R'), array('kelas_id' => $kelas_id));
         $this->dekanservice->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian' => 'R', 'validasi_dekan' => 'R', 'validasi_prodi' => 'R']);
@@ -149,6 +172,7 @@ class ValidasiNilai extends CI_Controller {
         if ($kelas_id === null) {
             $kelas_id = htmlspecialchars($this->input->post('kelas_id'));
         }
+        if (!$this->_authorize_kelas($kelas_id)) return;
 
         $this->dekanservice->update('kelas', array('catatan_dekan' => $note, 'status_nilai_uts' => 'R', 'validasi_dekan_uts' => 'R', 'validasi_nilai_uts' => 'R'), array('kelas_id' => $kelas_id));
         $this->dekanservice->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian_uts' => 'R', 'validasi_dekan_uts' => 'R', 'validasi_prodi_uts' => 'R']);
@@ -175,6 +199,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function validasi_uts($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id, true)) return;
         $nilai = $this->dekanservice->get_dummy_nilai_kelas($kelas_id);
         $this->dekanservice->update('kelas', array('validasi_dekan_uts' => 'T'), array('kelas_id' => $kelas_id));
         $this->dekanservice->insert('kelas_validasi', ['kelas_id' => $kelas_id, 'isian_uts' => 'T', 'validasi_prodi_uts' => 'T', 'validasi_dekan_uts' => 'T']);
@@ -213,6 +238,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function validasi_uas($kelas_id) {
+        if (!$this->_authorize_kelas($kelas_id, true)) return;
         $nilai = $this->dekanservice->get_dummy_nilai_kelas($kelas_id);
         foreach ($nilai as $row) {
             $data_nilai = array(
@@ -364,6 +390,7 @@ class ValidasiNilai extends CI_Controller {
     }
 
     public function show_nilai_revisi($id) {
+        if (!$this->_authorize_kelas($id, true)) return;
         $data['data'] = $this->dekanservice->get_nilai_revisi_dekan($id);
 
         $data['data_kelas'] = $this->dekanservice->get_data_kelas_revisi_dekan($id);
@@ -374,6 +401,7 @@ class ValidasiNilai extends CI_Controller {
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
         $kode_ta = $this->input->POST('kode_ta');
+        if (!$this->_authorize_kelas($kelas)) return;
 
         $data['data'] = $this->dekanservice->get_revisi_nilai_validasi_dekan($kelas, $level, $kode_ta);
 
@@ -385,6 +413,7 @@ class ValidasiNilai extends CI_Controller {
     public function revisi_nilai_divalidasi(){
         $kelas = $this->input->POST('kelas');
         $kode_ta = $this->input->POST('kode_ta');
+        if (!$this->_authorize_kelas($kelas)) return;
 
         $data['kelas'] = $this->dekanservice->get_revisi_nilai_divalidasi_dekan($kelas);
 
@@ -396,6 +425,7 @@ class ValidasiNilai extends CI_Controller {
     public function revisi_nilai_validasi_mhs(){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas)) return;
 
         $data['data'] = $this->dekanservice->get_mahasiswa_kelas_only_dekan($kelas);
         $data['nilai'] = false;
@@ -404,6 +434,7 @@ class ValidasiNilai extends CI_Controller {
     public function revisi_nilai_selesai(){
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
+        if (!$this->_authorize_kelas($kelas, true)) return;
         $this->dekanservice->update('dummy_update_kelas', array('status_dekan' => 'T','status' => '3'), array('id_kelas' => $kelas, 'level' => $level));
         $nilai = $this->dekanservice->get_dummy_update_nilai($kelas, $level);
         foreach ($nilai as $row) {
@@ -421,6 +452,7 @@ class ValidasiNilai extends CI_Controller {
         $kelas = $this->input->POST('kelas');
         $level = $this->input->POST('level');
         $pesan = $this->input->POST('pesan');
+        if (!$this->_authorize_kelas($kelas, true)) return;
 
         $this->dekanservice->update('dummy_update_kelas', array('status_prodi' => 'R','status_dosen' => 'R','status_dekan' => 'R','status' => '4'), array('id_kelas' => $kelas, 'level' => $level));
 
@@ -438,6 +470,7 @@ class ValidasiNilai extends CI_Controller {
 
     public function revisi_nilai_all_mahasiswa(){
         $kelas = $this->input->POST('kelas');
+        if (!$this->_authorize_kelas($kelas)) return;
         $ta = tahun_akademik();
         $kode_tahun_akademik = $ta ? $ta->kode_tahun_akademik : null;
         $saber = $this->dekanservice->get_dummy_update_kelas_all($kelas);

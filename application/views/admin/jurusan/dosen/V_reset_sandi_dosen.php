@@ -99,7 +99,7 @@
             cancelButtonText: 'Tidak',
             confirmButtonText: 'Ya'
         }).then(function () {
-            window.location.href = url;
+            siskaPostAction(url);
         });
     }
     function gantipassword(url) {
@@ -114,7 +114,7 @@
             confirmButtonText: 'Ya',
             closeOnConfirm: false
         }).then(function () {
-            window.location.href = url;
+            siskaPostAction(url);
         })
     }
 </script>

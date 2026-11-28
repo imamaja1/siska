@@ -97,7 +97,7 @@ class Backup_database extends CI_Controller {
                 fclose($fp);
                 @unlink($tempfile);
                 $conn->close();
-                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Gagal membaca tabel ' . $table . '.</h6></div>');
+                $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Gagal membaca tabel ' . e($table) . '.</h6></div>');
                 redirect(site_url('admin/pengaturan/backup_database'));
             }
 
@@ -194,7 +194,7 @@ class Backup_database extends CI_Controller {
             $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>Import database berhasil (' . $result['statements'] . ' statement dieksekusi).</h6></div>');
         } else {
             log_message('error', 'Import database gagal: ' . $result['error']);
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Import database gagal: ' . $result['error'] . '</h6></div>');
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>Import database gagal: ' . e($result['error']) . '</h6></div>');
         }
 
         redirect(site_url('admin/pengaturan/backup_database'));

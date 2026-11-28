@@ -315,7 +315,7 @@ class Mahasiswa extends CI_Controller {
             $table .= '</table></div></div>';
             $data['table'] = $table;
         } else {
-            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci <b>' . $kunci . '</b> !</div>');
+            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible flat">Tidak ditemukan data mahasiswa dengan kata kunci <b>' . e($kunci) . '</b> !</div>');
         }
         $this->load->view('admin/template/V_main', $data);
     }
@@ -354,7 +354,9 @@ class Mahasiswa extends CI_Controller {
                 $table = '<div class="box box-primary flat" ><div class="box-body"><table class="table demo-table"><thead><tr><th id="th">NIM</th><th id="th">NAMA MAHASISWA</th><th id="th">TINDAKAN</th></tr></thead>';
                 foreach ($res['data'] as $row) {
                     $table .= '<tr><td align="center">' . e($row->nim) . '</td><td align="center">' . e($row->nama_mahasiswa) . '</td><td align="center">';
-                    $table .= '<a href="' . site_url('admin/akademik/mahasiswa/generate_sandi/' . rawurlencode($row->nim)) . '" class=" btn-danger btn-xs flat"><i class="fa fa-refresh"></i> Reset Sandi</a>&nbsp;</td></tr>';
+                    $table .= '<form method="POST" action="' . site_url('admin/akademik/mahasiswa/generate_sandi/' . rawurlencode($row->nim)) . '" style="display:inline;">'
+                        . '<input type="hidden" name="' . e($this->security->get_csrf_token_name()) . '" value="' . e($this->security->get_csrf_hash()) . '">'
+                        . '<button type="submit" class="btn btn-danger btn-xs flat"><i class="fa fa-refresh"></i> Reset Sandi</button></form>&nbsp;</td></tr>';
                 }
                 $table .= '</table></div></div>';
                 $data['table'] = $table;
@@ -366,6 +368,10 @@ class Mahasiswa extends CI_Controller {
     }
 
     public function generate_sandi($nim) {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect('admin/akademik/mahasiswa/reset_sandi');
+            return;
+        }
         $res = $this->mahasiswaservice->generateSandi($nim);
         if ($res['status']) {
             $data = array(

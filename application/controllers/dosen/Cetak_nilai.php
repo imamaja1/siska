@@ -14,6 +14,13 @@ class Cetak_nilai extends CI_Controller {
     }
 
     public function index($id) {
+        if (!$this->session->userdata('nama_login')) {
+            $kode_dosen = $this->session->userdata('kode_dosen');
+            if (!$this->dosenakademikservice->canAccessKelas($kode_dosen, $id)) {
+                show_error('Anda tidak memiliki wewenang untuk mengakses kelas ini.', 403);
+                return;
+            }
+        }
         $data['query1'] = $this->dosenakademikservice->getCetakQuery1($id);
         $data['query2'] = $this->dosenakademikservice->getCetakQuery2($id);
         $data['query3'] = $this->dosenakademikservice->getCetakQuery3($id);

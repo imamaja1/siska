@@ -31,7 +31,9 @@ class Login extends CI_Controller
 
     private function handle_remember_me($username, $role)
     {
-        $is_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+        $is_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+            || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) === 'on');
         if ($this->input->post('remember')) {
             $expire = 2592000;
             $this->input->set_cookie(array(

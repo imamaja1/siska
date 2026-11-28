@@ -129,6 +129,10 @@ class Api_tokens extends CI_Controller {
 
     public function hapus($id)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/pengaturan/api_tokens'));
+            return;
+        }
         if ($this->apiservice->deleteToken($id)) {
             $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>Token berhasil dihapus.</h6></div>');
         } else {
@@ -139,6 +143,11 @@ class Api_tokens extends CI_Controller {
 
     public function toggle_status($id)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            $this->output->set_status_header(405);
+            echo json_encode(['status' => false, 'message' => 'Method not allowed']);
+            return;
+        }
         if ($this->apiservice->toggleStatus($id)) {
             $token = $this->apiservice->getTokenById($id);
             $status = $token->is_active ? 'aktif' : 'nonaktif';
@@ -156,12 +165,16 @@ class Api_tokens extends CI_Controller {
 
     public function sinkronisasi($id)
     {
+        if (strtoupper($this->input->method()) !== 'POST') {
+            redirect(site_url('admin/pengaturan/api_tokens'));
+            return;
+        }
         $result = $this->apiservice->syncFromPMB($id);
 
         if ($result['status']) {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>' . $result['message'] . '</h6></div>');
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-success"><h6>' . e($result['message']) . '</h6></div>');
         } else {
-            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>' . $result['message'] . '</h6></div>');
+            $this->session->set_flashdata('pesan', '<div class="alert animated fadeInUp alert-danger"><h6>' . e($result['message']) . '</h6></div>');
         }
         redirect(site_url('admin/pengaturan/api_tokens'));
     }

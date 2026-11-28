@@ -56,10 +56,9 @@ class Ganti_sandi extends CI_Controller {
                 redirect('mahasiswa/ganti_sandi');
             }
 
-            // Melakukan one way hash menggunakan MD5 pada sandi pengguna
-            $sandi = md5($this->input->post('sandi_pengguna'));
             $string = $this->input->post('sandi_pengguna');
-            $password_api = password_hash($string,PASSWORD_BCRYPT);
+            $password_api = password_hash($string, PASSWORD_BCRYPT);
+            $sandi = $password_api;
 
             // Persiapan data
             $data_ubah = array('sandi' => $sandi);
